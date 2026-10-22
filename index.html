@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -61,6 +62,8 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn:active {
             transform: scale(0.98);
@@ -127,15 +130,16 @@
         <!-- Add Money / QR Code Section -->
         <div id="addMoneySection" class="hidden card">
             <h3 style="color: #ff9900; margin-bottom: 5px;">BharatPe QR से पैसे जोड़ें</h3>
-            <p style="font-size: 12px; color: #ccc;">QR कोड स्कैन करके भुगतान करें</p>
+            <p style="font-size: 12px; color: #ccc;">QR कोड स्कैन करें या नीचे बटन दबाएं</p>
             
             <div class="qr-box">
-                <!-- yahan apne BharatPe QR code ka image link dalein -->
                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitytype" alt="BharatPe QR Code">
-
             </div>
 
-            <p style="font-size: 12px; color: #ffcc00; margin-bottom: 5px;">भुगतान करने के बाद अपना UPI / Ref No. यहाँ डालें:</p>
+            <!-- Direct UPI App Payment Button -->
+            <a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitytype&pn=Mahakal%20Paheli&cu=INR" class="btn" style="background: linear-gradient(45deg, #0088cc, #0055ff); font-size: 14px; padding: 10px;">📱 सीधे GPay / PhonePe से भुगतान करें</a>
+
+            <p style="font-size: 12px; color: #ffcc00; margin-top: 10px; margin-bottom: 5px;">भुगतान करने के बाद अपना UPI / Ref No. यहाँ डालें:</p>
             <input type="text" id="upiRefInput" placeholder="UPI Ref / Transaction ID">
             
             <button class="btn" onclick="verifyAndAddMoney()">पैसे जोड़ें (Verify)</button>
@@ -193,10 +197,9 @@
 
             document.getElementById('loadingMsg').classList.remove('hidden');
 
-            // 5 second ka simulation/verification timer
             setTimeout(function() {
                 document.getElementById('loadingMsg').classList.add('hidden');
-                userWallet += 50; // default testing add amount ya jitna user dale
+                userWallet += 50; 
                 updateWalletUI();
                 alert("सफल! आपके पैसे वॉलेट में जोड़ दिए गए हैं।");
                 document.getElementById('upiRefInput').value = "";
