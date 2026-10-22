@@ -117,7 +117,7 @@
 <body>
 
     <div class="container">
-        <!-- Register Screen (Pahli Baar) -->
+        <!-- Register Screen -->
         <div id="registerSection" class="card">
             <div class="header">
                 <h1>🔱 महाकाल पहेली बैटल 🔱</h1>
@@ -126,7 +126,6 @@
             <input type="tel" id="regMobile" placeholder="मोबाइल नंबर (10 अंक)" maxlength="10">
             <button class="btn" onclick="sendOTP()">OTP भेजें</button>
 
-            <!-- OTP & Password Setup (Initially Hidden) -->
             <div id="otpPasswordBlock" class="hidden" style="margin-top: 15px;">
                 <input type="text" id="enteredOtp" placeholder="OTP दर्ज करें (Demo: 1234)" maxlength="4">
                 <input type="password" id="regPassword" placeholder="नया पासवर्ड बनाएं">
@@ -152,7 +151,7 @@
         <!-- Blacklisted Screen -->
         <div id="blacklistedSection" class="card hidden">
             <h2 style="color: #ff3333; margin-bottom: 10px;">⚠️ अकाउंट ब्लॉक है</h2>
-            <p style="font-size: 14px; color: #ccc; line-height: 1.5;">सुरक्षा कारणों या नियमों के उल्लंघन के कारण आपका यह मोबाइल नंबर ब्लैकलिस्ट कर दिया गया है। आप इस ऐप का उपयोग नहीं कर सकते।</p>
+            <p style="font-size: 14px; color: #ccc; line-height: 1.5;">सुरक्षा कारणों या नियमों के उल्लंघन के कारण आपका यह मोबाइल नंबर ब्लैकलिस्ट कर दिया गया है।</p>
             <button class="btn" style="background: #555; margin-top: 20px;" onclick="showLogin()">वापस जाएं</button>
         </div>
 
@@ -220,8 +219,6 @@
     <script>
         let userWallet = 10.00;
         let timerInterval;
-
-        // Blacklisted numbers list (Aap yahanaur numbers add kar sakte hain)
         const blacklistedNumbers = ["9999999999", "8888888888", "1234567890"];
 
         function showLogin() {
@@ -264,7 +261,6 @@
                 return;
             }
 
-            // User data ko browser memory (localStorage) me save kar rahe hain
             localStorage.setItem("savedMobile", mobile);
             localStorage.setItem("savedPassword", password);
 
@@ -342,7 +338,6 @@
                 timeLeft--;
                 document.getElementById('puzzleTimer').innerText = timeLeft;
                 if(timeLeft <= 0) {
-                    clearInterval(timerIntentVal);
                     clearInterval(timerInterval);
                     alert("समय समाप्त! आप हार गए।");
                     backToDashboard();
@@ -373,6 +368,7 @@
                 userWallet += 50; 
                 alert("सफल! आपके वॉलेट में पैसे जोड़ दिए गए हैं।");
                 document.getElementById('upiRefInput').value = "";
+                backToDayboard / backToDashboard();
                 backToDashboard();
             }, 4000);
         }
@@ -391,5 +387,4 @@
         }
     </script>
 </body>
-  </html>
-  
+</html>
