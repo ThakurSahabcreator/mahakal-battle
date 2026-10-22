@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>महाकाल पहेली बैटल</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #050505; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .phone-frame { width: 100%; max-width: 400px; background: #121212; border: 4px solid #ff6600; border-radius: 20px; overflow: hidden; box-shadow: 0 0 25px rgba(255, 102, 0, 0.5); display: flex; flex-direction: column; height: 750px; position: relative; }
+        
+        header { background: linear-gradient(135deg, #1a0000, #330000); padding: 15px; text-align: center; border-bottom: 2px solid #ff6600; }
+        header h1 { font-size: 18px; color: #ffcc00; text-transform: uppercase; letter-spacing: 1px; }
+        header p { font-size: 11px; color: #ff99ff; margin-top: 2px; }
+
+        .screen { display: none; flex: 1; padding: 20px; overflow-y: auto; flex-direction: column; justify-content: center; }
+        .screen.active { display: flex; }
+
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #1f1f1f; border: 1px solid #444; color: #fff; border-radius: 8px; font-size: 16px; text-align: center; }
+        button { width: 100%; padding: 12px; background: linear-gradient(135deg, #ff6600, #cc3300); border: none; color: #fff; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3); }
+        button:active { transform: scale(0.98); }
+
+        .wallet-box { background: #1a1a1a; border: 1px solid #ff6600; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
+        .wallet-box h3 { color: #ffcc00; font-size: 14px; }
+        .wallet-box p { font-size: 24px; font-weight: bold; color: #00ffcc; margin-top: 5px; }
+
+        .game-card { background: #1a1a1a; border: 1px solid #444; border-radius: 10px; padding: 15px; margin-top: 10px; text-align: center; }
+        
+        .timer { font-size: 32px; font-weight: bold; color: #ff3333; text-align: center; margin: 15px 0; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        .rules { font-size: 12px; color: #ccc; background: #181818; padding: 12px; border-radius: 6px; margin-top: 10px; line-height: 1.5; border-left: 3px solid #ffcc00; }
+        
+        .qr-placeholder { background: #fff; width: 140px; height: 140px; margin: 10px auto; display: flex; justify-content: center; align-items: center; color: #000; font-weight: bold; border-radius: 8px; font-size: 13px; border: 3px dashed #ff6600; text-align: center; }
+        
+        .splash-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #ffcc00; margin: 0 auto 15px auto; background: radial-gradient(circle, #ff6600, #111); display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 0 15px #ff6600; }
+    </style>
+</head>
+<body>
+
+<div class="phone-frame">
+    <header>
+        <h1>🔱 महाकाल पहेली बैटल 🔱</h1>
+        <p>15 सेकंड, ₹5 एंट्री, असली इनाम!</p>
+    </header>
+
+    <div id="loginScreen" class="screen active" style="justify-content: flex-start; padding-top: 40px;">
+        <div class="splash-img">🔱</div>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #ffcc00; font-size: 20px;">हर हर महाकाल</h2>
+            <p style="font-size: 13px; color: #ddd; margin-top: 5px;">मोबाइल नंबर से लॉगिन करें और पाएं <b style="color: #00ffcc;">₹10 वेलकम बोनस</b></p>
+        </div>
+        <input type="tel" id="mobileInput" placeholder="मोबाइल नंबर (10 अंक)" maxlength="10">
+        <button onclick="loginUser()">लॉगिन करें & बोनस लें</button>
+    </div>
+
+    <div id="homeScreen" class="screen" style="justify-content: flex-start; padding-top: 20px;">
+        <div class="wallet-box">
+            <h3>आपका वॉलेट बैलेंस</h3>
+            <p id="walletBalance">₹10.00</p>
+        </div>
+
+        <div class="game-card">
+            <h3 style="color: #ffcc00;">⚡ 15 सेकंड पहेली मुकाबला</h3>
+            <p style="font-size: 13px; color: #ccc; margin: 8px 0;">एंट्री फीस: ₹5 | सबसे तेज सही जवाब देने वाला जीतेगा!</p>
+            <button onclick="startGame()">गेम खेलें (-₹5)</button>
+        </div>
+
+        <button onclick="openWallet()" style="background: #222; border: 1px solid #ff6600; margin-top: 25px;">वॉलेट / पैसे निकालें (Withdraw)</button>
+    </div>
+
+    <div id="gameScreen" class="screen" style="justify-content: flex-start; padding-top: 20px;">
+        <div class="timer" id="timerDisplay">15</div>
+        <div style="background: #1a1a1a; padding: 15px; border-radius: 10px; border-left: 4px solid #ff6600; margin-bottom: 15px;">
+            <p id="riddleText" style="font-size: 16px; font-weight: bold; line-height: 1.4;">पहेली लोड हो रही है...</p>
+        </div>
+        <input type="text" id="answerInput" placeholder="अपना जवाब यहाँ लिखें...">
+        <button onclick="submitAnswer()">जवाब जमा करें</button>
+        <p style="font-size: 11px; color: #ff3333; text-align: center; margin-top: 15px;">⚠️ एंटी-चीट एक्टिव: स्क्रीनशॉट और ऐप स्विच प्रतिबंधित।</p>
+    </div>
+
+    <div id="walletScreen" class="screen" style="justify-content: flex-start; padding-top: 15px;">
+        <div class="wallet-box">
+            <h3>उपलब्ध बैलेंस</h3>
+            <p id="fullWalletBalance">₹10.00</p>
+        </div>
+
+        <div style="text-align: center;">
+            <p style="font-size: 12px; color: #ffcc00; margin-bottom: 2px;">पैसे जोड़ने के लिए QR स्कैन करें:</p>
+            <div class="qr-placeholder">SCAN QR<br>(UPI / PAYTM)</div>
+            <button onclick="addMoney(50)" style="background: #008800; font-size: 13px; padding: 8px; margin-top: 5px;">वॉलेट में ₹50 जोड़ें (टेस्ट)</button>
+        </div>
+
+        <div class="rules">
+            <b>विथड्रॉल नियम:</b><br>
+            • न्यूनतम निकासी (Min): <b>₹120</b><br>
+            • सुरक्षित शेष: पैसे निकालते समय वॉलेट में कम से कम <b>₹50</b> छोड़ना अनिवार्य है।
+        </div>
+
+        <input type="number" id="withdrawInput" placeholder="विथड्रॉल राशि (₹)" style="margin-top: 10px;">
+        <button onclick="requestWithdrawal()" style="background: #cc0000;">पैसे बैंक/UPI में भेजें</button>
+        <button onclick="goHome()" style="background: #333; margin-top: 5px;">वापस होम पर जाएं</button>
+    </div>
+</div>
+
+<script>
+    let userBalance = 10.00;
+    let timer;
+    let timeLeft = 15;
+
+    const riddles = [
+        { q: "ऐसी कौन सी चीज़ है जो पानी पीते ही मर जाती है?", a: "प्यास" },
+        { q: "ऐसी कौन सी चीज़ है जो हमेशा ऊपर जाती है कभी नीचे नहीं आती?", a: "उम्र" },
+        { q: "ऐसी कौन सी चीज़ है जिसे दिन में कई बार उठाते हैं और रखते हैं, लेकिन बिना उठाए सो नहीं सकते?", a: "पलक" }
+    ];
+
+    function updateUI() {
+        document.getElementById('walletBalance').innerText = `₹${userBalance.toFixed(2)}`;
+        document.getElementById('fullWalletBalance').innerText = `₹${userBalance.toFixed(2)}`;
+    }
+
+    function loginUser() {
+        const mobile = document.getElementById('mobileInput').value;
+        if(mobile.length === 10) {
+            alert("हर हर महाकाल! लॉगिन सफल रहा और ₹10 वेलकम बोनस आपके वॉलेट में जोड़ दिया गया है।");
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('homeScreen').classList.add('active');
+            updateUI();
+        } else {
+            alert("कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें।");
+        }
+    }
+
+    function openWallet() {
+        document.getElementById('homeScreen').classList.remove('active');
+        document.getElementById('walletScreen').classList.add('active');
+        updateUI();
+    }
+
+    function goHome() {
+        document.getElementById('walletScreen').classList.remove('active');
+        document.getElementById('homeScreen').classList.add('active');
+        updateUI();
+    }
+
+    function addMoney(amount) {
+        userBalance += amount;
+        updateUI();
+        alert(`सफलतापूर्वक ₹${amount} वॉलेट में जोड़ दिए गए!`);
+    }
+
+    function startGame() {
+        if(userBalance < 5) {
+            alert("आपके वॉलेट में पर्याप्त पैसे नहीं हैं! कृपया पहले पैसे जोड़ें।");
+            return;
+        }
+        userBalance -= 5;
+        updateUI();
+
+        document.getElementById('homeScreen').classList.remove('active');
+        document.getElementById('gameScreen').classList.add('active');
+
+        const randomRiddle = riddles[Math.floor(Math.random() * riddles.length)];
+        document.getElementById('riddleText').innerText = randomRiddle.q;
+        document.getElementById('answerInput').value = "";
+        
+        timeLeft = 15;
+        document.getElementById('timerDisplay').innerText = timeLeft;
+        
+        clearInterval(timer);
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timerDisplay').innerText = timeLeft;
+            if(timeLeft <= 0) {
+                clearInterval(timer);
+                alert("समय समाप्त! इस राउंड में कोई जवाब नहीं मिला।");
+                document.getElementById('gameScreen').classList.remove('active');
+                document.getElementById('homeScreen').classList.add('active');
+                updateUI();
+            }
+        }, 1000);
+    }
+
+    function submitAnswer() {
+        clearInterval(timer);
+        const userAnswer = document.getElementById('answerInput').value.trim();
+        if(userAnswer !== "") {
+            userBalance += 10; 
+            alert("हर हर महादेव! आपका जवाब बिल्कुल सही है। आपने यह मुकाबला जीत लिया है! (+₹10)");
+        } else {
+            alert("समय रहते कोई जवाब दर्ज नहीं हुआ!");
+        }
+        document.getElementById('gameScreen').classList.remove('active');
+        document.getElementById('homeScreen').classList.add('active');
+        updateUI();
+    }
+
+    function requestWithdrawal() {
+        const withdrawAmount = parseFloat(document.getElementById('withdrawInput').value);
+        
+        if(isNaN(withdrawAmount) || withdrawAmount <= 0) {
+            alert("कृपया सही विथड्रॉल राशि दर्ज करें।");
+            return;
+        }
+
+        if(userBalance < 120) {
+            alert("न्यूनतम विथड्रॉल सीमा ₹120 है। आपका बैलेंस अभी इससे कम है!");
+            return;
+        }
+
+        if((userBalance - withdrawAmount) < 50) {
+            alert("नियम के अनुसार पैसे निकालने के बाद भी वॉलेट में कम से कम ₹50 छोड़ना अनिवार्य है!");
+            return;
+        }
+
+        userBalance -= withdrawAmount;
+        updateUI();
+        alert(`सफलतापूर्वक ₹${withdrawAmount} आपके बैंक/UPI में ट्रांसफर कर दिए गए हैं!`);
+    }
+</script>
+
+</body>
+              </html>
