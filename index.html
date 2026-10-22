@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>महाकाल पहेली बैटल</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: #1e1e1e;
+            border: 2px solid #ff6600;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+        }
+        .header {
+            border-bottom: 2px solid #ff6600;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #ff9900;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #cccccc;
+            font-size: 13px;
+        }
+        .card {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .btn {
+            background: linear-gradient(45deg, #ff6600, #ff9900);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .option-btn {
+            background: #333;
+            border: 1px solid #ff6600;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 8px;
+            text-align: left;
+        }
+        .option-btn:active {
+            background: #ff6600;
+        }
+        input[type="text"], input[type="tel"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #555;
+            background: #121212;
+            color: #fff;
+            margin-top: 8px;
+            font-size: 15px;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .qr-box img {
+            width: 160px;
+            height: 160px;
+            background: #fff;
+            padding: 5px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .toggle-link {
+            color: #00ffcc;
+            font-size: 13px;
+            margin-top: 12px;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Register Screen (Pahli Baar) -->
+        <div id="registerSection" class="card">
+            <div class="header">
+                <h1>🔱 महाकाल पहेली बैटल 🔱</h1>
+                <p>नया खाता बनाएं & ₹10 बोनस पाएं!</p>
+            </div>
+            <input type="tel" id="regMobile" placeholder="मोबाइल नंबर (10 अंक)" maxlength="10">
+            <button class="btn" onclick="sendOTP()">OTP भेजें</button>
+
+            <!-- OTP & Password Setup (Initially Hidden) -->
+            <div id="otpPasswordBlock" class="hidden" style="margin-top: 15px;">
+                <input type="text" id="enteredOtp" placeholder="OTP दर्ज करें (Demo: 1234)" maxlength="4">
+                <input type="password" id="regPassword" placeholder="नया पासवर्ड बनाएं">
+                <button class="btn" onclick="verifyAndRegister()">रजिस्ट्रेशन पूरा करें</button>
+            </div>
+
+            <span class="toggle-link" onclick="showLogin()">पहले से खाता है? लॉगिन करें</span>
+        </div>
+
+        <!-- Login Screen -->
+        <div id="loginSection" class="card hidden">
+            <div class="header">
+                <h1>🔱 महाकाल पहेली बैटल 🔱</h1>
+                <p>लॉगिन करें और खेलें!</p>
+            </div>
+            <input type="tel" id="loginMobile" placeholder="मोबाइल नंबर (10 अंक)" maxlength="10">
+            <input type="password" id="loginPassword" placeholder="पासवर्ड दर्ज करें">
+            <button class="btn" onclick="loginUser()">लॉगिन करें</button>
+            
+            <span class="toggle-link" onclick="showRegister()">नया खाता बनाएं (Register)</span>
+        </div>
+
+        <!-- Blacklisted Screen -->
+        <div id="blacklistedSection" class="card hidden">
+            <h2 style="color: #ff3333; margin-bottom: 10px;">⚠️ अकाउंट ब्लॉक है</h2>
+            <p style="font-size: 14px; color: #ccc; line-height: 1.5;">सुरक्षा कारणों या नियमों के उल्लंघन के कारण आपका यह मोबाइल नंबर ब्लैकलिस्ट कर दिया गया है। आप इस ऐप का उपयोग नहीं कर सकते।</p>
+            <button class="btn" style="background: #555; margin-top: 20px;" onclick="showLogin()">वापस जाएं</button>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboardSection" class="hidden">
+            <div class="header">
+                <h1>🔱 महाकाल पहेली बैटल 🔱</h1>
+            </div>
+            
+            <div class="card">
+                <p style="font-size: 14px; color: #aaa;">आपका वॉलेट बैलेंस</p>
+                <h2 id="walletBalance" style="color: #00ffcc; font-size: 28px; margin: 5px 0;">₹10.00</h2>
+            </div>
+
+            <div class="card">
+                <h3 style="color: #ff9900; font-size: 16px;">⚡ 15 सेकंड पहेली मुकाबला</h3>
+                <p style="font-size: 12px; color: #ccc; margin: 5px 0;">एंट्री फीस: ₹5 | सही जवाब देने पर मिलेंगे ₹10!</p>
+                <button class="btn" onclick="playGame()">गेम खेलें (-₹5)</button>
+            </div>
+
+            <button class="btn" style="background: #333; border: 1px solid #ff6600;" onclick="showAddMoney()">➕ वॉलेट में पैसे जोड़ें (Add Money)</button>
+            <button class="btn" style="background: #442222; border: 1px solid #ff3333; font-size: 14px; margin-top: 15px;" onclick="logout()">लॉग आउट (Logout)</button>
+        </div>
+
+        <!-- Puzzle Section -->
+        <div id="puzzleSection" class="hidden card">
+            <h3 style="color: #ff9900; font-size: 16px;">⚡ 15 सेकंड पहेली मुकाबला</h3>
+            <p id="puzzleTimer" style="color: #ffcc00; font-size: 22px; margin: 8px 0;">15</p>
+            
+            <p style="font-size: 14px; color: #fff; margin: 12px 0; text-align: left; line-height: 1.4;">
+                ऐसी कौन सी चीज़ है जिसे दिन में कई बार उठाते हैं और रखते हैं, लेकिन बिना उठाए सो नहीं सकते?
+            </p>
+
+            <button class="btn" style="background: #0088cc; font-size: 13px; padding: 8px; margin-bottom: 10px;" onclick="bolkarSunao()">🔊 सवाल और विकल्प बोलकर सुनें</button>
+
+            <button class="option-btn" onclick="checkAnswer('A')">A) हाथ</button>
+            <button class="option-btn" onclick="checkAnswer('B')">B) पैर (कदम)</button>
+            <button class="option-btn" onclick="checkAnswer('C')">C) किताब</button>
+            <button class="option-btn" onclick="checkAnswer('D')">D) मोबाइल</button>
+
+            <button class="btn" style="background: #555; margin-top: 15px;" onclick="backToDashboard()">वापस जाएं</button>
+        </div>
+
+        <!-- Add Money Section -->
+        <div id="addMoneySection" class="hidden card">
+            <h3 style="color: #ff9900; margin-bottom: 5px;">BharatPe QR से पैसे जोड़ें</h3>
+            <p style="font-size: 12px; color: #ccc;">QR कोड स्कैन करें या नीचे बटन दबाएं</p>
+            
+            <div class="qr-box">
+                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitytype" alt="BharatPe QR Code">
+            </div>
+
+            <a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitytype&pn=Mahakal%20Paheli&cu=INR" class="btn" style="background: linear-gradient(45deg, #0088cc, #0055ff); font-size: 14px; padding: 10px;">📱 सीधे GPay / PhonePe से भुगतान करें</a>
+
+            <p style="font-size: 12px; color: #ffcc00; margin-top: 10px; margin-bottom: 5px;">भुगतान करने के बाद अपना UPI / Ref No. यहाँ डालें:</p>
+            <input type="text" id="upiRefInput" placeholder="UPI Ref / Transaction ID">
+            
+            <button class="btn" onclick="verifyAndAddMoney()">पैसे जोड़ें (Verify)</button>
+            <p id="loadingMsg" style="color: #00ffcc; font-size: 13px; margin-top: 10px;" class="hidden">पूरी जांच हो रही है, कृपया 5 सेकंड प्रतीक्षा करें...</p>
+            
+            <button class="btn" style="background: #555; margin-top: 5px;" onclick="backToDashboard()">वापस जाएं</button>
+        </div>
+    </div>
+
+    <script>
+        let userWallet = 10.00;
+        let timerInterval;
+
+        // Blacklisted numbers list (Aap yahanaur numbers add kar sakte hain)
+        const blacklistedNumbers = ["9999999999", "8888888888", "1234567890"];
+
+        function showLogin() {
+            document.getElementById('registerSection').classList.add('hidden');
+            document.getElementById('blacklistedSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('registerSection').classList.remove('hidden');
+        }
+
+        function sendOTP() {
+            let mobile = document.getElementById('regMobile').value;
+            if(mobile.length !== 10) {
+                alert("कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें!");
+                return;
+            }
+            if(blacklistedNumbers.includes(mobile)) {
+                document.getElementById('registerSection').classList.add('hidden');
+                document.getElementById('blacklistedSection').classList.remove('hidden');
+                return;
+            }
+            alert("OTP भेज दिया गया है! डेमो के लिए OTP '1234' दर्ज करें।");
+            document.getElementById('otpPasswordBlock').classList.remove('hidden');
+        }
+
+        function verifyAndRegister() {
+            let mobile = document.getElementById('regMobile').value;
+            let otp = document.getElementById('enteredOtp').value;
+            let password = document.getElementById('regPassword').value;
+
+            if(otp !== "1234") {
+                alert("गलत OTP! कृपया सही OTP दर्ज करें (1234)।");
+                return;
+            }
+            if(password.trim() === "") {
+                alert("कृपया नया पासवर्ड सेट करें!");
+                return;
+            }
+
+            // User data ko browser memory (localStorage) me save kar rahe hain
+            localStorage.setItem("savedMobile", mobile);
+            localStorage.setItem("savedPassword", password);
+
+            alert("रजिस्ट्रेशन सफल! आपको ₹10 वेलकम बोनस मिला है।");
+            document.getElementById('registerSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            updateWalletUI();
+        }
+
+        function loginUser() {
+            let mobile = document.getElementById('loginMobile').value;
+            let password = document.getElementById('loginPassword').value;
+
+            if(blacklistedNumbers.includes(mobile)) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('blacklistedSection').classList.remove('hidden');
+                return;
+            }
+
+            let savedMobile = localStorage.getItem("savedMobile");
+            let savedPassword = localStorage.getItem("savedPassword");
+
+            if(mobile === savedMobile && password === savedPassword) {
+                alert("लॉगिन सफल!");
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dashboardSection').classList.remove('hidden');
+                updateWalletUI();
+            } else {
+                alert("गलत मोबाइल नंबर या पासवर्ड! यदि नया खाता है तो पहले रजिस्टर करें।");
+            }
+        }
+
+        function logout() {
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function updateWalletUI() {
+            document.getElementById('walletBalance').innerText = "₹" + userWallet.toFixed(2);
+        }
+
+        function showAddMoney() {
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('addMoneySection').classList.remove('hidden');
+        }
+
+        function backToDashboard() {
+            clearInterval(timerInterval);
+            document.getElementById('addMoneySection').classList.add('hidden');
+            document.getElementById('puzzleSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            updateWalletUI();
+        }
+
+        function playGame() {
+            if(userWallet < 5) {
+                alert("आपके वॉलेट में पर्याप्त बैलेंस नहीं है! कृपया पहले पैसे जोड़ें।");
+                showAddMoney();
+                return;
+            }
+            userWallet -= 5;
+            updateWalletUI();
+            
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('puzzleSection').classList.remove('hidden');
+            startTimer();
+        }
+
+        function startTimer() {
+            let timeLeft = 15;
+            document.getElementById('puzzleTimer').innerText = timeLeft;
+            clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('puzzleTimer').innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    clearInterval(timerIntentVal);
+                    clearInterval(timerInterval);
+                    alert("समय समाप्त! आप हार गए।");
+                    backToDashboard();
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(option) {
+            clearInterval(timerInterval);
+            if(option === 'D') {
+                userWallet += 10;
+                alert("बधाई हो! आपका जवाब बिल्कुल सही है। आपने ₹10 जीत लिए हैं!");
+            } else {
+                alert("गलत जवाब! सही उत्तर 'D) मोबाइल' था।");
+            }
+            backToDashboard();
+        }
+
+        function verifyAndAddMoney() {
+            let ref = document.getElementById('upiRefInput').value;
+            if(ref.trim() === "") {
+                alert("कृपया UPI Ref / Transaction ID दर्ज करें!");
+                return;
+            }
+            document.getElementById('loadingMsg').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('loadingMsg').classList.add('hidden');
+                userWallet += 50; 
+                alert("सफल! आपके वॉलेट में पैसे जोड़ दिए गए हैं।");
+                document.getElementById('upiRefInput').value = "";
+                backToDashboard();
+            }, 4000);
+        }
+
+        function bolkarSunao() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let textToSpeak = "सवाल है: ऐसी कौन सी चीज़ है जिसे दिन में कई बार उठाते हैं और रखते हैं, लेकिन बिना उठाए सो नहीं सकते? विकल्प हैं: ए, हाथ। बी, पैर। सी, किताब। डी, मोबाइल।";
+                let speech = new SpeechSynthesisUtterance(textToSpeak);
+                speech.lang = 'hi-IN';
+                speech.rate = 0.9;
+                window.speechSynthesis.speak(speech);
+            } else {
+                alert("माफ़ कीजिए, आपके ब्राउज़र में बोलकर सुनाने की सुविधा काम नहीं कर रही है।");
+            }
+        }
+    </script>
+</body>
+  </html>
+  
