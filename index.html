@@ -64,13 +64,22 @@
             text-align: center;
             font-size: 16px;
         }
-        .wallet-box {
-            background: #2a2a2a;
+        
+        /* अलग और आकर्षक वॉलेट बॉक्स डिजाइन */
+        .unique-wallet-card {
+            background: linear-gradient(135deg, #2c1a00, #4d2600);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 15px;
-            border: 1px solid #ffab00;
+            border: 2px solid #ffcc00;
+            box-shadow: inset 0 0 10px rgba(255, 204, 0, 0.3);
         }
+        .unique-wallet-card h3 {
+            margin: 0;
+            color: #ffe680;
+            font-size: 20px;
+        }
+
         .qr-img {
             width: 220px;
             height: 220px;
@@ -80,8 +89,8 @@
             margin: 10px auto;
             -webkit-touch-callout: none;
         }
-        .msg { color: #00e676; font-size: 14px; margin-top: 10px; }
-        .error { color: #ff5252; font-size: 14px; margin-top: 10px; }
+        .msg { color: #00e676; font-size: 14px; margin-top: 10px; font-weight: bold; }
+        .error { color: #ff5252; font-size: 14px; margin-top: 10px; font-weight: bold; }
         
         /* Security Blur & Alert Overlay */
         .blur-screen {
@@ -110,17 +119,18 @@
         <!-- Security Alert Overlay for 15 Seconds -->
         <div id="security-alert">
             <h3>⚠️ सुरक्षा चेतावनी!</h3>
-            <p style="font-size: 14px; color: #fff;">आप गेम से बाहर जाने या स्क्रीनशॉट लेने की कोशिश कर रहे हैं। सुरक्षा कारणों से स्क्रीन 15 सेकंड के लिए लॉक कर दी गई है।</p>
+            <p style="font-size: 14px; color: #fff;">आप स्क्रीनशॉट लेने या ऐप बदलने की कोशिश कर रहे हैं। सुरक्षा कारणों से स्क्रीन 15 सेकंड के लिए लॉक कर दी गई है और पहेली बदल दी जाएगी!</p>
             <h1 id="countdown" style="color: #ffab00; font-size: 40px;">15</h1>
         </div>
 
         <h2>🔱 महाकाल पहेली बैटल 🔱</h2>
         
-        <!-- Wallet & Dashboard Section -->
+        <!-- Dashboard Section -->
         <div id="dashboard" style="display:none;">
-            <div class="wallet-box">
-                <h3>वॉलेट बैलेंस: <span id="balance">10</span> ₹</h3>
-                <p style="font-size: 12px; color: #aaa;">(नियम: मिनिमम ₹20 वॉलेट में सुरक्षित रखना अनिवार्य है)</p>
+            <!-- अलग से बनाया गया शानदार वॉलेट बॉक्स -->
+            <div class="unique-wallet-card">
+                <h3>💰 मेरा वॉलेट: ₹<span id="balance">10</span></h3>
+                <p style="font-size: 11px; color: #ffd24d; margin: 5px 0 0 0;">(नियम: मिनिमम ₹20 वॉलेट में सुरक्षित रखना अनिवार्य है)</p>
             </div>
 
             <button class="btn" onclick="startPuzzle()">🎮 पहेली खेलें (Play Puzzle)</button>
@@ -140,21 +150,19 @@
                 <button class="option-btn" id="optD" onclick="checkAnswer('D')">D. <span id="textD"></span></button>
             </div>
 
-            <div id="puzzle-result" style="margin-top: 15px; font-weight: bold; font-size: 16px;"></div>
+            <div id="puzzle-result" style="margin-top: 15px; font-size: 16px;"></div>
             <button class="btn" style="background:#555; display:none; margin-top:15px;" id="back-dash-btn" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
         </div>
 
-        <!-- Add Money Section (BharatPe Real QR & UPI Intent) -->
+        <!-- Add Money Section -->
         <div id="add-money-section" style="display:none;">
             <h3>BharatPe QR से पैसे जोड़ें</h3>
             <p style="font-size: 13px; color: #ccc;">₹50 से ₹100 तक जोड़ें</p>
             <input type="number" id="deposit-amount" placeholder="राशि दर्ज करें (उदा. 50, 100)" min="50" max="100">
             
-            <!-- आपका असली QR Code इमेज -->
-            <img src="qrcode.jpg" alt="BharatPe QR" class="qr-img" id="secure-qr">[span_1](start_span)[span_1](end_span)
-            <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>[span_2](start_span)[span_2](end_span)
+            <img src="qrcode.jpg" alt="BharatPe QR" class="qr-img" id="secure-qr">[span_0](start_span)[span_0](end_span)
+            <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>[span_1](start_span)[span_1](end_span)
 
-            <!-- GPay / PhonePe डायरेक्ट UPI पेइंग लिंक -->
             <a id="upi-pay-btn" href="#" target="_blank">
                 <button class="btn" style="background: linear-gradient(to right, #2979ff, #00b0ff);">📱 सीधे GPay / PhonePe से भुगतान करें</button>
             </a>
@@ -188,9 +196,34 @@
     <script>
         let walletBalance = 10;
         let lockTimer = null;
-        let currentCorrectAnswer = 'B'; // सही उत्तर
+        let currentCorrectAnswer = 'B';
+        let currentPuzzleIndex = 0;
 
-        // Security: Trigger 15-second lock when user switches app or leaves screen
+        // पहेलियों की लिस्ट (जैसे ही खेलेंगे या स्क्रीनशॉट लेंगे, नई पहेली आ जाएगी)
+        let puzzles = [
+            {
+                q: "ऐसी कौन सी चीज है जो हमेशा ऊपर जाती है, कभी नीचे नहीं आती?",
+                options: { A: "हवा", B: "उम्र (Age)", C: "पक्षी", D: "सूरज" },
+                answer: "B"
+            },
+            {
+                q: "ऐसी कौन सी चीज है जिसे आगे से भगवान ने बनाया है और पीछे से इंसान ने?",
+                options: { A: "गाड़ी", B: "बैलगाड़ी", C: "ताला", D: "कंकाल" },
+                answer: "B"
+            },
+            {
+                q: "वह कौन सी चीज है जो पानी पीते ही मर जाती है?",
+                options: { A: "पेड़", B: "मछली", C: "प्यास", D: "आग" },
+                answer: "C"
+            },
+            {
+                q: "ऐसी कौन सी चीज है जो अंधेरे में तो आपके साथ रहती है, लेकिन उजाले में गायब हो जाती है?",
+                options: { A: "हवा", B: "परछाई (Shadow)", C: "अंधेरा", D: "डर" },
+                answer: "B"
+            }
+        ];
+
+        // Security: Trigger 15-second lock and auto-change puzzle when user takes screenshot or switches app
         document.addEventListener("visibilitychange", function() {
             if (document.hidden) {
                 triggerSecurityLock();
@@ -211,6 +244,9 @@
             alertBox.style.display = "flex";
             appBox.classList.add("blur-screen");
             
+            // सुरक्षा के कारण पहेली तुरंत बदल दें
+            loadNextPuzzle();
+
             let timeLeft = 15;
             countDisplay.innerText = timeLeft;
 
@@ -225,6 +261,29 @@
                     appBox.classList.remove("blur-screen");
                 }
             }, 1000);
+        }
+
+        function loadNextPuzzle() {
+            // अगली पहेली पर स्विच करें
+            currentPuzzleIndex = (currentPuzzleIndex + 1) % puzzles.length;
+            let p = puzzles[currentPuzzleIndex];
+
+            document.getElementById('puzzle-question').innerText = p.q;
+            document.getElementById('textA').innerText = p.options.A;
+            document.getElementById('textB').innerText = p.options.B;
+            document.getElementById('textC').innerText = p.options.C;
+            document.getElementById('textD').innerText = p.options.D;
+            currentCorrectAnswer = p.answer;
+            
+            // बटन और रिजल्ट रीसेट करें
+            document.getElementById('puzzle-result').innerText = "";
+            document.getElementById('back-dash-btn').style.display = "none";
+            
+            // ऑप्शंस चालू करें
+            document.getElementById('optA').disabled = false;
+            document.getElementById('optB').disabled = false;
+            document.getElementById('optC').disabled = false;
+            document.getElementById('optD').disabled = false;
         }
 
         function sendOtp() {
@@ -254,22 +313,12 @@
         function startPuzzle() {
             document.getElementById('dashboard').style.display = "none";
             document.getElementById('puzzle-section').style.display = "block";
-            document.getElementById('puzzle-result').innerText = "";
-            document.getElementById('back-dash-btn').style.display = "none";
-
-            // पहेली और विकल्प सेट करें (₹5 लगाने पर सही होने पर ₹10 मिलेंगे)
-            document.getElementById('puzzle-question').innerText = "ऐसी कौन सी चीज है जो हमेशा ऊपर जाती है, कभी नीचे नहीं आती?";
-            document.getElementById('textA').innerText = "हवा";
-            document.getElementById('textB').innerText = "उम्र (Age)";
-            document.getElementById('textC').innerText = "पक्षी";
-            document.getElementById('textD').innerText = "सूरज";
-            currentCorrectAnswer = 'B'; // सही उत्तर B है
+            loadNextPuzzle(); // नई पहेली लोड करें
         }
 
         function checkAnswer(selectedOption) {
             let resultDiv = document.getElementById('puzzle-result');
             
-            // चेक करते हैं कि वॉलेट में कम से कम ₹5 हैं या नहीं खेलने के लिए
             if (walletBalance < 5) {
                 resultDiv.className = "error";
                 resultDiv.innerText = "⚠️ पहेली खेलने के लिए वॉलेट में कम से कम ₹5 होने चाहिए!";
@@ -277,19 +326,23 @@
             }
 
             if (selectedOption === currentCorrectAnswer) {
-                walletBalance += 5; // ₹5 लगाकर सही होने पर ₹5 अतिरिक्त यानी कुल ₹10 का फायदा
+                walletBalance += 5; 
                 updateBalanceDisplay();
                 resultDiv.className = "msg";
-                resultDiv.innerHTML = "✅ सही जवाब! ✔️ आपके ₹5 के ₹10 हो गए हैं!";
+                resultDiv.innerHTML = "✅ सही जवाब! ✔️ आपके ₹5 के ₹10 हो गए हैं!<br><span style='color:#ffab00; font-size:13px;'>अगली पहेली लोड हो रही है...</span>";
+                
+                // सही जवाब देने पर 2.5 सेकंड बाद अपने आप अगली पहेली आ जाएगी
+                setTimeout(function() {
+                    loadNextPuzzle();
+                }, 2500);
+
             } else {
-                walletBalance -= 5; // गलत होने पर ₹5 कट जाएंगे
+                walletBalance -= 5; 
                 updateBalanceDisplay();
                 resultDiv.className = "error";
-                resultDiv.innerHTML = "❌ गलत जवाब! ❌ आपकी पहेली रिजेक्ट हो गई और ₹5 कट गए।";
+                resultDiv.innerHTML = "❌ गलत जवाब! ❌ आपके ₹5 कट गए।";
+                document.getElementById('back-dash-btn').style.display = "block";
             }
-
-            // ऑप्शन disable कर दें ताकि दोबारा न दबा सकें
-            document.getElementById('back-dash-btn').style.display = "block";
         }
 
         function showAddMoney() {
