@@ -125,6 +125,7 @@
 <body oncontextmenu="return false;">
 
     <div class="container" id="main-container">
+        <!-- Security & Screenshot Alert Lock -->
         <div id="security-alert">
             <h3>⚠️ Suraksha Chetavani!</h3>
             <p style="font-size: 14px; color: #fff;">Aap screenshot lene ya app badalne ki koshish kar rahe hain. Screen lock kar di gayi hai aur paheli badal di jayegi!</p>
@@ -152,10 +153,17 @@
             </div>
         </div>
 
-        <!-- Puzzle Section -->
+        <!-- Puzzle Section with 15s Timer & Voice Reader -->
         <div id="puzzle-section" style="display:none;">
             <h3>🤔 Mahakal Paheli</h3>
-            <p id="puzzle-question" style="font-size: 15px; color: #ffab00; margin: 15px 0;">Paheli load ho rahi hai...</p>
+            <div style="background: #2a2a2a; padding: 5px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px;">
+                ⏱️ Samay Bacha Hai: <span id="puzzle-timer" style="color: #ffab00; font-weight: bold;">15</span>s
+            </div>
+
+            <!-- Voice Reader Button -->
+            <button class="btn" style="background: linear-gradient(to right, #00897b, #26a69a); padding: 8px; font-size: 14px; margin-bottom: 10px;" onclick="speakPuzzle()">🔊 Paheli Bolkar Sunaye</button>
+
+            <p id="puzzle-question" style="font-size: 15px; color: #ffab00; margin: 10px 0;">Paheli load ho rahi hai...</p>
             
             <div id="options-container">
                 <button class="option-btn" id="optA" onclick="checkAnswer('A')">A. <span id="textA"></span></button>
@@ -174,8 +182,8 @@
             <p style="font-size: 13px; color: #ccc;">₹50 se ₹100 tak jode</p>
             <input type="number" id="deposit-amount" placeholder="Rashi darj kare (Uda. 50, 100)" min="50" max="100">
             
-            <img src="qrcode.jpg" alt="BharatPe QR" class="qr-img" id="secure-qr">[span_0](start_span)[span_0](end_span)
-            <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>[span_1](start_span)[span_1](end_span)
+            <img src="qrcode.jpg" alt="BharatPe QR" class="qr-img" id="secure-qr">
+            <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 
             <a id="upi-pay-btn" href="#" target="_blank">
                 <button class="btn" style="background: linear-gradient(to right, #2979ff, #00b0ff);">📱 Seedhe GPay / PhonePe se bhugtan kare</button>
@@ -211,10 +219,10 @@
         let walletBalance = 10;
         let totalDepositedByUser = 0;
         let lockTimer = null;
+        let puzzleTimerInterval = null;
         let currentCorrectAnswer = 'B';
         let currentPuzzleIndex = 0;
 
-        // Global stats (Local Storage se track hoga)
         let totalAppUsers = localStorage.getItem('totalUsers') ? parseInt(localStorage.getItem('totalUsers')) : 1;
         let platformTotalDeposit = localStorage.getItem('platformDeposit') ? parseInt(localStorage.getItem('platformDeposit')) : 0;
 
@@ -241,6 +249,7 @@
             }
         ];
 
+        // Security Blur Lock on Tab Switch / App Leave
         document.addEventListener("visibilitychange", function() {
             if (document.hidden) {
                 triggerSecurityLock();
@@ -277,7 +286,52 @@
             }, 1000);
         }
 
+        // Text-to-Speech: Paheli Bolkar Sunane ka function
+        function speakPuzzle() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Purani bolne ki awaaz rokein
+                let p = puzzles[currentPuzzleIndex];
+                let textToSpeak = "Paheli hai: " + p.q + ". Options hain: A, " + p.options.A + ". B, " + p.options.B + ". C, " + p.options.C + ". D, " + p.options.D;
+                let utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'hi-IN'; // Hindi voice
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Aapka browser voice feature support nahi karta.");
+            }
+        }
+
+        // Gameplay 15-second timer
+        function startPuzzleTimer() {
+            let timeLeft = 15;
+            document.getElementById('puzzle-timer').innerText = timeLeft;
+
+            if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+
+            puzzleTimerInterval = setInterval(function() {
+                timeLeft--;
+                document.getElementById('puzzle-timer').innerText = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(puzzleTimerInterval);
+                    walletBalance -= 5;
+                    updateBalanceDisplay();
+                    let resultDiv = document.getElementById('puzzle-result');
+                    resultDiv.className = "error";
+                    resultDiv.innerHTML = "⏳ Samay samapt! ❌ Aapka samay khatam ho gaya aur ₹5 kat gaye.";
+                    document.getElementById('back-dash-btn').style.display = "block";
+                    
+                    document.getElementById('optA').disabled = true;
+                    document.getElementById('optB').disabled = true;
+                    document.getElementById('optC').disabled = true;
+                    document.getElementById('optD').disabled = true;
+                }
+            }, 1000);
+        }
+
         function loadNextPuzzle() {
+            if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            
             currentPuzzleIndex = (currentPuzzleIndex + 1) % puzzles.length;
             let p = puzzles[currentPuzzleIndex];
 
@@ -295,6 +349,8 @@
             document.getElementById('optB').disabled = false;
             document.getElementById('optC').disabled = false;
             document.getElementById('optD').disabled = false;
+
+            startPuzzleTimer();
         }
 
         function sendOtp() {
@@ -310,7 +366,6 @@
         function verifyOtp() {
             let otp = document.getElementById('otp').value;
             if(otp === "1234") {
-                // Naya user jude to count badhayein
                 totalAppUsers++;
                 localStorage.setItem('totalUsers', totalAppUsers);
 
@@ -332,6 +387,8 @@
         }
 
         function checkAnswer(selectedOption) {
+            if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
             let resultDiv = document.getElementById('puzzle-result');
             
             if (walletBalance < 5) {
@@ -383,9 +440,7 @@
             if(amt >= 50 && amt <= 100) {
                 if(txnId.trim() !== "") {
                     walletBalance += amt;
-                    totalDepositedByUser += amt; // Customer ne apne dwara lagaye gaye paise track kiye
-
-                    // Platform total deposit update karein
+                    totalDepositedByUser += amt;
                     platformTotalDeposit += amt;
                     localStorage.setItem('platformDeposit', platformTotalDeposit);
 
@@ -407,32 +462,6 @@
         }
 
         function backToDashboard() {
-            document.getElementById('puzzle-section').style.display = "none";
-            document.getElementById('add-money-section').style.display = "none";
-            document.getElementById('withdraw-section').style.display = "none";
-            document.getElementById('dashboard').style.display = "block";
-            document.getElementById('message').innerText = "";
-        }
-
-        function processWithdraw() {
-            let wAmt = parseInt(document.getElementById('withdraw-amount').value);
-            if(walletBalance >= 120 && wAmt >= 100 && (walletBalance - wAmt) >= 20) {
-                walletBalance -= wAmt;
-                updateBalanceDisplay();
-                alert("Safalpurvak ₹" + wAmt + " ka withdrawal anurodh sweekar kar liya gaya hai!");
-                backToDashboard();
-            } else {
-                alert("Withdrawal safal nahi hua! Niyam ke anusar kam se kam ₹120 hone चाहिए aur transaction ke baad ₹20 safe bachna anivarya hai.");
-            }
-        }
-
-        function updateBalanceDisplay() {
-            document.getElementById('balance').innerText = walletBalance;
-            document.getElementById('total-deposited').innerText = totalDepositedByUser;
-            document.getElementById('admin-total-users').innerText = totalAppUsers;
-            document.getElementById('admin-total-platform-deposit').innerText = platformTotalDeposit;
-        }
-    </script>
-</body>
-    </html>
-    
+            if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('puzz
