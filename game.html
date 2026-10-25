@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>महाकाल गेमिंग ज़ोन - गेम</title>
+<title>महाकाल गेमिंग ज़ोन - सुरक्षित पहेली बैटल</title>
 <style>
 body {
 background-color: #121212;
@@ -24,6 +24,7 @@ border-radius: 12px;
 border: 2px solid #ff7b00;
 box-shadow: 0 4px 15px rgba(255, 123, 0, 0.3);
 position: relative;
+overflow: hidden;
 }
 h2 { color: #ffab00; margin-top: 10px; }
 
@@ -156,51 +157,79 @@ margin: 10px auto;
 }
 .msg { color: #00e676; font-size: 14px; margin-top: 10px; font-weight: bold; }
 .error { color: #ff5252; font-size: 14px; margin-top: 10px; font-weight: bold; }
+
+/* Anti-Screenshot Security Blur */
+.blur-screen {
+filter: blur(25px);
+pointer-events: none;
+user-select: none;
+}
+#security-alert {
+display: none;
+position: absolute;
+top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(0, 0, 0, 0.95);
+color: #ff5252;
+z-index: 999;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+border-radius: 12px;
+padding: 20px;
+box-sizing: border-box;
+}
 </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div class="container" id="main-container">
+<!-- Security Alert Layer -->
+<div id="security-alert">
+<h3>⚠️ सुरक्षा चेतावनी!</h3>
+<p style="font-size: 14px; color: #fff;">स्क्रीनशॉट लेना या ऐप बदलना प्रतिबंधित है। सुरक्षा कारणों से स्क्रीन लॉक कर दी गई है!</p>
+<h1 id="countdown" style="color: #ffab00; font-size: 40px;">15</h1>
+</div>
+
 <img src="1792858963757.png" alt="Mahakal Banner" class="banner-img">
 <h2>🔱 महाकाल गेमिंग ज़ोन 🔱</h2>
 
 <!-- Dashboard Section -->
 <div id="dashboard">
 <div class="unique-wallet-card">
-<h3>💰 Mera Wallet: ₹<span id="balance">10</span></h3>
-<p style="font-size: 11px; color: #ffd24d; margin: 5px 0 0 0;">Kul Lagaye Gaye Paise: ₹<span id="total-deposited">0</span></p>
+<h3>💰 मेरा वॉलेट: ₹<span id="balance">10</span></h3>
+<p style="font-size: 11px; color: #ffd24d; margin: 5px 0 0 0;">कुल लगाए गए पैसे: ₹<span id="total-deposited">0</span></p>
 </div>
 
-<p style="color: #ffab00; font-weight: bold; margin: 15px 0 5px 0;">Apna Manpasand Game Chune:</p>
+<p style="color: #ffab00; font-weight: bold; margin: 15px 0 5px 0;">अपना मनपसंद गेम चुनें:</p>
 
-<button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="startPuzzle()">🤔 1. Mahakal Paheli Battle</button>
-<button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="startAdvancedGame()">🧩 2. Mahakal Tiles Swapping Game</button>
+<button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="startPuzzle()">🔥 1. महाकाल कठिन पहेली बैटल</button>
+<button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="startAdvancedGame()">🧩 2. महाकाल टाइल्स गेम</button>
 
-<button class="btn" onclick="showAddMoney()">Paise Jode (Add Money)</button>
-<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="showWithdraw()">Paise Nikale (Withdraw)</button>
+<button class="btn" onclick="showAddMoney()">पैसे जोड़े (Add Money)</button>
+<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="showWithdraw()">पैसे निकाले (Withdraw)</button>
 
 <div class="chat-box">
-<b style="color: #ffab00; font-size: 14px;">💬 Khiladi Sahayata (Support Box):</b>
-<p style="font-size: 12px; color: #ccc; margin: 5px 0;">Koi samasya ya sawal hai? Yahan likhe aur turant jawab paye:</p>
-<textarea id="user-msg" rows="2" placeholder="Apni samasya yahan likhe..."></textarea>
-<button class="btn" style="padding: 8px; font-size: 14px; margin-top: 5px;" onclick="sendSupportMessage()">Message Bheje</button>
+<b style="color: #ffab00; font-size: 14px;">💬 खिलाड़ी सहायता (Support Box):</b>
+<p style="font-size: 12px; color: #ccc; margin: 5px 0;">कोई समस्या या सवाल है? यहाँ लिखें और तुरंत जवाब पाएं:</p>
+<textarea id="user-msg" rows="2" placeholder="अपनी समस्या यहाँ लिखें..."></textarea>
+<button class="btn" style="padding: 8px; font-size: 14px; margin-top: 5px;" onclick="sendSupportMessage()">संदेश भेजें</button>
 <div id="support-reply" class="chat-response"></div>
 </div>
 
 <div class="admin-box">
-<b>👑 System Status:</b><br>
-Kul Jude Users: <span id="admin-total-users">1</span> | Kul Jama: ₹<span id="admin-total-platform-deposit">0</span>
+<b>👑 सिस्टम स्टेटस:</b><br>
+कुल जुड़े यूजर्स: <span id="admin-total-users">1</span> | कुल जमा: ₹<span id="admin-total-platform-deposit">0</span>
 </div>
 </div>
 
 <!-- Puzzle Section -->
 <div id="puzzle-section" style="display:none;">
-<h3>🤔 Mahakal Paheli</h3>
+<h3>🔥 महाकाल कठिन पहेली</h3>
 <div style="background: #2a2a2a; padding: 5px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px;">
-⏱️ Samay Bacha Hai: <span id="puzzle-timer" style="color: #ffab00; font-weight: bold;">15</span>s
+⏱️ समय बचा है: <span id="puzzle-timer" style="color: #ffab00; font-weight: bold;">15</span>s
 </div>
-<button class="btn" style="background: linear-gradient(to right, #00897b, #26a69a); padding: 8px; font-size: 14px; margin-bottom: 10px;" onclick="speakPuzzle()">🔊 Paheli Bolkar Sunaye</button>
-<p id="puzzle-question" style="font-size: 15px; color: #ffab00; margin: 10px 0;">Paheli load ho rahi hai...</p>
+<button class="btn" style="background: linear-gradient(to right, #00897b, #26a69a); padding: 8px; font-size: 14px; margin-bottom: 10px;" onclick="speakPuzzle()">🔊 पहेली बोलकर सुनाएं</button>
+<p id="puzzle-question" style="font-size: 15px; color: #ffab00; margin: 10px 0;">पहेली लोड हो रही है...</p>
 <div id="options-container">
 <button class="option-btn" id="optA" onclick="checkAnswer('A')">A. <span id="textA"></span></button>
 <button class="option-btn" id="optB" onclick="checkAnswer('B')">B. <span id="textB"></span></button>
@@ -208,42 +237,42 @@ Kul Jude Users: <span id="admin-total-users">1</span> | Kul Jama: ₹<span id="a
 <button class="option-btn" id="optD" onclick="checkAnswer('D')">D. <span id="textD"></span></button>
 </div>
 <div id="puzzle-result" style="margin-top: 15px; font-size: 16px;"></div>
-<button class="btn" style="background:#555; margin-top:15px;" onclick="backToDashboard()">Dashboard par wapas jaye</button>
+<button class="btn" style="background:#555; margin-top:15px;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
 <!-- Tiles Section -->
 <div id="tiles-section" style="display:none;">
-<h3>🧩 Mahakal Tiles Game</h3>
+<h3>🧩 महाकाल टाइल्स गेम</h3>
 <div style="font-size: 14px; color: #ffab00; margin-bottom: 10px;">
-Score: <span id="adv-score">0</span> | High Score: <span id="adv-highscore">0</span>
+स्कोर: <span id="adv-score">0</span> | हाई स्कोर: <span id="adv-highscore">0</span>
 </div>
 <div id="advBoardContainer"></div>
-<button class="btn" style="background: #ff5722;" onclick="resetAdvancedGame()">Game Reset Kare</button>
-<button class="btn" style="background:#555; margin-top:10px;" onclick="backToDashboard()">Dashboard par wapas jaye</button>
+<button class="btn" style="background: #ff5722;" onclick="resetAdvancedGame()">गेम रीसेट करें</button>
+<button class="btn" style="background:#555; margin-top:10px;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
 <!-- Add Money Section -->
 <div id="add-money-section" style="display:none;">
-<h3>BharatPe QR se Paise Jode</h3>
-<p style="font-size: 13px; color: #ccc;">₹50 se ₹100 tak jode</p>
-<input type="number" id="deposit-amount" placeholder="Rashi darj kare (Uda. 50, 100)" min="50" max="100">
+<h3>BharatPe QR से पैसे जोड़ें</h3>
+<p style="font-size: 13px; color: #ccc;">₹50 से ₹100 तक जोड़ें</p>
+<input type="number" id="deposit-amount" placeholder="राशि दर्ज करें (उदा. 50, 100)" min="50" max="100">
 <img src="1792858963757.png" alt="BharatPe QR" class="qr-img">
 <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 <a id="upi-pay-btn" href="#" target="_blank">
-<button class="btn" style="background: linear-gradient(to right, #2979ff, #00b0ff);">📱 Seedhe GPay / PhonePe se bhugtan kare</button>
+<button class="btn" style="background: linear-gradient(to right, #2979ff, #00b0ff);">📱 सीधे GPay / PhonePe से भुगतान करें</button>
 </a>
-<input type="text" id="txn-id" placeholder="Bhugtan ke baad UPI Ref / Txn ID yahan dale">
-<button class="btn" onclick="verifyDeposit()">Paise Jode (Verify)</button>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">Wapas jaye</button>
+<input type="text" id="txn-id" placeholder="भुगतान के बाद UPI Ref / Txn ID यहाँ डालें">
+<button class="btn" onclick="verifyDeposit()">पैसे जोड़ें (Verify)</button>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">वापस जाएं</button>
 </div>
 
 <!-- Withdraw Section -->
 <div id="withdraw-section" style="display:none;">
-<h3>Paise Nikale (Withdrawal)</h3>
-<p style="font-size: 13px; color: #ccc;">Minimum nikasi: ₹120 (Shesh ₹20 wallet me safe rahenge)</p>
-<input type="number" id="withdraw-amount" placeholder="Nikasi rashi darj kare">
-<button class="btn" onclick="processWithdraw()">Withdrawal pura kare</button>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">Wapas jaye</button>
+<h3>पैसे निकालें (Withdrawal)</h3>
+<p style="font-size: 13px; color: #ccc;">न्यूनतम निकासी: ₹120 (शेष ₹20 वॉलेट में सेफ रहेंगे)</p>
+<input type="number" id="withdraw-amount" placeholder="निकासी राशि दर्ज करें">
+<button class="btn" onclick="processWithdraw()">निकासी पूरी करें</button>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">वापस जाएं</button>
 </div>
 
 </div>
@@ -253,7 +282,7 @@ let walletBalance = 10;
 let totalDepositedByUser = 0;
 let puzzleTimerInterval = null;
 let currentCorrectAnswer = 'B';
-let currentPuzzleIndex = 0;
+let currentPuzzle = null;
 
 let totalAppUsers = localStorage.getItem('totalUsers') ? parseInt(localStorage.getItem('totalUsers')) : 1;
 let platformTotalDeposit = localStorage.getItem('platformDeposit') ? parseInt(localStorage.getItem('platformDeposit')) : 0;
@@ -263,30 +292,65 @@ let selectedTile = null;
 let advScore = 0;
 let advHighScore = localStorage.getItem('mahakal_secure_highscore') ? parseInt(localStorage.getItem('mahakal_secure_highscore')) : 0;
 
+// Shuddh Hindi aur Kathin Paheliyan (Hard Puzzles)
 let puzzles = [
-{ q: "Aisi kaun si cheez hai jo hamesha upar jati hai, kabhi niche nahi aati?", options: { A: "Hawa", B: "Umr (Age)", C: "Pakshi", D: "Suraj" }, answer: "B" },
-{ q: "Aisi kaun si cheez hai jise aage se bhagwan ne banaya hai aur pichhe se insan ne?", options: { A: "Gadi", B: "Bullock Cart", C: "Tala", D: "Kankal" }, answer: "B" },
-{ q: "Wah kaun si cheez hai jo pani peete hi mar jati hai?", options: { A: "Ped", B: "Machhli", C: "Pyas", D: "Aag" }, answer: "C" },
-{ q: "Aisi kaun si cheez hai jo andhere me to aapke sath rahti hai, lekin ujale me gayab ho jati hai?", options: { A: "Hawa", B: "Parchhai (Shadow)", C: "Andhera", D: "Dar" }, answer: "B" }
+{ q: "ऐसी कौन सी चीज़ है, जिसके पास पंख नहीं हैं फिर भी वह उड़ती है, और हाथ नहीं हैं फिर भी लिखती है?", options: { A: "समय (Time)", B: "पेंसिल और कागज़", C: "हवा का झोंका", D: "पतंग" }, answer: "A" },
+{ q: "वह कौन सी चीज़ है जिसे जितना अधिक साफ़ किया जाता है, वह उतनी ही गंदी और काली हो जाती है?", options: { A: "कपड़ा", B: "कोयला", C: "ब्लैकबोर्ड (Blackboard)", D: "बर्तन" }, answer: "C" },
+{ q: "ऐसी कौन सी चीज़ है जो पानी के अंदर पैदा होती है और घर की छत पर जाकर सो जाती है?", options: { A: "नारियल", B: "ईंट (Brick)", C: "ओस", D: "बांस" }, answer: "B" },
+{ q: "ऐसी कौन सी चीज़ है जिसके सिर पर पैर और पैरों पर सिर होता है, फिर भी वह कभी नहीं थकता?", options: { A: "कीड़ा", B: "कील (Nail)", C: "घड़ी", D: "सांप" }, answer: "B" },
+{ q: "बिना पैरों के वह भागती है, कभी वापस लौटकर नहीं आती, बताओ वह क्या है?", options: { A: "हवा", B: "नदी का पानी", C: "आयु (उम्र / Time)", D: "बिजली" }, answer: "C" },
+{ q: "वह कौन सी चीज़ है जिसे तोड़ने पर आवाज़ नहीं आती, लेकिन जोड़ने पर आवाज़ सुनाई देती है?", options: { A: "विश्वास", B: "खामोश रिश्ता", C: "अंडा (Egg)", D: "सन्नाटा" }, answer: "C" },
+{ q: "ऐसी कौन सी चीज़ है जो जिंदा हो तो दफना दी जाती है और मर जाए तो निकाल ली जाती है?", options: { A: "बीज (Seed / पौधा)", B: "साँप की केंचुली", C: "मछली का कांटा", D: "मूर्तिकला का पत्थर" }, answer: "A" }
 ];
+
+// Anti-Screenshot & App Switch Detection
+document.addEventListener("visibilitychange", function() {
+if (document.hidden) {
+triggerSecurityLock();
+}
+});
+
+window.addEventListener("blur", function() {
+triggerSecurityLock();
+});
+
+function triggerSecurityLock() {
+let alertBox = document.getElementById('security-alert');
+let mainContainer = document.getElementById('main-container');
+alertBox.style.display = "flex";
+mainContainer.classList.add('blur-screen');
+
+let count = 15;
+let countdownEl = document.getElementById('countdown');
+countdownEl.innerText = count;
+
+let lockInterval = setInterval(function() {
+count--;
+countdownEl.innerText = count;
+if (count <= 0) {
+clearInterval(lockInterval);
+alertBox.style.display = "none";
+mainContainer.classList.remove('blur-screen');
+}
+}, 1000);
+}
 
 function sendSupportMessage() {
 let userText = document.getElementById('user-msg').value.trim();
 let replyBox = document.getElementById('support-reply');
-if(userText === "") { alert("Kripya pehle apna message likhe."); return; }
+if(userText === "") { alert("कृपया पहले अपना संदेश लिखें।"); return; }
 replyBox.style.display = "block";
-replyBox.innerHTML = "⏳ Message bhej diya gaya hai...";
+replyBox.innerHTML = "⏳ संदेश भेज दिया गया है...";
 setTimeout(function() {
-replyBox.innerHTML = "🤖 Auto-Reply: Aapka message mil gaya hai. Kripya niyam anusaar game khele.";
+replyBox.innerHTML = "🤖 ऑटो-रिप्लाई: आपका संदेश मिल गया है। कृपया नियम अनुसार गेम खेलें।";
 document.getElementById('user-msg').value = "";
 }, 1000);
 }
 
 function speakPuzzle() {
-if ('speechSynthesis' in window) {
+if ('speechSynthesis' in window && currentPuzzle) {
 window.speechSynthesis.cancel();
-let p = puzzles[currentPuzzleIndex];
-let textToSpeak = "Paheli hai: " + p.q;
+let textToSpeak = "कठिन पहेली है: " + currentPuzzle.q;
 let utterance = new SpeechSynthesisUtterance(textToSpeak);
 utterance.lang = 'hi-IN';
 window.speechSynthesis.speak(utterance);
@@ -305,21 +369,27 @@ clearInterval(puzzleTimerInterval);
 walletBalance -= 5;
 updateBalanceDisplay();
 document.getElementById('puzzle-result').className = "error";
-document.getElementById('puzzle-result').innerText = "⏳ Samay samapt! ₹5 kat gaye.";
+document.getElementById('puzzle-result').innerText = "⏳ समय समाप्त! ₹5 कट गए। अगली कठिन पहेली आ रही है...";
+setTimeout(loadRandomPuzzle, 2000);
 }
 }, 1000);
 }
 
-function loadNextPuzzle() {
+function loadRandomPuzzle() {
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
-currentPuzzleIndex = (currentPuzzleIndex + 1) % puzzles.length;
-let p = puzzles[currentPuzzleIndex];
-document.getElementById('puzzle-question').innerText = p.q;
-document.getElementById('textA').innerText = p.options.A;
-document.getElementById('textB').innerText = p.options.B;
-document.getElementById('textC').innerText = p.options.C;
-document.getElementById('textD').innerText = p.options.D;
-currentCorrectAnswer = p.answer;
+if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+// Har baar bilkul random (alag) kathin paheli chunne ke liye
+let randomIndex = Math.floor(Math.random() * puzzles.length);
+currentPuzzle = puzzles[randomIndex];
+
+document.getElementById('puzzle-question').innerText = currentPuzzle.q;
+document.getElementById('textA').innerText = currentPuzzle.options.A;
+document.getElementById('textB').innerText = currentPuzzle.options.B;
+document.getElementById('textC').innerText = currentPuzzle.options.C;
+document.getElementById('textD').innerText = currentPuzzle.options.D;
+currentCorrectAnswer = currentPuzzle.answer;
+
 document.getElementById('puzzle-result').innerText = "";
 startPuzzleTimer();
 }
@@ -367,7 +437,7 @@ renderAdvBoard();
 }
 
 function resetAdvancedGame() { initAdvancedGame(); }
-function startPuzzle() { document.getElementById('dashboard').style.display = "none"; document.getElementById('puzzle-section').style.display = "block"; loadNextPuzzle(); }
+function startPuzzle() { document.getElementById('dashboard').style.display = "none"; document.getElementById('puzzle-section').style.display = "block"; loadRandomPuzzle(); }
 function startAdvancedGame() { document.getElementById('dashboard').style.display = "none"; document.getElementById('tiles-section').style.display = "block"; initAdvancedGame(); }
 function backToDashboard() {
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
@@ -381,18 +451,19 @@ document.getElementById('dashboard').style.display = "block";
 function checkAnswer(selectedOption) {
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 let resultDiv = document.getElementById('puzzle-result');
-if (walletBalance < 5) { resultDiv.className = "error"; resultDiv.innerText = "⚠️ Wallet me ₹5 hone chahiye!"; return; }
+if (walletBalance < 5) { resultDiv.className = "error"; resultDiv.innerText = "⚠️ वॉलेट में ₹5 होने चाहिए!"; return; }
 if (selectedOption === currentCorrectAnswer) {
 walletBalance += 5;
 updateBalanceDisplay();
 resultDiv.className = "msg";
-resultDiv.innerText = "✅ Sahi jawab! ₹5 jeet gaye!";
-setTimeout(loadNextPuzzle, 2000);
+resultDiv.innerText = "✅ सही जवाब! ₹5 जीत गए! अगली कठिन पहेली आ रही है...";
+setTimeout(loadRandomPuzzle, 2000);
 } else {
 walletBalance -= 5;
 updateBalanceDisplay();
 resultDiv.className = "error";
-resultDiv.innerText = "❌ Galat jawab! ₹5 kat gaye.";
+resultDiv.innerText = "❌ गलत जवाब! ₹5 कट गए। अगली पहेली आ रही है...";
+setTimeout(loadRandomPuzzle, 2000);
 }
 }
 
@@ -415,10 +486,10 @@ if(amt >= 50 && amt <= 100 && txnId.trim() !== "") {
 walletBalance += amt;
 totalDepositedByUser += amt;
 updateBalanceDisplay();
-alert("Wallet me ₹" + amt + " jud gaye!");
+alert("वॉलेट में ₹" + amt + " जुड़ गए!");
 backToDashboard();
 } else {
-alert("Kripya sahi rashi aur UPI Txn ID dale.");
+alert("कृपया सही राशि और UPI Txn ID डालें।");
 }
 }
 
@@ -427,11 +498,11 @@ function processWithdraw() {
 let amt = parseInt(document.getElementById('withdraw-amount').value);
 if(amt >= 120 && walletBalance - amt >= 20) {
 walletBalance -= amt;
-updateBalanceDevice();
-alert("Withdrawal safal raha!");
+updateBalanceDisplay();
+alert("निकासी (Withdrawal) सफल रही!");
 backToDashboard();
 } else {
-alert("Minimum withdrawal ₹120 hai.");
+alert("न्यूनतम निकासी ₹120 है।");
 }
 }
 </script>
