@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>महाकाल गेमिंग ज़ोन - सुरक्षित पहेली बैटल</title>
 
+<!-- सोशल मीडिया शेयरिंग और बैनर के लिए मेटा टैग्स (Meta Open Graph & Twitter Cards) -->
+<meta property="og:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
+<meta property="og:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
+<meta property="og:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793028639916000&sa=E">
+<meta property="og:url" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/&source=gmail&ust=1793028639916000&sa=E">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
+<meta name="twitter:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
+<meta name="twitter:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793028639916000&sa=E">
+
 <style>
 body {
 background-color: #121212;
@@ -161,6 +173,7 @@ border: 2px solid #ffab00;
 .msg { color: #00e676; font-size: 14px; margin-top: 10px; font-weight: bold; }
 .error { color: #ff5252; font-size: 14px; margin-top: 10px; font-weight: bold; }
 
+/* Anti-Cheat Security Styles */
 .blur-screen {
 filter: blur(25px);
 pointer-events: none;
@@ -185,10 +198,11 @@ box-sizing: border-box;
 <body oncontextmenu="return false;">
 
 <div class="container" id="main-container">
+<!-- Anti-Cheat Security Alert Overlay -->
 <div id="security-alert">
-<h3>⚠️ सुरक्षा चेतावनी!</h3>
-<p style="font-size: 14px; color: #fff;">स्क्रीनशॉट लेना या ऐप बदलना प्रतिबंधित है। सुरक्षा कारणों से स्क्रीन लॉक कर दी गई है!</p>
-<h1 id="countdown" style="color: #ffab00; font-size: 40px;">15</h1>
+<h3>⚠️ सुरक्षा चेतावनी! (Anti-Cheat)</h3>
+<p style="font-size: 14px; color: #fff;">ऐप बदलना या चीटिंग करना प्रतिबंधित है। सुरक्षा कारणों से स्क्रीन लॉक कर दी गई है!</p>
+<h1 id="security-countdown" style="color: #ffab00; font-size: 40px;">10</h1>
 </div>
 
 <div style="text-align: right; margin-bottom: 5px;">
@@ -211,6 +225,7 @@ box-sizing: border-box;
 
 <button class="btn" onclick="showAddMoney()">पैसे जोड़े (Add Money)</button>
 <button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="showWithdraw()">पैसे निकाले (Withdraw)</button>
+<button class="btn" style="background: linear-gradient(to right, #ff9800, #ff5722);" onclick="showReferral()">🎁 दोस्तों को शेयर करें & बोनस पाएं</button>
 
 <div class="chat-box">
 <b style="color: #ffab00; font-size: 14px;">💬 खिलाड़ी सहायता (Support Box):</b>
@@ -229,7 +244,7 @@ box-sizing: border-box;
 <div id="puzzle-section" style="display:none;">
 <h3>🔥 महाकाल कठिन पहेली</h3>
 <div style="background: #2a2a2a; padding: 5px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px;">
-⏱️ समय बचा है: <span id="puzzle-timer" style="color: #ffab00; font-weight: bold;">15</span>s
+⏱️ समय बचा है: <span id="puzzle-timer" style="color: #ffab00; font-weight: bold;">10</span>s
 </div>
 <button class="btn" style="background: linear-gradient(to right, #00897b, #26a69a); padding: 10px; font-size: 15px; margin-bottom: 10px;" onclick="speakPuzzle()">🔊 पहेली बोलकर सुनें</button>
 <p id="puzzle-question" style="font-size: 15px; color: #ffab00; margin: 10px 0;">पहेली लोड हो रही है...</p>
@@ -257,7 +272,7 @@ box-sizing: border-box;
 <h3>BharatPe QR से पैसे जोड़ें</h3>
 <p style="font-size: 13px; color: #ccc;">₹50 से ₹100 तक जोड़ें</p>
 <input type="number" id="deposit-amount" placeholder="राशि दर्ज करें (उदा. 50, 100)" min="50" max="100">
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype" alt="BharatPe QR" class="qr-img">
+<img src="https://www.google.com/url?q=https://api.qrserver.com/v1/create-qr-code/?size%3D180x180%26data%3Dupi://pay?pa%3DBHARATPE2G0F0C1Y8Q38903@unitype&source=gmail&ust=1793028639916000&sa=E" alt="BharatPe QR" class="qr-img">
 <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 <a id="upi-pay-btn" href="#" target="_blank">
 <button class="btn" style="background: linear-gradient(to right, #2979ff, #00b0ff);">📱 सीधे GPay / PhonePe से भुगतान करें</button>
@@ -275,6 +290,14 @@ box-sizing: border-box;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">वापस जाएं</button>
 </div>
 
+<div id="referral-section" style="display:none;">
+<h3>🎁 रेफर & अर्न (Refer & Earn)</h3>
+<p style="font-size: 13px; color: #ccc;">अपना लिंक दोस्तों को भेजें। जब वे गेम में आएंगे और पैसे जोड़ेंगे, तो आपको भी बोनस मिलेगा!</p>
+<textarea id="my-ref-link" rows="2" readonly style="font-size: 12px; background: #111; color: #ffab00; text-align: center;"></textarea>
+<button class="btn" style="background: linear-gradient(to right, #25D366, #128C7E);" onclick="shareOnWhatsApp()">💬 WhatsApp पर शेयर करें</button>
+<button class="btn" style="background:#555; margin-top:10px;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+</div>
+
 </div>
 
 <script>
@@ -285,19 +308,48 @@ let currentCorrectAnswer = 'B';
 let currentPuzzle = null;
 let soundEnabled = true;
 
+// Referral System Initialization
+let myUserId = localStorage.getItem('mahakal_user_id');
+if (!myUserId) {
+myUserId = 'MK' + Math.floor(100000 + Math.random() * 900000);
+localStorage.setItem('mahakal_user_id', myUserId);
+walletBalance += 10; // Sign up bonus
+}
+
+// Check if opened via referral link
+window.onload = function() {
+const urlParams = new URLSearchParams(window.location.search);
+const refBy = urlParams.get('ref');
+if (refBy && !localStorage.getItem('mahakal_referred')) {
+localStorage.setItem('mahakal_referred', refBy);
+walletBalance += 5; // Signup bonus via referral
+alert("🎉 आपको रेफरल लिंक से जुड़ने पर ₹5 का स्वागत बोनस मिला है!");
+}
+updateBalanceDisplay();
+setupReferralLink();
+};
+
+function setupReferralLink() {
+let shareUrl = window.location.origin + window.location.pathname + "?ref=" + myUserId;
+document.getElementById('my-ref-link').value = shareUrl;
+}
+
+function shareOnWhatsApp() {
+let refLink = document.getElementById('my-ref-link').value;
+let whatsappMsg = encodeURIComponent("🔥 महाकाल गेमिंग ज़ोन खेलें, पहेलियां सुलझाएं और पैसे जीतें!\n\nमेरा रेफरल लिंक: " + refLink);
+window.open("https://www.google.com/url?q=https://api.whatsapp.com/send?text%3D&source=gmail&ust=1793028639917000&sa=E" + whatsappMsg, "_blank");
+}
+
 let advBoard = ['🔱', '🕉️', '🔔', '📿', '🔱', '🕉️', '🔔', '📿', '🕉️'];
 let selectedTile = null;
 let advScore = 0;
 let advHighScore = localStorage.getItem('mahakal_secure_highscore') ? parseInt(localStorage.getItem('mahakal_secure_highscore')) : 0;
 
 let puzzles = [
-{ q: "ऐसी कौन सी चीज़ है, जिसके पास पंख नहीं हैं फिर भी वह उड़ती है, और हाथ नहीं हैं फिर भी लिखती है?", options: { A: "समय (Time)", B: "पेंसिल और कागज़", C: "हवा का झोंका", D: "पतंग" }, answer: "A" },
-{ q: "वह कौन सी चीज़ है जिसे जितना अधिक साफ़ किया जाता है, वह उतनी ही गंदी और काली हो जाती है?", options: { A: "कपड़ा", B: "कोयला", C: "ब्लैकबोर्ड (Blackboard)", D: "बर्तन" }, answer: "C" },
-{ q: "ऐसी कौन सी चीज़ है जो पानी के अंदर पैदा होती है और घर की छत पर जाकर सो जाती है?", options: { A: "नारियल", B: "ईंट (Brick)", C: "ओस", D: "बांस" }, answer: "B" },
-{ q: "ऐसी कौन सी चीज़ है जिसके सिर पर पैर और पैरों पर सिर होता है, फिर भी वह कभी नहीं थकता?", options: { A: "कीड़ा", B: "कील (Nail)", C: "घड़ी", D: "सांप" }, answer: "B" },
-{ q: "बिना पैरों के वह भागती है, कभी वापस लौटकर नहीं आती, बताओ वह क्या है?", options: { A: "हवा", B: "नदी का पानी", C: "आयु (उम्र / Time)", D: "बिजली" }, answer: "C" },
-{ q: "वह कौन सी चीज़ है जिसे तोड़ने पर आवाज़ नहीं आती, लेकिन जोड़ने पर आवाज़ सुनाई देती है?", options: { A: "विश्वास", B: "खामोश रिश्ता", C: "अंडा (Egg)", D: "सन्नाटा" }, answer: "C" },
-{ q: "ऐसी कौन सी चीज़ है जो जिंदा हो तो दफना दी जाती है और मर जाए तो निकाल ली जाती है?", options: { A: "बीज (Seed / पौधा)", B: "साँप की केंचुली", C: "मछली का कांटा", D: "मूर्तिकला का पत्थर" }, answer: "A" }
+{ q: "ऐसी कौन सी चीज़ है जिसे आगे से देखो तो भगवान का आशीर्वाद लगती है, पीछे से देखो तो किस्मत का ताला लगती है, और अगर हाथ में आ जाए तो सिर्फ पसीना छोड़ती है?", options: { A: "मंदिर की घंटी", B: "मेहनत और हाथ की लकीरें", C: "बिजली का तार", D: "समय की रेत" }, answer: "B" },
+{ q: "डिजिटल दुनिया का ऐसा कौन सा चोर है, जो जेब से एक रुपया भी नहीं चुराता, लेकिन इंसान का पूरा का पूरा 'आज' और 'कल' दोनों गायब कर देता है?", options: { A: "चोर बाजार", B: "ऑनलाइन गेमिंग और सोशल मीडिया की लत", C: "बैंक का एटीएम", D: "कंप्यूटर का वायरस" }, answer: "B" },
+{ q: "ऐसा कौन सा राजा है जिसके पास कोई राज्य नहीं, कोई सिंहासन नहीं, कोई सिपाही नहीं, फिर भी पूरी दुनिया उसके इशारे पर सेकंडों में नाचती है?", options: { A: "मौत का राजा", B: "मोबाइल की बैटरी का '0%' नोटिफिकेशन", C: "कालसर्प योग", D: "समय का पहिया" }, answer: "B" },
+{ q: "इंसान जब पैदा होता है तो उसके पास शून्य होता है, जैसे-जैसे वह सफर तय करता है वह कमाता है। पर एक ऐसी चीज़ है जो इंसान मुफ्त में बांटता है, लेकिन जितनी ज्यादा बांटे उतनी ही उसकी इज्जत घट जाती है?", options: { A: "अपना ज्ञान", B: "अपनी कमजोरी और गोपनीय बातें", C: "पैसों की मदद", D: "मीठी बोलियां" }, answer: "B" }
 ];
 
 let audioCtx = null;
@@ -381,10 +433,10 @@ startBackgroundChants();
 function speakPuzzle() {
 if ('speechSynthesis' in window && currentPuzzle) {
 window.speechSynthesis.cancel();
-let textToSpeak = "कठिन पहेली है: " + currentPuzzle.q + 
-". विकल्प ए है: " + currentPuzzle.options.A + 
-", विकल्प बी है: " + currentPuzzle.options.B + 
-", विकल्प सी है: " + currentPuzzle.options.C + 
+let textToSpeak = "कठिन पहेली है: " + currentPuzzle.q +
+". विकल्प ए है: " + currentPuzzle.options.A +
+", विकल्प बी है: " + currentPuzzle.options.B +
+", विकल्प सी है: " + currentPuzzle.options.C +
 ", विकल्प डी है: " + currentPuzzle.options.D;
 let utterance = new SpeechSynthesisUtterance(textToSpeak);
 utterance.lang = 'hi-IN';
@@ -393,7 +445,7 @@ window.speechSynthesis.speak(utterance);
 }
 
 function startPuzzleTimer() {
-let timeLeft = 15;
+let timeLeft = 10;
 document.getElementById('puzzle-timer').innerText = timeLeft;
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 puzzleTimerInterval = setInterval(function() {
@@ -474,12 +526,15 @@ renderAdvBoard();
 function resetAdvancedGame() { initAdvancedGame(); }
 function startPuzzle() { document.getElementById('dashboard').style.display = "none"; document.getElementById('puzzle-section').style.display = "block"; loadRandomPuzzle(); }
 function startAdvancedGame() { document.getElementById('dashboard').style.display = "none"; document.getElementById('tiles-section').style.display = "block"; initAdvancedGame(); }
+function showReferral() { document.getElementById('dashboard').style.display = "none"; document.getElementById('referral-section').style.display = "block"; }
+
 function backToDashboard() {
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 document.getElementById('puzzle-section').style.display = "none";
 document.getElementById('tiles-section').style.display = "none";
 document.getElementById('add-money-section').style.display = "none";
 document.getElementById('withdraw-section').style.display = "none";
+document.getElementById('referral-section').style.display = "none";
 document.getElementById('dashboard').style.display = "block";
 }
 
@@ -521,6 +576,16 @@ let txnId = document.getElementById('txn-id').value;
 if(amt >= 50 && amt <= 100 && txnId.trim() !== "") {
 walletBalance += amt;
 totalDepositedByUser += amt;
+
+// Referral Deposit Bonus Rule: Giving bonus when user adds money
+let referredBy = localStorage.getItem('mahakal_referred');
+if (referredBy && !localStorage.getItem('deposit_bonus_credited')) {
+let bonusAmt = Math.floor(amt * 0.10); // 10% referral deposit bonus simulated
+walletBalance += bonusAmt;
+localStorage.setItem('deposit_bonus_credited', 'true');
+alert("🎉 आपके रेफरल कोड के माध्यम से पैसे जोड़ने पर आपको ₹" + bonusAmt + " का अतिरिक्त बोनस मिला है!");
+}
+
 updateBalanceDisplay();
 alert("वॉलेट में ₹" + amt + " जुड़ गए!");
 backToDashboard();
@@ -555,17 +620,38 @@ updateBalanceDisplay();
 alert("निकासी अनुरोध सफलतापूर्वक सबमिट हो गया है!");
 backToDashboard();
 }
+
+// Anti-Cheat: Detects tab switch / minimizing
+document.addEventListener("visibilitychange", function() {
+if (document.hidden) {
+triggerSecurityLock();
+}
+});
+
+function triggerSecurityLock() {
+if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+let alertBox = document.getElementById('security-alert');
+let mainContainer = document.getElementById('main-container');
+alertBox.style.display = "flex";
+mainContainer.classList.add('blur-screen');
+
+let secTime = 10;
+document.getElementById('security-countdown').innerText = secTime;
+let secInterval = setInterval(() => {
+secTime--;
+document.getElementById('security-countdown').innerText = secTime;
+if (secTime <= 0) {
+clearInterval(secInterval);
+alertBox.style.display = "none";
+mainContainer.classList.remove('blur-screen');
+if (document.getElementById('puzzle-section').style.display === "block") {
+walletBalance -= 5;
+updateBalanceDisplay();
+loadRandomPuzzle();
+}
+}
+}, 1000);
+}
 </script>
 </body>
-  </html>
-<meta property="og:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
-<meta property="og:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
-<meta property="og:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
-<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
-<meta property="og:type" content="website">
-
-<!-- Yeh naye tags bade banner aur button ke liye zaroori hain -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
-<meta name="twitter:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
-<meta name="twitter:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
+</html>
