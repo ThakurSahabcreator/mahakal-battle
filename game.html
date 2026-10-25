@@ -5,17 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>महाकाल गेमिंग ज़ोन - सुरक्षित पहेली बैटल</title>
 
-<!-- सोशल मीडिया शेयरिंग और बैनर के लिए मेटा टैग्स (Meta Open Graph & Twitter Cards) -->
 <meta property="og:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
 <meta property="og:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
-<meta property="og:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793028639916000&sa=E">
-<meta property="og:url" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/&source=gmail&ust=1793028639916000&sa=E">
+<meta property="og:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793033220710000&sa=E">
+<meta property="og:url" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/&source=gmail&ust=1793033220710000&sa=E">
 <meta property="og:type" content="website">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
 <meta name="twitter:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
-<meta name="twitter:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793028639916000&sa=E">
+<meta name="twitter:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793033220710000&sa=E">
 
 <style>
 body {
@@ -272,7 +271,7 @@ box-sizing: border-box;
 <h3>BharatPe QR से पैसे जोड़ें</h3>
 <p style="font-size: 13px; color: #ccc;">₹50 से ₹100 तक जोड़ें</p>
 <input type="number" id="deposit-amount" placeholder="राशि दर्ज करें (उदा. 50, 100)" min="50" max="100">
-<img src="https://www.google.com/url?q=https://api.qrserver.com/v1/create-qr-code/?size%3D180x180%26data%3Dupi://pay?pa%3DBHARATPE2G0F0C1Y8Q38903@unitype&source=gmail&ust=1793028639916000&sa=E" alt="BharatPe QR" class="qr-img">
+<img src="qrcode.jpg" alt="BharatPe QR" class="qr-img">
 <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 <a id="upi-pay-btn" href="#" target="_blank">
 <button class="btn" style="background: linear-gradient(to right, #2979ff, #00b0ff);">📱 सीधे GPay / PhonePe से भुगतान करें</button>
@@ -308,21 +307,19 @@ let currentCorrectAnswer = 'B';
 let currentPuzzle = null;
 let soundEnabled = true;
 
-// Referral System Initialization
 let myUserId = localStorage.getItem('mahakal_user_id');
 if (!myUserId) {
 myUserId = 'MK' + Math.floor(100000 + Math.random() * 900000);
 localStorage.setItem('mahakal_user_id', myUserId);
-walletBalance += 10; // Sign up bonus
+walletBalance += 10;
 }
 
-// Check if opened via referral link
 window.onload = function() {
 const urlParams = new URLSearchParams(window.location.search);
 const refBy = urlParams.get('ref');
 if (refBy && !localStorage.getItem('mahakal_referred')) {
 localStorage.setItem('mahakal_referred', refBy);
-walletBalance += 5; // Signup bonus via referral
+walletBalance += 5;
 alert("🎉 आपको रेफरल लिंक से जुड़ने पर ₹5 का स्वागत बोनस मिला है!");
 }
 updateBalanceDisplay();
@@ -337,7 +334,7 @@ document.getElementById('my-ref-link').value = shareUrl;
 function shareOnWhatsApp() {
 let refLink = document.getElementById('my-ref-link').value;
 let whatsappMsg = encodeURIComponent("🔥 महाकाल गेमिंग ज़ोन खेलें, पहेलियां सुलझाएं और पैसे जीतें!\n\nमेरा रेफरल लिंक: " + refLink);
-window.open("https://www.google.com/url?q=https://api.whatsapp.com/send?text%3D&source=gmail&ust=1793028639917000&sa=E" + whatsappMsg, "_blank");
+window.open("https://www.google.com/url?q=https://api.whatsapp.com/send?text%3D&source=gmail&ust=1793033220711000&sa=E" + whatsappMsg, "_blank");
 }
 
 let advBoard = ['🔱', '🕉️', '🔔', '📿', '🔱', '🕉️', '🔔', '📿', '🕉️'];
@@ -558,100 +555,4 @@ setTimeout(loadRandomPuzzle, 2000);
 }
 }
 
-function updateBalanceDisplay() {
-document.getElementById('balance').innerText = walletBalance;
-document.getElementById('total-deposited').innerText = totalDepositedByUser;
-}
-
-function showAddMoney() { document.getElementById('dashboard').style.display = "none"; document.getElementById('add-money-section').style.display = "block"; updateUpiLink(); }
-function updateUpiLink() {
-let amt = document.getElementById('deposit-amount').value || "50";
-document.getElementById('upi-pay-btn').href = `upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=Sandeep_Kumar&am=${amt}&cu=INR`;
-}
-document.getElementById('deposit-amount').addEventListener('input', updateUpiLink);
-
-function verifyDeposit() {
-let amt = parseInt(document.getElementById('deposit-amount').value);
-let txnId = document.getElementById('txn-id').value;
-if(amt >= 50 && amt <= 100 && txnId.trim() !== "") {
-walletBalance += amt;
-totalDepositedByUser += amt;
-
-// Referral Deposit Bonus Rule: Giving bonus when user adds money
-let referredBy = localStorage.getItem('mahakal_referred');
-if (referredBy && !localStorage.getItem('deposit_bonus_credited')) {
-let bonusAmt = Math.floor(amt * 0.10); // 10% referral deposit bonus simulated
-walletBalance += bonusAmt;
-localStorage.setItem('deposit_bonus_credited', 'true');
-alert("🎉 आपके रेफरल कोड के माध्यम से पैसे जोड़ने पर आपको ₹" + bonusAmt + " का अतिरिक्त बोनस मिला है!");
-}
-
-updateBalanceDisplay();
-alert("वॉलेट में ₹" + amt + " जुड़ गए!");
-backToDashboard();
-} else {
-alert("कृपया सही राशि और UPI Txn ID डालें।");
-}
-}
-
-function showWithdraw() { document.getElementById('dashboard').style.display = "none"; document.getElementById('withdraw-section').style.display = "block"; }
-function processWithdraw() {
-let amt = parseInt(document.getElementById('withdraw-amount').value);
-let minWithdrawal = 120;
-let minWalletBalance = 20;
-
-if (isNaN(amt)) {
-alert("कृपया निकासी की वैध राशि दर्ज करें।");
-return;
-}
-
-if (amt < minWithdrawal) {
-alert("न्यूनतम निकासी ₹120 है।");
-return;
-}
-
-if (walletBalance - amt < minWalletBalance) {
-alert("निकासी के बाद वॉलेट में कम से कम ₹20 शेष होना आवश्यक है।");
-return;
-}
-
-walletBalance -= amt;
-updateBalanceDisplay();
-alert("निकासी अनुरोध सफलतापूर्वक सबमिट हो गया है!");
-backToDashboard();
-}
-
-// Anti-Cheat: Detects tab switch / minimizing
-document.addEventListener("visibilitychange", function() {
-if (document.hidden) {
-triggerSecurityLock();
-}
-});
-
-function triggerSecurityLock() {
-if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
-let alertBox = document.getElementById('security-alert');
-let mainContainer = document.getElementById('main-container');
-alertBox.style.display = "flex";
-mainContainer.classList.add('blur-screen');
-
-let secTime = 10;
-document.getElementById('security-countdown').innerText = secTime;
-let secInterval = setInterval(() => {
-secTime--;
-document.getElementById('security-countdown').innerText = secTime;
-if (secTime <= 0) {
-clearInterval(secInterval);
-alertBox.style.display = "none";
-mainContainer.classList.remove('blur-screen');
-if (document.getElementById('puzzle-section').style.display === "block") {
-walletBalance -= 5;
-updateBalanceDisplay();
-loadRandomPuzzle();
-}
-}
-}, 1000);
-}
-</script>
-</body>
-</html>
+functi
