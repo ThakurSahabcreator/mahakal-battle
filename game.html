@@ -1,3 +1,5 @@
+Neeche updated HTML code diya gaya hai jismein unique paheliyan, options ka shuffle logic, aur WhatsApp share mein poster aur referral link ka feature shamil hai:
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -7,14 +9,9 @@
 
 <meta property="og:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
 <meta property="og:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
-<meta property="og:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
-<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
+<meta property="og:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793043751267000&sa=E">
+<meta property="og:url" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/&source=gmail&ust=1793043751267000&sa=E">
 <meta property="og:type" content="website">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
-<meta name="twitter:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
-<meta name="twitter:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
 
 <style>
 body {
@@ -264,7 +261,7 @@ border: 2px solid #ffab00;
 
 <div id="referral-section" style="display:none;">
 <h3>🎁 रेफर & अर्न (Refer & Earn)</h3>
-<p style="font-size: 13px; color: #ccc;">अपना लिंक दोस्तों को भेजें। जब वे गेम में आएंगे और पैसे जोड़ेंगे, तो आपको भी बोनस मिलेगा!</p>
+<p style="font-size: 13px; color: #ccc;">अपना लिंक दोस्तों को भेजें। जब वे इस लिंक से जुड़ेंगे, तो आपको तुरंत रेफरल बोनस मिलेगा!</p>
 <textarea id="my-ref-link" rows="2" readonly style="font-size: 12px; background: #111; color: #ffab00; text-align: center;"></textarea>
 <button class="btn" style="background: linear-gradient(to right, #25D366, #128C7E);" onclick="shareOnWhatsApp()">💬 WhatsApp पर शेयर करें</button>
 <button class="btn" style="background:#555; margin-top:10px;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
@@ -292,8 +289,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const refBy = urlParams.get('ref');
 if (refBy && !localStorage.getItem('mahakal_referred')) {
 localStorage.setItem('mahakal_referred', refBy);
-walletBalance += 5;
-alert("🎉 आपको रेफरल लिंक से जुड़ने पर ₹5 का स्वागत बोनस मिला है!");
+walletBalance += 15;
+alert("🎉 आपको महाकाल रेफरल लिंक से जुड़ने पर ₹15 का स्पेशल बोनस मिला है!");
 }
 updateBalanceDisplay();
 setupReferralLink();
@@ -306,8 +303,9 @@ document.getElementById('my-ref-link').value = shareUrl;
 
 function shareOnWhatsApp() {
 let refLink = document.getElementById('my-ref-link').value;
-let whatsappMsg = encodeURIComponent("🔥 महाकाल गेमिंग ज़ोन खेलें, पहेलियां सुलझाएं और पैसे जीतें!\n\nमेरा रेफरल लिंक: " + refLink);
-window.open("https://api.whatsapp.com/send?text=" + whatsappMsg, "_blank");
+let posterImgUrl = "https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793043751267000&sa=E";
+let whatsappMsg = encodeURIComponent("🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और पैसे जीतें!\n\n🖼️ पोस्टर देखें: " + posterImgUrl + "\n\n🎁 अपना रेफरल लिंक से जुड़ें और बोनस पाएं:\n" + refLink);
+window.open("https://www.google.com/url?q=https://api.whatsapp.com/send?text%3D&source=gmail&ust=1793043751267000&sa=E" + whatsappMsg, "_blank");
 }
 
 let advBoard = ['🔱', '🕉️', '🔔', '📿', '🔱', '🕉️', '🔔', '📿', '🕉️'];
@@ -316,10 +314,11 @@ let advScore = 0;
 let advHighScore = localStorage.getItem('mahakal_secure_highscore') ? parseInt(localStorage.getItem('mahakal_secure_highscore')) : 0;
 
 let puzzles = [
-{ q: "ऐसी कौन सी चीज़ है जिसे आगे से देखो तो भगवान का आशीर्वाद लगती है, पीछे से देखो तो किस्मत का ताला लगती है, और अगर हाथ में आ जाए तो सिर्फ पसीना छोड़ती है?", options: { A: "मंदिर की घंटी", B: "मेहनत और हाथ की लकीरें", C: "बिजली का तार", D: "समय की रेत" }, answer: "B" },
-{ q: "डिजिटल दुनिया का ऐसा कौन सा चोर है, जो जेब से एक रुपया भी नहीं चुराता, लेकिन इंसान का पूरा का पूरा 'आज' और 'कल' दोनों गायब कर देता है?", options: { A: "चोर बाजार", B: "ऑनलाइन गेमिंग और सोशल मीडिया की लत", C: "बैंक का एटीएम", D: "कंप्यूटर का वायरस" }, answer: "B" },
-{ q: "ऐसा कौन सा राजा है जिसके पास कोई राज्य नहीं, कोई सिंहासन नहीं, कोई सिपाही नहीं, फिर भी पूरी दुनिया उसके इशारे पर सेकंडों में नाचती है?", options: { A: "मौत का राजा", B: "मोबाइल की बैटरी का '0%' नोटिफिकेशन", C: "कालसर्प योग", D: "समय का पहिया" }, answer: "B" },
-{ q: "इंसान जब पैदा होता है तो उसके पास शून्य होता है, जैसे-जैसे वह सफर तय करता है वह कमाता है। पर एक ऐसी चीज़ है जो इंसान मुफ्त में बांटता है, लेकिन जितनी ज्यादा बांटे उतनी ही उसकी इज्जत घट जाती है?", options: { A: "अपना ज्ञान", B: "अपनी कमजोरी और गोपनीय बातें", C: "पैसों की मदद", D: "मीठी बोलियां" }, answer: "B" }
+{ q: "Aisa kaun sa darwaza hai jise kholne par koi aawaz nahi hoti, lekin jab woh band hota hai toh insaan ki saansein thamne lagti hain?", options: { A: "Maut ka darwaza", B: "Aankh ki palkein", C: "Samay ka chakra", D: "Dil ka darwaza" }, answer: "B" },
+{ q: "Voh kaun si aag hai jo bina lakdi aur tel ke jalti hai, aur agar ek baar dil mein lag jaye toh poori duniya ka paani bhi use bujha nahi sakta?", options: { A: "Krodh ki aag", B: "Virah aur yaadon ki aag", C: "Bhookh ki aag", D: "Suraj ki aag" }, answer: "B" },
+{ q: "Aisi kaun si cheez hai jo zameen par pade toh mitti ban jaye, paani mein gire toh gayab ho jaye, aur agar insaan ke paas aa jaye toh use raaja se rank bana de?", options: { A: "Guroor (Ahankaar)", B: "Ret ka kkan", C: "Namak", D: "Kismat ka khel" }, answer: "A" },
+{ q: "Waqt ek aisa shikaari hai jo sabko shikaar banata hai, par iska woh kaun sa roop hai jo sabse zyada khatarnak hota hai jab insaan akela hota hai?", options: { A: "Beete hue kal ka pachtawa", B: "Bhavishya ka dar", C: "Aandhi aur toofan", D: "Raat ka andhera" }, answer: "A" },
+{ q: "Aisi kaun si cheez hai jo bina pairon ke bhaagti hai, kabhi wapas nahi aati, aur har ameer-gareeb ko barabar jhukne par majboor kar deti hai?", options: { A: "Hawa ka jhonka", B: "Beeta hua samay (Umar)", C: "Zindagi ka safar", D: "Nadi ka paani" }, answer: "B" }
 ];
 
 let audioCtx = null;
@@ -403,10 +402,10 @@ startBackgroundChants();
 function speakPuzzle() {
 if ('speechSynthesis' in window && currentPuzzle) {
 window.speechSynthesis.cancel();
-let textToSpeak = "कठिन पहेली है: " + currentPuzzle.q + 
-". विकल्प ए है: " + currentPuzzle.options.A + 
-", विकल्प बी है: " + currentPuzzle.options.B + 
-", विकल्प सी है: " + currentPuzzle.options.C + 
+let textToSpeak = "कठिन पहेली है: " + currentPuzzle.q +
+". विकल्प ए है: " + currentPuzzle.options.A +
+", विकल्प बी है: " + currentPuzzle.options.B +
+", विकल्प सी है: " + currentPuzzle.options.C +
 ", विकल्प डी है: " + currentPuzzle.options.D;
 let utterance = new SpeechSynthesisUtterance(textToSpeak);
 utterance.lang = 'hi-IN';
@@ -438,14 +437,29 @@ if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 
 let randomIndex = Math.floor(Math.random() * puzzles.length);
-currentPuzzle = puzzles[randomIndex];
+let p = puzzles[randomIndex];
 
-document.getElementById('puzzle-question').innerText = currentPuzzle.q;
-document.getElementById('textA').innerText = currentPuzzle.options.A;
-document.getElementById('textB').innerText = currentPuzzle.options.B;
-document.getElementById('textC').innerText = currentPuzzle.options.C;
-document.getElementById('textD').innerText = currentPuzzle.options.D;
-currentCorrectAnswer = currentPuzzle.answer;
+let allOpts = [
+{ text: p.options.A, isCorrect: (p.answer === 'A') },
+{ text: p.options.B, isCorrect: (p.answer === 'B') },
+{ text: p.options.C, isCorrect: (p.answer === 'C') },
+{ text: p.options.D, isCorrect: (p.answer === 'D') }
+];
+
+allOpts.sort(() => Math.random() - 0.5);
+
+currentPuzzle = p;
+
+document.getElementById('puzzle-question').innerText = p.q;
+document.getElementById('textA').innerText = allOpts[0].text;
+document.getElementById('textB').innerText = allOpts[1].text;
+document.getElementById('textC').innerText = allOpts[2].text;
+document.getElementById('textD').innerText = allOpts[3].text;
+
+if (allOpts[0].isCorrect) currentCorrectAnswer = 'A';
+else if (allOpts[1].isCorrect) currentCorrectAnswer = 'B';
+else if (allOpts[2].isCorrect) currentCorrectAnswer = 'C';
+else if (allOpts[3].isCorrect) currentCorrectAnswer = 'D';
 
 document.getElementById('puzzle-result').innerText = "";
 startPuzzleTimer();
@@ -552,60 +566,41 @@ let txnId = document.getElementById('txn-id').value;
 if(amt >= 50 && amt <= 100 && txnId.trim() !== "") {
 walletBalance += amt;
 totalDepositedByUser += amt;
-
-let referredBy = localStorage.getItem('mahakal_referred');
-if (referredBy && !localStorage.getItem('deposit_bonus_credited')) {
-let bonusAmt = Math.floor(amt * 0.10);
-walletBalance += bonusAmt;
-localStorage.setItem('deposit_bonus_credited', 'true');
-alert("🎉 आपके रेफरल कोड के माध्यम से पैसे जोड़ने पर आपको ₹" + bonusAmt + " का अतिरिक्त बोनस मिला है!");
-}
-
 updateBalanceDisplay();
-alert("वॉलेट में ₹" + amt + " जुड़ गए!");
+alert("✅ आपके पैसे सफलतापूक वॉलेट में जोड़ दिए गए हैं!");
 backToDashboard();
 } else {
-alert("कृपया सही राशि और UPI Txn ID डालें।");
+alert("❌ कृपया सही राशि (50 से 100 के बीच) और सही Txn ID दर्ज करें!");
 }
 }
 
-function showWithdraw() { document.getElementById('dashboard').style.display = "none"; document.getElementById('withdraw-section').style.display = "block"; }
+function showWithdraw() {
+document.getElementById('dashboard').style.display = "none";
+document.getElementById('withdraw-section').style.display = "block";
+}
+
 function processWithdraw() {
-let amt = parseInt(document.getElementById('withdraw-amount').value);
-let minWithdrawal = 120;
-let minWalletBalance = 20;
-
-if (isNaN(amt)) {
-alert("कृपया निकासी की वैध राशि दर्ज करें।");
-return;
-}
-
-if (amt < minWithdrawal) {
-alert("न्यूनतम निकासी ₹120 है।");
-return;
-}
-
-if (walletBalance - amt < minWalletBalance) {
-alert("निकासी के बाद वॉलेट में कम से कम ₹20 शेष होना आवश्यक है।");
-return;
-}
-
-walletBalance -= amt;
+let wAmt = parseInt(document.getElementById('withdraw-amount').value);
+if (wAmt >= 120 && (walletBalance - wAmt) >= 20) {
+walletBalance -= wAmt;
 updateBalanceDisplay();
-alert("निकासी अनुरोध सफलतापूर्वक सबमिट हो गया है!");
+alert("✅ आपकी निकासी (Withdrawal) अनुरोध सफलतापूक दर्ज कर ली गई है!");
 backToDashboard();
+} else {
+alert("❌ न्यूनतम निकासी ₹120 है और ₹20 वॉलेट में सुरक्षित रहना अनिवार्य है!");
+}
 }
 
 function sendSupportMessage() {
 let msg = document.getElementById('user-msg').value;
 let replyDiv = document.getElementById('support-reply');
-if(msg.trim() === "") {
-alert("कृपया पहले अपनी समस्या यहाँ लिखें।");
-return;
-}
+if(msg.trim() !== "") {
 replyDiv.style.display = "block";
-replyDiv.innerText = "🙏 महाकाल टीम को आपका संदेश मिल गया है। आपको जल्द ही सहायता मिलेगी!";
+replyDiv.innerText = "🙏 महाकाल सहायता टीम: आपका संदेश मिल गया है। 24 घंटे में आपकी समस्या हल कर दी जाएगी।";
 document.getElementById('user-msg').value = "";
+} else {
+alert("कृपया पहले अपनी समस्या लिखें!");
+}
 }
 </script>
 </body>
