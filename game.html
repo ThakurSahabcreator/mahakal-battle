@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -193,10 +192,9 @@ box-sizing: border-box;
 </div>
 
 <div style="text-align: right; margin-bottom: 5px;">
-<button id="sound-toggle-btn" onclick="toggleSound()" style="background: #333; color: #ffab00; border: 1px solid #ffab00; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer;">🔊 Sound: ON</button>
+<button id="sound-toggle-btn" onclick="toggleSound()" style="background: #333; color: #ffab00; border: 1px solid #ffab00; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer;">🔊 ॐ नमः शिवाय: ON</button>
 </div>
 
-<!-- Upar Mahakal Banner Image -->
 <img src="1792858963757.png" alt="Mahakal Banner" class="banner-img">
 <h2>🔱 महाकाल गेमिंग ज़ोन 🔱</h2>
 
@@ -233,7 +231,7 @@ box-sizing: border-box;
 <div style="background: #2a2a2a; padding: 5px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px;">
 ⏱️ समय बचा है: <span id="puzzle-timer" style="color: #ffab00; font-weight: bold;">15</span>s
 </div>
-<button class="btn" style="background: linear-gradient(to right, #00897b, #26a69a); padding: 8px; font-size: 14px; margin-bottom: 10px;" onclick="speakPuzzle()">🔊 पहेली बोलकर सुनाएं</button>
+<button class="btn" style="background: linear-gradient(to right, #00897b, #26a69a); padding: 10px; font-size: 15px; margin-bottom: 10px;" onclick="speakPuzzle()">🔊 पहेली बोलकर सुनें</button>
 <p id="puzzle-question" style="font-size: 15px; color: #ffab00; margin: 10px 0;">पहेली लोड हो रही है...</p>
 <div id="options-container">
 <button class="option-btn" id="optA" onclick="checkAnswer('A')">A. <span id="textA"></span></button>
@@ -255,12 +253,11 @@ box-sizing: border-box;
 <button class="btn" style="background:#555; margin-top:10px;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Add Money Section (QR Code Scanner) -->
 <div id="add-money-section" style="display:none;">
 <h3>BharatPe QR से पैसे जोड़ें</h3>
 <p style="font-size: 13px; color: #ccc;">₹50 से ₹100 तक जोड़ें</p>
 <input type="number" id="deposit-amount" placeholder="राशि दर्ज करें (उदा. 50, 100)" min="50" max="100">
-<img src="qr_placeholder.png" alt="BharatPe QR" class="qr-img">
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype" alt="BharatPe QR" class="qr-img">
 <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 <a id="upi-pay-btn" href="#" target="_blank">
 <button class="btn" style="background: linear-gradient(to right, #2979ff, #00b0ff);">📱 सीधे GPay / PhonePe से भुगतान करें</button>
@@ -367,10 +364,10 @@ function toggleSound() {
 soundEnabled = !soundEnabled;
 let btn = document.getElementById('sound-toggle-btn');
 if (soundEnabled) {
-btn.innerText = "🔊 Sound: ON";
+btn.innerText = "🔊 ॐ नमः शिवाय: ON";
 startBackgroundChants();
 } else {
-btn.innerText = "🔇 Sound: OFF";
+btn.innerText = "🔇 ॐ नमः शिवाय: OFF";
 if (chantInterval) clearInterval(chantInterval);
 }
 }
@@ -381,10 +378,182 @@ startBackgroundChants();
 }
 }, { once: true });
 
-document.getElementById('deposit-amount').addEventListener('input', updateUpiLink);
+function speakPuzzle() {
+if ('speechSynthesis' in window && currentPuzzle) {
+window.speechSynthesis.cancel();
+let textToSpeak = "कठिन पहेली है: " + currentPuzzle.q + 
+". विकल्प ए है: " + currentPuzzle.options.A + 
+", विकल्प बी है: " + currentPuzzle.options.B + 
+", विकल्प सी है: " + currentPuzzle.options.C + 
+", विकल्प डी है: " + currentPuzzle.options.D;
+let utterance = new SpeechSynthesisUtterance(textToSpeak);
+utterance.lang = 'hi-IN';
+window.speechSynthesis.speak(utterance);
+}
+}
+
+function startPuzzleTimer() {
+let timeLeft = 15;
+document.getElementById('puzzle-timer').innerText = timeLeft;
+if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+puzzleTimerInterval = setInterval(function() {
+timeLeft--;
+document.getElementById('puzzle-timer').innerText = timeLeft;
+if (timeLeft <= 0) {
+clearInterval(puzzleTimerInterval);
+walletBalance -= 5;
+updateBalanceDisplay();
+document.getElementById('puzzle-result').className = "error";
+document.getElementById('puzzle-result').innerText = "⏳ समय समाप्त! ₹5 कट गए। अगली कठिन पहेली आ रही है...";
+setTimeout(loadRandomPuzzle, 2000);
+}
+}, 1000);
+}
+
+function loadRandomPuzzle() {
+if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+let randomIndex = Math.floor(Math.random() * puzzles.length);
+currentPuzzle = puzzles[randomIndex];
+
+document.getElementById('puzzle-question').innerText = currentPuzzle.q;
+document.getElementById('textA').innerText = currentPuzzle.options.A;
+document.getElementById('textB').innerText = currentPuzzle.options.B;
+document.getElementById('textC').innerText = currentPuzzle.options.C;
+document.getElementById('textD').innerText = currentPuzzle.options.D;
+currentCorrectAnswer = currentPuzzle.answer;
+
+document.getElementById('puzzle-result').innerText = "";
+startPuzzleTimer();
+}
+
+function initAdvancedGame() {
+advScore = 0;
+document.getElementById('adv-score').innerText = advScore;
+document.getElementById('adv-highscore').innerText = advHighScore;
+advBoard.sort(() => Math.random() - 0.5);
+renderAdvBoard();
+}
+
+function renderAdvBoard() {
+const container = document.getElementById('advBoardContainer');
+container.innerHTML = '';
+advBoard.forEach((icon, index) => {
+const tile = document.createElement('div');
+tile.className = 'adv-tile';
+tile.innerText = icon;
+tile.onclick = () => handleAdvTileClick(index, tile);
+container.appendChild(tile);
+});
+}
+
+function handleAdvTileClick(index, element) {
+if (selectedTile === null) {
+selectedTile = index;
+element.classList.add('selected');
+} else {
+let prevElement = document.querySelectorAll('.adv-tile')[selectedTile];
+if(prevElement) prevElement.classList.remove('selected');
+let temp = advBoard[selectedTile];
+advBoard[selectedTile] = advBoard[index];
+advBoard[index] = temp;
+advScore += 15;
+playCoinSound();
+document.getElementById('adv-score').innerText = advScore;
+if(advScore > advHighScore) {
+advHighScore = advScore;
+localStorage.setItem('mahakal_secure_highscore', advHighScore);
+document.getElementById('adv-highscore').innerText = advHighScore;
+}
+selectedTile = null;
+renderAdvBoard();
+}
+}
+
+function resetAdvancedGame() { initAdvancedGame(); }
+function startPuzzle() { document.getElementById('dashboard').style.display = "none"; document.getElementById('puzzle-section').style.display = "block"; loadRandomPuzzle(); }
+function startAdvancedGame() { document.getElementById('dashboard').style.display = "none"; document.getElementById('tiles-section').style.display = "block"; initAdvancedGame(); }
+function backToDashboard() {
+if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+document.getElementById('puzzle-section').style.display = "none";
+document.getElementById('tiles-section').style.display = "none";
+document.getElementById('add-money-section').style.display = "none";
+document.getElementById('withdraw-section').style.display = "none";
+document.getElementById('dashboard').style.display = "block";
+}
+
+function checkAnswer(selectedOption) {
+if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+let resultDiv = document.getElementById('puzzle-result');
+if (walletBalance < 5) { resultDiv.className = "error"; resultDiv.innerText = "⚠️ वॉलेट में ₹5 होने चाहिए!"; return; }
+if (selectedOption === currentCorrectAnswer) {
+walletBalance += 5;
+playCoinSound();
+updateBalanceDisplay();
+resultDiv.className = "msg";
+resultDiv.innerText = "✅ सही जवाब! ₹5 जीत गए! अगली कठिन पहेली आ रही है...";
+setTimeout(loadRandomPuzzle, 2000);
+} else {
+walletBalance -= 5;
+updateBalanceDisplay();
+resultDiv.className = "error";
+resultDiv.innerText = "❌ गलत जवाब! ₹5 कट गए। अगली पहेली आ रही है...";
+setTimeout(loadRandomPuzzle, 2000);
+}
+}
+
+function updateBalanceDisplay() {
+document.getElementById('balance').innerText = walletBalance;
+document.getElementById('total-deposited').innerText = totalDepositedByUser;
+}
+
+function showAddMoney() { document.getElementById('dashboard').style.display = "none"; document.getElementById('add-money-section').style.display = "block"; updateUpiLink(); }
 function updateUpiLink() {
 let amt = document.getElementById('deposit-amount').value || "50";
 document.getElementById('upi-pay-btn').href = `upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=Sandeep_Kumar&am=${amt}&cu=INR`;
+}
+document.getElementById('deposit-amount').addEventListener('input', updateUpiLink);
+
+function verifyDeposit() {
+let amt = parseInt(document.getElementById('deposit-amount').value);
+let txnId = document.getElementById('txn-id').value;
+if(amt >= 50 && amt <= 100 && txnId.trim() !== "") {
+walletBalance += amt;
+totalDepositedByUser += amt;
+updateBalanceDisplay();
+alert("वॉलेट में ₹" + amt + " जुड़ गए!");
+backToDashboard();
+} else {
+alert("कृपया सही राशि और UPI Txn ID डालें।");
+}
+}
+
+function showWithdraw() { document.getElementById('dashboard').style.display = "none"; document.getElementById('withdraw-section').style.display = "block"; }
+function processWithdraw() {
+let amt = parseInt(document.getElementById('withdraw-amount').value);
+let minWithdrawal = 120;
+let minWalletBalance = 20;
+
+if (isNaN(amt)) {
+alert("कृपया निकासी की वैध राशि दर्ज करें।");
+return;
+}
+
+if (amt < minWithdrawal) {
+alert("न्यूनतम निकासी ₹120 है।");
+return;
+}
+
+if (walletBalance - amt < minWalletBalance) {
+alert("निकासी के बाद वॉलेट में कम से कम ₹20 शेष होना आवश्यक है।");
+return;
+}
+
+walletBalance -= amt;
+updateBalanceDisplay();
+alert("निकासी अनुरोध सफलतापूर्वक सबमिट हो गया है!");
+backToDashboard();
 }
 </script>
 </body>
