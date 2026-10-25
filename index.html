@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mahakal Login</title>
+<!-- WhatsApp OG Meta Tags -->
+<meta property="og:title" content="महाकाल गेमिंग ज़ोन - Mahakal Puzzle Battle">
+<meta property="og:description" content="पहेलियां सुलझाएं, असली नकद जीतें और सुरक्षित गेमिंग का आनंद लें!">
+<meta property="og:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
+<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
+<meta property="og:type" content="website">
+
 <style>
 body {
 background-color: #121212;
@@ -65,11 +72,11 @@ font-size: 15px;
 <h2>🔱 महाकाल गेमिंग ज़ोन 🔱</h2>
 
 <div id="login-section">
-<p>Naya khata banaye & ₹10 bonus paye!</p>
-<input type="tel" id="phone" placeholder="Apna mobile number darj kare">
-<button class="btn" onclick="sendOtp()">OTP bheje</button>
-<input type="text" id="otp" placeholder="OTP darj kare (Demo: 1234)">
-<button class="btn" onclick="verifyOtp()">Registration pura kare</button>
+<p>नया खाता बनाएं & ₹10 बोनस पाएं!</p>
+<input type="tel" id="phone" placeholder="अपना मोबाइल नंबर दर्ज करें">
+<button class="btn" onclick="sendOtp()">OTP भेजें</button>
+<input type="text" id="otp" placeholder="OTP दर्ज करें (Demo: 1234)">
+<button class="btn" onclick="verifyOtp()">रजिस्ट्रेशन पूरा करें</button>
 </div>
 
 <div id="message" class="msg"></div>
@@ -79,25 +86,25 @@ font-size: 15px;
 function sendOtp() {
 let phone = document.getElementById('phone').value;
 if(phone.length === 10) {
-document.getElementById('message').innerText = "OTP bhej diya gaya hai! (Demo: 1234)";
+document.getElementById('message').innerText = "OTP भेज दिया गया है! (Demo: 1234)";
 document.getElementById('message').className = "msg";
 } else {
 document.getElementById('message').className = "error";
-document.getElementById('message').innerText = "Kripya sahi 10 anko ka mobile number dale.";
+document.getElementById('message').innerText = "कृपया सही 10 अंकों का मोबाइल नंबर डालें।";
 }
 }
 
 function verifyOtp() {
 let otp = document.getElementById('otp').value;
 if(otp === "1234") {
-document.getElementById('message').innerText = "Safalpurvak login ho gaya! Game par ja rahe hain...";
+document.getElementById('message').innerText = "सफलतापूर्वक लॉगिन हो गया! गेम पर जा रहे हैं...";
 document.getElementById('message').className = "msg";
 setTimeout(function() {
 window.location.href = 'game.html';
 }, 1000);
 } else {
 document.getElementById('message').className = "error";
-document.getElementById('message').innerText = "Galat OTP! Kripya '1234' darj kare.";
+document.getElementById('message').innerText = "गलत OTP! कृपया '1234' दर्ज करें।";
 }
 }
 </script>
