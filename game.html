@@ -1,9 +1,10 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>महाकाल गेमिंग ज़ोन - सुरक्षित पहेली बैटल</title>
+
 <style>
 body {
 background-color: #121212;
@@ -190,6 +191,11 @@ box-sizing: border-box;
 <h1 id="countdown" style="color: #ffab00; font-size: 40px;">15</h1>
 </div>
 
+<!-- Audio Control Button & Hidden Audio for Om Namah Shivay / Chants -->
+<div style="text-align: right; margin-bottom: 5px;">
+<button id="sound-toggle-btn" onclick="toggleSound()" style="background: #333; color: #ffab00; border: 1px solid #ffab00; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer;">🔊 Sound: ON</button>
+</div>
+
 <img src="1792858963757.png" alt="Mahakal Banner" class="banner-img">
 <h2>🔱 महाकाल गेमिंग ज़ोन 🔱</h2>
 
@@ -283,6 +289,7 @@ let totalDepositedByUser = 0;
 let puzzleTimerInterval = null;
 let currentCorrectAnswer = 'B';
 let currentPuzzle = null;
+let soundEnabled = true;
 
 let totalAppUsers = localStorage.getItem('totalUsers') ? parseInt(localStorage.getItem('totalUsers')) : 1;
 let platformTotalDeposit = localStorage.getItem('platformDeposit') ? parseInt(localStorage.getItem('platformDeposit')) : 0;
@@ -292,7 +299,6 @@ let selectedTile = null;
 let advScore = 0;
 let advHighScore = localStorage.getItem('mahakal_secure_highscore') ? parseInt(localStorage.getItem('mahakal_secure_highscore')) : 0;
 
-// Shuddh Hindi aur Kathin Paheliyan (Hard Puzzles)
 let puzzles = [
 { q: "ऐसी कौन सी चीज़ है, जिसके पास पंख नहीं हैं फिर भी वह उड़ती है, और हाथ नहीं हैं फिर भी लिखती है?", options: { A: "समय (Time)", B: "पेंसिल और कागज़", C: "हवा का झोंका", D: "पतंग" }, answer: "A" },
 { q: "वह कौन सी चीज़ है जिसे जितना अधिक साफ़ किया जाता है, वह उतनी ही गंदी और काली हो जाती है?", options: { A: "कपड़ा", B: "कोयला", C: "ब्लैकबोर्ड (Blackboard)", D: "बर्तन" }, answer: "C" },
@@ -303,7 +309,84 @@ let puzzles = [
 { q: "ऐसी कौन सी चीज़ है जो जिंदा हो तो दफना दी जाती है और मर जाए तो निकाल ली जाती है?", options: { A: "बीज (Seed / पौधा)", B: "साँप की केंचुली", C: "मछली का कांटा", D: "मूर्तिकला का पत्थर" }, answer: "A" }
 ];
 
-// Anti-Screenshot & App Switch Detection
+let audioCtx = null;
+let chantInterval = null;
+
+function initAudio() {
+if (!audioCtx) {
+audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+}
+
+function playOmChantTone() {
+if (!soundEnabled || !audioCtx) return;
+try {
+let osc = audioCtx.createOscillator();
+let gain = audioCtx.createGain();
+osc.type = 'sine';
+osc.frequency.setValueAtTime(130.81, audioCtx.currentTime);
+
+gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.5);
+
+osc.connect(gain);
+gain.connect(audioCtx.destination);
+osc.start();
+osc.stop(audioCtx.currentTime + 3.5);
+} catch(e) {}
+}
+
+function startBackgroundChants() {
+initAudio();
+if (audioCtx && audioCtx.state === 'suspended') {
+audioCtx.resume();
+}
+if (chantInterval) clearInterval(chantInterval);
+chantInterval = setInterval(() => {
+if (soundEnabled) {
+playOmChantTone();
+}
+}, 5000);
+}
+
+function playCoinSound() {
+if (!soundEnabled) return;
+initAudio();
+try {
+let osc = audioCtx.createOscillator();
+let gain = audioCtx.createGain();
+osc.type = 'triangle';
+osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+osc.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.15);
+
+gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+
+osc.connect(gain);
+gain.connect(audioCtx.destination);
+osc.start();
+osc.stop(audioCtx.currentTime + 0.15);
+} catch(e) {}
+}
+
+function toggleSound() {
+soundEnabled = !soundEnabled;
+let btn = document.getElementById('sound-toggle-btn');
+if (soundEnabled) {
+btn.innerText = "🔊 Sound: ON";
+startBackgroundChants();
+} else {
+btn.innerText = "🔇 Sound: OFF";
+if (chantInterval) clearInterval(chantInterval);
+}
+}
+
+window.addEventListener('click', () => {
+if (!audioCtx) {
+startBackgroundChants();
+}
+}, { once: true });
+
 document.addEventListener("visibilitychange", function() {
 if (document.hidden) {
 triggerSecurityLock();
@@ -379,7 +462,6 @@ function loadRandomPuzzle() {
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 
-// Har baar bilkul random (alag) kathin paheli chunne ke liye
 let randomIndex = Math.floor(Math.random() * puzzles.length);
 currentPuzzle = puzzles[randomIndex];
 
@@ -425,6 +507,7 @@ let temp = advBoard[selectedTile];
 advBoard[selectedTile] = advBoard[index];
 advBoard[index] = temp;
 advScore += 15;
+playCoinSound();
 document.getElementById('adv-score').innerText = advScore;
 if(advScore > advHighScore) {
 advHighScore = advScore;
@@ -454,6 +537,7 @@ let resultDiv = document.getElementById('puzzle-result');
 if (walletBalance < 5) { resultDiv.className = "error"; resultDiv.innerText = "⚠️ वॉलेट में ₹5 होने चाहिए!"; return; }
 if (selectedOption === currentCorrectAnswer) {
 walletBalance += 5;
+playCoinSound();
 updateBalanceDisplay();
 resultDiv.className = "msg";
 resultDiv.innerText = "✅ सही जवाब! ₹5 जीत गए! अगली कठिन पहेली आ रही है...";
@@ -492,18 +576,28 @@ backToDashboard();
 alert("कृपया सही राशि और UPI Txn ID डालें।");
 }
 }
-
 function showWithdraw() { document.getElementById('dashboard').style.display = "none"; document.getElementById('withdraw-section').style.display = "block"; }
 function processWithdraw() {
 let amt = parseInt(document.getElementById('withdraw-amount').value);
-if(amt >= 120 && walletBalance - amt >= 20) {
+let minWithdrawal = 120;
+let minWalletBalance = 20;
+
+if (isNaN(amt)) {
+alert("कृपया निकासी की वैध राशि दर्ज करें।");
+return;
+}
+if (amt < minWithdrawal) {
+alert("न्यूनतम निकासी ₹120 है।");
+return;
+}
+if (walletBalance - amt < minWalletBalance) {
+alert("निकासी के बाद वॉलेट में कम से कम ₹20 शेष होना अनिवार्य है।");
+return;
+}
 walletBalance -= amt;
 updateBalanceDisplay();
 alert("निकासी (Withdrawal) सफल रही!");
 backToDashboard();
-} else {
-alert("न्यूनतम निकासी ₹120 है।");
-}
 }
 </script>
 </body>
