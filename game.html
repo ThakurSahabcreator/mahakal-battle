@@ -7,14 +7,14 @@
 
 <meta property="og:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
 <meta property="og:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
-<meta property="og:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793033220710000&sa=E">
-<meta property="og:url" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/&source=gmail&ust=1793033220710000&sa=E">
+<meta property="og:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
+<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
 <meta property="og:type" content="website">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
 <meta name="twitter:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
-<meta name="twitter:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793033220710000&sa=E">
+<meta name="twitter:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
 
 <style>
 body {
@@ -172,7 +172,6 @@ border: 2px solid #ffab00;
 .msg { color: #00e676; font-size: 14px; margin-top: 10px; font-weight: bold; }
 .error { color: #ff5252; font-size: 14px; margin-top: 10px; font-weight: bold; }
 
-/* Anti-Cheat Security Styles */
 .blur-screen {
 filter: blur(25px);
 pointer-events: none;
@@ -197,7 +196,6 @@ box-sizing: border-box;
 <body oncontextmenu="return false;">
 
 <div class="container" id="main-container">
-<!-- Anti-Cheat Security Alert Overlay -->
 <div id="security-alert">
 <h3>⚠️ सुरक्षा चेतावनी! (Anti-Cheat)</h3>
 <p style="font-size: 14px; color: #fff;">ऐप बदलना या चीटिंग करना प्रतिबंधित है। सुरक्षा कारणों से स्क्रीन लॉक कर दी गई है!</p>
@@ -334,7 +332,7 @@ document.getElementById('my-ref-link').value = shareUrl;
 function shareOnWhatsApp() {
 let refLink = document.getElementById('my-ref-link').value;
 let whatsappMsg = encodeURIComponent("🔥 महाकाल गेमिंग ज़ोन खेलें, पहेलियां सुलझाएं और पैसे जीतें!\n\nमेरा रेफरल लिंक: " + refLink);
-window.open("https://www.google.com/url?q=https://api.whatsapp.com/send?text%3D&source=gmail&ust=1793033220711000&sa=E" + whatsappMsg, "_blank");
+window.open("https://api.whatsapp.com/send?text=" + whatsappMsg, "_blank");
 }
 
 let advBoard = ['🔱', '🕉️', '🔔', '📿', '🔱', '🕉️', '🔔', '📿', '🕉️'];
@@ -430,10 +428,10 @@ startBackgroundChants();
 function speakPuzzle() {
 if ('speechSynthesis' in window && currentPuzzle) {
 window.speechSynthesis.cancel();
-let textToSpeak = "कठिन पहेली है: " + currentPuzzle.q +
-". विकल्प ए है: " + currentPuzzle.options.A +
-", विकल्प बी है: " + currentPuzzle.options.B +
-", विकल्प सी है: " + currentPuzzle.options.C +
+let textToSpeak = "कठिन पहेली है: " + currentPuzzle.q + 
+". विकल्प ए है: " + currentPuzzle.options.A + 
+", विकल्प बी है: " + currentPuzzle.options.B + 
+", विकल्प सी है: " + currentPuzzle.options.C + 
 ", विकल्प डी है: " + currentPuzzle.options.D;
 let utterance = new SpeechSynthesisUtterance(textToSpeak);
 utterance.lang = 'hi-IN';
@@ -555,4 +553,10 @@ setTimeout(loadRandomPuzzle, 2000);
 }
 }
 
-functi
+function updateBalanceDisplay() {
+document.getElementById('balance').innerText = walletBalance;
+document.getElementById('total-deposited').innerText = totalDepositedByUser;
+}
+
+function showAddMoney() { document.getElementById('dashboard').style.display = "none"; document.getElementById('add-money-section').style.display = "block"; updateUpiLink(); }
+  
