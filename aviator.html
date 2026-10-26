@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>महाकाल Dual Aviator - Secret Admin View</title>
+<title>महाकाल Dual Aviator - Full Admin Control</title>
 <style>
 body {
 background-color: #0b0f19;
@@ -59,6 +59,13 @@ font-weight: bold;
 color: #00e676;
 text-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
 z-index: 2;
+}
+
+.timer-display {
+font-size: 22px;
+color: #ffab00;
+font-weight: bold;
+margin-top: 5px;
 }
 
 .plane-icon {
@@ -139,15 +146,15 @@ padding: 10px;
 font-size: 14px;
 }
 
-/* Secret Admin Preview Box (Sirf Admin ko dikhega) */
+/* Secret Admin Box */
 .secret-admin-box {
 background: #2a1010;
 border: 1px solid #ff5252;
 padding: 8px;
 border-radius: 8px;
 margin-top: 10px;
-text-align: center;
-font-size: 13px;
+text-align: left;
+font-size: 12px;
 color: #ff8a80;
 font-weight: bold;
 }
@@ -159,18 +166,18 @@ padding: 8px;
 border-radius: 8px;
 margin-top: 8px;
 text-align: left;
-font-size: 12px;
+font-size: 11px;
 color: #e1bee7;
 }
 .admin-setting-box input {
-width: 55px;
-padding: 3px;
+width: 50px;
+padding: 4px;
 background: #0b0f19;
 color: #00e676;
 border: 1px solid #ab47bc;
 font-weight: bold;
 display: inline-block;
-margin: 0 3px;
+margin: 2px;
 }
 
 .msg { color: #00e676; font-size: 13px; margin-top: 5px; font-weight: bold; }
@@ -183,11 +190,12 @@ margin: 0 3px;
 <h2>✈️ महाकाल Dual Aviator बैटल</h2>
 
 <div class="wallet-box">
-💰 वॉलेट बैलेंस: ₹<span id="aviator-balance">100</span>
+💰 वॉलेट बैलेंस: ₹<span id="aviator-balance">5000</span>
 </div>
 
 <div class="game-screen" id="game-screen">
-<div class="multiplier-display" id="multiplier-text">1.00x</div>
+<div class="multiplier-display" id="multiplier-text" style="display:none;">1.00x</div>
+<div class="timer-display" id="timer-box">बेटिंग टाइम: <span id="countdown">10</span>s</div>
 <div class="plane-icon" id="plane">🚀</div>
 </div>
 
@@ -195,90 +203,114 @@ margin: 0 3px;
 <div class="dual-controls">
     <div class="bet-panel">
         <h4>बेट 1</h4>
-        <input type="number" id="bet1-amount" value="10" min="5">
-        <button class="btn" id="action-btn-1" onclick="handleBet(1)">प्लेन उड़ाएं</button>
+        <input type="number" id="bet1-amount" value="50" min="5" max="50000">
+        <button class="btn" id="action-btn-1" onclick="handleBet(1)">बेट लगाएं</button>
         <div class="live-win-text" id="live-win-1"></div>
     </div>
     <div class="bet-panel">
         <h4>बेट 2</h4>
-        <input type="number" id="bet2-amount" value="20" min="5">
-        <button class="btn" id="action-btn-2" onclick="handleBet(2)">प्लेन उड़ाएं</button>
+        <input type="number" id="bet2-amount" value="100" min="5" max="50000">
+        <button class="btn" id="action-btn-2" onclick="handleBet(2)">बेट लगाएं</button>
         <div class="live-win-text" id="live-win-2"></div>
     </div>
 </div>
 
 <div id="result-msg" style="min-height: 20px;"></div>
 
-<!-- 🔒 गुप्त एडमिन पैनल (यहाँ आपको दिखेगा कि प्लेन कहां क्रैश होगा) -->
-<div class="secret-admin-box" id="secret-preview">
-    🔐 [Admin Secret View]: प्लेन क्रैश पॉइंट: <span>--</span>
+<!-- 👑 एडमिन मास्टर कंट्रोल पैनल -->
+<div class="admin-setting-box">
+<b>👑 एडमिन मास्टर कंट्रोल:</b><br>
+1. बेट टाइम (सेकंड): <input type="number" id="admin-bet-time" value="10"> <br>
+2. क्रैश पॉइंट (x): <input type="number" id="admin-crash-point" value="2.50" step="0.1"> <br>
+3. स्पीड (मिलीसेकंड): <input type="number" id="admin-speed" value="70" title="कम करने पर प्लेन तेज़ भागेगा">
 </div>
 
-<div class="admin-setting-box">
-<b>👑 एडमिन लिमिट:</b> Min: <input type="number" id="min-limit" value="1.2">x | Max: <input type="number" id="max-limit" value="50">x
+<!-- 🔒 एडमिन लाइव स्टेटस -->
+<div class="secret-admin-box" id="secret-preview">
+    🔐 [Live Status]: कुल बेट राशि: ₹<span id="admin-total-bet">0</span> | स्थिति: <span id="admin-game-status">बेटिंग चल रही है...</span>
 </div>
 
 <button class="btn btn-back" onclick="window.location.href='index.html'">🏠 मुख्य डैशबोर्ड पर वापस जाएं</button>
 </div>
 
 <script>
-let balance = 100;
+let balance = 5000;
 let multiplier = 1.00;
 let gameInterval = null;
-let isGameRunning = false;
-let crashPoint = 1.00;
+let timerInterval = null;
+let gameState = "WAITING"; // WAITING, RUNNING, CRASHED
+let crashPoint = 2.50;
+let timeLeft = 10;
 
 let bets = {
-    1: { active: false, amount: 0 },
-    2: { active: false, amount: 0 }
+    1: { placed: false, amount: 0, cashedOut: false },
+    2: { placed: false, amount: 0, cashedOut: false }
 };
 
 function updateWalletDisplay() {
     document.getElementById('aviator-balance').innerText = balance;
 }
 
+function updateAdminStats() {
+    let total = (bets[1].placed ? bets[1].amount : 0) + (bets[2].placed ? bets[2].amount : 0);
+    document.getElementById('admin-total-bet').innerText = total;
+}
+
+// बेट लगाने या कैश आउट करने का मुख्य फंक्शन
 function handleBet(panelId) {
     let betInputId = panelId === 1 ? 'bet1-amount' : 'bet2-amount';
     let btnId = panelId === 1 ? 'action-btn-1' : 'action-btn-2';
     let winTextId = panelId === 1 ? 'live-win-1' : 'live-win-2';
-
     let betInput = parseInt(document.getElementById(betInputId).value);
 
-    if (!isGameRunning) {
-        if (isNaN(betInput) || betInput < 5) {
-            alert("❌ न्यूनतम ₹5 या अधिक की बाजी दर्ज करें!");
-            return;
-        }
-        if (balance < betInput) {
-            alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है!");
-            return;
+    if (gameState === "WAITING") {
+        // जब तक टाइमर चल रहा है, यूज़र पैसे लगा या हटा सकता है
+        if (!bets[panelId].placed) {
+            if (isNaN(betInput) || betInput < 5) {
+                alert("❌ न्यूनतम ₹5 या अधिक की बाजी दर्ज करें!");
+                return;
+            }
+            if (balance < betInput) {
+                alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है!");
+                return;
+            }
+
+            bets[panelId].amount = betInput;
+            bets[panelId].placed = true;
+            balance -= betInput;
+            updateWalletDisplay();
+            updateAdminStats();
+
+            document.getElementById(betInputId).disabled = true;
+            let btn = document.getElementById(btnId);
+            btn.innerText = "रद्द करें (Cancel)";
+            btn.className = "btn btn-cashout";
+            document.getElementById(winTextId).innerText = `लगाए: ₹${betInput}`;
+        } else {
+            // बेट वापस लेना
+            balance += bets[panelId].amount;
+            bets[panelId].placed = false;
+            updateWalletDisplay();
+            updateAdminStats();
+
+            document.getElementById(betInputId).disabled = false;
+            let btn = document.getElementById(btnId);
+            btn.innerText = "बेट लगाएं";
+            btn.className = "btn";
+            document.getElementById(winTextId).innerText = "रद्द कर दिया";
         }
 
-        bets[panelId].amount = betInput;
-        bets[panelId].active = true;
-        balance -= betInput;
-        updateWalletDisplay();
-
-        document.getElementById(betInputId).disabled = true;
-        let btn = document.getElementById(btnId);
-        btn.innerText = "Cash Out";
-        btn.className = "btn btn-cashout";
-
-        if (!isGameRunning && (bets[1].active || bets[2].active)) {
-            startGlobalGame();
-        }
-    } 
-    else {
-        if (bets[panelId].active) {
+    } else if (gameState === "RUNNING") {
+        // जब प्लेन उड़ रहा हो, तब 'Cash Out' करें
+        if (bets[panelId].placed && !bets[panelId].cashedOut) {
             let winAmt = Math.floor(bets[panelId].amount * multiplier);
             balance += winAmt;
             updateWalletDisplay();
 
-            bets[panelId].active = false;
+            bets[panelId].cashedOut = true;
             let btn = document.getElementById(btnId);
-            btn.innerText = "प्लेन उड़ाएं";
+            btn.innerText = "जीता ✅";
             btn.className = "btn";
-            document.getElementById(betInputId).disabled = false;
             document.getElementById(winTextId).innerText = `जीत: ₹${winAmt}`;
 
             let resDiv = document.getElementById('result-msg');
@@ -288,43 +320,86 @@ function handleBet(panelId) {
     }
 }
 
-function startGlobalGame() {
-    isGameRunning = true;
-    multiplier = 1.00;
+// 1. बेटिंग टाइमर शुरू करने का फंक्शन (आप एडमिन बॉक्स से सेकंड सेट कर सकते हैं)
+function startCountdown() {
+    gameState = "WAITING";
+    document.getElementById('admin-game-status').innerText = "बेटिंग चल रही है (टाइम चालू है)";
+    
+    // एडमिन द्वारा बॉक्स में सेट किया गया टाइम यहाँ लिया जाएगा
+    timeLeft = parseInt(document.getElementById('admin-bet-time').value) || 10;
+    
+    document.getElementById('multiplier-text').style.display = "none";
+    document.getElementById('timer-box').style.display = "block";
+    document.getElementById('plane').style.display = "none";
     document.getElementById('result-msg').innerText = "";
+
+    // दोनों पैनल रीसेट
+    [1, 2].forEach(id => {
+        bets[id].placed = false;
+        bets[id].cashedOut = false;
+        document.getElementById(`bet${id}-amount`).disabled = false;
+        let btn = document.getElementById(`action-btn-${id}`);
+        btn.innerText = "बेट लगाएं";
+        btn.className = "btn";
+        document.getElementById(`live-win-${id}`).innerText = "";
+    });
+
+    updateAdminStats();
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('countdown').innerText = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            startFlightGame();
+        }
+    }, 1000);
+}
+
+// 2. प्लेन उड़ान भरने का फंक्शन (अब फ्लाइट के दौरान भी क्रैश पॉइंट बदला जा सकता है)
+function startFlightGame() {
+    gameState = "RUNNING";
+    multiplier = 1.00;
+    document.getElementById('admin-game-status').innerText = "प्लेन उड़ रहा है ✈️";
+
+    document.getElementById('timer-box').style.display = "none";
+    document.getElementById('multiplier-text').style.display = "block";
     document.getElementById('plane').style.display = "block";
     document.getElementById('plane').style.transform = "translate(-40px, 20px) rotate(-15deg)";
 
-    let maxLimit = parseFloat(document.getElementById('max-limit').value) || 50;
-    let totalBet = (bets[1].active ? bets[1].amount : 0) + (bets[2].active ? bets[2].amount : 0);
+    // उड़ान शुरू होते ही एडमिन बॉक्स से क्रैश पॉइंट और स्पीड ले ली जाएगी
+    crashPoint = parseFloat(document.getElementById('admin-crash-point').value) || 2.50;
+    let speed = parseInt(document.getElementById('admin-speed').value) || 70;
 
-    let speed = 90;
-    if (totalBet >= 50) {
-        speed = 25;
-        crashPoint = parseFloat((Math.random() * 0.15 + 1.02).toFixed(2));
-    } else if (totalBet >= 25) {
-        speed = 50;
-        crashPoint = parseFloat((Math.random() * 0.8 + 1.1).toFixed(2));
-    } else {
-        speed = 100;
-        crashPoint = parseFloat((Math.random() * (maxLimit - 2) + 2).toFixed(2));
-    }
-
-    // 🔒 Yahan admin ko secret preview dikhega
-    document.getElementById('secret-preview').innerHTML = `🔐 [Admin Secret View]: प्लेन क्रैश पॉइंट: <span style="color:#00e676; font-size:15px;">${crashPoint.toFixed(2)}x</span>`;
+    [1, 2].forEach(id => {
+        let btn = document.getElementById(`action-btn-${id}`);
+        if (bets[id].placed) {
+            btn.innerText = "Cash Out";
+            btn.className = "btn btn-cashout";
+        } else {
+            btn.disabled = true;
+            btn.innerText = "मिस हो गया";
+            btn.className = "btn";
+        }
+    });
 
     gameInterval = setInterval(() => {
-        multiplier += 0.01;
+        multiplier += 0.02;
         document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
 
-        if (bets[1].active) {
-            let w1 = Math.floor(bets[1].amount * multiplier);
-            document.getElementById('live-win-1').innerText = `₹${w1}`;
+        // हर बार चेक करें कि क्या एडमिन ने चलते गेम में क्रैश पॉइंट बदल दिया है?
+        let liveAdminCrash = parseFloat(document.getElementById('admin-crash-point').value);
+        if(!isNaN(liveAdminCrash)) {
+            crashPoint = liveAdminCrash;
         }
-        if (bets[2].active) {
-            let w2 = Math.floor(bets[2].amount * multiplier);
-            document.getElementById('live-win-2').innerText = `₹${w2}`;
-        }
+
+        [1, 2].forEach(id => {
+            if (bets[id].placed && !bets[id].cashedOut) {
+                let liveW = Math.floor(bets[id].amount * multiplier);
+                document.getElementById(`live-win-${id}`).innerText = `₹${liveW}`;
+            }
+        });
 
         let xPos = (multiplier - 1) * 25 - 30;
         let yPos = 20 - (multiplier - 1) * 12;
@@ -339,31 +414,32 @@ function startGlobalGame() {
     }, speed);
 }
 
+// 3. क्रैश होने पर एक्शन
 function triggerCrash() {
-    isGameRunning = false;
+    gameState = "CRASHED";
     document.getElementById('plane').style.display = "none";
-    document.getElementById('secret-preview').innerHTML = `🔐 [Admin Secret View]: प्लेन क्रैश हो चुका है!`;
+    document.getElementById('admin-game-status').innerText = `क्रैश हो गया! (${crashPoint.toFixed(2)}x)`;
 
     [1, 2].forEach(id => {
-        if (bets[id].active) {
-            bets[id].active = false;
-            let btnId = id === 1 ? 'action-btn-1' : 'action-btn-2';
-            let betInputId = id === 1 ? 'bet1-amount' : 'bet2-amount';
-            let winTextId = id === 1 ? 'live-win-1' : 'live-win-2';
-
-            document.getElementById(btnId).innerText = "प्लेन उड़ाएं";
-            document.getElementById(btnId).className = "btn";
-            document.getElementById(betInputId).disabled = false;
-            document.getElementById(winTextId).innerText = "हार गए";
+        if (bets[id].placed && !bets[id].cashedOut) {
+            document.getElementById(`live-win-${id}`).innerText = "हार गए ❌";
         }
+        let btn = document.getElementById(`action-btn-${id}`);
+        btn.disabled = false;
+        btn.innerText = "अगला राउंड...";
+        btn.className = "btn";
     });
 
     let resDiv = document.getElementById('result-msg');
     resDiv.className = "error";
     resDiv.innerText = `💥 क्रैश हो गया! प्लेन ${crashPoint.toFixed(2)}x पर उड़ गया।`;
+
+    // 4 सेकंड बाद नया टाइमर शुरू होगा
+    setTimeout(startCountdown, 4000);
 }
 
 updateWalletDisplay();
+startCountdown(); // ऑटो-स्टार्ट
 </script>
 
 </body>
