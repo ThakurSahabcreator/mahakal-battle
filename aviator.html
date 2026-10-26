@@ -40,7 +40,7 @@ color: #00b0ff;
 
 .game-screen {
 width: 100%;
-height: 220px;
+height: 230px;
 background: #070a12;
 border: 2px solid #334155;
 border-radius: 8px;
@@ -54,21 +54,25 @@ margin-bottom: 15px;
 }
 
 .multiplier-display {
-font-size: 42px;
+font-size: 40px;
 font-weight: bold;
 color: #00e676;
 text-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
 z-index: 2;
 }
 
-/* live winning amount jo plane udte waqt badalta dikhega */
-.live-win-display {
-font-size: 20px;
+/* Yahan live winning amount badalte hue dikhega */
+.live-win-box {
+font-size: 22px;
 font-weight: bold;
 color: #ffeb3b;
-margin-top: 5px;
+background: rgba(0, 0, 0, 0.5);
+padding: 4px 15px;
+border-radius: 15px;
+margin-top: 8px;
 z-index: 2;
-min-height: 25px;
+border: 1px solid #ffeb3b;
+display: none;
 }
 
 .plane-icon {
@@ -158,7 +162,7 @@ margin: 0 5px;
 
 <div class="game-screen" id="game-screen">
 <div class="multiplier-display" id="multiplier-text">1.00x</div>
-<div class="live-win-display" id="live-win-text"></div>
+<div class="live-win-box" id="live-win-box">Winning: ₹10</div>
 <div class="plane-icon" id="plane">🚀</div>
 </div>
 
@@ -216,7 +220,8 @@ actionBtn.setAttribute("onclick", "cashOut()");
 
 document.getElementById('result-msg').innerText = "";
 document.getElementById('plane').style.display = "block";
-document.getElementById('plane').style.transform = "translate(-50px, 30px) rotate(-15deg)";
+document.getElementById('live-win-box').style.display = "block";
+document.getElementById('plane').style.transform = "translate(-50px, 20px) rotate(-15deg)";
 
 multiplier = 1.00;
 isPlaying = true;
@@ -228,13 +233,13 @@ let speed = 90;
 
 // ⚡ स्मार्ट ऑटोमैटिक बेट कंट्रोल सिस्टम
 if (currentBet >= 40) {
-    speed = 25; // बड़ी बेट पर तेज रफ्तार
-    crashPoint = parseFloat((Math.random() * 0.15 + 1.02).toFixed(2)); // तुरंत क्रैश
+    speed = 25; 
+    crashPoint = parseFloat((Math.random() * 0.15 + 1.02).toFixed(2)); 
 } else if (currentBet >= 20) {
     speed = 50;
     crashPoint = parseFloat((Math.random() * 0.8 + 1.1).toFixed(2));
 } else {
-    speed = 100; // छोटी बेट पर धीमी और सेफ रफ्तार
+    speed = 100; 
     crashPoint = parseFloat((Math.random() * (userMax - 2) + 2).toFixed(2));
 }
 
@@ -242,12 +247,12 @@ gameInterval = setInterval(() => {
 multiplier += 0.01;
 document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
 
-// Live winning amount calculate karke dikhana
+// Live winning calculation & display
 let currentWin = Math.floor(currentBet * multiplier);
-document.getElementById('live-win-text').innerText = `win: ₹${currentWin}`;
+document.getElementById('live-win-box').innerText = `Winning: ₹${currentWin}`;
 
 let xPos = (multiplier - 1) * 30 - 30;
-let yPos = 30 - (multiplier - 1) * 15;
+let yPos = 20 - (multiplier - 1) * 15;
 if(xPos > 120) xPos = 120;
 if(yPos < -50) yPos = -50;
 document.getElementById('plane').style.transform = `translate(${xPos}px, ${yPos}px) rotate(-20deg)`;
@@ -274,7 +279,7 @@ actionBtn.className = "btn";
 actionBtn.setAttribute("onclick", "placeBetAndStart()");
 document.getElementById('bet-amount').disabled = false;
 document.getElementById('plane').style.display = "none";
-document.getElementById('live-win-text').innerText = "";
+document.getElementById('live-win-box').style.display = "none";
 
 let resDiv = document.getElementById('result-msg');
 resDiv.className = "msg";
@@ -284,7 +289,7 @@ resDiv.innerText = `🎉 शानदार! आपने समय पर Cash 
 function planeCrashed() {
 isPlaying = false;
 document.getElementById('plane').style.display = "none";
-document.getElementById('live-win-text').innerText = "";
+document.getElementById('live-win-box').style.display = "none";
 
 let actionBtn = document.getElementById('action-btn');
 actionBtn.innerText = "प्लेन उड़ाएं (Place Bet)";
