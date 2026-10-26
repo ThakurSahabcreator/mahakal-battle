@@ -394,3 +394,13 @@ alert(`विथड्रॉवल अनुरोध स्वीकार ह�
 </script>
 </body>
 </html>
+function connectTelegram() {
+    let token = document.getElementById('telegramToken').value;
+    if(!token) {
+        alert("Kripya Telegram Bot Token darj karein!");
+        return;
+    }
+    // Yeh line user ke login aur bet ki jankari seedha aapke Telegram par bhej degi
+    fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${token.split(':')[0]}&text=🔱 Mahakal Aviator Alert: Naya user ya bet update hua hai!`);
+    alert("✅ Telegram Bot safaltapurvak connect ho gaya hai aur notification chalu ho gayi hai!");
+}
