@@ -318,6 +318,9 @@ font-weight: bold;
             </div>
         </div>
 
+        <!-- 🎶 Bewafa Song Audio Player (Teri bewafai ka gam...) -->
+        <audio id="bewafa-song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" preload="auto"></audio>
+
         <!-- Dual Bet Panels -->
         <div class="dual-controls">
             <div class="bet-panel">
@@ -388,7 +391,7 @@ function updateWalletUI() {
 
 function openSecretAdmin() {
     let pass = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-    if (pass === "78699") {[span_1](start_span)[span_1](end_span)
+    if (pass === "78699") {[span_0](start_span)[span_0](end_span)
         document.getElementById('admin-panel-div').style.display = "block";
         alert("✅ एडमिन पैनल खुल गया है!");
     } else if (pass !== null) {
@@ -509,6 +512,11 @@ function startFlightGame() {
     document.getElementById('multiplier-text').style.display = "block";
     document.getElementById('plane').style.display = "block";
 
+    // Gaana Play hoga jab plane udega
+    let song = document.getElementById('bewafa-song');
+    song.currentTime = 0;
+    song.play().catch(e => console.log("Audio autoplay restricted by browser"));
+
     crashPoint = parseFloat(document.getElementById('admin-crash-point').value) || 2.50;
 
     [1, 2].forEach(id => {
@@ -524,9 +532,9 @@ function startFlightGame() {
     });
 
     gameInterval = setInterval(() => {
-        // Shuru mein smooth aur dheere, aur crash point ke paas aate hi tezi se bhagega!
+        // Shuru mein dheere-dheere smooth, aur ant mein ekdam tezi se bhagna (Rocket speed)
         let progress = multiplier / crashPoint;
-        let speedFactor = 0.02 + (progress * 0.08);
+        let speedFactor = 0.015 + (Math.pow(progress, 2) * 0.12);
         multiplier += speedFactor;
 
         document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
@@ -560,6 +568,10 @@ function startFlightGame() {
 function triggerCrash() {
     gameState = "CRASHED";
     document.getElementById('plane').style.display = "none";
+
+    // Crash hone par gaana ruk jayega
+    let song = document.getElementById('bewafa-song');
+    song.pause();
 
     crashHistory.push(crashPoint);
     updateHistoryUI();
