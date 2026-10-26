@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>महाकाल Aviator - ड्यूल बेट प्लेन क्रैश बैटल</title>
+<title>महाकाल Dual Aviator - Secret Admin View</title>
 <style>
 body {
 background-color: #0b0f19;
@@ -69,7 +69,7 @@ display: none;
 z-index: 1;
 }
 
-/* Dual Bet Panels Layout */
+/* Dual Bet Panels */
 .dual-controls {
 display: flex;
 gap: 8px;
@@ -139,12 +139,25 @@ padding: 10px;
 font-size: 14px;
 }
 
+/* Secret Admin Preview Box (Sirf Admin ko dikhega) */
+.secret-admin-box {
+background: #2a1010;
+border: 1px solid #ff5252;
+padding: 8px;
+border-radius: 8px;
+margin-top: 10px;
+text-align: center;
+font-size: 13px;
+color: #ff8a80;
+font-weight: bold;
+}
+
 .admin-setting-box {
 background: #1e1b2e;
 border: 1px dashed #ab47bc;
 padding: 8px;
 border-radius: 8px;
-margin-top: 10px;
+margin-top: 8px;
 text-align: left;
 font-size: 12px;
 color: #e1bee7;
@@ -178,19 +191,16 @@ margin: 0 3px;
 <div class="plane-icon" id="plane">🚀</div>
 </div>
 
-<!-- 🎛️ Dual Bet Panels (दो जगह बेट लगाने के लिए) -->
+<!-- Dual Bet Panels -->
 <div class="dual-controls">
-    <!-- Panel 1 -->
     <div class="bet-panel">
-        <h4>बेट 1 (Bet 1)</h4>
+        <h4>बेट 1</h4>
         <input type="number" id="bet1-amount" value="10" min="5">
         <button class="btn" id="action-btn-1" onclick="handleBet(1)">प्लेन उड़ाएं</button>
         <div class="live-win-text" id="live-win-1"></div>
     </div>
-
-    <!-- Panel 2 -->
     <div class="bet-panel">
-        <h4>बेट 2 (Bet 2)</h4>
+        <h4>बेट 2</h4>
         <input type="number" id="bet2-amount" value="20" min="5">
         <button class="btn" id="action-btn-2" onclick="handleBet(2)">प्लेन उड़ाएं</button>
         <div class="live-win-text" id="live-win-2"></div>
@@ -199,8 +209,13 @@ margin: 0 3px;
 
 <div id="result-msg" style="min-height: 20px;"></div>
 
+<!-- 🔒 गुप्त एडमिन पैनल (यहाँ आपको दिखेगा कि प्लेन कहां क्रैश होगा) -->
+<div class="secret-admin-box" id="secret-preview">
+    🔐 [Admin Secret View]: प्लेन क्रैश पॉइंट: <span>--</span>
+</div>
+
 <div class="admin-setting-box">
-<b>👑 एडमिन कंट्रोल:</b> Min: <input type="number" id="min-limit" value="1.2">x | Max: <input type="number" id="max-limit" value="50">x
+<b>👑 एडमिन लिमिट:</b> Min: <input type="number" id="min-limit" value="1.2">x | Max: <input type="number" id="max-limit" value="50">x
 </div>
 
 <button class="btn btn-back" onclick="window.location.href='index.html'">🏠 मुख्य डैशबोर्ड पर वापस जाएं</button>
@@ -229,7 +244,6 @@ function handleBet(panelId) {
 
     let betInput = parseInt(document.getElementById(betInputId).value);
 
-    // Agar game nahi chal raha toh Bet lagakar game start karo
     if (!isGameRunning) {
         if (isNaN(betInput) || betInput < 5) {
             alert("❌ न्यूनतम ₹5 या अधिक की बाजी दर्ज करें!");
@@ -250,13 +264,11 @@ function handleBet(panelId) {
         btn.innerText = "Cash Out";
         btn.className = "btn btn-cashout";
 
-        // Agar pehli bet lagi hai toh game start karo
         if (!isGameRunning && (bets[1].active || bets[2].active)) {
             startGlobalGame();
         }
     } 
     else {
-        // Agar game chal raha hai toh Cash Out karo
         if (bets[panelId].active) {
             let winAmt = Math.floor(bets[panelId].amount * multiplier);
             balance += winAmt;
@@ -298,11 +310,13 @@ function startGlobalGame() {
         crashPoint = parseFloat((Math.random() * (maxLimit - 2) + 2).toFixed(2));
     }
 
+    // 🔒 Yahan admin ko secret preview dikhega
+    document.getElementById('secret-preview').innerHTML = `🔐 [Admin Secret View]: प्लेन क्रैश पॉइंट: <span style="color:#00e676; font-size:15px;">${crashPoint.toFixed(2)}x</span>`;
+
     gameInterval = setInterval(() => {
         multiplier += 0.01;
         document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
 
-        // Dono panels ka live winning update karo
         if (bets[1].active) {
             let w1 = Math.floor(bets[1].amount * multiplier);
             document.getElementById('live-win-1').innerText = `₹${w1}`;
@@ -328,8 +342,8 @@ function startGlobalGame() {
 function triggerCrash() {
     isGameRunning = false;
     document.getElementById('plane').style.display = "none";
+    document.getElementById('secret-preview').innerHTML = `🔐 [Admin Secret View]: प्लेन क्रैश हो चुका है!`;
 
-    // Dono bets jo cashout nahi hui, wo haar jayengi
     [1, 2].forEach(id => {
         if (bets[id].active) {
             bets[id].active = false;
