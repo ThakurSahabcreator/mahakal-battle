@@ -128,13 +128,13 @@ margin-top: 5px;
 z-index: 2;
 }
 
-/* Bada Plane: Aage Pankhudi, Andar Pilot, Piche Aag */
+/* Sahi Plane Design: 🔥 Aag (Piche) -> 🌀 Pankhudi (Aage) -> ✈️👨‍✈️ Aeroplane aur Pilot (Andar) */
 .plane-container {
 position: absolute;
 left: 10px;
 bottom: 15px;
-font-size: 32px;
-transition: transform 0.03s linear;
+font-size: 26px;
+transition: transform 0.05s linear;
 display: none;
 z-index: 2;
 white-space: nowrap;
@@ -142,9 +142,9 @@ white-space: nowrap;
 
 .propeller {
 display: inline-block;
-font-size: 20px;
-animation: spinProp 0.02s linear infinite;
-margin-right: -4px;
+font-size: 18px;
+animation: spinProp 0.05s linear infinite;
+margin-right: -2px;
 }
 
 @keyframes spinProp {
@@ -153,16 +153,16 @@ margin-right: -4px;
 }
 
 .flame {
-font-size: 20px;
+font-size: 18px;
 position: absolute;
-left: -22px;
-top: 6px;
-animation: flicker 0.05s infinite alternate;
+left: -16px;
+top: 4px;
+animation: flicker 0.08s infinite alternate;
 }
 
 @keyframes flicker {
-0% { opacity: 0.5; transform: scale(0.7); }
-100% { opacity: 1; transform: scale(1.4); }
+0% { opacity: 0.6; transform: scale(0.8); }
+100% { opacity: 1; transform: scale(1.2); }
 }
 
 /* Dual Bet Panels */
@@ -227,10 +227,10 @@ margin-top: 6px;
 background: linear-gradient(to right, #ff9100, #ff3d00);
 }
 
-/* Ekdam Chhota aur Gupt Admin Trigger (Neeche wallet bar ya title ke paas invisible jaisa) */
+/* Secret Admin Trigger */
 .secret-key {
 font-size: 10px;
-color: #131a26; /* Background jaisa rang taaki kisi ko na dikhe */
+color: #131a26;
 cursor: pointer;
 user-select: none;
 margin-top: 5px;
@@ -312,7 +312,7 @@ font-weight: bold;
             <div class="multiplier-display" id="multiplier-text" style="display:none;">1.00x</div>
             <div class="timer-display" id="timer-box">बेटिंग टाइम: <span id="countdown">15</span>s</div>
             
-            <!-- Bada Plane: Aage Pankhudi (🌀), Andar Pilot (✈️👨‍✈️), Piche Aag (🔥) -->
+            <!-- Sahi Plane Design: 🔥 Aag (Piche) -> 🌀 Pankhudi (Aage) -> ✈️👨‍✈️ Aeroplane aur Pilot (Andar) -->
             <div class="plane-container" id="plane">
                 <span class="flame">🔥</span><span class="propeller">🌀</span>✈️👨‍✈️
             </div>
@@ -336,9 +336,9 @@ font-weight: bold;
 
         <div id="result-msg" style="min-height: 18px;"></div>
 
-        <!-- 🔒 Gupt Secret Trigger: Wallet text ke "बैलेंस:" ke ुpar ya niche ek chhota sa invisible click point -->
+        <!-- 🔒 Secret Admin Trigger -->
         <div style="text-align: center;">
-            <span class="secret-key" onclick="openSecretAdmin()">⚙️</span>
+            <span class="secret-key" onclick="openSecretAdmin()">⚙️Admin</span>
         </div>
 
         <!-- 👑 Admin Master Control Panel -->
@@ -388,7 +388,7 @@ function updateWalletUI() {
 
 function openSecretAdmin() {
     let pass = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-    if (pass === "78699") {
+    if (pass === "78699") {[span_1](start_span)[span_1](end_span)
         document.getElementById('admin-panel-div').style.display = "block";
         alert("✅ एडमिन पैनल खुल गया है!");
     } else if (pass !== null) {
@@ -523,8 +523,12 @@ function startFlightGame() {
         }
     });
 
-    gameIntent = gameInterval = setInterval(() => {
-        multiplier += 0.08; 
+    gameInterval = setInterval(() => {
+        // Shuru mein smooth aur dheere, aur crash point ke paas aate hi tezi se bhagega!
+        let progress = multiplier / crashPoint;
+        let speedFactor = 0.02 + (progress * 0.08);
+        multiplier += speedFactor;
+
         document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
 
         let adminInput = parseFloat(document.getElementById('admin-crash-point').value);
@@ -550,7 +554,7 @@ function startFlightGame() {
             clearInterval(gameInterval);
             triggerCrash();
         }
-    }, 40);
+    }, 50);
 }
 
 function triggerCrash() {
