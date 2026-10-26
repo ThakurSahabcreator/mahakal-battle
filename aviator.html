@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>महाकाल Aviator - प्लेन क्रैश बैटल</title>
+<title>महाकाल Aviator - ड्यूल बेट प्लेन क्रैश बैटल</title>
 <style>
 body {
 background-color: #0b0f19;
@@ -11,36 +11,36 @@ color: #ffffff;
 font-family: Arial, sans-serif;
 text-align: center;
 margin: 0;
-padding: 15px;
+padding: 10px;
 -webkit-user-select: none;
 user-select: none;
 }
 .container {
-max-width: 400px;
+max-width: 420px;
 margin: auto;
 background: #131a26;
-padding: 20px;
+padding: 15px;
 border-radius: 12px;
 border: 2px solid #00e676;
 box-shadow: 0 4px 20px rgba(0, 230, 118, 0.3);
 position: relative;
 }
-h2 { color: #00e676; margin-top: 5px; }
+h2 { color: #00e676; margin-top: 5px; font-size: 20px; }
 
 .wallet-box {
 background: linear-gradient(135deg, #1b2a4a, #0b1329);
-padding: 12px;
+padding: 10px;
 border-radius: 8px;
-margin-bottom: 15px;
+margin-bottom: 10px;
 border: 1px solid #00b0ff;
-font-size: 18px;
+font-size: 16px;
 font-weight: bold;
 color: #00b0ff;
 }
 
 .game-screen {
 width: 100%;
-height: 230px;
+height: 200px;
 background: #070a12;
 border: 2px solid #334155;
 border-radius: 8px;
@@ -50,111 +50,124 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-margin-bottom: 15px;
+margin-bottom: 10px;
 }
 
 .multiplier-display {
-font-size: 40px;
+font-size: 38px;
 font-weight: bold;
 color: #00e676;
 text-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
 z-index: 2;
 }
 
-/* Yahan live winning amount badalte hue dikhega */
-.live-win-box {
-font-size: 22px;
-font-weight: bold;
-color: #ffeb3b;
-background: rgba(0, 0, 0, 0.5);
-padding: 4px 15px;
-border-radius: 15px;
-margin-top: 8px;
-z-index: 2;
-border: 1px solid #ffeb3b;
-display: none;
-}
-
 .plane-icon {
 position: absolute;
-font-size: 35px;
+font-size: 32px;
 transition: transform 0.1s linear;
 display: none;
 z-index: 1;
 }
 
-.controls-box {
-background: #1b2230;
-padding: 15px;
-border-radius: 8px;
-border: 1px solid #475569;
+/* Dual Bet Panels Layout */
+.dual-controls {
+display: flex;
+gap: 8px;
+margin-bottom: 10px;
 }
 
-input {
-width: 90%;
+.bet-panel {
+flex: 1;
+background: #1b2230;
 padding: 10px;
-margin: 8px 0;
+border-radius: 8px;
+border: 1px solid #475569;
+text-align: left;
+}
+
+.bet-panel h4 {
+margin: 0 0 5px 0;
+color: #ffab00;
+font-size: 13px;
+text-align: center;
+}
+
+.bet-panel input {
+width: 90%;
+padding: 6px;
+margin: 4px 0;
 background: #0b0f19;
 border: 1px solid #64748b;
 color: white;
-border-radius: 5px;
+border-radius: 4px;
 text-align: center;
-font-size: 16px;
+font-size: 14px;
+}
+
+.live-win-text {
+font-size: 12px;
+color: #ffeb3b;
+font-weight: bold;
+margin-top: 4px;
+min-height: 18px;
+text-align: center;
 }
 
 .btn {
 background: linear-gradient(to right, #00c853, #64dd17);
 color: white;
 border: none;
-padding: 12px;
+padding: 8px;
 width: 100%;
-border-radius: 6px;
-font-size: 16px;
+border-radius: 5px;
+font-size: 13px;
 font-weight: bold;
 cursor: pointer;
-margin-top: 8px;
+margin-top: 5px;
 }
 .btn:hover { opacity: 0.9; }
 
 .btn-cashout {
 background: linear-gradient(to right, #ff9100, #ff3d00);
-display: none;
 }
 
 .btn-back {
 background: #475569;
-margin-top: 15px;
+margin-top: 10px;
+width: 100%;
+padding: 10px;
+font-size: 14px;
 }
 
 .admin-setting-box {
 background: #1e1b2e;
 border: 1px dashed #ab47bc;
-padding: 10px;
+padding: 8px;
 border-radius: 8px;
-margin-top: 15px;
+margin-top: 10px;
 text-align: left;
-font-size: 13px;
+font-size: 12px;
 color: #e1bee7;
 }
 .admin-setting-box input {
-width: 70px;
-padding: 5px;
+width: 55px;
+padding: 3px;
 background: #0b0f19;
 color: #00e676;
 border: 1px solid #ab47bc;
 font-weight: bold;
 display: inline-block;
-margin: 0 5px;
+margin: 0 3px;
 }
 
-.msg { color: #00e676; font-size: 15px; margin-top: 10px; font-weight: bold; }
-.error { color: #ff5252; font-size: 15px; margin-top: 10px; font-weight: bold; }
+.msg { color: #00e676; font-size: 13px; margin-top: 5px; font-weight: bold; }
+.error { color: #ff5252; font-size: 13px; margin-top: 5px; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div class="container">
-<h2>✈️ महाकाल Aviator बैटल</h2>
+<h2>✈️ महाकाल Dual Aviator बैटल</h2>
 
 <div class="wallet-box">
 💰 वॉलेट बैलेंस: ₹<span id="aviator-balance">100</span>
@@ -162,24 +175,32 @@ margin: 0 5px;
 
 <div class="game-screen" id="game-screen">
 <div class="multiplier-display" id="multiplier-text">1.00x</div>
-<div class="live-win-box" id="live-win-box">Winning: ₹10</div>
 <div class="plane-icon" id="plane">🚀</div>
 </div>
 
-<div class="controls-box" id="controls-box">
-<p style="font-size: 13px; color: #94a3b8; margin: 0 0 5px 0;">अपनी बाजी (₹5 या अधिक) दर्ज करें:</p>
-<input type="number" id="bet-amount" value="10" min="5" placeholder="बाजी राशि (उदा. 10, 50)">
+<!-- 🎛️ Dual Bet Panels (दो जगह बेट लगाने के लिए) -->
+<div class="dual-controls">
+    <!-- Panel 1 -->
+    <div class="bet-panel">
+        <h4>बेट 1 (Bet 1)</h4>
+        <input type="number" id="bet1-amount" value="10" min="5">
+        <button class="btn" id="action-btn-1" onclick="handleBet(1)">प्लेन उड़ाएं</button>
+        <div class="live-win-text" id="live-win-1"></div>
+    </div>
 
-<button class="btn" id="action-btn" onclick="placeBetAndStart()">प्लेन उड़ाएं (Place Bet)</button>
+    <!-- Panel 2 -->
+    <div class="bet-panel">
+        <h4>बेट 2 (Bet 2)</h4>
+        <input type="number" id="bet2-amount" value="20" min="5">
+        <button class="btn" id="action-btn-2" onclick="handleBet(2)">प्लेन उड़ाएं</button>
+        <div class="live-win-text" id="live-win-2"></div>
+    </div>
 </div>
 
-<div id="result-msg" style="min-height: 25px;"></div>
+<div id="result-msg" style="min-height: 20px;"></div>
 
 <div class="admin-setting-box">
-<b>👑 एडमिन कंट्रोल (Multiplier Limit):</b><br>
-कम से कम: <input type="number" id="min-limit" value="1.2">x &nbsp; 
-अधिकतम: <input type="number" id="max-limit" value="50">x
-<p style="font-size: 11px; color: #b388ff; margin: 5px 0 0 0;">(छोटी बेट पर प्लेन ऊपर जाएगा, बड़ी बेट पर ऑटोमैटिक क्रैश होगा)</p>
+<b>👑 एडमिन कंट्रोल:</b> Min: <input type="number" id="min-limit" value="1.2">x | Max: <input type="number" id="max-limit" value="50">x
 </div>
 
 <button class="btn btn-back" onclick="window.location.href='index.html'">🏠 मुख्य डैशबोर्ड पर वापस जाएं</button>
@@ -187,119 +208,145 @@ margin: 0 5px;
 
 <script>
 let balance = 100;
-let currentBet = 10;
 let multiplier = 1.00;
 let gameInterval = null;
-let isPlaying = false;
+let isGameRunning = false;
 let crashPoint = 1.00;
 
+let bets = {
+    1: { active: false, amount: 0 },
+    2: { active: false, amount: 0 }
+};
+
 function updateWalletDisplay() {
-document.getElementById('aviator-balance').innerText = balance;
+    document.getElementById('aviator-balance').innerText = balance;
 }
 
-function placeBetAndStart() {
-let betInput = parseInt(document.getElementById('bet-amount').value);
-if (isNaN(betInput) || betInput < 5) {
-alert("❌ कृपया न्यूनतम ₹5 या उससे अधिक की बाजी दर्ज करें!");
-return;
-}
-if (balance < betInput) {
-alert("❌ आपके वॉलेट में पर्याप्त बैलेंस नहीं है!");
-return;
-}
+function handleBet(panelId) {
+    let betInputId = panelId === 1 ? 'bet1-amount' : 'bet2-amount';
+    let btnId = panelId === 1 ? 'action-btn-1' : 'action-btn-2';
+    let winTextId = panelId === 1 ? 'live-win-1' : 'live-win-2';
 
-currentBet = betInput;
-balance -= currentBet;
-updateWalletDisplay();
+    let betInput = parseInt(document.getElementById(betInputId).value);
 
-document.getElementById('bet-amount').disabled = true;
-let actionBtn = document.getElementById('action-btn');
-actionBtn.innerText = "Cash Out";
-actionBtn.className = "btn btn-cashout";
-actionBtn.setAttribute("onclick", "cashOut()");
+    // Agar game nahi chal raha toh Bet lagakar game start karo
+    if (!isGameRunning) {
+        if (isNaN(betInput) || betInput < 5) {
+            alert("❌ न्यूनतम ₹5 या अधिक की बाजी दर्ज करें!");
+            return;
+        }
+        if (balance < betInput) {
+            alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है!");
+            return;
+        }
 
-document.getElementById('result-msg').innerText = "";
-document.getElementById('plane').style.display = "block";
-document.getElementById('live-win-box').style.display = "block";
-document.getElementById('plane').style.transform = "translate(-50px, 20px) rotate(-15deg)";
+        bets[panelId].amount = betInput;
+        bets[panelId].active = true;
+        balance -= betInput;
+        updateWalletDisplay();
 
-multiplier = 1.00;
-isPlaying = true;
+        document.getElementById(betInputId).disabled = true;
+        let btn = document.getElementById(btnId);
+        btn.innerText = "Cash Out";
+        btn.className = "btn btn-cashout";
 
-let userMin = parseFloat(document.getElementById('min-limit').value) || 1.2;
-let userMax = parseFloat(document.getElementById('max-limit').value) || 50;
+        // Agar pehli bet lagi hai toh game start karo
+        if (!isGameRunning && (bets[1].active || bets[2].active)) {
+            startGlobalGame();
+        }
+    } 
+    else {
+        // Agar game chal raha hai toh Cash Out karo
+        if (bets[panelId].active) {
+            let winAmt = Math.floor(bets[panelId].amount * multiplier);
+            balance += winAmt;
+            updateWalletDisplay();
 
-let speed = 90;
+            bets[panelId].active = false;
+            let btn = document.getElementById(btnId);
+            btn.innerText = "प्लेन उड़ाएं";
+            btn.className = "btn";
+            document.getElementById(betInputId).disabled = false;
+            document.getElementById(winTextId).innerText = `जीत: ₹${winAmt}`;
 
-// ⚡ स्मार्ट ऑटोमैटिक बेट कंट्रोल सिस्टम
-if (currentBet >= 40) {
-    speed = 25; 
-    crashPoint = parseFloat((Math.random() * 0.15 + 1.02).toFixed(2)); 
-} else if (currentBet >= 20) {
-    speed = 50;
-    crashPoint = parseFloat((Math.random() * 0.8 + 1.1).toFixed(2));
-} else {
-    speed = 100; 
-    crashPoint = parseFloat((Math.random() * (userMax - 2) + 2).toFixed(2));
-}
-
-gameInterval = setInterval(() => {
-multiplier += 0.01;
-document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
-
-// Live winning calculation & display
-let currentWin = Math.floor(currentBet * multiplier);
-document.getElementById('live-win-box').innerText = `Winning: ₹${currentWin}`;
-
-let xPos = (multiplier - 1) * 30 - 30;
-let yPos = 20 - (multiplier - 1) * 15;
-if(xPos > 120) xPos = 120;
-if(yPos < -50) yPos = -50;
-document.getElementById('plane').style.transform = `translate(${xPos}px, ${yPos}px) rotate(-20deg)`;
-
-if (multiplier >= crashPoint) {
-clearInterval(gameInterval);
-planeCrashed();
-}
-}, speed);
+            let resDiv = document.getElementById('result-msg');
+            resDiv.className = "msg";
+            resDiv.innerText = `🎉 Bet ${panelId} Cash Out! जीता: ₹${winAmt} (${multiplier.toFixed(2)}x)`;
+        }
+    }
 }
 
-function cashOut() {
-if (!isPlaying) return;
-clearInterval(gameInterval);
-isPlaying = false;
+function startGlobalGame() {
+    isGameRunning = true;
+    multiplier = 1.00;
+    document.getElementById('result-msg').innerText = "";
+    document.getElementById('plane').style.display = "block";
+    document.getElementById('plane').style.transform = "translate(-40px, 20px) rotate(-15deg)";
 
-let winAmount = Math.floor(currentBet * multiplier);
-balance += winAmount;
-updateWalletDisplay();
+    let maxLimit = parseFloat(document.getElementById('max-limit').value) || 50;
+    let totalBet = (bets[1].active ? bets[1].amount : 0) + (bets[2].active ? bets[2].amount : 0);
 
-let actionBtn = document.getElementById('action-btn');
-actionBtn.innerText = "प्लेन उड़ाएं (Place Bet)";
-actionBtn.className = "btn";
-actionBtn.setAttribute("onclick", "placeBetAndStart()");
-document.getElementById('bet-amount').disabled = false;
-document.getElementById('plane').style.display = "none";
-document.getElementById('live-win-box').style.display = "none";
+    let speed = 90;
+    if (totalBet >= 50) {
+        speed = 25;
+        crashPoint = parseFloat((Math.random() * 0.15 + 1.02).toFixed(2));
+    } else if (totalBet >= 25) {
+        speed = 50;
+        crashPoint = parseFloat((Math.random() * 0.8 + 1.1).toFixed(2));
+    } else {
+        speed = 100;
+        crashPoint = parseFloat((Math.random() * (maxLimit - 2) + 2).toFixed(2));
+    }
 
-let resDiv = document.getElementById('result-msg');
-resDiv.className = "msg";
-resDiv.innerText = `🎉 शानदार! आपने समय पर Cash Out कर लिया। जीत: ₹${winAmount} (${multiplier.toFixed(2)}x)`;
+    gameInterval = setInterval(() => {
+        multiplier += 0.01;
+        document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
+
+        // Dono panels ka live winning update karo
+        if (bets[1].active) {
+            let w1 = Math.floor(bets[1].amount * multiplier);
+            document.getElementById('live-win-1').innerText = `₹${w1}`;
+        }
+        if (bets[2].active) {
+            let w2 = Math.floor(bets[2].amount * multiplier);
+            document.getElementById('live-win-2').innerText = `₹${w2}`;
+        }
+
+        let xPos = (multiplier - 1) * 25 - 30;
+        let yPos = 20 - (multiplier - 1) * 12;
+        if(xPos > 100) xPos = 100;
+        if(yPos < -40) yPos = -40;
+        document.getElementById('plane').style.transform = `translate(${xPos}px, ${yPos}px) rotate(-20deg)`;
+
+        if (multiplier >= crashPoint) {
+            clearInterval(gameInterval);
+            triggerCrash();
+        }
+    }, speed);
 }
 
-function planeCrashed() {
-isPlaying = false;
-document.getElementById('plane').style.display = "none";
-document.getElementById('live-win-box').style.display = "none";
+function triggerCrash() {
+    isGameRunning = false;
+    document.getElementById('plane').style.display = "none";
 
-let actionBtn = document.getElementById('action-btn');
-actionBtn.innerText = "प्लेन उड़ाएं (Place Bet)";
-actionBtn.className = "btn";
-actionBtn.setAttribute("onclick", "placeBetAndStart()");
-document.getElementById('bet-amount').disabled = false;
+    // Dono bets jo cashout nahi hui, wo haar jayengi
+    [1, 2].forEach(id => {
+        if (bets[id].active) {
+            bets[id].active = false;
+            let btnId = id === 1 ? 'action-btn-1' : 'action-btn-2';
+            let betInputId = id === 1 ? 'bet1-amount' : 'bet2-amount';
+            let winTextId = id === 1 ? 'live-win-1' : 'live-win-2';
 
-let resDiv = document.getElementById('result-msg');
-resDiv.className = "error";
-resDiv.innerText = `💥 क्रैश हो गया! प्लेन ${crashPoint.toFixed(2)}x पर उड़ गया। आप बाजी हार गए।`;
+            document.getElementById(btnId).innerText = "प्लेन उड़ाएं";
+            document.getElementById(btnId).className = "btn";
+            document.getElementById(betInputId).disabled = false;
+            document.getElementById(winTextId).innerText = "हार गए";
+        }
+    });
+
+    let resDiv = document.getElementById('result-msg');
+    resDiv.className = "error";
+    resDiv.innerText = `💥 क्रैश हो गया! प्लेन ${crashPoint.toFixed(2)}x पर उड़ गया।`;
 }
 
 updateWalletDisplay();
