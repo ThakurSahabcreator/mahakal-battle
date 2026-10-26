@@ -53,13 +53,21 @@ margin-top: 10px;
 input {
 width: 90%;
 padding: 10px;
-margin: 10px 0;
+margin: 8px 0;
 background: #2a2a2a;
 border: 1px solid #444;
 color: white;
 border-radius: 5px;
 text-align: center;
 font-size: 15px;
+}
+label {
+display: block;
+text-align: left;
+width: 90%;
+margin: auto;
+font-size: 13px;
+color: #ffab00;
 }
 .msg { color: #00e676; font-size: 14px; margin-top: 10px; font-weight: bold; }
 .error { color: #ff5252; font-size: 14px; margin-top: 10px; font-weight: bold; }
@@ -73,39 +81,56 @@ font-size: 15px;
 
 <div id="login-section">
 <p>नया खाता बनाएं & ₹10 बोनस पाएं!</p>
+
+<label>मोबाइल नंबर:</label>
 <input type="tel" id="phone" placeholder="अपना मोबाइल नंबर दर्ज करें">
-<button class="btn" onclick="sendOtp()">OTP भेजें</button>
+
+<label>OTP दर्ज करें:</label>
 <input type="text" id="otp" placeholder="OTP दर्ज करें (Demo: 1234)">
-<button class="btn" onclick="verifyOtp()">रजिस्ट्रेशन पूरा करें</button>
+
+<label>मनपसंद पासवर्ड:</label>
+<input type="password" id="password" placeholder="अपना नया पासवर्ड बनाएं">
+
+<button class="btn" onclick="verifyAndRegister()">रजिस्ट्रेशन पूरा करें</button>
 </div>
 
 <div id="message" class="msg"></div>
 </div>
 
 <script>
-function sendOtp() {
+function verifyAndRegister() {
 let phone = document.getElementById('phone').value;
-if(phone.length === 10) {
-document.getElementById('message').innerText = "OTP भेज दिया गया है! (Demo: 1234)";
-document.getElementById('message').className = "msg";
-} else {
+let otp = document.getElementById('otp').value;
+let password = document.getElementById('password').value;
+
+if(phone.length !== 10) {
 document.getElementById('message').className = "error";
 document.getElementById('message').innerText = "कृपया सही 10 अंकों का मोबाइल नंबर डालें।";
-}
+return;
 }
 
-function verifyOtp() {
-let otp = document.getElementById('otp').value;
-if(otp === "1234") {
-document.getElementById('message').innerText = "सफलतापूर्वक लॉगिन हो गया! गेम पर जा रहे हैं...";
+if(otp !== "1234") {
+document.getElementById('message').className = "error";
+document.getElementById('message').innerText = "गलत OTP! कृपया '1234' दर्ज करें।";
+return;
+}
+
+if(password.length < 3) {
+document.getElementById('message').className = "error";
+document.getElementById('message').innerText = "कृपया कमي से कम 3 अंकों का मनपसंद पासवर्ड बनाएं।";
+return;
+}
+
+// LocalStorage में यूजर का डेटा सेव कर रहे हैं (ताकि बाद में काम आए)
+localStorage.setItem("user_phone", phone);
+localStorage.setItem("user_password", password);
+
+document.getElementById('message').innerText = "सफलतापूर्वक खाता बन गया! गेम पर जा रहे हैं...";
 document.getElementById('message').className = "msg";
+
 setTimeout(function() {
 window.location.href = 'game.html';
 }, 1000);
-} else {
-document.getElementById('message').className = "error";
-document.getElementById('message').innerText = "गलत OTP! कृपया '1234' दर्ज करें।";
-}
 }
 </script>
 </body>
