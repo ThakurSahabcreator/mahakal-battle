@@ -189,7 +189,7 @@ border: 2px solid #ffab00;
 <p style="font-size: 11px; color: #ffd24d; margin: 5px 0 0 0;">कुल लगाए गए पैसे: ₹<span id="total-deposited">0</span></p>
 </div>
 
-<!-- App Install / Download Button (Always Visible) -->
+<!-- App Install / Download Button -->
 <button id="installBtn" class="btn" style="background: linear-gradient(to right, #00c853, #64dd17); margin-bottom: 10px;" onclick="installAppDirect()">
     📱 ऐप डाउनलोड करें (Play Store जैसा)
 </button>
@@ -198,7 +198,6 @@ border: 2px solid #ffab00;
 
 <button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="startPuzzle()">🔥 1. महाकाल कठिन पहेली बैटल</button>
 <button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="startAdvancedGame()">🧩 2. महाकाल टाइल्स गेम</button>
-<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='ship.html'">🚢 3. महाकाल जहाज यात्रा (राज गेम)</button>
 
 <button class="btn" onclick="showAddMoney()">पैसे जोड़े (Add Money)</button>
 <button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="showWithdraw()">पैसे निकाले (Withdraw)</button>
@@ -336,38 +335,35 @@ function initAudio() {
 if (!audioCtx) {
 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 }
+if (audioCtx.state === 'suspended') {
+audioCtx.resume();
+}
 }
 
 function playOmChantTone() {
-if (!soundEnabled || !audioCtx) return;
+if (!soundEnabled) return;
+initAudio();
 try {
 let osc = audioCtx.createOscillator();
 let gain = audioCtx.createGain();
 osc.type = 'sine';
 osc.frequency.setValueAtTime(130.81, audioCtx.currentTime);
 
-gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
-gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.5);
+gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 4.0);
 
 osc.connect(gain);
 gain.connect(audioCtx.destination);
 osc.start();
-osc.stop(audioCtx.currentTime + 3.5);
+osc.stop(audioCtx.currentTime + 4.0);
 } catch(e) {}
 }
 
-function startBackgroundChants() {
-initAudio();
-if (audioCtx && audioCtx.state === 'suspended') {
-audioCtx.resume();
-}
-if (chantInterval) clearInterval(chantInterval);
-chantInterval = setInterval(() => {
-if (soundEnabled) {
+setInterval(() => {
+if (soundEnabled && audioCtx) {
 playOmChantTone();
 }
-}, 5000);
-}
+}, 4000);
 
 function playCoinSound() {
 if (!soundEnabled) return;
@@ -394,17 +390,13 @@ soundEnabled = !soundEnabled;
 let btn = document.getElementById('sound-toggle-btn');
 if (soundEnabled) {
 btn.innerText = "🔊 ॐ नमः शिवाय: ON";
-startBackgroundChants();
 } else {
 btn.innerText = "🔇 ॐ नमः शिवाय: OFF";
-if (chantInterval) clearInterval(chantInterval);
 }
 }
 
-window.addEventListener('click', () => {
-if (!audioCtx) {
-startBackgroundChants();
-}
+window.addEventListener('pointerdown', () => {
+initAudio();
 }, { once: true });
 
 function speakPuzzle() {
@@ -611,7 +603,7 @@ alert("कृपया पहले अपनी समस्या लिखे
 }
 }
 
-// Direct App Install Functionality
+// App Install / PWA Trigger
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
