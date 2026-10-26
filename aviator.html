@@ -32,6 +32,25 @@ box-shadow: 0 4px 20px rgba(0, 230, 118, 0.3);
 position: relative;
 }
 
+/* User Wallet Bar on Top */
+.wallet-bar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: #1b2230;
+padding: 8px 12px;
+border-radius: 8px;
+border: 1px solid #ffab00;
+margin-bottom: 8px;
+font-size: 12px;
+font-weight: bold;
+color: #ffab00;
+}
+.wallet-balance {
+color: #00e676;
+font-size: 14px;
+}
+
 /* History Bar */
 .history-bar {
 display: flex;
@@ -57,11 +76,11 @@ color: #00e676;
 border-color: #00e676;
 }
 
-/* Game Screen */
+/* Game Screen with Moon, Stars & Space Sky */
 .game-screen {
 width: 100%;
-height: 190px;
-background: linear-gradient(to bottom, #1e3c72, #2a5298);
+height: 195px;
+background: linear-gradient(to bottom, #050b14, #1b2a4a, #0f172a);
 border: 2px solid #334155;
 border-radius: 8px;
 position: relative;
@@ -73,21 +92,24 @@ justify-content: center;
 margin-bottom: 8px;
 }
 
-/* Background Clouds Animation */
-.cloud {
+/* Moon and Stars */
+.moon {
 position: absolute;
-background: rgba(255, 255, 255, 0.15);
-border-radius: 50px;
-animation: moveClouds linear infinite;
+top: 15px;
+right: 25px;
+font-size: 22px;
 z-index: 0;
 }
-.cloud.c1 { width: 60px; height: 20px; top: 30px; left: -70px; animation-duration: 2.5s; }
-.cloud.c2 { width: 90px; height: 25px; top: 90px; left: -100px; animation-duration: 4s; }
-.cloud.c3 { width: 50px; height: 18px; top: 130px; left: -60px; animation-duration: 2s; }
-
-@keyframes moveClouds {
-0% { transform: translateX(0); }
-100% { transform: translateX(500px); }
+.star {
+position: absolute;
+color: #fff;
+font-size: 10px;
+animation: twinkle 1.5s infinite alternate;
+z-index: 0;
+}
+@keyframes twinkle {
+0% { opacity: 0.3; }
+100% { opacity: 1; }
 }
 
 .multiplier-display {
@@ -106,21 +128,32 @@ margin-top: 5px;
 z-index: 2;
 }
 
-/* Plane with Fire & Smoke moving further ahead & higher */
+/* Plane with Rotating Propeller & Pilot, Fire Effect */
 .plane-container {
 position: absolute;
 left: 10px;
 bottom: 15px;
-font-size: 28px;
+font-size: 26px;
 transition: transform 0.05s linear;
 display: none;
 z-index: 2;
 }
 
+.propeller {
+display: inline-block;
+font-size: 18px;
+animation: spinProp 0.05s linear infinite;
+}
+
+@keyframes spinProp {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
 .flame {
-font-size: 20px;
+font-size: 18px;
 position: absolute;
-left: -20px;
+left: -18px;
 top: 4px;
 animation: flicker 0.08s infinite alternate;
 }
@@ -241,82 +274,91 @@ font-weight: bold;
 
 <div class="container">
 
-<!-- 🎮 Clean Game Dashboard -->
-<div id="game-dashboard">
-
-    <!-- History Bar -->
-    <div class="history-bar" id="history-container">
-        <div class="history-item">1.45x</div>
-        <div class="history-item high">10.0x</div>
+    <!-- 💰 User Wallet Bar on Top -->
+    <div class="wallet-bar">
+        <span>💰 वॉलेट बैलेंस:</span>
+        <span class="wallet-balance" id="user-wallet">₹1000.00</span>
     </div>
 
-    <!-- Game Screen -->
-    <div class="game-screen" id="game-screen">
-        <div class="cloud c1"></div>
-        <div class="cloud c2"></div>
-        <div class="cloud c3"></div>
+    <!-- 🎮 Clean Game Dashboard -->
+    <div id="game-dashboard">
 
-        <div class="multiplier-display" id="multiplier-text" style="display:none;">1.00x</div>
-        <div class="timer-display" id="timer-box">बेटिंग टाइम: <span id="countdown">10</span>s</div>
-        
-        <!-- Fast Plane flying higher & further -->
-        <div class="plane-container" id="plane">
-            <span class="flame">🔥</span>🚀
+        <!-- History Bar -->
+        <div class="history-bar" id="history-container">
+            <div class="history-item">1.45x</div>
+            <div class="history-item high">10.0x</div>
         </div>
-    </div>
 
-    <!-- Dual Bet Panels -->
-    <div class="dual-controls">
-        <div class="bet-panel">
-            <h4>बेट 1</h4>
-            <input type="number" id="bet1-amount" value="50" min="5" max="50000">
-            <button class="btn" style="padding:7px;" id="action-btn-1" onclick="handleBet(1)">बेट लगाएं</button>
-            <div class="live-win-text" id="live-win-1"></div>
+        <!-- Game Screen with Moon & Stars -->
+        <div class="game-screen" id="game-screen">
+            <div class="moon">🌕</div>
+            <div class="star" style="top:25px; left:40px;">✨</div>
+            <div class="star" style="top:70px; left:120px;">⭐</div>
+            <div class="star" style="top:40px; right:90px;">✨</div>
+            <div class="star" style="top:110px; right:50px;">⭐</div>
+
+            <div class="multiplier-display" id="multiplier-text" style="display:none;">1.00x</div>
+            <div class="timer-display" id="timer-box">बेटिंग टाइम: <span id="countdown">15</span>s</div>
+            
+            <!-- Plane with Pilot, Rotating Propeller & Fire -->
+            <div class="plane-container" id="plane">
+                <span class="flame">🔥</span><span class="propeller">🌀</span>👨‍✈️✈️
+            </div>
         </div>
-        <div class="bet-panel">
-            <h4>बेट 2</h4>
-            <input type="number" id="bet2-amount" value="100" min="5" max="50000">
-            <button class="btn" style="padding:7px;" id="action-btn-2" onclick="handleBet(2)">बेट लगाएं</button>
-            <div class="live-win-text" id="live-win-2"></div>
+
+        <!-- Dual Bet Panels -->
+        <div class="dual-controls">
+            <div class="bet-panel">
+                <h4>बेट 1</h4>
+                <input type="number" id="bet1-amount" value="50" min="5" max="50000">
+                <button class="btn" style="padding:7px;" id="action-btn-1" onclick="handleBet(1)">बेट लगाएं</button>
+                <div class="live-win-text" id="live-win-1"></div>
+            </div>
+            <div class="bet-panel">
+                <h4>बेट 2</h4>
+                <input type="number" id="bet2-amount" value="100" min="5" max="50000">
+                <button class="btn" style="padding:7px;" id="action-btn-2" onclick="handleBet(2)">बेट लगाएं</button>
+                <div class="live-win-text" id="live-win-2"></div>
+            </div>
         </div>
-    </div>
 
-    <div id="result-msg" style="min-height: 18px;"></div>
+        <div id="result-msg" style="min-height: 18px;"></div>
 
-    <!-- 👑 Safe Admin Login Box -->
-    <div style="margin-top: 10px; text-align: center;" id="admin-login-area">
-        <input type="password" id="admin-pass-input" placeholder="पासवर्ड (78699)" style="width: 110px; padding: 5px; background: #0b0f19; color: #ffab00; border: 1px solid #475569; font-size: 12px; text-align: center; border-radius: 4px;">
-        <button onclick="checkAdminPass()" style="background: #00e676; color: #000; border: none; padding: 6px 12px; font-size: 11px; border-radius: 4px; cursor: pointer; font-weight: bold;">Admin Login 👑</button>
-    </div>
-
-    <!-- 👑 Admin Master Control Panel -->
-    <div class="admin-setting-box" id="admin-panel-div">
-        <b>👑 एडमिन मास्टर कंट्रोल (क्रैश और टाइमिंग सेट करें):</b><br>
-        बेट टाइम (Sec): <input type="number" id="admin-bet-time" value="10"> 
-        क्रैश पॉइंट (x): <input type="number" id="admin-crash-point" value="2.50" step="0.1"> 
-        <br>
-        <b>⚡ क्विक सेट (2x, 3x, 5x, आदि):</b>
-        <div class="quick-btns">
-            <button class="quick-btn" onclick="setCrash(1.5)">1.5x</button>
-            <button class="quick-btn" onclick="setCrash(2.0)">2x</button>
-            <button class="quick-btn" onclick="setCrash(3.0)">3x</button>
-            <button class="quick-btn" onclick="setCrash(5.0)">5x</button>
-            <button class="quick-btn" onclick="setCrash(10.0)">10x</button>
-            <button class="quick-btn" onclick="setCrash(50.0)">50x</button>
+        <!-- 👑 Safe Admin Login Box -->
+        <div style="margin-top: 10px; text-align: center;" id="admin-login-area">
+            <input type="password" id="admin-pass-input" placeholder="गुप्त पासवर्ड दर्ज करें" style="width: 130px; padding: 5px; background: #0b0f19; color: #ffab00; border: 1px solid #475569; font-size: 11px; text-align: center; border-radius: 4px;">
+            <button onclick="checkAdminPass()" style="background: #00e676; color: #000; border: none; padding: 6px 12px; font-size: 11px; border-radius: 4px; cursor: pointer; font-weight: bold;">Admin Login 👑</button>
         </div>
-    </div>
 
-</div>
+        <!-- 👑 Admin Master Control Panel -->
+        <div class="admin-setting-box" id="admin-panel-div">
+            <b>👑 एडमिन मास्टर कंट्रोल (क्रैश और टाइमिंग सेट करें):</b><br>
+            बेट टाइम (Sec): <input type="number" id="admin-bet-time" value="15"> 
+            क्रैश पॉइंट (x): <input type="number" id="admin-crash-point" value="2.50" step="0.1"> 
+            <br>
+            <b>⚡ क्विक सेट (2x, 3x, 5x, आदि):</b>
+            <div class="quick-btns">
+                <button class="quick-btn" onclick="setCrash(1.5)">1.5x</button>
+                <button class="quick-btn" onclick="setCrash(2.0)">2x</button>
+                <button class="quick-btn" onclick="setCrash(3.0)">3x</button>
+                <button class="quick-btn" onclick="setCrash(5.0)">5x</button>
+                <button class="quick-btn" onclick="setCrash(10.0)">10x</button>
+                <button class="quick-btn" onclick="setCrash(50.0)">50x</button>
+            </div>
+        </div>
+
+    </div>
 
 </div>
 
 <script>
+let walletBalance = 1000.00;
 let multiplier = 1.00;
 let gameInterval = null;
 let timerInterval = null;
 let gameState = "WAITING"; 
 let crashPoint = 2.50;
-let timeLeft = 10;
+let timeLeft = 15;
 let crashHistory = [1.45, 10.0, 2.10, 50.0, 3.20];
 
 let bets = {
@@ -325,12 +367,17 @@ let bets = {
 };
 
 window.onload = function() {
+    updateWalletUI();
     startCountdown();
 };
 
+function updateWalletUI() {
+    document.getElementById('user-wallet').innerText = "₹" + walletBalance.toFixed(2);
+}
+
 function checkAdminPass() {
     let pass = document.getElementById('admin-pass-input').value.trim();
-    if (pass === "78699") {
+    if (pass === "78699") {[span_1](start_span)[span_1](end_span)
         document.getElementById('admin-panel-div').style.display = "block";
         alert("✅ एडमिन पैनल सफलतापूर्वक खुल गया है!");
     } else {
@@ -366,6 +413,13 @@ function handleBet(panelId) {
                 alert("❌ न्यूनतम ₹5 या अधिक दर्ज करें!");
                 return;
             }
+            if (walletBalance < betInput) {
+                alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है!");
+                return;
+            }
+
+            walletBalance -= betInput;
+            updateWalletUI();
 
             bets[panelId].amount = betInput;
             bets[panelId].placed = true;
@@ -376,8 +430,10 @@ function handleBet(panelId) {
             btn.className = "btn btn-cashout";
             document.getElementById(winTextId).innerText = `लगाए: ₹${betInput}`;
         } else {
-            bets[panelId].placed = false;
+            walletBalance += bets[panelId].amount;
+            updateWalletUI();
 
+            bets[panelId].placed = false;
             document.getElementById(betInputId).disabled = false;
             let btn = document.getElementById(btnId);
             btn.innerText = "बेट लगाएं";
@@ -387,6 +443,9 @@ function handleBet(panelId) {
     } else if (gameState === "RUNNING") {
         if (bets[panelId].placed && !bets[panelId].cashedOut) {
             let winAmt = Math.floor(bets[panelId].amount * multiplier);
+            walletBalance += winAmt;
+            updateWalletUI();
+
             bets[panelId].cashedOut = true;
 
             let btn = document.getElementById(btnId);
@@ -403,7 +462,7 @@ function handleBet(panelId) {
 
 function startCountdown() {
     gameState = "WAITING";
-    timeLeft = parseInt(document.getElementById('admin-bet-time').value) || 10;
+    timeLeft = parseInt(document.getElementById('admin-bet-time').value) || 15;
     
     document.getElementById('multiplier-text').style.display = "none";
     document.getElementById('timer-box').style.display = "block";
@@ -453,7 +512,6 @@ function startFlightGame() {
         }
     });
 
-    // Jitna upar multiplier, utna hi aage aur uche jayega plane
     gameInterval = setInterval(() => {
         multiplier += 0.04; 
         document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
@@ -470,7 +528,6 @@ function startFlightGame() {
             }
         });
 
-        // Extended range for higher multiplier movement
         let xPos = (multiplier - 1) * 45;
         let yPos = (multiplier - 1) * 28;
         if(xPos > 280) xPos = 280;
