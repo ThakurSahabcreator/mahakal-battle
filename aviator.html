@@ -47,6 +47,7 @@ border-radius: 8px;
 position: relative;
 overflow: hidden;
 display: flex;
+flex-direction: column;
 align-items: center;
 justify-content: center;
 margin-bottom: 15px;
@@ -58,6 +59,16 @@ font-weight: bold;
 color: #00e676;
 text-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
 z-index: 2;
+}
+
+/* live winning amount jo plane udte waqt badalta dikhega */
+.live-win-display {
+font-size: 20px;
+font-weight: bold;
+color: #ffeb3b;
+margin-top: 5px;
+z-index: 2;
+min-height: 25px;
 }
 
 .plane-icon {
@@ -147,6 +158,7 @@ margin: 0 5px;
 
 <div class="game-screen" id="game-screen">
 <div class="multiplier-display" id="multiplier-text">1.00x</div>
+<div class="live-win-display" id="live-win-text"></div>
 <div class="plane-icon" id="plane">🚀</div>
 </div>
 
@@ -204,7 +216,7 @@ actionBtn.setAttribute("onclick", "cashOut()");
 
 document.getElementById('result-msg').innerText = "";
 document.getElementById('plane').style.display = "block";
-document.getElementById('plane').style.transform = "translate(-50px, 40px) rotate(-15deg)";
+document.getElementById('plane').style.transform = "translate(-50px, 30px) rotate(-15deg)";
 
 multiplier = 1.00;
 isPlaying = true;
@@ -230,10 +242,14 @@ gameInterval = setInterval(() => {
 multiplier += 0.01;
 document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
 
+// Live winning amount calculate karke dikhana
+let currentWin = Math.floor(currentBet * multiplier);
+document.getElementById('live-win-text').innerText = `win: ₹${currentWin}`;
+
 let xPos = (multiplier - 1) * 30 - 30;
-let yPos = 40 - (multiplier - 1) * 20;
+let yPos = 30 - (multiplier - 1) * 15;
 if(xPos > 120) xPos = 120;
-if(yPos < -60) yPos = -60;
+if(yPos < -50) yPos = -50;
 document.getElementById('plane').style.transform = `translate(${xPos}px, ${yPos}px) rotate(-20deg)`;
 
 if (multiplier >= crashPoint) {
@@ -258,6 +274,7 @@ actionBtn.className = "btn";
 actionBtn.setAttribute("onclick", "placeBetAndStart()");
 document.getElementById('bet-amount').disabled = false;
 document.getElementById('plane').style.display = "none";
+document.getElementById('live-win-text').innerText = "";
 
 let resDiv = document.getElementById('result-msg');
 resDiv.className = "msg";
@@ -267,6 +284,7 @@ resDiv.innerText = `🎉 शानदार! आपने समय पर Cash 
 function planeCrashed() {
 isPlaying = false;
 document.getElementById('plane').style.display = "none";
+document.getElementById('live-win-text').innerText = "";
 
 let actionBtn = document.getElementById('action-btn');
 actionBtn.innerText = "प्लेन उड़ाएं (Place Bet)";
@@ -283,5 +301,4 @@ updateWalletDisplay();
 </script>
 
 </body>
-  </html>
-  
+</html>
