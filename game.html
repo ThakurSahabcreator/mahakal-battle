@@ -194,11 +194,10 @@ border: 2px solid #ffab00;
 
 <button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="showPuzzleSetup()">🔥 1. महाकाल कठिन पहेली बैटल (Bet)</button>
 <button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="startLudoGame()">🎲 2. महाकाल लूडो पासा बैटल (Bet)</button>
-<!-- यहाँ जहाज वाले बटन को हटाकर Aviator गेम का बटन लगा दिया गया है -->
 <button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='aviator.html'">✈️ 3. महाकाल Aviator प्लेन क्रैश बैटल</button>
 
 <button class="btn" onclick="showAddMoney()">पैसे जोड़े (Add Money)</button>
-<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="showWithdraw()">पैसे निकाले (Withdraw)</button>
+<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="showWithdraw()">🏦 बैंक में पैसे भेजें (Withdraw)</button>
 <button class="btn" style="background: linear-gradient(to right, #ff9800, #ff5722);" onclick="showReferral()">🎁 दोस्तों को शेयर करें & बोनस पाएं</button>
 
 <div class="chat-box">
@@ -274,13 +273,61 @@ border: 2px solid #ffab00;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">वापस जाएं</button>
 </div>
 
-<!-- पैसे निकाले सेक्शन -->
+<!-- बैंक चयन, खाता विवरण और ट्रांसफर सेक्शन -->
 <div id="withdraw-section" style="display:none;">
-<h3>पैसे निकालें (Withdrawal)</h3>
-<p style="font-size: 13px; color: #ccc;">न्यूनतम निकासी: ₹120 (शेष ₹20 वॉलेट में सेफ रहेंगे)</p>
-<input type="number" id="withdraw-amount" placeholder="निकासी राशि दर्ज करें">
-<button class="btn" onclick="processWithdraw()">निकासी पूरी करें</button>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">वापस जाएं</button>
+<h3>🏦 सुरक्षित बैंक ट्रांसफर पोर्टल</h3>
+<p style="font-size: 13px; color: #ccc;">न्यूनतम निकासी: ₹120 (शेष ₹20 वॉलेट में सेफ रहेंगे)<br><span style="color: #ffab00;">⚠️ प्रति ₹1000 पर ₹20 (2%) कमीशन काटकर खाते में भेजे जाएंगे</span></p>
+
+<!-- स्टेप 1: बैंक चयन और खाता फॉर्म -->
+<div id="bank-form-box" class="game-card-box" style="text-align: left;">
+<h4 style="color: #ffab00; margin-top: 0; text-align: center;">📝 स्टेप 1: बैंक चुनें और विवरण भरें</h4>
+
+<label style="font-size: 12px; color: #aaa;">अपना बैंक चुनें (Select Bank):</label>
+<select id="bank-name-select">
+<option value="">-- बैंक चुनें --</option>
+<option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
+<option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)</option>
+<option value="HDFC Bank">HDFC Bank</option>
+<option value="ICICI Bank">ICICI Bank</option>
+<option value="Bank of Baroda">Bank of Baroda</option>
+<option value="Axis Bank">Axis Bank</option>
+<option value="Union Bank of India">Union Bank of India</option>
+<option value="Canara Bank">Canara Bank</option>
+<option value="Paytm Payments Bank">Paytm Payments Bank</option>
+<option value="Airtel Payments Bank">Airtel Payments Bank</option>
+<option value="Other Bank">अन्य बैंक (Other Bank)</option>
+</select>
+
+<label style="font-size: 12px; color: #aaa;">खाता धारक का नाम (Account Holder Name):</label>
+<input type="text" id="bank-holder-name" placeholder="पूरा नाम दर्ज करें">
+
+<label style="font-size: 12px; color: #aaa;">बैंक खाता संख्या (Account Number):</label>
+<input type="text" id="bank-account-no" placeholder="खाता संख्या दर्ज करें">
+
+<label style="font-size: 12px; color: #aaa;">IFSC कोड:</label>
+<input type="text" id="bank-ifsc" placeholder="IFSC कोड दर्ज करें (उदा. SBIN000...)">
+
+<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17); margin-top: 15px;" onclick="saveBankAccount()">खाता सुरक्षित करें & आगे बढ़ें ➔</button>
+</div>
+
+<!-- स्टेप 2: बैंक खाता जुड़ने के बाद पैसे ट्रांसफर करने का विकल्प -->
+<div id="bank-transfer-box" class="game-card-box" style="display: none; text-align: left;">
+<h4 style="color: #00e676; margin-top: 0; text-align: center;">✅ बैंक खाता जुड़ गया है!</h4>
+<div style="background: #121212; padding: 10px; border-radius: 6px; font-size: 12px; color: #ddd; margin-bottom: 10px; border: 1px solid #444;">
+🏛️ बैंक: <span id="disp-bank" style="color: #ffab00;"></span><br>
+👤 नाम: <span id="disp-name" style="color: #ffab00;"></span><br>
+🔢 खाता नं: <span id="disp-acc" style="color: #ffab00;"></span><br>
+🏦 IFSC: <span id="disp-ifsc" style="color: #ffab00;"></span>
+</div>
+
+<label style="font-size: 12px; color: #aaa;">कितने रुपये ट्रांसफर करने हैं?</label>
+<input type="number" id="transfer-amount" placeholder="राशि दर्ज करें (उदा. 1000)">
+
+<button class="btn" style="background: linear-gradient(to right, #2979ff, #00b0ff);" onclick="processBankTransfer()">🚀 खाते में पैसे ट्रांसफर करें (2% कमीशन कटकर)</button>
+<button class="btn" style="background: #444; font-size: 13px; padding: 8px; margin-top: 5px;" onclick="editBankDetails()">✏️ बैंक विवरण बदलें</button>
+</div>
+
+<button class="btn" style="background:#555; margin-top: 15px;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
 <!-- रेफरल सेक्शन -->
@@ -320,6 +367,7 @@ alert("🎉 आपको महाकाल रेफरल लिंक से 
 }
 updateBalanceDisplay();
 setupReferralLink();
+checkSavedBankDetails();
 };
 
 function setupReferralLink() {
@@ -343,7 +391,6 @@ let puzzles = [
 ];
 
 let audioCtx = null;
-let chantInterval = null;
 
 function initAudio() {
 if (!audioCtx) {
@@ -546,11 +593,9 @@ alert("❌ आपके वॉलेट में पर्याप्त ब�
 return;
 }
 
-// बाजी के पैसे काटें
 walletBalance -= betAmt;
 updateBalanceDisplay();
 
-// पासा घुमाने का इफ़ेक्ट
 let diceDisplay = document.getElementById('dice-display');
 let resultDiv = document.getElementById('ludo-result');
 diceDisplay.innerText = "🌀";
@@ -615,18 +660,91 @@ alert("❌ कृपया सही राशि (50 से 100 के बी�
 function showWithdraw() {
 document.getElementById('dashboard').style.display = "none";
 document.getElementById('withdraw-section').style.display = "block";
+checkSavedBankDetails();
 }
 
-function processWithdraw() {
-let wAmt = parseInt(document.getElementById('withdraw-amount').value);
-if (wAmt >= 120 && (walletBalance - wAmt) >= 20) {
-walletBalance -= wAmt;
-updateBalanceDisplay();
-alert("✅ आपकी निकासी (Withdrawal) अनुरोध सफलतापूर्वक दर्ज कर ली गई है!");
-backToDashboard();
-} else {
-alert("❌ न्यूनतम निकासी ₹120 है और ₹20 वॉलेट में सुरक्षित रहना अनिवार्य है!");
+// बैंक नाम के साथ विवरण सेव करना
+function saveBankAccount() {
+let bankName = document.getElementById('bank-name-select').value;
+let holderName = document.getElementById('bank-holder-name').value.trim();
+let accountNo = document.getElementById('bank-account-no').value.trim();
+let ifscCode = document.getElementById('bank-ifsc').value.trim();
+
+if (bankName === "") {
+alert("❌ कृपया सूची में से अपना बैंक चुनें!");
+return;
 }
+
+if (holderName === "" || accountNo === "" || ifscCode === "") {
+alert("❌ कृपया खाता धारक का नाम, खाता संख्या और IFSC कोड सभी सही भरें!");
+return;
+}
+
+// LocalStorage में बैंक डेटा सेव करें
+localStorage.setItem('bank_name', bankName);
+localStorage.setItem('bank_holder', holderName);
+localStorage.setItem('bank_acc', accountNo);
+localStorage.setItem('bank_ifsc', ifscCode);
+
+alert("✅ बैंक खाता सफलतापूर्वक लिंक हो गया है!");
+checkSavedBankDetails();
+}
+
+function checkSavedBankDetails() {
+let savedBank = localStorage.getItem('bank_name');
+let savedName = localStorage.getItem('bank_holder');
+let savedAcc = localStorage.getItem('bank_acc');
+let savedIfsc = localStorage.getItem('bank_ifsc');
+
+if (savedBank && savedName && savedAcc && savedIfsc) {
+document.getElementById('bank-form-box').style.display = "none";
+document.getElementById('bank-transfer-box').style.display = "block";
+document.getElementById('disp-bank').innerText = savedBank;
+document.getElementById('disp-name').innerText = savedName;
+document.getElementById('disp-acc').innerText = savedAcc;
+document.getElementById('disp-ifsc').innerText = savedIfsc;
+} else {
+document.getElementById('bank-form-box').style.display = "block";
+document.getElementById('bank-transfer-box').style.display = "none";
+}
+}
+
+function editBankDetails() {
+localStorage.removeItem('bank_name');
+localStorage.removeItem('bank_holder');
+localStorage.removeItem('bank_acc');
+localStorage.removeItem('bank_ifsc');
+checkSavedBankDetails();
+}
+
+// बैंक ट्रांसफर और 2% कमीशन का फाइनल प्रोसेस
+function processBankTransfer() {
+let tAmt = parseInt(document.getElementById('transfer-amount').value);
+
+if (isNaN(tAmt) || tAmt < 120) {
+alert("❌ न्यूनतम ट्रांसफर राशि ₹120 होनी चाहिए!");
+return;
+}
+
+if ((walletBalance - tAmt) < 20) {
+alert("❌ ट्रांसफर के बाद आपके वॉलेट में कम से कम ₹20 सुरक्षित बचना अनिवार्य है!");
+return;
+}
+
+// प्रति 1000 पर 20 रुपये (2%) कमीशन की गणना
+let commission = (tAmt * 20) / 1000;
+let finalTransferAmount = tAmt - commission;
+let savedBank = localStorage.getItem('bank_name');
+let savedName = localStorage.getItem('bank_holder');
+let savedAcc = localStorage.getItem('bank_acc');
+
+// वॉलेट से पैसे काटें
+walletBalance -= tAmt;
+updateBalanceDisplay();
+
+alert(`🎉 बैंक ट्रांसफर सफल रहा!\n\n🏛️ बैंक: ${savedBank}\n👤 प्राप्तकर्ता: ${savedName}\n🔢 खाता नं: ${savedAcc}\n\n💰 ट्रांसफर राशि: ₹${tAmt}\n📉 प्लेटफॉर्म कमीशन (2%): ₹${commission}\n👉 आपके बैंक खाते में भेजी गई राशि: ₹${finalTransferAmount}`);
+
+backToDashboard();
 }
 
 function sendSupportMessage() {
