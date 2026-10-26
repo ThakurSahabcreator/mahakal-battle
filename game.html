@@ -5,10 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>महाकाल गेमिंग ज़ोन - सुरक्षित पहेली बैटल</title>
 
+<!-- PWA Manifest Link -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff9900">
+
 <meta property="og:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
 <meta property="og:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
-<meta property="og:image" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793044829204000&sa=E">
-<meta property="og:url" content="https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/&source=gmail&ust=1793044829204000&sa=E">
+<meta property="og:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
+<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
 <meta property="og:type" content="website">
 
 <style>
@@ -185,10 +189,16 @@ border: 2px solid #ffab00;
 <p style="font-size: 11px; color: #ffd24d; margin: 5px 0 0 0;">कुल लगाए गए पैसे: ₹<span id="total-deposited">0</span></p>
 </div>
 
+<!-- App Install / Download Button (Play Store Jaisa) -->
+<button id="installBtn" class="btn" style="display: none; background: linear-gradient(to right, #00c853, #64dd17); margin-bottom: 10px;">
+    📱 ऐप डाउनलोड करें (Play Store जैसा)
+</button>
+
 <p style="color: #ffab00; font-weight: bold; margin: 15px 0 5px 0;">अपना मनपसंद गेम चुनें:</p>
 
 <button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="startPuzzle()">🔥 1. महाकाल कठिन पहेली बैटल</button>
 <button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="startAdvancedGame()">🧩 2. महाकाल टाइल्स गेम</button>
+<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='ship.html'">🚢 3. महाकाल जहाज यात्रा (राज गेम)</button>
 
 <button class="btn" onclick="showAddMoney()">पैसे जोड़े (Add Money)</button>
 <button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="showWithdraw()">पैसे निकाले (Withdraw)</button>
@@ -301,9 +311,9 @@ document.getElementById('my-ref-link').value = shareUrl;
 
 function shareOnWhatsApp() {
 let refLink = document.getElementById('my-ref-link').value;
-let posterImgUrl = "https://www.google.com/url?q=https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png&source=gmail&ust=1793044829205000&sa=E";
+let posterImgUrl = "https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png";
 let whatsappMsg = encodeURIComponent("🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और पैसे जीतें!\n\n🖼️ पोस्टर देखें: " + posterImgUrl + "\n\n🎁 अपना रेफरल लिंक से जुड़ें और बोनस पाएं:\n" + refLink);
-window.open("https://www.google.com/url?q=https://api.whatsapp.com/send?text%3D&source=gmail&ust=1793044829205000&sa=E" + whatsappMsg, "_blank");
+window.open("https://api.whatsapp.com/send?text=" + whatsappMsg, "_blank");
 }
 
 let advBoard = ['🔱', '🕉️', '🔔', '📿', '🔱', '🕉️', '🔔', '📿', '🕉️'];
@@ -600,6 +610,27 @@ document.getElementById('user-msg').value = "";
 alert("कृपया पहले अपनी समस्या लिखें!");
 }
 }
+
+// Play Store Jaisa App Install Script
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'block';
+
+    installBtn.addEventListener('click', () => {
+        installBtn.style.display = 'none';
+        deferredPrompt.prompt();
+        deferredPrompt.choiceResult.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User ne game install kar liya hai');
+            }
+            deferredPrompt = null;
+        });
+    });
+});
 </script>
 </body>
 </html>
