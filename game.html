@@ -189,8 +189,8 @@ border: 2px solid #ffab00;
 <p style="font-size: 11px; color: #ffd24d; margin: 5px 0 0 0;">कुल लगाए गए पैसे: ₹<span id="total-deposited">0</span></p>
 </div>
 
-<!-- App Install / Download Button (Play Store Jaisa) -->
-<button id="installBtn" class="btn" style="display: none; background: linear-gradient(to right, #00c853, #64dd17); margin-bottom: 10px;">
+<!-- App Install / Download Button (Always Visible) -->
+<button id="installBtn" class="btn" style="background: linear-gradient(to right, #00c853, #64dd17); margin-bottom: 10px;" onclick="installAppDirect()">
     📱 ऐप डाउनलोड करें (Play Store जैसा)
 </button>
 
@@ -611,17 +611,15 @@ alert("कृपया पहले अपनी समस्या लिखे
 }
 }
 
-// Play Store Jaisa App Install Script
+// Direct App Install Functionality
 let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
-
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    installBtn.style.display = 'block';
+});
 
-    installBtn.addEventListener('click', () => {
-        installBtn.style.display = 'none';
+function installAppDirect() {
+    if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.choiceResult.then((choiceResult) => {
             if (choiceResult.outcome === 'accepted') {
@@ -629,8 +627,10 @@ window.addEventListener('beforeinstallprompt', (e) => {
             }
             deferredPrompt = null;
         });
-    });
-});
+    } else {
+        alert("📲 ऐप इंस्टॉल करने के लिए कृपया अपने ब्राउज़र (Chrome) के ऊपर 3 डॉट (Menu) पर क्लिक करके 'Install app' या 'Add to Home screen' चुनें।");
+    }
+}
 </script>
 </body>
 </html>
