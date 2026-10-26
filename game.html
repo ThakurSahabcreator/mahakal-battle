@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>महाकाल गेमिंग ज़ोन - सुरक्षित पहेली बैटल</title>
+<title>महाकाल गेमिंग ज़ोन - सुरक्षित बैटल</title>
 
 <!-- PWA Manifest Link -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff9900">
 
-<meta property="og:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और जीतें!">
+<meta property="og:title" content="🔥 महाकाल गेमिंग ज़ोन - पहेलियां और लूडो खेलें!">
 <meta property="og:description" content="🏆 Daily Challenge | 🎁 Referral Bonus | 💎 Secure Gaming & Wallet Support">
 <meta property="og:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
 <meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
@@ -77,7 +77,7 @@ padding-left: 15px;
 }
 .option-btn:hover { background: #333; }
 
-input, textarea {
+input, textarea, select {
 width: 90%;
 padding: 10px;
 margin: 10px 0;
@@ -104,28 +104,24 @@ color: #ffe680;
 font-size: 20px;
 }
 
-#advBoardContainer {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 10px;
+.game-card-box {
+background: #2a1a2e;
+border: 2px solid #9c27b0;
+border-radius: 10px;
+padding: 15px;
 margin: 15px 0;
 }
-.adv-tile {
-background: #2a2a2a;
+.dice-box {
+font-size: 50px;
+background: #1e1e1e;
 border: 2px solid #ffab00;
-border-radius: 8px;
-font-size: 30px;
-height: 70px;
+border-radius: 10px;
+width: 80px;
+height: 80px;
+margin: 15px auto;
 display: flex;
 align-items: center;
 justify-content: center;
-cursor: pointer;
-transition: 0.2s;
-}
-.adv-tile.selected {
-background: #ff7b00;
-border-color: #fff;
-transform: scale(1.05);
 }
 
 .admin-box {
@@ -196,8 +192,9 @@ border: 2px solid #ffab00;
 
 <p style="color: #ffab00; font-weight: bold; margin: 15px 0 5px 0;">अपना मनपसंद गेम चुनें:</p>
 
-<button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="startPuzzle()">🔥 1. महाकाल कठिन पहेली बैटल</button>
-<button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="startAdvancedGame()">🧩 2. महाकाल टाइल्स गेम</button>
+<button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="showPuzzleSetup()">🔥 1. महाकाल कठिन पहेली बैटल (Bet)</button>
+<button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="startLudoGame()">🎲 2. महाकाल लूडो पासा बैटल (Bet)</button>
+<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='ship.html'">🚢 3. महाकाल जहाज यात्रा (राज गेम)</button>
 
 <button class="btn" onclick="showAddMoney()">पैसे जोड़े (Add Money)</button>
 <button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="showWithdraw()">पैसे निकाले (Withdraw)</button>
@@ -217,10 +214,22 @@ border: 2px solid #ffab00;
 </div>
 </div>
 
+<!-- पहेली बेट सेटअप सेक्शन -->
+<div id="puzzle-setup-section" style="display:none;">
+<div class="game-card-box">
+<h3>🔥 पहेली बैटल बाजी (Bet)</h3>
+<p style="font-size: 13px; color: #ccc;">कम से कम ₹5 या अपनी मर्जी से जितने चाहें उतने पैसे लगाएं:</p>
+<input type="number" id="puzzle-bet-input" value="10" min="5" placeholder="बाजी की राशि दर्ज करें (उदा. 5, 10, 50)">
+<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="startPuzzleGameWithBet()">🚀 गेम शुरू करें</button>
+</div>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+</div>
+
+<!-- पहेली गेम खेलने का सेक्शन -->
 <div id="puzzle-section" style="display:none;">
 <h3>🔥 महाकाल कठिन पहेली</h3>
 <div style="background: #2a2a2a; padding: 5px 10px; border-radius: 20px; display: inline-block; margin-bottom: 5px;">
-⏱️ समय बचा है: <span id="puzzle-timer" style="color: #ffab00; font-weight: bold;">10</span>s
+⏱️ समय बचा है: <span id="puzzle-timer" style="color: #ffab00; font-weight: bold;">10</span>s | लगी बाजी: ₹<span id="active-puzzle-bet" style="color: #00e676;">10</span>
 </div>
 <button class="btn" style="background: linear-gradient(to right, #00897b, #26a69a); padding: 10px; font-size: 15px; margin-bottom: 10px;" onclick="speakPuzzle()">🔊 पहेली बोलकर सुनें</button>
 <p id="puzzle-question" style="font-size: 15px; color: #ffab00; margin: 10px 0;">पहेली लोड हो रही है...</p>
@@ -234,16 +243,22 @@ border: 2px solid #ffab00;
 <button class="btn" style="background:#555; margin-top:15px;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<div id="tiles-section" style="display:none;">
-<h3>🧩 महाकाल टाइल्स गेम</h3>
-<div style="font-size: 14px; color: #ffab00; margin-bottom: 10px;">
-स्कोर: <span id="adv-score">0</span> | हाई स्कोर: <span id="adv-highscore">0</span>
+<!-- लूडो पासा बैटल सेक्शन -->
+<div id="ludo-section" style="display:none;">
+<h3>🎲 महाकाल लूडो पासा बैटल</h3>
+<div class="game-card-box">
+<p style="font-size: 13px; color: #ffab00; margin: 0 0 10px 0;">अपनी पसंद की बाजी (₹5 से अधिक कुछ भी) दर्ज करें:</p>
+<input type="number" id="ludo-bet-amount" value="10" min="5" placeholder="बाजी की राशि दर्ज करें (उदा. 10, 50)">
+<div class="dice-box" id="dice-display">🎲</div>
+<p style="font-size: 14px; color: #ccc;">पासा फेंकें! यदि **4, 5 या 6** आया तो आपकी राशि दोगुनी (2x) हो जाएगी!</p>
+
+<button class="btn" style="background: linear-gradient(to right, #9c27b0, #e91e63);" onclick="rollLudoDice()">🎲 पासा फेंको (Roll Dice)</button>
+<div id="ludo-result" style="margin-top: 15px; font-size: 16px; font-weight: bold;"></div>
 </div>
-<div id="advBoardContainer"></div>
-<button class="btn" style="background: #ff5722;" onclick="resetAdvancedGame()">गेम रीसेट करें</button>
-<button class="btn" style="background:#555; margin-top:10px;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
+<!-- पैसे जोड़े सेक्शन -->
 <div id="add-money-section" style="display:none;">
 <h3>BharatPe QR से पैसे जोड़ें</h3>
 <p style="font-size: 13px; color: #ccc;">₹50 से ₹100 तक जोड़ें</p>
@@ -258,6 +273,7 @@ border: 2px solid #ffab00;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">वापस जाएं</button>
 </div>
 
+<!-- पैसे निकाले सेक्शन -->
 <div id="withdraw-section" style="display:none;">
 <h3>पैसे निकालें (Withdrawal)</h3>
 <p style="font-size: 13px; color: #ccc;">न्यूनतम निकासी: ₹120 (शेष ₹20 वॉलेट में सेफ रहेंगे)</p>
@@ -266,6 +282,7 @@ border: 2px solid #ffab00;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">वापस जाएं</button>
 </div>
 
+<!-- रेफरल सेक्शन -->
 <div id="referral-section" style="display:none;">
 <h3>🎁 रेफर & अर्न (Refer & Earn)</h3>
 <p style="font-size: 13px; color: #ccc;">अपना लिंक दोस्तों को भेजें। जब वे इस लिंक से जुड़ेंगे, तो आपको तुरंत रेफरल बोनस मिलेगा!</p>
@@ -283,6 +300,7 @@ let puzzleTimerInterval = null;
 let currentCorrectAnswer = 'B';
 let currentPuzzle = null;
 let soundEnabled = true;
+let currentPuzzleBet = 10;
 
 let myUserId = localStorage.getItem('mahakal_user_id');
 if (!myUserId) {
@@ -311,14 +329,9 @@ document.getElementById('my-ref-link').value = shareUrl;
 function shareOnWhatsApp() {
 let refLink = document.getElementById('my-ref-link').value;
 let posterImgUrl = "https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png";
-let whatsappMsg = encodeURIComponent("🔥 महाकाल गेमिंग ज़ोन - पहेलियां सुलझाएं और पैसे जीतें!\n\n🖼️ पोस्टर देखें: " + posterImgUrl + "\n\n🎁 अपना रेफरल लिंक से जुड़ें और बोनस पाएं:\n" + refLink);
+let whatsappMsg = encodeURIComponent("🔥 महाकाल गेमिंग ज़ोन - पहेलियां और लूडो खेलें और पैसे जीतें!\n\n🖼️ पोस्टर देखें: " + posterImgUrl + "\n\n🎁 अपना रेफरल लिंक से जुड़ें और बोनस पाएं:\n" + refLink);
 window.open("https://api.whatsapp.com/send?text=" + whatsappMsg, "_blank");
 }
-
-let advBoard = ['🔱', '🕉️', '🔔', '📿', '🔱', '🕉️', '🔔', '📿', '🕉️'];
-let selectedTile = null;
-let advScore = 0;
-let advHighScore = localStorage.getItem('mahakal_secure_highscore') ? parseInt(localStorage.getItem('mahakal_secure_highscore')) : 0;
 
 let puzzles = [
 { q: "ऐसी कौन सी खामोश दीवार है जिसे बिना छुए भी हर कोई महसूस करता है, और इसके पीछे का सच छिपा होने पर इंसान की सांसें थमने लगती हैं?", options: { A: "मौत का दरवाजा", B: "आंख की पलकें", C: "समय का चक्र", D: "दिल का दरवाजा" }, answer: "B" },
@@ -413,6 +426,28 @@ window.speechSynthesis.speak(utterance);
 }
 }
 
+function showPuzzleSetup() {
+document.getElementById('dashboard').style.display = "none";
+document.getElementById('puzzle-setup-section').style.display = "block";
+}
+
+function startPuzzleGameWithBet() {
+let betInput = parseInt(document.getElementById('puzzle-bet-input').value);
+if (isNaN(betInput) || betInput < 5) {
+alert("❌ कृपया न्यूनतम ₹5 या उससे अधिक की बाजी दर्ज करें!");
+return;
+}
+if (walletBalance < betInput) {
+alert("❌ आपके वॉलेट में पर्याप्त बैलेंस नहीं है! कृपया पहले 'पैसे जोड़े' से राशि बढ़ाएं।");
+return;
+}
+currentPuzzleBet = betInput;
+document.getElementById('active-puzzle-bet').innerText = currentPuzzleBet;
+document.getElementById('puzzle-setup-section').style.display = "none";
+document.getElementById('puzzle-section').style.display = "block";
+loadRandomPuzzle();
+}
+
 function startPuzzleTimer() {
 let timeLeft = 10;
 document.getElementById('puzzle-timer').innerText = timeLeft;
@@ -422,11 +457,11 @@ timeLeft--;
 document.getElementById('puzzle-timer').innerText = timeLeft;
 if (timeLeft <= 0) {
 clearInterval(puzzleTimerInterval);
-walletBalance -= 5;
+walletBalance -= currentPuzzleBet;
 if (walletBalance < 0) walletBalance = 0;
 updateBalanceDisplay();
 document.getElementById('puzzle-result').className = "error";
-document.getElementById('puzzle-result').innerText = "⏳ समय समाप्त! ₹5 कट गए। अगली कठिन पहेली आ रही है...";
+document.getElementById('puzzle-result').innerText = `⏳ समय समाप्त! ₹${currentPuzzleBet} कट गए। अगली कठिन पहेली आ रही है...`;
 setTimeout(loadRandomPuzzle, 2000);
 }
 }, 1000);
@@ -465,87 +500,89 @@ document.getElementById('puzzle-result').innerText = "";
 startPuzzleTimer();
 }
 
-function initAdvancedGame() {
-advScore = 0;
-document.getElementById('adv-score').innerText = advScore;
-document.getElementById('adv-highscore').innerText = advHighScore;
-advBoard.sort(() => Math.random() - 0.5);
-renderAdvBoard();
-}
-
-function renderAdvBoard() {
-const container = document.getElementById('advBoardContainer');
-container.innerHTML = '';
-advBoard.forEach((icon, index) => {
-const tile = document.createElement('div');
-tile.className = 'adv-tile';
-tile.innerText = icon;
-tile.onclick = () => handleAdvTileClick(index, tile);
-container.appendChild(tile);
-});
-}
-
-function handleAdvTileClick(index, element) {
-if (selectedTile === null) {
-selectedTile = index;
-element.classList.add('selected');
-} else {
-let prevElement = document.querySelectorAll('.adv-tile')[selectedTile];
-if(prevElement) prevElement.classList.remove('selected');
-let temp = advBoard[selectedTile];
-advBoard[selectedTile] = advBoard[index];
-advBoard[index] = temp;
-advScore += 15;
-playCoinSound();
-document.getElementById('adv-score').innerText = advScore;
-if(advScore > advHighScore) {
-advHighScore = advScore;
-localStorage.setItem('mahakal_secure_highscore', advHighScore);
-document.getElementById('adv-highscore').innerText = advHighScore;
-}
-selectedTile = null;
-renderAdvBoard();
-}
-}
-
-function resetAdvancedGame() { initAdvancedGame(); }
-function startPuzzle() { document.getElementById('dashboard').style.display = "none"; document.getElementById('puzzle-section').style.display = "block"; loadRandomPuzzle(); }
-function startAdvancedGame() { document.getElementById('dashboard').style.display = "none"; document.getElementById('tiles-section').style.display = "block"; initAdvancedGame(); }
-function showReferral() { document.getElementById('dashboard').style.display = "none"; document.getElementById('referral-section').style.display = "block"; }
-
-function backToDashboard() {
-if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
-document.getElementById('puzzle-section').style.display = "none";
-document.getElementById('tiles-section').style.display = "none";
-document.getElementById('add-money-section').style.display = "none";
-document.getElementById('withdraw-section').style.display = "none";
-document.getElementById('referral-section').style.display = "none";
-document.getElementById('dashboard').style.display = "block";
-}
-
 function checkAnswer(selectedOption) {
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 let resultDiv = document.getElementById('puzzle-result');
 
-if (walletBalance < 5) {
-walletBalance += 10;
-}
-
 if (selectedOption === currentCorrectAnswer) {
-walletBalance += 5;
+let winReward = currentPuzzleBet;
+walletBalance += winReward;
 playCoinSound();
 updateBalanceDisplay();
 resultDiv.className = "msg";
-resultDiv.innerText = "✅ सही जवाब! ₹5 जीत गए! अगली कठिन पहेली आ रही है...";
+resultDiv.innerText = `✅ सही जवाब! ₹${winReward} जीत गए! अगली कठिन पहेली आ रही है...`;
 setTimeout(loadRandomPuzzle, 2000);
 } else {
-walletBalance -= 5;
+walletBalance -= currentPuzzleBet;
 if (walletBalance < 0) walletBalance = 0;
 updateBalanceDisplay();
 resultDiv.className = "error";
-resultDiv.innerText = "❌ गलत जवाब! ₹5 कट गए। अगली पहेली आ रही है...";
+resultDiv.innerText = `❌ गलत जवाब! ₹${currentPuzzleBet} कट गए। अगली पहेली आ रही है...`;
 setTimeout(loadRandomPuzzle, 2000);
 }
+}
+
+// Ludo Dice Game Logic
+const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+
+function startLudoGame() {
+document.getElementById('dashboard').style.display = "none";
+document.getElementById('ludo-section').style.display = "block";
+document.getElementById('ludo-result').innerText = "";
+document.getElementById('dice-display').innerText = "🎲";
+}
+
+function rollLudoDice() {
+let betAmt = parseInt(document.getElementById('ludo-bet-amount').value);
+
+if (isNaN(betAmt) || betAmt < 5) {
+alert("❌ कृपया न्यूनतम ₹5 या उससे अधिक की बाजी दर्ज करें!");
+return;
+}
+
+if (walletBalance < betAmt) {
+alert("❌ आपके वॉलेट में पर्याप्त बैलेंस नहीं है! कृपया पहले 'पैसे जोड़े' विकल्प से पैसे जोड़ें।");
+return;
+}
+
+// बाजी के पैसे काटें
+walletBalance -= betAmt;
+updateBalanceDisplay();
+
+// पासा घुमाने का इफ़ेक्ट
+let diceDisplay = document.getElementById('dice-display');
+let resultDiv = document.getElementById('ludo-result');
+diceDisplay.innerText = "🌀";
+
+setTimeout(() => {
+let diceRoll = Math.floor(Math.random() * 6) + 1;
+diceDisplay.innerText = diceFaces[diceRoll - 1];
+
+if (diceRoll >= 4) {
+let winAmt = betAmt * 2;
+walletBalance += winAmt;
+playCoinSound();
+updateBalanceDisplay();
+resultDiv.className = "msg";
+resultDiv.innerText = `🎉 शानदार! पासा आया [${diceRoll}] - आप ₹${winAmt} जीत गए!`;
+} else {
+resultDiv.className = "error";
+resultDiv.innerText = `❌ ओह! पासा आया [${diceRoll}] - आप यह बाजी हार गए।`;
+}
+}, 600);
+}
+
+function showReferral() { document.getElementById('dashboard').style.display = "none"; document.getElementById('referral-section').style.display = "block"; }
+
+function backToDashboard() {
+if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+document.getElementById('puzzle-setup-section').style.display = "none";
+document.getElementById('puzzle-section').style.display = "none";
+document.getElementById('ludo-section').style.display = "none";
+document.getElementById('add-money-section').style.display = "none";
+document.getElementById('withdraw-section').style.display = "none";
+document.getElementById('referral-section').style.display = "none";
+document.getElementById('dashboard').style.display = "block";
 }
 
 function updateBalanceDisplay() {
