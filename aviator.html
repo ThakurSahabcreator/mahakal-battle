@@ -128,21 +128,23 @@ margin-top: 5px;
 z-index: 2;
 }
 
-/* Plane with Rotating Propeller & Pilot, Fire Effect */
+/* Bada Plane: Aage Pankhudi, Andar Pilot, Piche Aag */
 .plane-container {
 position: absolute;
 left: 10px;
 bottom: 15px;
-font-size: 26px;
-transition: transform 0.05s linear;
+font-size: 32px;
+transition: transform 0.03s linear;
 display: none;
 z-index: 2;
+white-space: nowrap;
 }
 
 .propeller {
 display: inline-block;
-font-size: 18px;
-animation: spinProp 0.05s linear infinite;
+font-size: 20px;
+animation: spinProp 0.02s linear infinite;
+margin-right: -4px;
 }
 
 @keyframes spinProp {
@@ -151,16 +153,16 @@ animation: spinProp 0.05s linear infinite;
 }
 
 .flame {
-font-size: 18px;
+font-size: 20px;
 position: absolute;
-left: -18px;
-top: 4px;
-animation: flicker 0.08s infinite alternate;
+left: -22px;
+top: 6px;
+animation: flicker 0.05s infinite alternate;
 }
 
 @keyframes flicker {
-0% { opacity: 0.6; transform: scale(0.8); }
-100% { opacity: 1; transform: scale(1.3); }
+0% { opacity: 0.5; transform: scale(0.7); }
+100% { opacity: 1; transform: scale(1.4); }
 }
 
 /* Dual Bet Panels */
@@ -223,6 +225,16 @@ margin-top: 6px;
 
 .btn-cashout {
 background: linear-gradient(to right, #ff9100, #ff3d00);
+}
+
+/* Ekdam Chhota aur Gupt Admin Trigger (Neeche wallet bar ya title ke paas invisible jaisa) */
+.secret-key {
+font-size: 10px;
+color: #131a26; /* Background jaisa rang taaki kisi ko na dikhe */
+cursor: pointer;
+user-select: none;
+margin-top: 5px;
+display: inline-block;
 }
 
 /* Admin Panel */
@@ -300,9 +312,9 @@ font-weight: bold;
             <div class="multiplier-display" id="multiplier-text" style="display:none;">1.00x</div>
             <div class="timer-display" id="timer-box">बेटिंग टाइम: <span id="countdown">15</span>s</div>
             
-            <!-- Plane with Pilot, Rotating Propeller & Fire -->
+            <!-- Bada Plane: Aage Pankhudi (🌀), Andar Pilot (✈️👨‍✈️), Piche Aag (🔥) -->
             <div class="plane-container" id="plane">
-                <span class="flame">🔥</span><span class="propeller">🌀</span>👨‍✈️✈️
+                <span class="flame">🔥</span><span class="propeller">🌀</span>✈️👨‍✈️
             </div>
         </div>
 
@@ -324,10 +336,9 @@ font-weight: bold;
 
         <div id="result-msg" style="min-height: 18px;"></div>
 
-        <!-- 👑 Safe Admin Login Box -->
-        <div style="margin-top: 10px; text-align: center;" id="admin-login-area">
-            <input type="password" id="admin-pass-input" placeholder="गुप्त पासवर्ड दर्ज करें" style="width: 130px; padding: 5px; background: #0b0f19; color: #ffab00; border: 1px solid #475569; font-size: 11px; text-align: center; border-radius: 4px;">
-            <button onclick="checkAdminPass()" style="background: #00e676; color: #000; border: none; padding: 6px 12px; font-size: 11px; border-radius: 4px; cursor: pointer; font-weight: bold;">Admin Login 👑</button>
+        <!-- 🔒 Gupt Secret Trigger: Wallet text ke "बैलेंस:" ke ुpar ya niche ek chhota sa invisible click point -->
+        <div style="text-align: center;">
+            <span class="secret-key" onclick="openSecretAdmin()">⚙️</span>
         </div>
 
         <!-- 👑 Admin Master Control Panel -->
@@ -375,13 +386,13 @@ function updateWalletUI() {
     document.getElementById('user-wallet').innerText = "₹" + walletBalance.toFixed(2);
 }
 
-function checkAdminPass() {
-    let pass = document.getElementById('admin-pass-input').value.trim();
-    if (pass === "78699") {[span_1](start_span)[span_1](end_span)
+function openSecretAdmin() {
+    let pass = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
+    if (pass === "78699") {
         document.getElementById('admin-panel-div').style.display = "block";
-        alert("✅ एडमिन पैनल सफलतापूर्वक खुल गया है!");
-    } else {
-        alert("❌ गलत पासवर्ड! कृपया सही पासवर्ड दर्ज करें।");
+        alert("✅ एडमिन पैनल खुल गया है!");
+    } else if (pass !== null) {
+        alert("❌ गलत पासवर्ड!");
     }
 }
 
@@ -512,8 +523,8 @@ function startFlightGame() {
         }
     });
 
-    gameInterval = setInterval(() => {
-        multiplier += 0.04; 
+    gameIntent = gameInterval = setInterval(() => {
+        multiplier += 0.08; 
         document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
 
         let adminInput = parseFloat(document.getElementById('admin-crash-point').value);
@@ -539,7 +550,7 @@ function startFlightGame() {
             clearInterval(gameInterval);
             triggerCrash();
         }
-    }, 50);
+    }, 40);
 }
 
 function triggerCrash() {
@@ -563,7 +574,7 @@ function triggerCrash() {
     resDiv.className = "error";
     resDiv.innerText = `💥 क्रैश हो गया! (${crashPoint.toFixed(2)}x)`;
 
-    setTimeout(startCountdown, 4000);
+    setTimeout(startCountdown, 3000);
 }
 
 updateHistoryUI();
