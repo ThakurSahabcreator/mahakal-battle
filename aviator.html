@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>महाकाल Dual Aviator</title>
+<!-- WhatsApp OG Meta Tags -->
+<meta property="og:title" content="महाकाल गेमिंग ज़ोन - Mahakal Dual Aviator">
+<meta property="og:description" content="पहेलियां सुलझाएं, असली नकद जीतें और सुरक्षित गेमिंग का आनंद लें!">
+<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
+<meta property="og:type" content="website">
+
 <style>
 body {
 background-color: #0b0f19;
@@ -27,7 +33,7 @@ position: relative;
 }
 h2 { color: #00e676; margin-top: 2px; font-size: 18px; }
 
-/* Banner / Poster Style */
+/* Banner Style */
 .game-banner {
 width: 100%;
 border-radius: 8px;
@@ -36,7 +42,7 @@ margin-bottom: 10px;
 box-shadow: 0 0 10px rgba(255, 171, 0, 0.3);
 }
 
-/* Login Page */
+/* Login Page Style */
 .auth-box {
 background: #1b2230;
 padding: 15px;
@@ -93,7 +99,7 @@ font-weight: bold;
 color: #00b0ff;
 }
 
-/* Menu Action Buttons */
+/* Menu Buttons (Deposit & Withdraw outside game area)[span_7](start_span)[span_7](end_span) */
 .menu-buttons {
 display: flex;
 gap: 6px;
@@ -137,7 +143,7 @@ border-radius: 4px;
 font-size: 11px;
 }
 
-/* Game Screen */
+/* Game Screen (Clean view for plane and timing)[span_8](start_span)[span_8](end_span) */
 .game-screen {
 width: 100%;
 height: 170px;
@@ -242,7 +248,7 @@ background: linear-gradient(to right, #ff9100, #ff3d00);
 background: linear-gradient(to right, #d32f2f, #b71c1c);
 }
 
-/* Admin Panel (Password Protected)[span_4](start_span)[span_4](end_span) */
+/* Admin Panel (Password Protected 78699 at the bottom)[span_9](start_span)[span_9](end_span)[span_10](start_span)[span_10](end_span) */
 .admin-setting-box {
 display: none; 
 background: #1e1b2e;
@@ -255,8 +261,8 @@ font-size: 11px;
 color: #e1bee7;
 }
 .admin-setting-box input {
-width: 45px;
-padding: 3px;
+width: 50px;
+padding: 4px;
 background: #0b0f19;
 color: #00e676;
 border: 1px solid #ab47bc;
@@ -275,7 +281,7 @@ flex-wrap: wrap;
 background: #3b0764;
 color: #e9d5ff;
 border: 1px solid #a855f7;
-padding: 2px 5px;
+padding: 3px 6px;
 font-size: 9px;
 border-radius: 4px;
 cursor: pointer;
@@ -303,9 +309,9 @@ font-weight: bold;
 
 <div class="container">
 
-<!-- 🔐 Login Page (Sirf Mobile Number aur OTP 788044)[span_5](start_span)[span_5](end_span) -->
+<!-- 🔐 Login Page -->
 <div class="auth-box" id="auth-section">
-    <img src="https://raw.githubusercontent.com/pmahakal/pmahakal.github.io/main/banner.jpg" class="game-banner" onerror="this.style.display='none'">
+    <img src="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png" class="game-banner" onerror="this.style.display='none'">
     
     <div style="text-align: center; margin-bottom: 10px;">
         <span style="font-size: 18px; font-weight: bold; color: #ffab00;">🔱 महाकाल गेमिंग ज़ोन 🔱</span><br>
@@ -319,7 +325,7 @@ font-weight: bold;
 
     <div id="otp-container" style="display:none; margin-top: 6px;">
         <label style="font-size: 11px; color: #94a3b8;">OTP दर्ज करें:</label>
-        <input type="text" id="auth-otp" placeholder="788044">
+        <input type="text" id="auth-otp" placeholder="1234">
 
         <button class="btn" onclick="verifyAndLogin()" style="background: linear-gradient(to right, #00c853, #64dd17);">रजिस्ट्रेशन पूरा करें</button>
     </div>
@@ -330,17 +336,18 @@ font-weight: bold;
 <!-- 🎮 Game Dashboard -->
 <div id="game-dashboard" style="display:none;">
 
+    <!-- History Bar (Kitni baar crash hua)[span_11](start_span)[span_11](end_span) -->
     <div class="history-bar" id="history-container">
         <div class="history-item">1.45x</div>
         <div class="history-item high">10.0x</div>
     </div>
 
     <div class="wallet-box">
-        💰 मेन वॉलेट: ₹<span id="main-wallet">0</span> | गेम बैलेंस: ₹<span id="game-wallet">0</span>
+        💰 मेन वॉलेट: ₹<span id="main-wallet">1000</span> | गेम बैलेंस: ₹<span id="game-wallet">500</span>
         <br><button class="quick-btn" style="margin-top:4px; background:#0284c7;" onclick="logoutUser()">लॉग आउट 🔓</button>
     </div>
 
-    <!-- Deposit & Withdraw Toggle Buttons -->
+    <!-- Deposit & Withdraw Toggle Buttons (Outside game area)[span_12](start_span)[span_12](end_span) -->
     <div class="menu-buttons">
         <button class="menu-btn" id="btn-deposit-tab" onclick="toggleSection('deposit')">➕ डिपॉजिट (Deposit)</button>
         <button class="menu-btn" id="btn-withdraw-tab" onclick="toggleSection('withdraw')">🏦 विथड्रॉल (Withdraw)</button>
@@ -380,7 +387,7 @@ font-weight: bold;
         <button class="btn btn-danger" style="padding:6px; margin-top:5px;" onclick="requestWithdrawal()">विथड्रॉल रिक्वेस्ट भेजें</button>
     </div>
 
-    <!-- Game Screen -->
+    <!-- Game Screen (Clean view)[span_13](start_span)[span_13](end_span) -->
     <div class="game-screen" id="game-screen">
         <div class="multiplier-display" id="multiplier-text" style="display:none;">1.00x</div>
         <div class="timer-display" id="timer-box">बेटिंग टाइम: <span id="countdown">10</span>s</div>
@@ -405,18 +412,18 @@ font-weight: bold;
 
     <div id="result-msg" style="min-height: 18px;"></div>
 
-    <!-- 👑 Admin Portal Button (Password Protected 78699)[span_6](start_span)[span_6](end_span) -->
+    <!-- 👑 Admin Portal Button (Sabse Niche Lock ke sath)[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span) -->
     <div style="margin-top: 10px; text-align: center;">
-        <button onclick="openAdminPanel()" style="background:none; border:none; color:#334155; font-size:9px; cursor:pointer;">👑 Admin Portal</button>
+        <button onclick="openAdminPanel()" style="background:none; border:none; color:#475569; font-size:10px; cursor:pointer;">👑 Admin Portal</button>
     </div>
 
-    <!-- Admin Master Control Panel (Timing & Crash Point)[span_7](start_span)[span_7](end_span) -->
+    <!-- 👑 Admin Master Control Panel (Password Protected 78699)[span_16](start_span)[span_16](end_span) -->
     <div class="admin-setting-box" id="admin-panel-div">
-        <b>👑 एडमिन मास्टर कंट्रोल:</b><br>
+        <b>👑 एडमिन मास्टर कंट्रोल (क्रैश और टाइमिंग सेट करें):</b><br>
         बेट टाइम (Sec): <input type="number" id="admin-bet-time" value="10"> 
         क्रैश पॉइंट (x): <input type="number" id="admin-crash-point" value="2.50" step="0.1"> 
         <br>
-        <b>⚡ क्विक सेट:</b>
+        <b>⚡ क्विक सेट (2x, 3x, 5x, आदि):</b>
         <div class="quick-btns">
             <button class="quick-btn" onclick="setCrash(1.5)">1.5x</button>
             <button class="quick-btn" onclick="setCrash(2.0)">2x</button>
@@ -437,8 +444,8 @@ font-weight: bold;
 
 <script>
 let currentUser = null;
-let mainWallet = 0;
-let gameWallet = 0;
+let mainWallet = 1000;
+let gameWallet = 500;
 
 let multiplier = 1.00;
 let gameInterval = null;
@@ -461,25 +468,19 @@ function sendOtp() {
     }
     document.getElementById('otp-container').style.display = 'block';
     document.getElementById('otp-btn').style.display = 'none';
-    document.getElementById('auth-msg').innerText = "✅ OTP भेज दिया गया है (OTP: 788044)";
+    document.getElementById('auth-msg').innerText = "✅ OTP भेज दिया गया है (Demo OTP: 1234)";
 }
 
 function verifyAndLogin() {
     let phone = document.getElementById('auth-phone').value.trim();
     let otp = document.getElementById('auth-otp').value.trim();
 
-    if(otp !== "788044") {
-        alert("❌ गलत OTP! कृपया '788044' दर्ज करें।");
+    if(otp !== "1234") {
+        alert("❌ गलत OTP! कृपया '1234' दर्ज करें।");
         return;
     }
 
-    let savedWallet = localStorage.getItem("wallet_" + phone);
-    if(!savedWallet) {
-        localStorage.setItem("wallet_" + phone, "1000");
-    }
-
     currentUser = phone;
-    loadUserData();
     document.getElementById('auth-section').style.display = "none";
     document.getElementById('game-dashboard').style.display = "block";
     startCountdown();
@@ -514,21 +515,16 @@ function toggleSection(type) {
     }
 }
 
+// 👑 Secret Admin Password Check (78699)[span_17](start_span)[span_17](end_span)
 function openAdminPanel() {
     let pin = prompt("कृपया एडमिन पासवर्ड दर्ज करें:");
-    if(pin === "78699") { // Yeh timing aur crash point set karne ka secret password hai[span_8](start_span)[span_8](end_span)
+    if(pin === "78699") { 
         document.getElementById('admin-panel-div').style.display = "block";
         document.getElementById('secret-preview').style.display = "block";
         alert("✅ एडमिन पैनल अनलॉक हो गया है!");
     } else if(pin !== null) {
         alert("❌ गलत पासवर्ड!");
     }
-}
-
-function loadUserData() {
-    mainWallet = parseInt(localStorage.getItem("wallet_" + currentUser)) || 1000;
-    gameWallet = 500;
-    updateWalletDisplay();
 }
 
 function logoutUser() {
@@ -547,9 +543,6 @@ function logoutUser() {
 function updateWalletDisplay() {
     document.getElementById('main-wallet').innerText = mainWallet;
     document.getElementById('game-wallet').innerText = gameWallet;
-    if(currentUser) {
-        localStorage.setItem("wallet_" + currentUser, mainWallet);
-    }
 }
 
 function depositMoney() {
