@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>महाकाल Dual Aviator - Pro Admin View</title>
+<title>महाकाल Dual Aviator</title>
 <style>
 body {
 background-color: #0b0f19;
@@ -27,7 +27,59 @@ position: relative;
 }
 h2 { color: #00e676; margin-top: 5px; font-size: 20px; }
 
-/* पिछले क्रैश की हिस्ट्री (History Bar) */
+/* Auth Box */
+.auth-box {
+background: #1b2230;
+padding: 15px;
+border-radius: 8px;
+border: 1px solid #334155;
+margin-bottom: 10px;
+text-align: left;
+}
+.auth-box input {
+width: 95%;
+padding: 8px;
+margin: 6px 0;
+background: #0b0f19;
+border: 1px solid #64748b;
+color: white;
+border-radius: 4px;
+font-size: 14px;
+}
+
+/* Bank & Withdrawal Box */
+.bank-box {
+background: #1e1b2e;
+border: 1px solid #ab47bc;
+padding: 10px;
+border-radius: 8px;
+margin-bottom: 10px;
+font-size: 12px;
+text-align: left;
+}
+.bank-box input, .bank-box select {
+width: 95%;
+padding: 6px;
+margin: 3px 0;
+background: #0b0f19;
+color: #00e676;
+border: 1px solid #ab47bc;
+border-radius: 4px;
+font-size: 12px;
+}
+
+.wallet-box {
+background: linear-gradient(135deg, #1b2a4a, #0b1329);
+padding: 10px;
+border-radius: 8px;
+margin-bottom: 10px;
+border: 1px solid #00b0ff;
+font-size: 16px;
+font-weight: bold;
+color: #00b0ff;
+}
+
+/* History Bar */
 .history-bar {
 display: flex;
 gap: 5px;
@@ -50,17 +102,6 @@ border: 1px solid #334155;
 .history-item.high {
 color: #00e676;
 border-color: #00e676;
-}
-
-.wallet-box {
-background: linear-gradient(135deg, #1b2a4a, #0b1329);
-padding: 10px;
-border-radius: 8px;
-margin-bottom: 10px;
-border: 1px solid #00b0ff;
-font-size: 16px;
-font-weight: bold;
-color: #00b0ff;
 }
 
 .game-screen {
@@ -163,16 +204,13 @@ margin-top: 5px;
 background: linear-gradient(to right, #ff9100, #ff3d00);
 }
 
-.btn-back {
-background: #475569;
-margin-top: 10px;
-width: 100%;
-padding: 10px;
-font-size: 14px;
+.btn-danger {
+background: linear-gradient(to right, #d32f2f, #b71c1c);
 }
 
-/* Admin Control Box */
+/* गुप्त एडमिन पैनल (डिफ़ॉल्ट रूप से छुपा रहेगा) */
 .admin-setting-box {
+display: none; 
 background: #1e1b2e;
 border: 1px dashed #ab47bc;
 padding: 8px;
@@ -183,7 +221,7 @@ font-size: 11px;
 color: #e1bee7;
 }
 .admin-setting-box input {
-width: 55px;
+width: 50px;
 padding: 4px;
 background: #0b0f19;
 color: #00e676;
@@ -209,9 +247,9 @@ border-radius: 4px;
 cursor: pointer;
 font-weight: bold;
 }
-.quick-btn:hover { background: #6b21a8; }
 
 .secret-admin-box {
+display: none; /* आम यूजर को नहीं दिखेगा */
 background: #2a1010;
 border: 1px solid #ff5252;
 padding: 8px;
@@ -230,72 +268,124 @@ font-weight: bold;
 <body>
 
 <div class="container">
-<h2>✈️ महाकाल Dual Aviator बैटल</h2>
+<h2>✈️ महाकाल Dual Aviator</h2>
 
-<!-- 📊 पिछले क्रैश की हिस्ट्री (History Bar) -->
-<div class="history-bar" id="history-container">
-    <div class="history-item">1.45x</div>
-    <div class="history-item high">10.0x</div>
-    <div class="history-item">2.10x</div>
-    <div class="history-item high">50.0x</div>
-    <div class="history-item">3.20x</div>
+<!-- 🔐 लॉगिन / रजिस्टर सेक्शन -->
+<div class="auth-box" id="auth-section">
+    <h4 style="color:#00e676; margin-top:0; text-align:center;">🔐 यूजर लॉगिन / रजिस्टर</h4>
+    <label>मोबाइल नंबर:</label>
+    <input type="text" id="auth-phone" placeholder="10 अंकों का मोबाइल नंबर">
+    <label>मनपसंद पासवर्ड:</label>
+    <input type="password" id="auth-password" placeholder="अपना पासवर्ड दर्ज करें">
+    <button class="btn" onclick="handleAuth()">लॉगिन / रजिस्टर करें</button>
 </div>
 
-<div class="wallet-box">
-💰 वॉलेट बैलेंस: ₹<span id="aviator-balance">5000</span>
-</div>
+<!-- 🎮 गेम डैशबोर्ड -->
+<div id="game-dashboard" style="display:none;">
 
-<div class="game-screen" id="game-screen">
-<div class="multiplier-display" id="multiplier-text" style="display:none;">1.00x</div>
-<div class="timer-display" id="timer-box">बेटिंग टाइम: <span id="countdown">10</span>s</div>
-<div class="plane-icon" id="plane">🚀</div>
-</div>
-
-<!-- Dual Bet Panels -->
-<div class="dual-controls">
-    <div class="bet-panel">
-        <h4>बेट 1</h4>
-        <input type="number" id="bet1-amount" value="50" min="5" max="50000">
-        <button class="btn" id="action-btn-1" onclick="handleBet(1)">बेट लगाएं</button>
-        <div class="live-win-text" id="live-win-1"></div>
+    <div class="history-bar" id="history-container">
+        <div class="history-item">1.45x</div>
+        <div class="history-item high">10.0x</div>
     </div>
-    <div class="bet-panel">
-        <h4>बेट 2</h4>
-        <input type="number" id="bet2-amount" value="100" min="5" max="50000">
-        <button class="btn" id="action-btn-2" onclick="handleBet(2)">बेट लगाएं</button>
-        <div class="live-win-text" id="live-win-2"></div>
+
+    <div class="wallet-box">
+        💰 मेन वॉलेट: ₹<span id="main-wallet">0</span> | गेम बैलेंस: ₹<span id="game-wallet">0</span>
+        <br><button class="quick-btn" style="margin-top:6px; background:#0284c7;" onclick="logoutUser()">लॉग आउट 🔓</button>
     </div>
+
+    <!-- 💳 डिपॉजिट और बैंक विथड्रॉल सेक्शन -->
+    <div class="bank-box">
+        <b>📲 डिपॉजिट (QR Code से स्कैन करें):</b>
+        <div style="background:#0b0f19; padding:6px; border-radius:5px; margin:4px 0; text-align:center; font-size:11px; border:1px dashed #00e676;">
+            <span style="color:#ffab00; font-weight:bold;">BharatPe / UPI Scanner</span><br>
+            <span style="color:#94a3b8;">(इस पर पेमेंट करके UTR नीचे दर्ज करें)</span>
+        </div>
+        राशि: <input type="number" id="deposit-amt" value="500">
+        UTR No: <input type="text" id="utr-number" placeholder="12 अंकों का ट्रांजैक्शन आईडी">
+        <button class="btn" style="padding:5px; margin-top:3px;" onclick="depositMoney()">डिपॉजिट कन्फर्म करें</button>
+
+        <hr style="border-color:#334155; margin:8px 0;">
+
+        <b style="color:#ff5252;">🏦 बैंक खाते में पैसे भेजें (Withdrawal Form):</b><br>
+        निकलवाने की राशि (₹): <input type="number" id="withdraw-amt" value="1000">
+        <span style="color:#fbbf24; font-size:10px;">(विथड्रॉल कमीशन: 2% या न्यूनतम ₹20 कटेगा)</span>
+        
+        खाता धारक का नाम: <input type="text" id="acc-name" placeholder="बैंक पासबुक वाला नाम">
+        बैंक का नाम: 
+        <select id="bank-name">
+            <option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
+            <option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)</option>
+            <option value="HDFC Bank">HDFC Bank</option>
+            <option value="ICICI Bank">ICICI Bank</option>
+            <option value="Bank of Baroda">Bank of Baroda</option>
+            <option value="Paytm Payments Bank">Paytm Payments Bank</option>
+            <option value="Other Bank">अन्य बैंक (Other)</option>
+        </select>
+        खाता संख्या: <input type="text" id="acc-number" placeholder="अपना अकाउंट नंबर लिखें">
+        IFSC Code: <input type="text" id="ifsc-code" placeholder="उदा. SBIN0001234" style="text-transform: uppercase;">
+
+        <button class="btn btn-danger" style="padding:6px; margin-top:5px;" onclick="requestWithdrawal()">विथड्रॉल रिक्वेस्ट भेजें</button>
+    </div>
+
+    <div class="game-screen" id="game-screen">
+        <div class="multiplier-display" id="multiplier-text" style="display:none;">1.00x</div>
+        <div class="timer-display" id="timer-box">बेटिंग टाइम: <span id="countdown">10</span>s</div>
+        <div class="plane-icon" id="plane">🚀</div>
+    </div>
+
+    <div class="dual-controls">
+        <div class="bet-panel">
+            <h4>बेट 1</h4>
+            <input type="number" id="bet1-amount" value="50" min="5" max="50000">
+            <button class="btn" id="action-btn-1" onclick="handleBet(1)">बेट लगाएं</button>
+            <div class="live-win-text" id="live-win-1"></div>
+        </div>
+        <div class="bet-panel">
+            <h4>बेट 2</h4>
+            <input type="number" id="bet2-amount" value="100" min="5" max="50000">
+            <button class="btn" id="action-btn-2" onclick="handleBet(2)">बेट लगाएं</button>
+            <div class="live-win-text" id="live-win-2"></div>
+        </div>
+    </div>
+
+    <div id="result-msg" style="min-height: 20px;"></div>
+
+    <!-- 👑 एडमिन लॉगिन बटन (इसे सिर्फ आप जानते हैं) -->
+    <div style="margin-top: 15px; text-align: center;">
+        <button onclick="openAdminPanel()" style="background:none; border:none; color:#475569; font-size:11px; cursor:pointer;">👑 Admin Portal</button>
+    </div>
+
+    <!-- 👑 एडमिन मास्टर कंट्रोल पैनल (छिपा हुआ) -->
+    <div class="admin-setting-box" id="admin-panel-div">
+        <b>👑 एडमिन मास्टर कंट्रोल:</b><br>
+        बेट टाइम (Sec): <input type="number" id="admin-bet-time" value="10"> 
+        क्रैश पॉइंट (x): <input type="number" id="admin-crash-point" value="2.50" step="0.1"> 
+        <br>
+        <b>⚡ क्विक सेट:</b>
+        <div class="quick-btns">
+            <button class="quick-btn" onclick="setCrash(1.5)">1.5x</button>
+            <button class="quick-btn" onclick="setCrash(2.0)">2x</button>
+            <button class="quick-btn" onclick="setCrash(3.0)">3x</button>
+            <button class="quick-btn" onclick="setCrash(5.0)">5x</button>
+            <button class="quick-btn" onclick="setCrash(10.0)">10x</button>
+            <button class="quick-btn" onclick="setCrash(50.0)">50x</button>
+        </div>
+    </div>
+
+    <!-- 🔒 एडमिन लाइव स्टेटस (छिपा हुआ) -->
+    <div class="secret-admin-box" id="secret-preview">
+        🔐 [Live Status]: कुल बेट राशि: ₹<span id="admin-total-bet">0</span> | स्थिति: <span id="admin-game-status">बेटिंग चल रही है...</span>
+    </div>
+
 </div>
 
-<div id="result-msg" style="min-height: 20px;"></div>
-
-<!-- 👑 एडमिन मास्टर कंट्रोल पैनल -->
-<div class="admin-setting-box">
-<b>👑 एडमिन मास्टर कंट्रोल:</b><br>
-बेट टाइम (Sec): <input type="number" id="admin-bet-time" value="10"> 
-क्रैश पॉइंट (x): <input type="number" id="admin-crash-point" value="2.50" step="0.1"> 
-<br>
-<b>⚡ क्विक सेट (Quick Multiplier):</b>
-<div class="quick-btns">
-    <button class="quick-btn" onclick="setCrash(1.5)">1.5x</button>
-    <button class="quick-btn" onclick="setCrash(2.0)">2x</button>
-    <button class="quick-btn" onclick="setCrash(3.0)">3x</button>
-    <button class="quick-btn" onclick="setCrash(5.0)">5x</button>
-    <button class="quick-btn" onclick="setCrash(10.0)">10x</button>
-    <button class="quick-btn" onclick="setCrash(50.0)">50x</button>
-</div>
-</div>
-
-<!-- 🔒 एडमिन लाइव स्टेटस -->
-<div class="secret-admin-box" id="secret-preview">
-    🔐 [Live Status]: कुल बेट राशि: ₹<span id="admin-total-bet">0</span> | स्थिति: <span id="admin-game-status">बेटिंग चल रही है...</span>
-</div>
-
-<button class="btn btn-back" onclick="window.location.href='index.html'">🏠 मुख्य डैशबोर्ड पर वापस जाएं</button>
 </div>
 
 <script>
-let balance = 5000;
+let currentUser = null;
+let mainWallet = 0;
+let gameWallet = 0;
+
 let multiplier = 1.00;
 let gameInterval = null;
 let timerInterval = null;
@@ -309,8 +399,114 @@ let bets = {
     2: { placed: false, amount: 0, cashedOut: false }
 };
 
+// 👑 एडमिन पैनल खोलने का सीक्रेट पासवर्ड फंक्शन
+function openAdminPanel() {
+    let pin = prompt("कृपया एडमिन पासवर्ड दर्ज करें:");
+    if(pin === "78699") { // यहाँ आप अपना मनपसंद एडमिन पासवर्ड बदल सकते हैं
+        document.getElementById('admin-panel-div').style.display = "block";
+        document.getElementById('secret-preview').style.display = "block";
+        alert("✅ एडमिन पैनल अनलॉक हो गया है!");
+    } else if(pin !== null) {
+        alert("❌ गलत पासवर्ड!");
+    }
+}
+
+function handleAuth() {
+    let phone = document.getElementById('auth-phone').value.trim();
+    let pass = document.getElementById('auth-password').value.trim();
+
+    if(phone.length < 10 || pass.length < 3) {
+        alert("❌ कृपया सही मोबाइल नंबर और पासवर्ड दर्ज करें!");
+        return;
+    }
+
+    let savedPass = localStorage.getItem("user_" + phone);
+    if(savedPass) {
+        if(savedPass === pass) {
+            currentUser = phone;
+            alert("✅ लॉगिन सफल!");
+        } else {
+            alert("❌ गलत पासवर्ड!");
+            return;
+        }
+    } else {
+        localStorage.setItem("user_" + phone, pass);
+        localStorage.setItem("wallet_" + phone, "1000");
+        currentUser = phone;
+        alert("🎉 रजिस्ट्रेशन सफल! ₹1000 बोनस बैलेंस जोड़ा गया।");
+    }
+
+    loadUserData();
+    document.getElementById('auth-section').style.display = "none";
+    document.getElementById('game-dashboard').style.display = "block";
+    startCountdown();
+}
+
+function loadUserData() {
+    mainWallet = parseInt(localStorage.getItem("wallet_" + currentUser)) || 1000;
+    gameWallet = 500;
+    updateWalletDisplay();
+}
+
+function logoutUser() {
+    currentUser = null;
+    clearInterval(timerInterval);
+    clearInterval(gameInterval);
+    document.getElementById('game-dashboard').style.display = "none";
+    document.getElementById('auth-section').style.display = "block";
+    document.getElementById('auth-password').value = "";
+}
+
 function updateWalletDisplay() {
-    document.getElementById('aviator-balance').innerText = balance;
+    document.getElementById('main-wallet').innerText = mainWallet;
+    document.getElementById('game-wallet').innerText = gameWallet;
+    if(currentUser) {
+        localStorage.setItem("wallet_" + currentUser, mainWallet);
+    }
+}
+
+function depositMoney() {
+    let amt = parseInt(document.getElementById('deposit-amt').value);
+    let utr = document.getElementById('utr-number').value.trim();
+    if(isNaN(amt) || amt <= 0 || utr === "") {
+        alert("❌ कृपया सही राशि और UTR / Transaction ID दर्ज करें!");
+        return;
+    }
+    mainWallet += amt;
+    updateWalletDisplay();
+    alert(`✅ ₹${amt} सफलतापूर्वक आपके मेन अकाउंट में जोड़ दिए गए हैं!`);
+}
+
+function requestWithdrawal() {
+    let amt = parseInt(document.getElementById('withdraw-amt').value);
+    let name = document.getElementById('acc-name').value.trim();
+    let bank = document.getElementById('bank-name').value;
+    let accNo = document.getElementById('acc-number').value.trim();
+    let ifsc = document.getElementById('ifsc-code').value.trim().toUpperCase();
+
+    if(isNaN(amt) || amt < 200) {
+        alert("❌ न्यूनतम विथड्रॉल राशि ₹200 होनी चाहिए!");
+        return;
+    }
+    if(name === "" || accNo.length < 5 || ifsc.length < 4) {
+        alert("❌ कृपया बैंक खाता धारक का नाम, सही अकाउंट नंबर और IFSC कोड दर्ज करें!");
+        return;
+    }
+    if(mainWallet < amt) {
+        alert("❌ आपके मेन वॉलेट में पर्याप्त बैलेंस नहीं है!");
+        return;
+    }
+
+    let commissionRate = 0.02; 
+    let commission = Math.round(amt * commissionRate);
+    if(commission < 20) commission = 20;
+
+    let finalPayout = amt - commission;
+
+    mainWallet -= amt;
+    updateWalletDisplay();
+
+    alert(`✅ विथड्रॉल रिक्वेस्ट सफलतापूक ले ली गई है!\n\n--------------------\nकुल निकासी: ₹${amt}\nप्लेटफार्म कमीशन (फीस): ₹${commission}\nआपके खाते में आएगी राशि: ₹${finalPayout}\n--------------------\nबैंक: ${bank}\nअकाउंट नंबर: ${accNo}\nIFSC: ${ifsc}\n\n(10 मिनट में पैसे आपके बैंक खाते में भेज दिए जाएंगे।)`);
 }
 
 function updateAdminStats() {
@@ -318,13 +514,11 @@ function updateAdminStats() {
     document.getElementById('admin-total-bet').innerText = total;
 }
 
-// क्विक बटन से क्रैश पॉइंट सेट करने के लिए
 function setCrash(val) {
     document.getElementById('admin-crash-point').value = val;
     crashPoint = val;
 }
 
-// हिस्ट्री बार अपडेट करने का फंक्शन
 function updateHistoryUI() {
     let container = document.getElementById('history-container');
     container.innerHTML = "";
@@ -348,14 +542,19 @@ function handleBet(panelId) {
                 alert("❌ न्यूनतम ₹5 या अधिक की बाजी दर्ज करें!");
                 return;
             }
-            if (balance < betInput) {
-                alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है!");
-                return;
+            if (gameWallet < betInput) {
+                if(mainWallet >= betInput) {
+                    mainWallet -= betInput;
+                    gameWallet += betInput;
+                } else {
+                    alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है! कृपया डिपॉजिट करें।");
+                    return;
+                }
             }
 
+            gameWallet -= betInput;
             bets[panelId].amount = betInput;
             bets[panelId].placed = true;
-            balance -= betInput;
             updateWalletDisplay();
             updateAdminStats();
 
@@ -365,7 +564,7 @@ function handleBet(panelId) {
             btn.className = "btn btn-cashout";
             document.getElementById(winTextId).innerText = `लगाए: ₹${betInput}`;
         } else {
-            balance += bets[panelId].amount;
+            gameWallet += bets[panelId].amount;
             bets[panelId].placed = false;
             updateWalletDisplay();
             updateAdminStats();
@@ -379,7 +578,7 @@ function handleBet(panelId) {
     } else if (gameState === "RUNNING") {
         if (bets[panelId].placed && !bets[panelId].cashedOut) {
             let winAmt = Math.floor(bets[panelId].amount * multiplier);
-            balance += winAmt;
+            gameWallet += winAmt;
             updateWalletDisplay();
 
             bets[panelId].cashedOut = true;
@@ -486,7 +685,6 @@ function triggerCrash() {
     document.getElementById('plane').style.display = "none";
     document.getElementById('admin-game-status').innerText = `क्रैश हो गया! (${crashPoint.toFixed(2)}x)`;
 
-    // हिस्ट्री में नया क्रैश जोड़ें
     crashHistory.push(crashPoint);
     updateHistoryUI();
 
@@ -507,9 +705,7 @@ function triggerCrash() {
     setTimeout(startCountdown, 4000);
 }
 
-updateWalletDisplay();
 updateHistoryUI();
-startCountdown();
 </script>
 
 </body>
