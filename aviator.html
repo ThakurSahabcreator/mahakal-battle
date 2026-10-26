@@ -128,41 +128,15 @@ margin-top: 5px;
 z-index: 2;
 }
 
-/* Sahi Plane Design: 🔥 Aag (Piche) -> 🌀 Pankhudi (Aage) -> ✈️👨‍✈️ Aeroplane aur Pilot (Andar) */
+/* Simple Sada Aeroplane */
 .plane-container {
 position: absolute;
 left: 10px;
 bottom: 15px;
-font-size: 26px;
+font-size: 28px;
 transition: transform 0.05s linear;
 display: none;
 z-index: 2;
-white-space: nowrap;
-}
-
-.propeller {
-display: inline-block;
-font-size: 18px;
-animation: spinProp 0.05s linear infinite;
-margin-right: -2px;
-}
-
-@keyframes spinProp {
-0% { transform: rotate(0deg); }
-100% { transform: rotate(360deg); }
-}
-
-.flame {
-font-size: 18px;
-position: absolute;
-left: -16px;
-top: 4px;
-animation: flicker 0.08s infinite alternate;
-}
-
-@keyframes flicker {
-0% { opacity: 0.6; transform: scale(0.8); }
-100% { opacity: 1; transform: scale(1.2); }
 }
 
 /* Dual Bet Panels */
@@ -227,14 +201,18 @@ margin-top: 6px;
 background: linear-gradient(to right, #ff9100, #ff3d00);
 }
 
-/* Secret Admin Trigger */
+/* Admin Trigger Button */
 .secret-key {
-font-size: 10px;
-color: #131a26;
+font-size: 11px;
+color: #38bdf8;
+background: #1b2230;
+padding: 4px 10px;
+border: 1px solid #334155;
+border-radius: 4px;
 cursor: pointer;
-user-select: none;
-margin-top: 5px;
 display: inline-block;
+margin-top: 5px;
+font-weight: bold;
 }
 
 /* Admin Panel */
@@ -312,14 +290,9 @@ font-weight: bold;
             <div class="multiplier-display" id="multiplier-text" style="display:none;">1.00x</div>
             <div class="timer-display" id="timer-box">बेटिंग टाइम: <span id="countdown">15</span>s</div>
             
-            <!-- Sahi Plane Design: 🔥 Aag (Piche) -> 🌀 Pankhudi (Aage) -> ✈️👨‍✈️ Aeroplane aur Pilot (Andar) -->
-            <div class="plane-container" id="plane">
-                <span class="flame">🔥</span><span class="propeller">🌀</span>✈️👨‍✈️
-            </div>
+            <!-- Simple Sada Aeroplane -->
+            <div class="plane-container" id="plane">✈️</div>
         </div>
-
-        <!-- 🎶 Bewafa Song Audio Player (Teri bewafai ka gam...) -->
-        <audio id="bewafa-song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" preload="auto"></audio>
 
         <!-- Dual Bet Panels -->
         <div class="dual-controls">
@@ -339,9 +312,9 @@ font-weight: bold;
 
         <div id="result-msg" style="min-height: 18px;"></div>
 
-        <!-- 🔒 Secret Admin Trigger -->
+        <!-- 🔒 Admin Trigger Button -->
         <div style="text-align: center;">
-            <span class="secret-key" onclick="openSecretAdmin()">⚙️Admin</span>
+            <span class="secret-key" onclick="openSecretAdmin()">⚙️ Admin Settings</span>
         </div>
 
         <!-- 👑 Admin Master Control Panel -->
@@ -391,7 +364,7 @@ function updateWalletUI() {
 
 function openSecretAdmin() {
     let pass = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-    if (pass === "78699") {[span_0](start_span)[span_0](end_span)
+    if (pass === "78699") {
         document.getElementById('admin-panel-div').style.display = "block";
         alert("✅ एडमिन पैनल खुल गया है!");
     } else if (pass !== null) {
@@ -512,11 +485,6 @@ function startFlightGame() {
     document.getElementById('multiplier-text').style.display = "block";
     document.getElementById('plane').style.display = "block";
 
-    // Gaana Play hoga jab plane udega
-    let song = document.getElementById('bewafa-song');
-    song.currentTime = 0;
-    song.play().catch(e => console.log("Audio autoplay restricted by browser"));
-
     crashPoint = parseFloat(document.getElementById('admin-crash-point').value) || 2.50;
 
     [1, 2].forEach(id => {
@@ -532,10 +500,7 @@ function startFlightGame() {
     });
 
     gameInterval = setInterval(() => {
-        // Shuru mein dheere-dheere smooth, aur ant mein ekdam tezi se bhagna (Rocket speed)
-        let progress = multiplier / crashPoint;
-        let speedFactor = 0.015 + (Math.pow(progress, 2) * 0.12);
-        multiplier += speedFactor;
+        multiplier += 0.03;
 
         document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
 
@@ -562,16 +527,12 @@ function startFlightGame() {
             clearInterval(gameInterval);
             triggerCrash();
         }
-    }, 50);
+    }, 60);
 }
 
 function triggerCrash() {
     gameState = "CRASHED";
     document.getElementById('plane').style.display = "none";
-
-    // Crash hone par gaana ruk jayega
-    let song = document.getElementById('bewafa-song');
-    song.pause();
 
     crashHistory.push(crashPoint);
     updateHistoryUI();
