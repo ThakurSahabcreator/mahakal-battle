@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mahakal Aviator - महाकाल प्लेन क्रैश गेम</title>
+<title>Aviator</title>
 <style>
 body {
   background-color: #0b0f19;
@@ -11,263 +11,357 @@ body {
   font-family: Arial, sans-serif;
   text-align: center;
   margin: 0;
-  padding: 10px;
+  padding: 5px;
   user-select: none;
 }
 .container {
-  max-width: 420px;
+  max-width: 400px;
   margin: auto;
   background: #131a26;
-  padding: 15px;
-  border-radius: 12px;
+  padding: 10px;
+  border-radius: 10px;
   border: 2px solid #00b4d8;
-  box-shadow: 0 4px 20px rgba(0, 180, 216, 0.3);
-  position: relative;
 }
-h2 { color: #00b4d8; margin-top: 5px; font-size: 18px; cursor: pointer; }
-.top-bar {
+.header-row {
   display: flex;
   justify-content: space-between;
-  background: #1a2332;
-  padding: 8px 12px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  border: 1px solid #334155;
+  align-items: center;
+  margin-bottom: 8px;
 }
-.game-screen {
-  height: 180px;
-  background: radial-gradient(circle, #1a2332 0%, #05070c 100%);
+h2 { color: #ff5252; margin: 0; font-size: 22px; font-style: italic; cursor: pointer; }
+.wallet-badge {
+  background: #00c853;
+  color: #000;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+}
+.dep-btn {
+  background: #00c853;
+  color: #000;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.history-bar {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+}
+.hist-pill {
+  background: #1a2332;
+  border: 1px solid #334155;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #00b4d8;
+  white-space: nowrap;
+}
+.game-box {
+  height: 170px;
+  background: radial-gradient(circle, #221015 0%, #05070c 100%);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 2px solid #00b4d8;
-  margin-bottom: 12px;
+  border: 1px solid #ff5252;
+  margin-bottom: 8px;
   position: relative;
+  overflow: hidden;
 }
-.multiplier {
-  font-size: 36px;
+.plane-icon {
+  font-size: 32px;
+  animation: flyPlane 1.5s infinite alternate ease-in-out;
+  margin-bottom: 2px;
+}
+@keyframes flyPlane {
+  0% { transform: translateY(0px) rotate(-5deg); }
+  100% { transform: translateY(-8px) rotate(5deg); }
+}
+.plane-mult {
+  font-size: 40px;
   font-weight: bold;
-  color: #00e676;
+  color: #ffffff;
 }
-.status-text {
-  font-size: 13px;
+.plane-status {
+  font-size: 12px;
   color: #ffab00;
-  margin-top: 5px;
+  margin-top: 4px;
 }
-.card-box {
+.bet-card {
   background: #1a2332;
   border: 1px solid #334155;
   border-radius: 8px;
-  padding: 12px;
-  margin: 10px 0;
+  padding: 8px;
+  margin-bottom: 8px;
   text-align: left;
 }
-input, select {
-  width: 90%;
-  padding: 10px;
-  margin: 6px 0;
+.tab-row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+.tab-btn {
+  background: #0b0f19;
+  color: #aaa;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.tab-btn.active { background: #222; color: #fff; font-weight: bold; }
+.amt-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 5px;
+}
+.quick-btn {
+  background: #0b0f19;
+  color: #fff;
+  border: 1px solid #444;
+  flex: 1;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+input {
+  width: 100%;
+  padding: 8px;
   background: #0b0f19;
   border: 1px solid #444;
   color: white;
   border-radius: 5px;
   text-align: center;
   font-size: 14px;
+  box-sizing: border-box;
+  margin-top: 4px;
 }
-.btn {
-  background: linear-gradient(to right, #0077b6, #00b4d8);
-  color: white;
+.big-bet-btn {
+  background: #00c853;
+  color: #000;
   border: none;
-  padding: 12px;
+  padding: 10px;
   width: 100%;
   border-radius: 6px;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 6px;
 }
-.btn:hover { opacity: 0.9; }
-
 .admin-panel {
   background: #2a1a1a;
   border: 2px solid #ff5252;
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
-  margin-top: 15px;
+  margin-top: 10px;
   text-align: left;
   display: none;
   font-size: 12px;
 }
-.msg { color: #00e676; font-size: 13px; margin-top: 6px; font-weight: bold; text-align: center; }
-.error { color: #ff5252; font-size: 13px; margin-top: 6px; font-weight: bold; text-align: center; }
+.msg { color: #00e676; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
+.error { color: #ff5252; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Title par 3 baar click karne se password (78699) maangega aur Admin Panel khulega -->
-  <h2 onclick="checkAviatorAdminTap()">✈️ महाकाल Aviator प्लेन गेम</h2>
-  
-  <div class="top-bar">
-    <span>💰 वॉलेट: ₹<span id="aviator-wallet">10</span></span>
-    <button onclick="window.location.href='index.html'" style="background: #ff7b00; border: none; color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer;">डैशबोर्ड जाएं</button>
+  <!-- Upar 'Aviator' title par 3 baar click karne se Admin Panel khulega (Password: 78699) -->
+  <div class="header-row">
+    <h2 onclick="checkAviatorAdminTap()">Aviator</h2>
+    <div>
+      <span class="wallet-badge">₹<span id="av-bal">90398</span></span>
+      <button class="dep-btn" onclick="window.location.href='index.html'">Deposit</button>
+    </div>
   </div>
 
-  <!-- Game Screen -->
-  <div class="game-screen">
-    <div class="multiplier" id="av-multiplier">1.00x</div>
-    <div class="status-text" id="av-status">अगला राउंड शुरू होने वाला है...</div>
+  <!-- Multiplier History Bar -->
+  <div class="history-bar">
+    <div class="hist-pill">2.03x</div>
+    <div class="hist-pill">4.39x</div>
+    <div class="hist-pill">3.73x</div>
+    <div class="hist-pill">1.18x</div>
+    <div class="hist-pill">1.12x</div>
+    <div class="hist-pill">41.89x</div>
   </div>
 
-  <!-- Betting & Auto Cashout Control Panel -->
-  <div class="card-box">
-    <label style="font-size: 12px; color: #ffab00;">बेट राशि (Bet Amount):</label>
-    <input type="number" id="av-bet-amt" value="50" min="10">
-
-    <label style="font-size: 12px; color: #00e676; margin-top: 5px; display: block;">ऑटो कैशआउट टारगेट (Auto Cashout Multiplier):</label>
-    <input type="number" id="av-auto-cash" value="2.00" step="0.1" min="1.1" placeholder="उदा. 2.00">
-
-    <button class="btn" id="av-action-btn" onclick="toggleAviatorBet()">बेट लगाएं (Place Bet)</button>
-    <div id="av-msg"></div>
+  <!-- Game Screen with Flying Plane Animation -->
+  <div class="game-box">
+    <div class="plane-icon" id="plane-graphic">✈️</div>
+    <div class="plane-mult" id="av-mult">1.00x</div>
+    <div class="plane-status" id="av-stat">अगला राउंड शुरू हो रहा है...</div>
   </div>
 
-  <!---------------- AVIATOR SECRET ADMIN PANEL (Password: 78699) ---------------->
+  <!-- Bet Panel 1 -->
+  <div class="bet-card">
+    <div class="tab-row">
+      <button class="tab-btn active">Bet</button>
+      <button class="tab-btn">Auto</button>
+    </div>
+    <input type="number" id="bet-input-1" value="500" min="10">
+    <div class="amt-row">
+      <button class="quick-btn" onclick="setAmt(100)">100</button>
+      <button class="quick-btn" onclick="setAmt(200)">200</button>
+      <button class="quick-btn" onclick="setAmt(500)">500</button>
+      <button class="quick-btn" onclick="setAmt(1000)">1,000</button>
+    </div>
+    <button class="big-bet-btn" id="action-btn-1" onclick="handleBet(1)">BET (लगाएं)</button>
+    <div id="msg-1"></div>
+  </div>
+
+  <!-- Bet Panel 2 -->
+  <div class="bet-card">
+    <div class="tab-row">
+      <button class="tab-btn active">Bet</button>
+      <button class="tab-btn">Auto</button>
+    </div>
+    <input type="number" id="bet-input-2" value="500" min="10">
+    <div class="amt-row">
+      <button class="quick-btn" onclick="setAmt2(100)">100</button>
+      <button class="quick-btn" onclick="setAmt2(200)">200</button>
+      <button class="quick-btn" onclick="setAmt2(500)">500</button>
+      <button class="quick-btn" onclick="setAmt2(1000)">1,000</button>
+    </div>
+    <button class="big-bet-btn" id="action-btn-2" onclick="handleBet(2)">BET (लगाएं)</button>
+    <div id="msg-2"></div>
+  </div>
+
+  <!-- SECRET ADMIN PANEL (Password: 78699) -->
   <div id="aviator-admin-div" class="admin-panel">
     <b style="color: #ff5252;">👑 Aviator मास्टर कंट्रोल पैनल:</b>
-    <hr style="border-color: #444; margin: 5px 0;">
-    <p style="margin-top: 8px;">🎯 <b>अगले प्लेन का क्रैश पॉइंट सेट करें (Fixed Multiplier):</b></p>
-    <input type="number" id="adm-set-crash" placeholder="उदा. 2.50" step="0.1" min="1.1">
-    <button class="btn" style="padding: 6px; background: #00e676; color: #000; margin-top: 5px;" onclick="saveAdminCrash()">क्रैश पॉइंट लॉक करें</button>
-    <div id="adm-crash-msg" style="color: #00e676; font-size: 11px; margin-top: 4px;"></div>
-
-    <button class="btn" style="background: #555; padding: 5px; margin-top: 10px;" onclick="closeAviatorAdmin()">एडमिन बंद करें</button>
+    <hr style="border-color: #444; margin: 4px 0;">
+    <p style="margin-top: 6px;">🎯 <b>अगले प्लेन का क्रैश पॉइंट सेट करें (Fixed Multiplier):</b></p>
+    <input type="number" id="adm-crash-val" placeholder="उदा. 2.50" step="0.1" min="1.1">
+    <button class="big-bet-btn" style="padding: 6px; background: #00e676; color: #000; margin-top: 5px; font-size: 13px;" onclick="saveAdminCrash()">क्रैश पॉइंट लॉक करें</button>
+    <div id="adm-status-msg" style="color: #00e676; font-size: 11px; margin-top: 4px;"></div>
+    <button class="big-bet-btn" style="background: #555; padding: 5px; margin-top: 8px; font-size: 12px;" onclick="closeAviatorAdmin()">एडमिन बंद करें</button>
   </div>
 
-  <button class="btn" style="background: #555; margin-top: 10px;" onclick="window.location.href='index.html'">मुख्य होमपेज पर वापस जाएं</button>
+  <button class="big-bet-btn" style="background: #333; color: #fff; margin-top: 5px;" onclick="window.location.href='index.html'">मुख्य होमपेज पर वापस जाएं</button>
 </div>
 
 <script>
-let walletBal = 10;
-let gameInterval = null;
+let walletBal = 90398;
 let currentMult = 1.00;
 let crashAt = 2.00;
-let forcedCrash = null; // Admin forced crash
-let isPlaying = false;
-let hasCasheOut = false;
-let betAmount = 50;
-let autoTarget = 2.00;
+let forcedCrash = null;
+let gameInterval = null;
+let isPlaying1 = false, isPlaying2 = false;
 
 window.onload = function() {
   let saved = localStorage.getItem('mahakal_master_wallet');
   if(saved !== null) walletBal = parseFloat(saved);
-  document.getElementById('aviator-wallet').innerText = walletBal;
-  startAviatorRound();
+  document.getElementById('av-bal').innerText = walletBal;
+  startRound();
 };
 
-function updateWalletUI() {
-  document.getElementById('aviator-wallet').innerText = walletBal;
+function updateBal() {
+  document.getElementById('av-bal').innerText = walletBal;
   localStorage.setItem('mahakal_master_wallet', walletBal);
 }
 
-function startAviatorRound() {
-  isPlaying = false;
-  hasCasheOut = false;
-  currentMult = 1.00;
-  document.getElementById('av-multiplier').innerText = "1.00x";
-  document.getElementById('av-multiplier').style.color = "#00e676";
-  document.getElementById('av-status').innerText = "अगला राउंड 3 सेकंड में शुरू होगा...";
-  document.getElementById('av-action-btn').innerText = "बेट लगाएं (Place Bet)";
-  document.getElementById('av-action-btn').style.background = "linear-gradient(to right, #0077b6, #00b4d8)";
+function setAmt(v) { document.getElementById('bet-input-1').value = v; }
+function setAmt2(v) { document.getElementById('bet-input-2').value = v; }
 
-  setTimeout(runFlight, 3000);
+function startRound() {
+  isPlaying1 = false; isPlaying2 = false;
+  currentMult = 1.00;
+  document.getElementById('av-mult').innerText = "1.00x";
+  document.getElementById('av-mult').style.color = "#fff";
+  document.getElementById('plane-graphic').style.display = "block";
+  document.getElementById('plane-graphic').innerText = "✈️";
+  document.getElementById('av-stat').innerText = "अगला राउंड शुरू हो रहा है...";
+  
+  document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
+  document.getElementById('action-btn-1').style.background = "#00c853";
+  document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
+  document.getElementById('action-btn-2').style.background = "#00c853";
+
+  setTimeout(runFlight, 2500);
 }
 
 function runFlight() {
-  // Agar admin ne fix crash set kiya hai toh wahi use hoga, warna random
   if(forcedCrash !== null) {
     crashAt = forcedCrash;
-    forcedCrash = null; // Reset after one use
+    forcedCrash = null;
   } else {
     crashAt = parseFloat((Math.random() * 3.5 + 1.2).toFixed(2));
   }
 
-  document.getElementById('av-status').innerText = "✈️ प्लेन उड़ रहा है...";
-  
+  document.getElementById('av-stat').innerText = "प्लेन उड़ रहा है...";
+
   gameInterval = setInterval(() => {
-    currentMult += 0.04;
+    currentMult += 0.03;
     let mStr = currentMult.toFixed(2) + "x";
-    document.getElementById('av-multiplier').innerText = mStr;
+    document.getElementById('av-mult').innerText = mStr;
 
-    // Check Auto Cashout if user placed bet
-    if(isPlaying && !hasCasheOut) {
-      if(currentMult >= autoTarget) {
-        cashOutGame(true);
-      }
-    }
-
-    // Check Crash
     if(currentMult >= crashAt) {
       clearInterval(gameInterval);
-      document.getElementById('av-multiplier').innerText = "💥 " + crashAt.toFixed(2) + "x";
-      document.getElementById('av-multiplier').style.color = "#ff5252";
-      document.getElementById('av-status').innerText = "क्रैश हो गया!";
-      
-      if(isPlaying && !hasCasheOut) {
-        document.getElementById('av-msg').className = "error";
-        document.getElementById('av-msg').innerText = `❌ आप हार गए! ₹${betAmount} डूब गए।`;
-        isPlaying = false;
+      document.getElementById('plane-graphic').innerText = "💥";
+      document.getElementById('av-mult').innerText = crashAt.toFixed(2) + "x";
+      document.getElementById('av-mult').style.color = "#ff5252";
+      document.getElementById('av-stat').innerText = "क्रैश हो गया!";
+
+      if(isPlaying1) {
+        document.getElementById('msg-1').className = "error";
+        document.getElementById('msg-1').innerText = "❌ हार गए!";
+        isPlaying1 = false;
+        document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
+        document.getElementById('action-btn-1').style.background = "#00c853";
+      }
+      if(isPlaying2) {
+        document.getElementById('msg-2').className = "error";
+        document.getElementById('msg-2').innerText = "❌ हार गए!";
+        isPlaying2 = false;
+        document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
+        document.getElementById('action-btn-2').style.background = "#00c853";
       }
 
-      setTimeout(startAviatorRound, 4000);
+      setTimeout(startRound, 3500);
     }
   }, 100);
 }
 
-function toggleAviatorBet() {
-  betAmount = parseInt(document.getElementById('av-bet-amt').value);
-  autoTarget = parseFloat(document.getElementById('av-auto-cash').value);
-  let msg = document.getElementById('av-msg');
+function handleBet(panelNo) {
+  let inpId = panelNo === 1 ? 'bet-input-1' : 'bet-input-2';
+  let btnId = panelNo === 1 ? 'action-btn-1' : 'action-btn-2';
+  let msgId = panelNo === 1 ? 'msg-1' : 'msg-2';
+  let isPlaying = panelNo === 1 ? isPlaying1 : isPlaying2;
+  let amt = parseInt(document.getElementById(inpId).value);
 
-  if(isNaN(betAmount) || betAmount < 10) {
-    msg.className = "error"; msg.innerText = "कम से कम ₹10 की बेट लगाएं!"; return;
-  }
-  if(walletBal < betAmount) {
-    msg.className = "error"; msg.innerText = "वॉलेट में पर्याप्त बैलेंस नहीं है!"; return;
-  }
+  if(isNaN(amt) || amt < 10) { alert("कम से कम ₹10 की बेट लगाएं!"); return; }
+  if(walletBal < amt) { alert("पर्याप्त बैलेंस नहीं है!"); return; }
 
   if(!isPlaying) {
-    walletBal -= betAmount;
-    updateWalletUI();
-    isPlaying = true;
-    hasCasheOut = false;
-    msg.className = "msg"; msg.innerText = `✅ बेट लग गई! (ऑटो टारगेट: ${autoTarget}x)`;
-    document.getElementById('av-action-btn').innerText = "कैश आउट (Cash Out)";
-    document.getElementById('av-action-btn').style.background = "linear-gradient(to right, #d32f2f, #f44336)";
+    walletBal -= amt;
+    updateBal();
+    if(panelNo === 1) isPlaying1 = true; else isPlaying2 = true;
+    
+    document.getElementById(btnId).innerText = "CASHOUT (कैश आउट)";
+    document.getElementById(btnId).style.background = "#ff5252";
+    document.getElementById(msgId).className = "msg";
+    document.getElementById(msgId).innerText = "✅ बेट लग गई!";
   } else {
-    cashOutGame(false);
+    let win = Math.floor(amt * currentMult);
+    walletBal += win;
+    updateBal();
+    if(panelNo === 1) isPlaying1 = false; else isPlaying2 = false;
+
+    document.getElementById(btnId).innerText = "BET (लगाएं)";
+    document.getElementById(btnId).style.background = "#00c853";
+    document.getElementById(msgId).className = "msg";
+    document.getElementById(msgId).innerText = `🎉 ₹${win} जीत गए!`;
   }
 }
 
-function cashOutGame(isAuto) {
-  if(!isPlaying || hasCasheOut) return;
-  hasCasheOut = true;
-  isPlaying = false;
-
-  let winAmt = Math.floor(betAmount * currentMult);
-  walletBal += winAmt;
-  updateWalletUI();
-
-  let msg = document.getElementById('av-msg');
-  msg.className = "msg";
-  msg.innerText = isAuto ? `🎉 ऑटो कैशआउट सफल! ${currentMult.toFixed(2)}x पर ₹${winAmt} जीत गए!` : `🎉 मैनुअल कैशआउट! ${currentMult.toFixed(2)}x पर ₹${winAmt} जीत गए!`;
-
-  document.getElementById('av-action-btn').innerText = "अगली बेट लगाएं";
-  document.getElementById('av-action-btn').style.background = "linear-gradient(to right, #0077b6, #00b4d8)";
-}
-
-// Secret Admin Tap Trigger (3 clicks on title, password: 78699)
+// 3 Taps Secret Admin Trigger (Password: 78699)[span_1](start_span)[span_1](end_span)
 let tapC = 0, lastT = 0;
 function checkAviatorAdminTap() {
   let now = new Date().getTime();
@@ -277,9 +371,9 @@ function checkAviatorAdminTap() {
   if(tapC === 3) {
     tapC = 0;
     let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-    if(p === "78699") {[span_1](start_span)[span_1](end_span)
+    if(p === "78699") {[span_2](start_span)[span_2](end_span)
       document.getElementById('aviator-admin-div').style.display = "block";
-      alert("✅ Aviator मास्टर एडमिन पैनल खुल गया है!");
+      alert("✅ Aviator एडमिन पैनल खुल गया है!");
     } else if(p !== null) {
       alert("❌ गलत पासवर्ड!");
     }
@@ -291,12 +385,12 @@ function closeAviatorAdmin() {
 }
 
 function saveAdminCrash() {
-  let val = parseFloat(document.getElementById('adm-set-crash').value);
+  let val = parseFloat(document.getElementById('adm-crash-val').value);
   if(!isNaN(val) && val >= 1.05) {
     forcedCrash = val;
-    document.getElementById('adm-crash-msg').innerText = `✅ अगला प्लेन ठीक ${val}x पर क्रैश होगा!`;
+    document.getElementById('adm-status-msg').innerText = `✅ अगला क्रैश ${val}x पर सेट हो गया!`;
   } else {
-    alert("कृपया सही वैल्यू (उदा. 2.00) दर्ज करें!");
+    alert("कृपया सही वैल्यू (उदा. 2.00) डालें!");
   }
 }
 </script>
