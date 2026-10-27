@@ -168,21 +168,32 @@ input {
   padding: 4px;
   font-size: 12px;
 }
+.secret-admin-btn {
+  background: #1a2332;
+  color: #ff5252;
+  border: 1px dashed #ff5252;
+  padding: 6px;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 6px;
+}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Upar 'Aviator' title par 3 baar click karne se chota Admin Panel khulega (Password: 78699)[span_0](start_span)[span_0](end_span)-->
   <div class="header-row">
-    <h2 onclick="checkAviatorAdminTap()">Aviator</h2>
+    <h2 onclick="openAdminPanel()">Aviator</h2>
     <div>
       <span class="wallet-badge">₹<span id="av-bal">90398</span></span>
       <button class="dep-btn" onclick="window.location.href='index.html'">Deposit</button>
     </div>
   </div>
 
-  <!-- CHOTA ADMIN CONTROL PANEL -->
+  <!-- ADMIN CONTROL PANEL (Password: 78699) -->
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
@@ -247,6 +258,9 @@ input {
     <div id="live-profit-2" class="live-profit">लाइव जीत: ₹0</div>
     <div id="msg-2"></div>
   </div>
+
+  <!-- Secret Admin Trigger Button at Bottom -->
+  <button class="secret-admin-btn" onclick="openAdminPanel()">⚙️ एडमिन पैनल खोलें (Admin)</button>
 
   <button class="big-bet-btn" style="background: #333; color: #fff; margin-top: 5px;" onclick="window.location.href='index.html'">मुख्य होमपेज पर वापस जाएं</button>
 </div>
@@ -329,7 +343,6 @@ function startFlight() {
     let mStr = currentMult.toFixed(2) + "x";
     document.getElementById('av-mult').innerText = mStr;
 
-    // Check Panel 1 auto cashout & button text
     if(isPlaying1) {
       let p1 = Math.floor(betAmt1 * currentMult);
       document.getElementById('live-profit-1').style.display = "block";
@@ -349,7 +362,6 @@ function startFlight() {
       }
     }
 
-    // Check Panel 2 auto cashout & button text
     if(isPlaying2) {
       let p2 = Math.floor(betAmt2 * currentMult);
       document.getElementById('live-profit-2').style.display = "block";
@@ -369,7 +381,6 @@ function startFlight() {
       }
     }
 
-    // Check Crash
     if(currentMult >= crashAt) {
       clearInterval(gameInterval);
       gameState = "CRASHED";
@@ -430,7 +441,6 @@ function handleBet(panelNo) {
     let isP = panelNo === 1 ? isPlaying1 : isPlaying2;
     if(!isP) { alert("राउंड शुरू हो चुका है!"); return; }
     
-    // Manual Cashout before crash / auto target
     let win = Math.floor((panelNo === 1 ? betAmt1 : betAmt2) * currentMult);
     walletBal += win;
     updateBal();
@@ -444,21 +454,13 @@ function handleBet(panelNo) {
   }
 }
 
-// 3 Taps Secret Admin Trigger (Password: 78699)[span_1](start_span)[span_1](end_span)
-let tapC = 0, lastT = 0;
-function checkAviatorAdminTap() {
-  let now = new Date().getTime();
-  if(now - lastT < 600) tapC++; else tapC = 1;
-  lastT = now;
-
-  if(tapC === 3) {
-    tapC = 0;
-    let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-    if(p === "78699") {[span_2](start_span)[span_2](end_span)
-      document.getElementById('aviator-admin-box').style.display = "block";
-    } else if(p !== null) {
-      alert("❌ गलत पासवर्ड!");
-    }
+// Admin Panel Trigger with Password: 78699[span_2](start_span)[span_2](end_span)
+function openAdminPanel() {
+  let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
+  if(p === "78699") {[span_3](start_span)[span_3](end_span)
+    document.getElementById('aviator-admin-box').style.display = "block";
+  } else if(p !== null) {
+    alert("❌ गलत पासवर्ड!");
   }
 }
 
