@@ -193,7 +193,7 @@ input {
     </div>
   </div>
 
-  <!-- ADMIN CONTROL PANEL (Password: 78699)[span_2](start_span)[span_2](end_span) -->
+  <!-- ADMIN CONTROL PANEL (Password: 78699)[span_3](start_span)[span_3](end_span) -->
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
@@ -458,10 +458,10 @@ function handleBet(panelNo) {
   }
 }
 
-// Fixed Direct Admin Panel Function (Password: 78699)[span_3](start_span)[span_3](end_span)
+// Fixed Admin Panel Function with .trim() to ignore keyboard trailing spaces
 function openAdminPanel() {
   let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-  if(p === "78699") {[span_4](start_span)[span_4](end_span)
+  if(p !== null && p.trim() === "78699") {
     let box = document.getElementById('aviator-admin-box');
     box.style.display = "block";
     box.scrollIntoView({ behavior: 'smooth' });
