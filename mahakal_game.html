@@ -4,11 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>महाकाल गेमिंग ज़ोन - Mahakal Aviator & Super Admin</title>
-<meta property="og:title" content="महाकाल गेमिंग ज़ोन - Mahakal Aviator">
-<meta property="og:description" content="पहेलियां सुलझाएं, असली नकद जीतें और सुरक्षित गेमिंग का आनंद लें!">
-<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
-<meta property="og:type" content="website">
+<title>महाकाल गेमिंग ज़ोन - Mahakal Aviator</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif; margin: 0; padding: 10px; user-select: none; }
@@ -22,7 +18,7 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 <!-- LOGIN SECTION -->
 <div id="login-section">
 <h1 class="text-xl font-bold text-center text-yellow-400 mb-2">🔱 महाकाल गेमिंग ज़ोन 🔱</h1>
-<p class="text-xs text-center text-gray-300 mb-4">नया खाता बनाएं & ₹10 बोनस पाएं!</p>
+<p class="text-xs text-center text-gray-300 mb-4">नया खाता बनाएं & ₹1000 बोनस पाएं!</p>
 <div class="space-y-3 bg-gray-800 p-3 rounded-lg text-sm">
 <label class="text-xs text-yellow-400 font-bold block">मोबाइल नंबर:</label>
 <input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white text-xs">
@@ -33,12 +29,12 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 <label class="text-xs text-yellow-400 font-bold block">पासवर्ड:</label>
 <input type="password" id="login-pass" placeholder="नया पासवर्ड बनाएं" class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white text-xs">
 
-<button onclick="verifyAndLogin()" class="w-full bg-green-600 hover:bg-green-700 p-2 rounded font-bold text-xs text-white">रजिस्ट्रेशन पूरा करें</button>
+<button onclick="verifyAndLogin()" class="w-full bg-green-600 hover:bg-green-700 p-2 rounded font-bold text-xs text-white">लॉगिन / रजिस्ट्रेशन पूरा करें</button>
 <div id="login-msg" class="text-xs font-bold text-center mt-2"></div>
 </div>
 </div>
 
-<!-- GAME DASHBOARD SECTION (Hidden initially until login) -->
+<!-- GAME DASHBOARD SECTION -->
 <div id="game-dashboard" class="hidden">
 <h1 class="text-xl font-bold text-center text-yellow-400 mb-3">✈️ Mahakal Aviator Game</h1>
 
@@ -54,12 +50,13 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 <div class="bg-gray-800 px-2 py-0.5 rounded text-green-400 font-bold border border-gray-700">10.0x</div>
 </div>
 
-<!-- Game Screen -->
+<!-- Game Screen (Right Facing Plane) -->
 <div class="h-44 bg-gradient-to-b from-black via-blue-950 to-slate-900 border border-slate-700 rounded-lg relative flex flex-col items-center justify-center mb-3 overflow-hidden">
 <div class="absolute top-2 right-3 text-lg">🌕</div>
 <div id="multiplier-text" class="text-3xl font-extrabold text-green-400 hidden animate-pulse">1.00x</div>
 <div id="timer-box" class="text-base text-yellow-400 font-bold">बेटिंग टाइम: <span id="countdown">15</span>s</div>
-<div id="plane" class="absolute left-2 bottom-3 text-2xl hidden transition-transform duration-75">✈️</div>
+<!-- Jahaj jo aage (right side) ki taraf face karega -->
+<div id="plane" class="absolute left-4 bottom-4 text-3xl hidden transition-transform duration-75" style="transform: scaleX(1) rotate(-15deg);">✈️</div>
 </div>
 
 <!-- Dual Controls -->
@@ -94,8 +91,8 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 <span onclick="openSecretAdmin()" class="text-[11px] text-sky-400 underline font-bold cursor-pointer bg-gray-800 px-3 py-1 rounded border border-slate-700">⚙️ Admin Settings (गुप्त)</span>
 </div>
 
-<!-- Super Admin Master Control Panel (Hidden from Users) -->
-<div id="admin-panel-div" class="hidden bg-purple-950/80 border border-purple-500 p-3 rounded-lg mt-3 text-xs text-purple-200 text-left space-y-2">
+<!-- Super Admin Master Control Panel (Hidden) -->
+<div id="admin-panel-div" class="hidden bg-purple-950/90 border border-purple-500 p-3 rounded-lg mt-3 text-xs text-purple-200 text-left space-y-2">
 <div class="flex justify-between items-center border-b border-purple-800 pb-1">
 <b>👑 सुपर एडमिन मास्टर कंट्रोल</b>
 <span onclick="closeSecretAdmin()" class="text-red-400 font-bold cursor-pointer">✕ बंद करें</span>
@@ -113,11 +110,6 @@ body { background-color: #0b0f19; color: #ffffff; font-family: Arial, sans-serif
 <button onclick="setCrash(5.0)" class="bg-purple-800 hover:bg-purple-700 px-2 py-0.5 rounded text-[10px] font-bold">5x</button>
 <button onclick="setCrash(10.0)" class="bg-purple-800 hover:bg-purple-700 px-2 py-0.5 rounded text-[10px] font-bold">10x</button>
 </div>
-</div>
-<div class="border-t border-purple-800 pt-1 space-y-1">
-<b>📱 Telegram Integration & OTP Alerts:</b>
-<input type="text" id="telegramToken" value="8531701253:AAFoYZkt3kJhPCEipll6Lk-ut1XR1uC2epE" placeholder="Telegram Bot Token / Chat ID" class="w-full p-1 bg-black text-white border border-purple-500 rounded text-[10px]">
-<button onclick="connectTelegram()" class="w-full bg-indigo-600 hover:bg-indigo-700 py-1 rounded text-white font-bold text-[10px]">टेलीग्राम बॉट कनेक्ट करें</button>
 </div>
 </div>
 </div>
@@ -194,15 +186,6 @@ function setCrash(val) {
 document.getElementById('admin-crash-point').value = val;
 crashPoint = val;
 alert("गुप्त क्रैश पॉइंट सेट हो गया: " + val + "x");
-}
-
-function connectTelegram() {
-let token = document.getElementById('telegramToken').value;
-if(!token) {
-alert("❌ कृपया Telegram Bot Token दर्ज करें!");
-return;
-}
-alert("✅ Telegram Bot सफलतापूर्वक कनेक्ट हो गया है!");
 }
 
 function updateHistoryUI() {
@@ -294,6 +277,7 @@ btn.className = "w-full bg-orange-500 hover:bg-orange-600 p-1.5 rounded font-bol
 document.getElementById(`live-win-${id}`).innerText = "";
 });
 
+clearInterval(timerInterval);
 timerInterval = setInterval(() => {
 timeLeft--;
 document.getElementById('countdown').innerText = timeLeft;
@@ -327,6 +311,7 @@ btn.className = "w-full bg-gray-700 p-1.5 rounded font-bold text-xs text-gray-40
 }
 });
 
+clearInterval(gameInterval);
 gameInterval = setInterval(() => {
 multiplier += 0.03;
 document.getElementById('multiplier-text').innerText = multiplier.toFixed(2) + "x";
@@ -344,11 +329,12 @@ document.getElementById(`live-win-${id}`).innerText = `₹${liveW}`;
 });
 
 let xPos = (multiplier - 1) * 35;
-let yPos = (multiplier - 1) * 25;
-if(xPos > 240) xPos = 240;
-if(yPos > 110) yPos = 110;
+let yPos = (multiplier - 1) * 20;
+if(xPos > 230) xPos = 230;
+if(yPos > 90) yPos = 90;
 
-document.getElementById('plane').style.transform = `translate(${xPos}px, -${yPos}px) rotate(-20deg)`;
+// Jahaj aage (right side) ki taraf move karega
+document.getElementById('plane').style.transform = `translate(${xPos}px, -${yPos}px) scaleX(1) rotate(-15deg)`;
 
 if (multiplier >= crashPoint) {
 clearInterval(gameInterval);
@@ -389,18 +375,8 @@ return;
 }
 let comm = wAmount * 0.02;
 let finalAmt = wAmount - comm;
-alert(`विथड्रॉवल अनुरोध स्वीकार हो गया है!\n2% कमीशन (₹${comm}) काटकर शेष राशि (₹${finalAmt}) 20-25 सेकंड में आपके खाते में भेजी जा रही है।`);
+alert(`विथड्रॉवल अनुरोध स्वीकार हो गया है!\n2% कमीशन (₹${comm}) काटकर शेष राशि (₹${finalAmt}) आपके खाते में भेजी जा रही है।`);
 }
 </script>
 </body>
 </html>
-function connectTelegram() {
-    let token = document.getElementById('telegramToken').value;
-    if(!token) {
-        alert("Kripya Telegram Bot Token darj karein!");
-        return;
-    }
-    // Yeh line user ke login aur bet ki jankari seedha aapke Telegram par bhej degi
-    fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${token.split(':')[0]}&text=🔱 Mahakal Aviator Alert: Naya user ya bet update hua hai!`);
-    alert("✅ Telegram Bot safaltapurvak connect ho gaya hai aur notification chalu ho gayi hai!");
-}
