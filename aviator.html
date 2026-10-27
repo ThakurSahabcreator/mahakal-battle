@@ -186,14 +186,14 @@ input {
 
 <div class="container">
   <div class="header-row">
-    <h2 onclick="openAdminPanel()">Aviator</h2>
+    <h2>Aviator</h2>
     <div>
       <span class="wallet-badge">₹<span id="av-bal">90398</span></span>
       <button class="dep-btn" onclick="window.location.href='index.html'">Deposit</button>
     </div>
   </div>
 
-  <!-- ADMIN CONTROL PANEL (Password: 78699)[span_3](start_span)[span_3](end_span) -->
+  <!-- ADMIN CONTROL PANEL (Password: 78699)[span_2](start_span)[span_2](end_span) -->
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
@@ -259,7 +259,7 @@ input {
     <div id="msg-2"></div>
   </div>
 
-  <!-- Secret Admin Trigger Button at Bottom -->
+  <!-- Direct Working Admin Button -->
   <button class="secret-admin-btn" onclick="openAdminPanel()">⚙️ एडमिन पैनल खोलें (Admin)</button>
 
   <button class="big-bet-btn" style="background: #333; color: #fff; margin-top: 5px;" onclick="window.location.href='index.html'">मुख्य होमपेज पर वापस जाएं</button>
@@ -333,7 +333,7 @@ function startFlight() {
   gameState = "FLYING";
   if(forcedCrash !== null) {
     crashAt = forcedCrash;
-    forcedCrash = null; // Reset after use
+    forcedCrash = null;
   } else {
     crashAt = parseFloat((Math.random() * 3.5 + 1.2).toFixed(2));
   }
@@ -458,11 +458,13 @@ function handleBet(panelNo) {
   }
 }
 
-// Admin Panel Trigger Function with Password 78699[span_4](start_span)[span_4](end_span)
+// Fixed Direct Admin Panel Function (Password: 78699)[span_3](start_span)[span_3](end_span)
 function openAdminPanel() {
   let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-  if(p === "78699") {[span_5](start_span)[span_5](end_span)
-    document.getElementById('aviator-admin-box').style.display = "block";
+  if(p === "78699") {[span_4](start_span)[span_4](end_span)
+    let box = document.getElementById('aviator-admin-box');
+    box.style.display = "block";
+    box.scrollIntoView({ behavior: 'smooth' });
   } else if(p !== null) {
     alert("❌ गलत पासवर्ड!");
   }
@@ -476,10 +478,10 @@ function saveAdminCrash() {
   let val = parseFloat(document.getElementById('adm-crash-val').value);
   if(!isNaN(val) && val >= 1.05) {
     forcedCrash = val;
-    document.getElementById('adm-status-msg').innerText = `✅ अगला क्रैश ${val}x पर सेट हो गया!`;
+    document.getElementById('adm-status-msg').innerText = `✅ क्रैश ${val}x पर लॉक हो गया!`;
     setTimeout(() => {
       closeAviatorAdmin();
-    }, 1200);
+    }, 1500);
   } else {
     alert("कृपया सही वैल्यू (उदा. 2.00) डालें!");
   }
