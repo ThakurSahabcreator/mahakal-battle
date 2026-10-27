@@ -112,8 +112,8 @@ font-size: 12px;
 
 <h2 onclick="checkSecretAdminTap()">🔱 MAHAKAL PUZZLE BATTLE 🔱</h2>
 
-<!-- Banner Image set to exact GitHub file name -->
-<img src="1792858963757.png" alt="Mahakal Puzzle Battle Banner" class="banner-img">[span_1](start_span)[span_1](end_span)
+<!-- Banner Image -->
+<img src="1792858963757.png" alt="Mahakal Puzzle Battle Banner" class="banner-img">[span_0](start_span)[span_0](end_span)
 
 <!---------------- 1. LOGIN PAGE SECTION ---------------->
 <div id="login-section">
@@ -174,16 +174,28 @@ font-size: 12px;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Deposit View -->
+<!-- Deposit View (With Direct Yes/No Approval Box) -->
 <div id="deposit-section" class="hidden">
 <div class="card-box">
 <h3 style="color: #ffab00; margin-top: 0; text-align: center;">📥 पैसे जोड़े (QR Deposit)</h3>
-<img src="qrcode.jpg" alt="QR" class="qr-img">
+<img src="qrcode.jpg" alt="QR" class="qr-img">[span_1](start_span)[span_1](end_span)
 <p style="font-size: 11px; color: #aaa; text-align: center;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 <input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
+<input type="text" id="dep-upinumber" placeholder="UPI Number / UPI ID दर्ज करें">
 <input type="text" id="dep-txnid" placeholder="UPI Txn ID दर्ज करें">
 <button class="btn" style="background: #00897b;" onclick="sendDepositReq()">डिपॉजिट अनुरोध भेजें</button>
 <div id="dep-msg"></div>
+
+<!-- Direct Admin Approval Box on Deposit Section -->
+<div id="direct-approval-box" style="margin-top: 15px; background: #1a1000; border: 1px solid #ffab00; padding: 10px; border-radius: 6px; display: none;">
+<p style="color: #ffab00; font-size: 12px; margin: 0 0 5px 0; font-weight: bold;">📢 नया डिपॉजिट अनुरोध (Live):</p>
+<div id="live-dep-details" style="font-size: 11px; color: #fff; margin-bottom: 8px;"></div>
+<div id="live-dep-buttons">
+<button onclick="admDepYes()" style="background:#00e676; border:none; padding:6px 12px; font-weight:bold; border-radius:3px; cursor:pointer; color:#000;">✔ YES (सफल)</button>
+<button onclick="admDepNo()" style="background:#ff5252; border:none; padding:6px 12px; font-weight:bold; border-radius:3px; cursor:pointer; color:#fff; margin-left:5px;">✖ NO (गलत)</button>
+</div>
+</div>
+
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
@@ -214,7 +226,7 @@ font-size: 12px;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!---------------- SECRET ADMIN PANEL (Password: 78699)[span_2](start_span)[span_2](end_span) ---------------->
+<!---------------- SECRET ADMIN PANEL (Password: 78699) ---------------->
 <div id="admin-panel-div" class="admin-panel">
 <b style="color: #ff5252;">👑 मास्टर एडमिन कंट्रोल पैनल (Security & Master Lock):</b>
 <hr style="border-color: #444; margin: 5px 0;">
@@ -222,11 +234,7 @@ font-size: 12px;
 <p>🔒 <b>मास्टर सिक्योरिटी लॉक:</b></p>
 <button onclick="toggleMasterLock()" id="lock-status-btn" style="background:#00e676; border:none; padding:6px 12px; font-weight:bold; border-radius:4px; cursor:pointer;">Lock Status: UNLOCKED</button>
 
-<p style="margin-top: 10px;">📦 <b>डिपॉजिट अनुरोध:</b> <span id="adm-dep" style="color: #00e676;">कोई नहीं</span></p>
-<button onclick="admDepYes()" style="background:#00e676; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer;">✔ YES</button>
-<button onclick="admDepNo()" style="background:#ff5252; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer; color:#fff; margin-left:5px;">✖ NO</button>
-
-<p style="margin-top: 10px;">🏦 <b>विथड्रॉवल अनुरोध:</b> <span id="adm-wit" style="color: #ffab00;">कोई नहीं</span></p>
+<p style="margin-top: 15px;">🏦 <b>विथड्रॉवल अनुरोध:</b> <span id="adm-wit" style="color: #ffab00;">कोई नहीं</span></p>
 <button onclick="admWitYes()" style="background:#00e676; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer;">✔ YES (2% काटकर)</button>
 <button onclick="admWitNo()" style="background:#ff5252; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer; color:#fff; margin-left:5px;">✖ NO</button>
 
@@ -244,9 +252,10 @@ font-size: 12px;
 
 <script>
 let walletBalance = 10;
-let pendingDep = null;
+let pendingDep = null; 
 let pendingWit = null;
-let isSystemLocked = false; // Master Lock Switch
+let isSystemLocked = false; 
+let loggedInPhone = ""; 
 
 const BOT_TOKEN = "8531701253:AAFoYZkt3kJhPCEipll6Lk-ut1XR1uC2epE";
 const CHAT_ID = "7880447645";
@@ -293,11 +302,10 @@ function processLogin() {
     msg.className = "error"; msg.innerText = "❌ कृपया पासवर्ड दर्ज करें!"; return;
   }
 
-  // Duplicate Number / Security Check
+  loggedInPhone = ph; 
   let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
   
   if(registeredUsers[ph]) {
-    // Purana User
     if(registeredUsers[ph] !== ps) {
       msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड! कृपया सही पासवर्ड डालें।";
       return;
@@ -305,14 +313,12 @@ function processLogin() {
     msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल! डैशबोर्ड खुल रहा है...";
     sendTelegram(`🔐 Purana User Login!\n📱 Number: ${ph}`);
   } else {
-    // Naya User - Instant ₹10 Bonus & Sound Effect
     registeredUsers[ph] = ps;
     localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
     
     walletBalance += 10;
     saveWallet();
     
-    // Play sound effect
     let sound = document.getElementById('bonus-sound');
     if(sound) sound.play().catch(e => console.log(e));
 
@@ -404,16 +410,40 @@ function rollDice() {
   }, 600);
 }
 
+// Deposit Request - Displays directly inside Deposit section with YES/NO buttons
 function sendDepositReq() {
   let amt = parseInt(document.getElementById('dep-amount').value);
-  let tx = document.getElementById('dep-txnid').value;
+  let upiNum = document.getElementById('dep-upinumber').value.trim();
+  let tx = document.getElementById('dep-txnid').value.trim();
   let msg = document.getElementById('dep-msg');
-  if(isNaN(amt) || amt < 100 || !tx) { msg.className = "error"; msg.innerText = "सही राशि और Txn ID भरें!"; return; }
 
-  pendingDep = amt;
-  msg.className = "msg"; msg.innerText = "⏳ डिपॉजिट अनुरोध एडमिन के पास भेज दिया गया है।";
-  document.getElementById('adm-dep').innerText = `₹${amt} (Txn: ${tx})`;
-  sendTelegram(`📥 New Deposit Request!\n💰 Amount: ₹${amt}\n🆔 Txn ID: ${tx}`);
+  if(isNaN(amt) || amt <= 0 || !upiNum || !tx) { 
+    msg.className = "error"; 
+    msg.innerText = "कृपया सही राशि, UPI नंबर/ID और Txn ID भरें!"; 
+    return; 
+  }
+
+  pendingDep = {
+    phone: loggedInPhone || "अज्ञात नंबर",
+    amount: amt,
+    upi: upiNum,
+    txn: tx
+  };
+
+  msg.className = "msg"; 
+  msg.innerText = "⏳ अनुरोध दर्ज हो गया है। नीचे दिए गए बॉक्स में चेक करें:";
+
+  // Show direct approval box right inside deposit section
+  document.getElementById('live-dep-details').innerHTML = `
+    📱 <b>Mobile:</b> ${pendingDep.phone}<br>
+    💰 <b>Amount:</b> ₹${amt}<br>
+    💳 <b>UPI No:</b> ${upiNum}<br>
+    🆔 <b>Txn ID:</b> ${tx}
+  `;
+  document.getElementById('direct-approval-box').style.display = "block";
+  document.getElementById('live-dep-buttons').style.display = "block";
+
+  sendTelegram(`📥 New Deposit Request!\n📱 Mobile: ${pendingDep.phone}\n💰 Amount: ₹${amt}\n💳 UPI No: ${upiNum}\n🆔 Txn ID: ${tx}`);
 }
 
 function sendWithdrawReq() {
@@ -436,7 +466,7 @@ function sendWithdrawReq() {
   sendTelegram(`🏦 New Withdrawal Request!\n🏛 Bank: ${b}\n👤 Holder: ${h}\n💸 Requested: ₹${amt}\n✂️ Final (2% cut): ₹${finalAmt}`);
 }
 
-// Secret Admin Trigger (3 taps on title, Password: 78699)[span_3](start_span)[span_3](end_span)
+// Secret Admin Trigger (3 taps on title, Password: 78699)
 let tapC = 0, lastT = 0;
 function checkSecretAdminTap() {
   let now = new Date().getTime();
@@ -446,7 +476,7 @@ function checkSecretAdminTap() {
   if(tapC === 3) {
     tapC = 0;
     let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-    if(p === "78699") {[span_4](start_span)[span_4](end_span)
+    if(p === "78699") {
       document.getElementById('admin-panel-div').style.display = "block";
       alert("✅ मास्टर एडमिन पैनल खुल गया है!");
     } else if(p !== null) {
@@ -480,18 +510,28 @@ function admUpdateBal() {
   }
 }
 
+// Direct YES Button (Approved inside Deposit section)
 function admDepYes() {
   if(pendingDep) {
-    walletBalance += pendingDep; saveWallet();
-    alert(`✅ डिपॉजिट स्वीकृत! ₹${pendingDep} जोड़ दिए गए हैं।`);
-    sendTelegram(`✅ Deposit Approved & Credited: ₹${pendingDep}`);
-    pendingDep = null; document.getElementById('adm-dep').innerText = "स्वीकृत (Approved)";
+    walletBalance += pendingDep.amount; 
+    saveWallet();
+    alert(`✅ डिपॉजिट स्वीकृत! ₹${pendingDep.amount} जोड़ दिए गए हैं।`);
+    sendTelegram(`✅ Deposit Approved & Credited: ₹${pendingDep.amount} for Mobile: ${pendingDep.phone}`);
+    
+    document.getElementById('live-dep-details').innerHTML = "<span style='color:#00e676; font-weight:bold;'>✔ स्वीकृत (Approved & Credited)</span>";
+    document.getElementById('live-dep-buttons').style.display = "none";
+    pendingDep = null; 
   }
 }
+
+// Direct NO Button (Rejected inside Deposit section)
 function admDepNo() {
-  pendingDep = null; alert("❌ डिपॉजिट खारिज कर दिया गया।");
+  pendingDep = null; 
+  alert("❌ डिपॉजिट खारिज कर दिया गया।");
   sendTelegram(`❌ Deposit Rejected by Admin`);
-  document.getElementById('adm-dep').innerText = "रद्द (Rejected)";
+  
+  document.getElementById('live-dep-details').innerHTML = "<span style='color:#ff5252; font-weight:bold;'>✖ रद्द (Rejected)</span>";
+  document.getElementById('live-dep-buttons').style.display = "none";
 }
 
 function admWitYes() {
