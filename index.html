@@ -33,6 +33,19 @@ position: relative;
 }
 h2 { color: #ffab00; margin-top: 10px; cursor: pointer; font-size: 18px; }
 
+.top-badge {
+font-size: 11px;
+color: #ff9933;
+background: #1a2332;
+padding: 4px 12px;
+border-radius: 15px;
+border: 1px solid #ff9933;
+display: inline-block;
+margin-bottom: 5px;
+font-weight: bold;
+box-shadow: 0 0 10px rgba(255, 153, 51, 0.3);
+}
+
 .banner-img {
 width: 100%;
 max-height: 200px;
@@ -116,6 +129,8 @@ font-size: 12px;
 
 <div class="container">
 
+<!-- Tiranga Flag & My Love India Badge -->
+<div class="top-badge">🇮🇳 🟨 ⬜ 🟩 My Love India 🇮🇳</div>
 <h2 onclick="checkSecretAdminTap()">🔱 MAHAKAL PUZZLE BATTLE 🔱</h2>
 
 <!-- Banner Image -->
@@ -161,6 +176,8 @@ font-size: 12px;
 <button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='aviator.html'">✈️ 3. महाकाल Aviator प्लेन गेम</button>
 <button class="btn" style="background: linear-gradient(to right, #00897b, #00acc1);" onclick="openSection('deposit-section')">📥 4. पैसे जोड़े (BharatPe QR Deposit)</button>
 <button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 5. बैंक में पैसे भेजें (Withdrawal Portal)</button>
+
+<!-- Games list ke bilkul niche Refer & Earn aur Support button -->
 <button class="btn" style="background: linear-gradient(to right, #eab308, #ca8a04);" onclick="openSection('refer-section')">🎁 6. शेयर करें और 3% कमीशन पाएं (Refer & Earn)</button>
 <button class="btn" style="background: linear-gradient(to right, #0284c7, #0369a1);" onclick="openSection('support-section')">💬 7. AI कस्टमर सपोर्ट (Help Desk)</button>
 </div>
@@ -632,7 +649,7 @@ function sendDepositReq() {
 
   if(isNaN(amt) || amt <= 0 || !upiNum || !tx) { 
     msg.className = "error"; 
-    msg.innerText = "कृपया सही राशि, UPI नंबर/ID और Txn ID भरें!"; 
+    msg.innerText = "कृपया सही राशि, UPI नंबर जोड़ी और Txn ID भरें!"; 
     return; 
   }
 
