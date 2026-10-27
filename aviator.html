@@ -190,10 +190,15 @@ body {
   padding: 10px;
   border: none;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.3;
 }
 .btn-bet-state { background: #00c853; color: #000; }
 .btn-cashout-state { background: #ff9800; color: #000; }
@@ -268,7 +273,7 @@ body {
     <span class="hist-item">41.89x</span>
   </div>
 
-  <!-- Game Screen with Red Plane & Multiplier -->
+  <!-- Game Screen -->
   <div class="game-screen">
     <div class="red-curve"></div>
     <div class="multiplier-text" id="multiplier-display">1.27x</div>
@@ -283,7 +288,7 @@ body {
     <input type="number" id="admin-crash-input" class="admin-input" placeholder="उदा. 2.00, 5.50" step="0.1" value="0">
     <button class="admin-save-btn" onclick="saveAdminCrash()">क्रैश पॉइंट सेट करें</button>
 
-    <p style="margin:8px 0 4px 0; color:#ccc;">राउंड टाइमर (सेकंड में - कम/zyada karein):</p>
+    <p style="margin:8px 0 4px 0; color:#ccc;">राउंड टाइमर (सेकंड में):</p>
     <input type="number" id="admin-timer-input" class="admin-input" value="3" min="1" max="30">
     <button class="admin-save-btn" style="background:#ff9800; color:#000;" onclick="saveAdminTimer()">टाइमर सेव करें</button>
 
@@ -299,45 +304,47 @@ body {
       <button class="tab-btn">Auto</button>
     </div>
     <div class="bet-box-row">
-      <button class="bet-btn-ctrl" onclick="adjustBet(-100)">-</button>
-      <input type="number" id="bet-amount" class="bet-input" value="500" min="10">
-      <button class="bet-btn-ctrl" onclick="adjustBet(100)">+</button>
+      <button class="bet-btn-ctrl" onclick="adjustBet(1, -100)">-</button>
+      <input type="number" id="bet-amount-1" class="bet-input" value="500" min="10">
+      <button class="bet-btn-ctrl" onclick="adjustBet(1, 100)">+</button>
     </div>
     <div class="preset-grid">
-      <button class="preset-btn" onclick="setBet(100)">100</button>
-      <button class="preset-btn" onclick="setBet(200)">200</button>
-      <button class="preset-btn" onclick="setBet(500)">500</button>
-      <button class="preset-btn" onclick="setBet(1000)">1,000</button>
+      <button class="preset-btn" onclick="setBet(1, 100)">100</button>
+      <button class="preset-btn" onclick="setBet(1, 200)">200</button>
+      <button class="preset-btn" onclick="setBet(1, 500)">500</button>
+      <button class="preset-btn" onclick="setBet(1, 1000)">1,000</button>
     </div>
-    <button id="main-action-btn" class="action-btn-main btn-bet-state" onclick="handleMainAction()">Bet (لगाएं)</button>
+    <button id="main-action-btn-1" class="action-btn-main btn-bet-state" onclick="handleMainAction(1)">Bet (लगाएं)</button>
   </div>
 
-  <!-- Second Bet Panel (As in original UI) -->
+  <!-- Second Bet Panel -->
   <div class="bet-control-panel" style="border-top: 1px solid #1f293d;">
     <div class="bet-tabs">
       <button class="tab-btn active">Bet</button>
       <button class="tab-btn">Auto</button>
     </div>
     <div class="bet-box-row">
-      <button class="bet-btn-ctrl">-</button>
-      <input type="number" class="bet-input" value="500">
-      <button class="bet-btn-ctrl">+</button>
+      <button class="bet-btn-ctrl" onclick="adjustBet(2, -100)">-</button>
+      <input type="number" id="bet-amount-2" class="bet-input" value="500" min="10">
+      <button class="bet-btn-ctrl" onclick="adjustBet(2, 100)">+</button>
     </div>
     <div class="preset-grid">
-      <button class="preset-btn">100</button>
-      <button class="preset-btn">200</button>
-      <button class="preset-btn">500</button>
-      <button class="preset-btn">1,000</button>
+      <button class="preset-btn" onclick="setBet(2, 100)">100</button>
+      <button class="preset-btn" onclick="setBet(2, 200)">200</button>
+      <button class="preset-btn" onclick="setBet(2, 500)">500</button>
+      <button class="preset-btn" onclick="setBet(2, 1000)">1,000</button>
     </div>
-    <button class="action-btn-main btn-bet-state">Bet (لगाएं)</button>
+    <button id="main-action-btn-2" class="action-btn-main btn-bet-state" onclick="handleMainAction(2)">Bet (लगाएं)</button>
   </div>
 
 </div>
 
 <script>
 let walletBalance = 96964.51;
-let currentBet = 500;
-let gameState = "WAITING"; 
+let bet1State = "WAITING"; 
+let currentBet1 = 500;
+let bet2State = "WAITING";
+let currentBet2 = 500;
 let currentMultiplier = 1.00;
 let crashPoint = 2.00;
 let forcedAdminCrash = 0;
@@ -383,24 +390,32 @@ function openDeposit() {
   }
 }
 
-function setBet(val) {
-  if(gameState === "WAITING") {
-    currentBet = val;
-    document.getElementById('bet-amount').value = currentBet;
+function setBet(panelNum, val) {
+  if(panelNum === 1 && bet1State === "WAITING") {
+    currentBet1 = val;
+    document.getElementById('bet-amount-1').value = currentBet1;
+  } else if(panelNum === 2 && bet2State === "WAITING") {
+    currentBet2 = val;
+    document.getElementById('bet-amount-2').value = currentBet2;
   }
 }
 
-function adjustBet(amt) {
-  if(gameState === "WAITING") {
-    let input = document.getElementById('bet-amount');
+function adjustBet(panelNum, amt) {
+  if(panelNum === 1 && bet1State === "WAITING") {
+    let input = document.getElementById('bet-amount-1');
     let val = parseInt(input.value) + amt;
     if(val < 10) val = 10;
-    currentBet = val;
-    input.value = currentBet;
+    currentBet1 = val;
+    input.value = currentBet1;
+  } else if(panelNum === 2 && bet2State === "WAITING") {
+    let input = document.getElementById('bet-amount-2');
+    let val = parseInt(input.value) + amt;
+    if(val < 10) val = 10;
+    currentBet2 = val;
+    input.value = currentBet2;
   }
 }
 
-// 3-Tap Secret Admin Trigger (Password: 78699)
 let tapCount = 0, lastTap = 0;
 function checkSecretAdminTap() {
   let now = new Date().getTime();
@@ -410,7 +425,7 @@ function checkSecretAdminTap() {
   if(tapCount === 3) {
     tapCount = 0;
     let pwd = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-    if(pwd === "78699") {
+    if(pwd === "78699") {[span_3](start_span)[span_3](end_span)
       let panel = document.getElementById('admin-panel-div');
       panel.style.display = panel.style.display === "block" ? "none" : "block";
     } else if(pwd !== null) {
@@ -446,19 +461,22 @@ function saveAdminBalance() {
 }
 
 function startCountdown() {
-  gameState = "WAITING";
+  bet1State = "WAITING";
+  bet2State = "WAITING";
   countdownSeconds = roundTimerSeconds;
   let statusTxt = document.getElementById('status-text');
   let mDisplay = document.getElementById('multiplier-display');
-  let btn = document.getElementById('main-action-btn');
   
   mDisplay.innerText = "1.00x";
   mDisplay.style.color = "#ffffff";
   
-  if(btn.innerText.includes("Won")) {
-    btn.className = "action-btn-main btn-bet-state";
-    btn.innerText = "Bet (लगाएं)";
-  }
+  let btn1 = document.getElementById('main-action-btn-1');
+  btn1.className = "action-btn-main btn-bet-state";
+  btn1.innerText = "Bet (लगाएं)";
+  
+  let btn2 = document.getElementById('main-action-btn-2');
+  btn2.className = "action-btn-main btn-bet-state";
+  btn2.innerText = "Bet (लगाएं)";
 
   timerInterval = setInterval(() => {
     countdownSeconds--;
@@ -471,56 +489,87 @@ function startCountdown() {
   }, 1000);
 }
 
-function handleMainAction() {
-  let btn = document.getElementById('main-action-btn');
-  let inputBet = parseInt(document.getElementById('bet-amount').value);
+function handleMainAction(panelNum) {
+  let btn1 = document.getElementById('main-action-btn-1');
+  let btn2 = document.getElementById('main-action-btn-2');
 
-  if(gameState === "WAITING") {
-    if(isNaN(inputBet) || inputBet < 10) {
-      alert("कृपया न्यूनतम ₹10 की बाजी लगाएं!");
-      return;
+  if(panelNum === 1) {
+    let inputBet = parseInt(document.getElementById('bet-amount-1').value);
+    if(bet1State === "WAITING") {
+      if(isNaN(inputBet) || inputBet < 10) { alert("कृपया न्यूनतम ₹10 लगाएं!"); return; }
+      if(walletBalance < inputBet) { alert("पर्याप्त बैलेंस नहीं है!"); return; }
+      currentBet1 = inputBet;
+      walletBalance -= currentBet1;
+      updateUI();
+      sendTelegramAlert(`🚨 Aviator Bet 1 Placed!\n💰 Amount: ₹${currentBet1}\n👤 Remaining: ₹${walletBalance}`);
+      
+      bet1State = "CANCELABLE";
+      btn1.className = "action-btn-main btn-cancel-state";
+      btn1.innerText = "Cancel (रद्द करें)";
+
+    } else if(bet1State === "CANCELABLE" || bet1State === "PLAYING") {
+      let winAmount = Math.floor(currentBet1 * currentMultiplier);
+      walletBalance += winAmount;
+      updateUI();
+      sendTelegramAlert(`🎉 Aviator Cash Out 1!\n🚀 Multiplier: ${currentMultiplier.toFixed(2)}x\n🏆 Won: ₹${winAmount}`);
+      
+      bet1State = "CASHED";
+      btn1.className = "action-btn-main btn-bet-state";
+      btn1.style.background = "#00e676";
+      btn1.innerText = `Won ₹${winAmount.toFixed(2)} INR`;
     }
-    if(walletBalance < inputBet) {
-      alert("पर्याप्त बैलेंस नहीं है!");
-      return;
+
+  } else if(panelNum === 2) {
+    let inputBet = parseInt(document.getElementById('bet-amount-2').value);
+    if(bet2State === "WAITING") {
+      if(isNaN(inputBet) || inputBet < 10) { alert("कृपया न्यूनतम ₹10 लगाएं!"); return; }
+      if(walletBalance < inputBet) { alert("पर्याप्त बैलेंस नहीं है!"); return; }
+      currentBet2 = inputBet;
+      walletBalance -= currentBet2;
+      updateUI();
+      sendTelegramAlert(`🚨 Aviator Bet 2 Placed!\n💰 Amount: ₹${currentBet2}\n👤 Remaining: ₹${walletBalance}`);
+      
+      bet2State = "CANCELABLE";
+      btn2.className = "action-btn-main btn-cancel-state";
+      btn2.innerText = "Cancel (रद्द करें)";
+
+    } else if(bet2State === "CANCELABLE" || bet2State === "PLAYING") {
+      let winAmount = Math.floor(currentBet2 * currentMultiplier);
+      walletBalance += winAmount;
+      updateUI();
+      sendTelegramAlert(`🎉 Aviator Cash Out 2!\n🚀 Multiplier: ${currentMultiplier.toFixed(2)}x\n🏆 Won: ₹${winAmount}`);
+      
+      bet2State = "CASHED";
+      btn2.className = "action-btn-main btn-bet-state";
+      btn2.style.background = "#00e676";
+      btn2.innerText = `Won ₹${winAmount.toFixed(2)} INR`;
     }
-
-    currentBet = inputBet;
-    walletBalance -= currentBet;
-    updateUI();
-
-    sendTelegramAlert(`🚨 Aviator Bet Placed!\n💰 Amount: ₹${currentBet}\n👤 Remaining Wallet: ₹${walletBalance}`);
-    
-    btn.className = "action-btn-main btn-cancel-state";
-    btn.innerText = "Cancel (रद्द करें)";
-
-  } else if(gameState === "FLYING") {
-    let winAmount = Math.floor(currentBet * currentMultiplier);
-    walletBalance += winAmount;
-    updateUI();
-
-    sendTelegramAlert(`🎉 Aviator Cash Out!\n🚀 Multiplier: ${currentMultiplier.toFixed(2)}x\n🏆 Won Amount: ₹${winAmount}\n💰 Total Wallet: ₹${walletBalance}`);
-
-    gameState = "CASHED";
-    btn.className = "action-btn-main btn-bet-state";
-    btn.innerText = `Won ₹${winAmount}`;
-    btn.style.background = "#00e676";
-    document.getElementById('status-text').innerText = `सफलतापूर्वक कैश आउट किया (${currentMultiplier.toFixed(2)}x)`;
   }
 }
 
 function startFlight() {
-  gameState = "FLYING";
   currentMultiplier = 1.00;
   crashPoint = (forcedAdminCrash > 0) ? forcedAdminCrash : parseFloat((Math.random() * 3.8 + 1.2).toFixed(2));
 
-  let btn = document.getElementById('main-action-btn');
-  if(!btn.innerText.includes("Won")) {
-    btn.className = "action-btn-main btn-cashout-state";
-    btn.style.background = "#ff9800";
-    btn.innerText = "Cash Out";
+  let btn1 = document.getElementById('main-action-btn-1');
+  let btn2 = document.getElementById('main-action-btn-2');
+
+  if(bet1State === "CANCELABLE") {
+    bet1State = "PLAYING";
+    btn1.className = "action-btn-main btn-cashout-state";
+    btn1.style.background = "#ff9800";
+  } else if(bet1State === "WAITING") {
+    bet1State = "MISSED";
   }
-  
+
+  if(bet2State === "CANCELABLE") {
+    bet2State = "PLAYING";
+    btn2.className = "action-btn-main btn-cashout-state";
+    btn2.style.background = "#ff9800";
+  } else if(bet2State === "WAITING") {
+    bet2State = "MISSED";
+  }
+
   let mDisplay = document.getElementById('multiplier-display');
   let statusTxt = document.getElementById('status-text');
   statusTxt.innerText = "प्लेन उड़ रहा है...";
@@ -528,29 +577,47 @@ function startFlight() {
   gameInterval = setInterval(() => {
     currentMultiplier += 0.04;
     mDisplay.innerText = currentMultiplier.toFixed(2) + "x";
-    
-    let liveWin = Math.floor(currentBet * currentMultiplier);
-    if(gameState === "FLYING" && !btn.innerText.includes("Won")) {
-      btn.innerText = `Cash Out\n₹${liveWin}`;
+
+    if(bet1State === "PLAYING") {
+      let liveWin1 = currentBet1 * currentMultiplier;
+      btn1.innerHTML = `Cash Out<br><span style="font-size:17px; font-weight:bold;">₹${liveWin1.toFixed(2)} INR</span>`;
+    }
+    if(bet2State === "PLAYING") {
+      let liveWin2 = currentBet2 * currentMultiplier;
+      btn2.innerHTML = `Cash Out<br><span style="font-size:17px; font-weight:bold;">₹${liveWin2.toFixed(2)} INR</span>`;
     }
 
     if(currentMultiplier >= crashPoint) {
       clearInterval(gameInterval);
-      
-      if(gameState === "FLYING") {
-        btn.className = "action-btn-main btn-bet-state";
-        btn.style.background = "#00c853";
-        btn.innerText = "Bet (लगाएं)";
-        statusTxt.innerText = "प्लेन क्रैश हो गया! हार गए।";
-        mDisplay.innerText = crashPoint.toFixed(2) + "x (CRASHED)";
-        mDisplay.style.color = "#ff3344";
 
-        sendTelegramAlert(`💥 Aviator Crashed!\n✈️ Crash Point: ${crashPoint.toFixed(2)}x\n❌ User Lost Bet: ₹${currentBet}`);
-      } else {
-        statusTxt.innerText = "राउंड समाप्त हुआ";
-        mDisplay.innerText = crashPoint.toFixed(2) + "x (CRASHED)";
+      if(bet1State === "PLAYING") {
+        bet1State = "LOST";
+        btn1.className = "action-btn-main btn-bet-state";
+        btn1.style.background = "#00c853";
+        btn1.innerText = "Bet (लगाएं)";
+        sendTelegramAlert(`💥 Aviator Crash! Bet 1 Lost: ₹${currentBet1}`);
+      } else if(bet1State === "MISSED") {
+        btn1.className = "action-btn-main btn-bet-state";
+        btn1.style.background = "#00c853";
+        btn1.innerText = "Bet (लगाएं)";
       }
-      
+
+      if(bet2State === "PLAYING") {
+        bet2State = "LOST";
+        btn2.className = "action-btn-main btn-bet-state";
+        btn2.style.background = "#00c853";
+        btn2.innerText = "Bet (लगाएं)";
+        sendTelegramAlert(`💥 Aviator Crash! Bet 2 Lost: ₹${currentBet2}`);
+      } else if(bet2State === "MISSED") {
+        btn2.className = "action-btn-main btn-bet-state";
+        btn2.style.background = "#00c853";
+        btn2.innerText = "Bet (लगाएं)";
+      }
+
+      statusTxt.innerText = "प्लेन क्रैश हो गया!";
+      mDisplay.innerText = crashPoint.toFixed(2) + "x (CRASHED)";
+      mDisplay.style.color = "#ff3344";
+
       setTimeout(() => {
         startCountdown();
       }, 2000);
