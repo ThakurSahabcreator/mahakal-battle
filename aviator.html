@@ -172,10 +172,10 @@ input {
   background: #1a2332;
   color: #ff5252;
   border: 1px dashed #ff5252;
-  padding: 6px;
+  padding: 8px;
   width: 100%;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
   margin-top: 6px;
@@ -193,7 +193,7 @@ input {
     </div>
   </div>
 
-  <!-- ADMIN CONTROL PANEL (Password: 78699) -->
+  <!-- ADMIN CONTROL PANEL (Password: 78699)[span_3](start_span)[span_3](end_span) -->
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
@@ -316,6 +316,8 @@ function startBettingTimer() {
   document.getElementById('live-profit-2').style.display = "none";
   document.getElementById('msg-2').innerText = "";
 
+  if(timerInterval) clearInterval(timerInterval);
+
   timerInterval = setInterval(() => {
     if(timeLeft > 0) {
       document.getElementById('av-stat').innerText = `⏱️ अगला राउंड शुरू होने में: ${timeLeft} सेकण्ड`;
@@ -331,12 +333,14 @@ function startFlight() {
   gameState = "FLYING";
   if(forcedCrash !== null) {
     crashAt = forcedCrash;
-    forcedCrash = null;
+    forcedCrash = null; // Reset after use
   } else {
     crashAt = parseFloat((Math.random() * 3.5 + 1.2).toFixed(2));
   }
 
   document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";
+
+  if(gameInterval) clearInterval(gameInterval);
 
   gameInterval = setInterval(() => {
     currentMult += 0.03;
@@ -406,7 +410,7 @@ function startFlight() {
         document.getElementById('live-profit-2').style.display = "none";
       }
 
-      setTimeout(startBettingTimer, 4000);
+      setTimeout(startBettingTimer, 2000);
     }
   }, 100);
 }
@@ -454,10 +458,10 @@ function handleBet(panelNo) {
   }
 }
 
-// Admin Panel Trigger with Password: 78699[span_2](start_span)[span_2](end_span)
+// Admin Panel Trigger Function with Password 78699[span_4](start_span)[span_4](end_span)
 function openAdminPanel() {
   let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-  if(p === "78699") {[span_3](start_span)[span_3](end_span)
+  if(p === "78699") {[span_5](start_span)[span_5](end_span)
     document.getElementById('aviator-admin-box').style.display = "block";
   } else if(p !== null) {
     alert("❌ गलत पासवर्ड!");
@@ -472,12 +476,12 @@ function saveAdminCrash() {
   let val = parseFloat(document.getElementById('adm-crash-val').value);
   if(!isNaN(val) && val >= 1.05) {
     forcedCrash = val;
-    document.getElementById('adm-status-msg').innerText = `✅ क्रैश ${val}x सेट!`;
+    document.getElementById('adm-status-msg').innerText = `✅ अगला क्रैश ${val}x पर सेट हो गया!`;
     setTimeout(() => {
       closeAviatorAdmin();
     }, 1200);
   } else {
-    alert("सही वैल्यू (उदा. 2.00) डालें!");
+    alert("कृपया सही वैल्यू (उदा. 2.00) डालें!");
   }
 }
 </script>
