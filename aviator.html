@@ -1,283 +1,350 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviator - Mahakal Secure Edition</title>
+<title>Aviator - Mahakal Pro Edition</title>
 <style>
 body {
-background-color: #0b0f19;
-color: #ffffff;
-font-family: Arial, sans-serif;
-margin: 0;
-padding: 10px;
-display: flex;
-flex-direction: column;
-align-items: center;
-user-select: none;
+  background-color: #0b0f19;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
 }
 .app-container {
-width: 100%;
-max-width: 400px;
-background: #121824;
-border-radius: 14px;
-border: 2px solid #1f293d;
-box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-overflow: hidden;
-position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: #121824;
+  border-radius: 14px;
+  border: 2px solid #1f293d;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+  overflow: hidden;
+  position: relative;
 }
 .header-bar {
-display: flex;
-justify-content: space-between;
-align-items: center;
-background: #0f141f;
-padding: 10px 15px;
-border-bottom: 1px solid #1f293d;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0f141f;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1f293d;
 }
 .app-title {
-color: #ff3344;
-font-size: 20px;
-font-weight: bold;
-font-style: italic;
-letter-spacing: 1px;
+  color: #ff3344;
+  font-size: 20px;
+  font-weight: bold;
+  font-style: italic;
+  letter-spacing: 1px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .balance-badge {
-background: #1a2332;
-padding: 5px 12px;
-border-radius: 20px;
-font-size: 13px;
-color: #00e676;
-border: 1px solid #2a3b52;
-font-weight: bold;
+  font-size: 13px;
+  color: #00e676;
+  font-weight: bold;
+}
+.deposit-btn {
+  background: #00c853;
+  color: #000;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
 }
 .history-bar {
-display: flex;
-gap: 6px;
-padding: 8px 12px;
-background: #0b0f19;
-overflow-x: auto;
-white-space: nowrap;
-font-size: 11px;
+  display: flex;
+  gap: 6px;
+  padding: 6px 10px;
+  background: #0b0f19;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-size: 11px;
+  border-bottom: 1px solid #1f293d;
 }
 .hist-item {
-background: #1a2230;
-padding: 3px 8px;
-border-radius: 4px;
-color: #00b4d8;
-font-weight: bold;
+  background: #1a2230;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: #00b4d8;
+  font-weight: bold;
 }
 .game-screen {
-height: 200px;
-background: radial-gradient(circle, #1a2639 0%, #080c14 100%);
-position: relative;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-border-bottom: 2px solid #1f293d;
-overflow: hidden;
+  height: 180px;
+  background: radial-gradient(circle, #1a2639 0%, #080c14 100%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid #1f293d;
+  overflow: hidden;
 }
-.pilot-img {
-position: absolute;
-right: 15px;
-bottom: 15px;
-width: 90px;
-opacity: 0.85;
-pointer-events: none;
+.red-curve {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(to top, rgba(255, 51, 68, 0.4), transparent);
+  clip-path: polygon(0 100%, 0 60%, 30% 40%, 70% 20%, 100% 0, 100% 100%);
+  z-index: 1;
 }
 .multiplier-text {
-font-size: 42px;
-font-weight: bold;
-color: #ffffff;
-text-shadow: 0 0 15px rgba(255,255,255,0.4);
-z-index: 2;
+  font-size: 40px;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255,51,68,0.6);
+  z-index: 2;
 }
 .status-msg {
-font-size: 12px;
-color: #8c9bae;
-margin-top: 5px;
-z-index: 2;
+  font-size: 12px;
+  color: #00e676;
+  margin-top: 4px;
+  z-index: 2;
+  font-weight: bold;
 }
 .bet-control-panel {
-background: #121824;
-padding: 15px;
+  background: #121824;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1f293d;
+}
+.bet-tabs {
+  display: flex;
+  background: #0b0f19;
+  border-radius: 6px;
+  padding: 2px;
+  margin-bottom: 8px;
+  width: fit-content;
+}
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #8c9bae;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.tab-btn.active {
+  background: #1a2230;
+  color: #fff;
 }
 .bet-box-row {
-display: flex;
-background: #1a2230;
-border-radius: 8px;
-border: 1px solid #2a3b52;
-overflow: hidden;
-margin-bottom: 8px;
-align-items: center;
+  display: flex;
+  background: #1a2230;
+  border-radius: 6px;
+  border: 1px solid #2a3b52;
+  overflow: hidden;
+  margin-bottom: 6px;
+  align-items: center;
 }
 .bet-input {
-flex: 1;
-background: transparent;
-border: none;
-color: white;
-font-size: 18px;
-font-weight: bold;
-text-align: center;
-padding: 8px;
-outline: none;
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  padding: 6px;
+  outline: none;
 }
 .bet-btn-ctrl {
-background: #253347;
-color: white;
-border: none;
-padding: 8px 15px;
-font-size: 18px;
-font-weight: bold;
-cursor: pointer;
+  background: #253347;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }
 .preset-grid {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 6px;
-margin-bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
 }
 .preset-btn {
-background: #1a2230;
-border: 1px solid #2a3b52;
-color: #a0aec0;
-padding: 6px;
-border-radius: 6px;
-font-size: 12px;
-font-weight: bold;
-cursor: pointer;
+  background: #1a2230;
+  border: 1px solid #2a3b52;
+  color: #a0aec0;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
 }
 .action-btn-main {
-width: 100%;
-padding: 14px;
-border: none;
-border-radius: 8px;
-font-size: 18px;
-font-weight: bold;
-cursor: pointer;
-text-transform: uppercase;
-letter-spacing: 0.5px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
 }
-.btn-bet-state { background: #00c853; color: #000; box-shadow: 0 4px 15px rgba(0,200,83,0.3); }
-.btn-cashout-state { background: #ff9800; color: #000; box-shadow: 0 4px 15px rgba(255,152,0,0.3); }
+.btn-bet-state { background: #00c853; color: #000; }
+.btn-cashout-state { background: #ff9800; color: #000; }
 .btn-cancel-state { background: #e53935; color: #fff; }
 
-/* Hidden Secret Admin Panel */
+/* Admin Panel */
 .admin-panel {
-background: #1a1111;
-border: 2px solid #ff5252;
-padding: 12px;
-margin: 10px;
-border-radius: 8px;
-display: none;
-text-align: left;
-font-size: 12px;
+  background: #1a1111;
+  border: 2px solid #ff5252;
+  padding: 12px;
+  margin: 10px;
+  border-radius: 8px;
+  display: none;
+  text-align: left;
+  font-size: 12px;
 }
 .admin-input {
-width: 100%;
-padding: 6px;
-margin: 5px 0;
-background: #0b0f19;
-border: 1px solid #ff5252;
-color: white;
-border-radius: 4px;
-text-align: center;
-box-sizing: border-box;
+  width: 100%;
+  padding: 6px;
+  margin: 5px 0;
+  background: #0b0f19;
+  border: 1px solid #ff5252;
+  color: white;
+  border-radius: 4px;
+  text-align: center;
+  box-sizing: border-box;
 }
 .admin-save-btn {
-background: #ff5252;
-color: white;
-border: none;
-padding: 6px;
-width: 100%;
-font-weight: bold;
-border-radius: 4px;
-cursor: pointer;
-margin-top: 5px;
+  background: #ff5252;
+  color: white;
+  border: none;
+  padding: 6px;
+  width: 100%;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 5px;
 }
-
-/* Hidden Admin Trigger Corner Box (Sirf aapke click karne ke liye) */
 .secret-corner-trigger {
-position: fixed;
-top: 0;
-right: 0;
-width: 40px;
-height: 40px;
-z-index: 9999;
-cursor: default;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  z-index: 9999;
+  cursor: default;
 }
 </style>
 </head>
 <body>
 
-<!-- Yeh invisible corner trigger hai: Jab aap iske upar lagataar 3 baar tap karenge tabhi password maangega -->
 <div class="secret-corner-trigger" onclick="checkSecretAdminTap()"></div>
 
 <div class="app-container">
 
+  <!-- Top Header Bar -->
   <div class="header-bar">
     <div class="app-title">Aviator</div>
-    <div class="balance-badge">₹<span id="user-balance">199.00</span></div>
+    <div class="header-right">
+      <div class="balance-badge">₹<span id="user-balance">96,964.51</span></div>
+      <button class="deposit-btn" onclick="openDeposit()">Deposit</button>
+    </div>
   </div>
 
+  <!-- History Bar -->
   <div class="history-bar">
     <span class="hist-item">2.03x</span>
     <span class="hist-item">4.39x</span>
+    <span class="hist-item">3.73x</span>
     <span class="hist-item">1.18x</span>
     <span class="hist-item">1.12x</span>
     <span class="hist-item">41.89x</span>
-    <span class="hist-item">2.79x</span>
   </div>
 
+  <!-- Game Screen with Red Plane & Multiplier -->
   <div class="game-screen">
-    <div class="multiplier-text" id="multiplier-display">1.00x</div>
-    <div class="status-msg" id="status-text">उड़ान भरने के लिए तैयार</div>
-    <svg class="pilot-img" viewBox="0 0 200 150">
-      <path d="M10,130 Q100,50 190,20" stroke="#ff3344" stroke-width="4" fill="none"/>
-      <circle cx="120" cy="55" r="18" fill="#d4af37"/>
-      <path d="M100,70 L140,70 L130,40 L110,40 Z" fill="#8B4513"/>
-    </svg>
+    <div class="red-curve"></div>
+    <div class="multiplier-text" id="multiplier-display">1.27x</div>
+    <div class="status-msg" id="status-text">अगला राउंड शुरू होने में: 3s</div>
   </div>
 
-  <!-- Secret Admin Control Box -->
+  <!-- Secret Admin Panel -->
   <div id="admin-panel-div" class="admin-panel">
-    <b style="color:#ff5252;">👑 Master Admin Secured Control:</b>
+    <b style="color:#ff5252;">👑 Master Admin Control Panel:</b>
+    
     <p style="margin:4px 0; color:#ccc;">फिक्स क्रैश मल्टीप्लायर (0 = Random):</p>
     <input type="number" id="admin-crash-input" class="admin-input" placeholder="उदा. 2.00, 5.50" step="0.1" value="0">
     <button class="admin-save-btn" onclick="saveAdminCrash()">क्रैश पॉइंट सेट करें</button>
+
+    <p style="margin:8px 0 4px 0; color:#ccc;">राउंड टाइमर (सेकंड में - कम/zyada karein):</p>
+    <input type="number" id="admin-timer-input" class="admin-input" value="3" min="1" max="30">
+    <button class="admin-save-btn" style="background:#ff9800; color:#000;" onclick="saveAdminTimer()">टाइमर सेव करें</button>
+
     <p style="margin:8px 0 4px 0; color:#ccc;">यूजर का वॉलेट बैलेंस बदलें:</p>
     <input type="number" id="admin-bal-input" class="admin-input" placeholder="नया बैलेंस दर्ज करें">
     <button class="admin-save-btn" style="background:#00e676; color:#000;" onclick="saveAdminBalance()">बैलेंस सेव करें</button>
   </div>
 
+  <!-- First Bet Panel -->
   <div class="bet-control-panel">
-    <div class="bet-box-row">
-      <button class="bet-btn-ctrl" onclick="adjustBet(-50)">-</button>
-      <input type="number" id="bet-amount" class="bet-input" value="100" min="10">
-      <button class="bet-btn-ctrl" onclick="adjustBet(50)">+</button>
+    <div class="bet-tabs">
+      <button class="tab-btn active">Bet</button>
+      <button class="tab-btn">Auto</button>
     </div>
-    
+    <div class="bet-box-row">
+      <button class="bet-btn-ctrl" onclick="adjustBet(-100)">-</button>
+      <input type="number" id="bet-amount" class="bet-input" value="500" min="10">
+      <button class="bet-btn-ctrl" onclick="adjustBet(100)">+</button>
+    </div>
     <div class="preset-grid">
       <button class="preset-btn" onclick="setBet(100)">100</button>
       <button class="preset-btn" onclick="setBet(200)">200</button>
       <button class="preset-btn" onclick="setBet(500)">500</button>
       <button class="preset-btn" onclick="setBet(1000)">1,000</button>
     </div>
+    <button id="main-action-btn" class="action-btn-main btn-bet-state" onclick="handleMainAction()">Bet (لगाएं)</button>
+  </div>
 
-    <button id="main-action-btn" class="action-btn-main btn-bet-state" onclick="handleMainAction()">Bet (लगाएं)</button>
+  <!-- Second Bet Panel (As in original UI) -->
+  <div class="bet-control-panel" style="border-top: 1px solid #1f293d;">
+    <div class="bet-tabs">
+      <button class="tab-btn active">Bet</button>
+      <button class="tab-btn">Auto</button>
+    </div>
+    <div class="bet-box-row">
+      <button class="bet-btn-ctrl">-</button>
+      <input type="number" class="bet-input" value="500">
+      <button class="bet-btn-ctrl">+</button>
+    </div>
+    <div class="preset-grid">
+      <button class="preset-btn">100</button>
+      <button class="preset-btn">200</button>
+      <button class="preset-btn">500</button>
+      <button class="preset-btn">1,000</button>
+    </div>
+    <button class="action-btn-main btn-bet-state">Bet (لगाएं)</button>
   </div>
 
 </div>
 
 <script>
-let walletBalance = 199.00;
-let currentBet = 100;
-let gameState = "IDLE";
+let walletBalance = 96964.51;
+let currentBet = 500;
+let gameState = "WAITING"; 
 let currentMultiplier = 1.00;
 let crashPoint = 2.00;
 let forcedAdminCrash = 0;
+let roundTimerSeconds = 3; 
 let gameInterval = null;
+let timerInterval = null;
+let countdownSeconds = 3;
 
 const TELEGRAM_BOT_TOKEN = "8531701253:AAFoYZkt3kJhPCEipll6Lk-ut1XR1uC2epE";
 const TELEGRAM_CHAT_ID = "7880447645";
@@ -293,7 +360,13 @@ window.onload = function() {
   if(saved !== null) {
     walletBalance = parseFloat(saved);
   }
+  let savedTimer = localStorage.getItem('mahakal_admin_timer');
+  if(savedTimer !== null) {
+    roundTimerSeconds = parseInt(savedTimer);
+    document.getElementById('admin-timer-input').value = roundTimerSeconds;
+  }
   updateUI();
+  startCountdown();
 };
 
 function updateUI() {
@@ -301,15 +374,24 @@ function updateUI() {
   localStorage.setItem('mahakal_master_wallet', walletBalance);
 }
 
+function openDeposit() {
+  let addAmt = prompt("Deposit karne ke liye amount darj karein:");
+  if(addAmt && !isNaN(addAmt)) {
+    walletBalance += parseFloat(addAmt);
+    updateUI();
+    alert("Deposit successful! New Balance: ₹" + walletBalance);
+  }
+}
+
 function setBet(val) {
-  if(gameState === "IDLE") {
+  if(gameState === "WAITING") {
     currentBet = val;
     document.getElementById('bet-amount').value = currentBet;
   }
 }
 
 function adjustBet(amt) {
-  if(gameState === "IDLE") {
+  if(gameState === "WAITING") {
     let input = document.getElementById('bet-amount');
     let val = parseInt(input.value) + amt;
     if(val < 10) val = 10;
@@ -318,7 +400,7 @@ function adjustBet(amt) {
   }
 }
 
-// Top-Right Corner Secret 3-Tap Security (Password: 78699)
+// 3-Tap Secret Admin Trigger (Password: 78699)
 let tapCount = 0, lastTap = 0;
 function checkSecretAdminTap() {
   let now = new Date().getTime();
@@ -345,6 +427,15 @@ function saveAdminCrash() {
   }
 }
 
+function saveAdminTimer() {
+  let val = parseInt(document.getElementById('admin-timer-input').value);
+  if(!isNaN(val) && val > 0) {
+    roundTimerSeconds = val;
+    localStorage.setItem('mahakal_admin_timer', roundTimerSeconds);
+    alert("✅ राउंड टाइमर सेट कर दिया गया: " + roundTimerSeconds + " सेकण्ड");
+  }
+}
+
 function saveAdminBalance() {
   let val = parseFloat(document.getElementById('admin-bal-input').value);
   if(!isNaN(val)) {
@@ -354,11 +445,37 @@ function saveAdminBalance() {
   }
 }
 
+function startCountdown() {
+  gameState = "WAITING";
+  countdownSeconds = roundTimerSeconds;
+  let statusTxt = document.getElementById('status-text');
+  let mDisplay = document.getElementById('multiplier-display');
+  let btn = document.getElementById('main-action-btn');
+  
+  mDisplay.innerText = "1.00x";
+  mDisplay.style.color = "#ffffff";
+  
+  if(btn.innerText.includes("Won")) {
+    btn.className = "action-btn-main btn-bet-state";
+    btn.innerText = "Bet (लगाएं)";
+  }
+
+  timerInterval = setInterval(() => {
+    countdownSeconds--;
+    if(countdownSeconds > 0) {
+      statusTxt.innerText = `अगला राउंड शुरू होने में: ${countdownSeconds}s`;
+    } else {
+      clearInterval(timerInterval);
+      startFlight();
+    }
+  }, 1000);
+}
+
 function handleMainAction() {
   let btn = document.getElementById('main-action-btn');
   let inputBet = parseInt(document.getElementById('bet-amount').value);
 
-  if(gameState === "IDLE") {
+  if(gameState === "WAITING") {
     if(isNaN(inputBet) || inputBet < 10) {
       alert("कृपया न्यूनतम ₹10 की बाजी लगाएं!");
       return;
@@ -373,21 +490,9 @@ function handleMainAction() {
     updateUI();
 
     sendTelegramAlert(`🚨 Aviator Bet Placed!\n💰 Amount: ₹${currentBet}\n👤 Remaining Wallet: ₹${walletBalance}`);
-
-    gameState = "WAITING";
+    
     btn.className = "action-btn-main btn-cancel-state";
     btn.innerText = "Cancel (रद्द करें)";
-    document.getElementById('status-text').innerText = "अगला राउंड शुरू हो रहा है...";
-
-    setTimeout(startFlight, 2000);
-
-  } else if(gameState === "WAITING") {
-    walletBalance += currentBet;
-    updateUI();
-    gameState = "IDLE";
-    btn.className = "action-btn-main btn-bet-state";
-    btn.innerText = "Bet (लगाएं)";
-    document.getElementById('status-text').innerText = "उड़ान रद्द कर दी गई";
 
   } else if(gameState === "FLYING") {
     let winAmount = Math.floor(currentBet * currentMultiplier);
@@ -405,15 +510,16 @@ function handleMainAction() {
 }
 
 function startFlight() {
-  if(gameState !== "WAITING") return;
-
   gameState = "FLYING";
   currentMultiplier = 1.00;
   crashPoint = (forcedAdminCrash > 0) ? forcedAdminCrash : parseFloat((Math.random() * 3.8 + 1.2).toFixed(2));
 
   let btn = document.getElementById('main-action-btn');
-  btn.className = "action-btn-main btn-cashout-state";
-  btn.style.background = "#ff9800";
+  if(!btn.innerText.includes("Won")) {
+    btn.className = "action-btn-main btn-cashout-state";
+    btn.style.background = "#ff9800";
+    btn.innerText = "Cash Out";
+  }
   
   let mDisplay = document.getElementById('multiplier-display');
   let statusTxt = document.getElementById('status-text');
@@ -424,7 +530,7 @@ function startFlight() {
     mDisplay.innerText = currentMultiplier.toFixed(2) + "x";
     
     let liveWin = Math.floor(currentBet * currentMultiplier);
-    if(gameState === "FLYING") {
+    if(gameState === "FLYING" && !btn.innerText.includes("Won")) {
       btn.innerText = `Cash Out\n₹${liveWin}`;
     }
 
@@ -432,30 +538,25 @@ function startFlight() {
       clearInterval(gameInterval);
       
       if(gameState === "FLYING") {
-        gameState = "IDLE";
         btn.className = "action-btn-main btn-bet-state";
         btn.style.background = "#00c853";
         btn.innerText = "Bet (लगाएं)";
-        statusTxt.innerText = "प्लेन क्रैश हो गया! आप हार गए।";
+        statusTxt.innerText = "प्लेन क्रैश हो गया! हार गए।";
         mDisplay.innerText = crashPoint.toFixed(2) + "x (CRASHED)";
         mDisplay.style.color = "#ff3344";
 
         sendTelegramAlert(`💥 Aviator Crashed!\n✈️ Crash Point: ${crashPoint.toFixed(2)}x\n❌ User Lost Bet: ₹${currentBet}`);
-      } else if(gameState === "CASHED") {
-        gameState = "IDLE";
-        btn.className = "action-btn-main btn-bet-state";
-        btn.style.background = "#00c853";
-        btn.innerText = "Bet (लगाएं)";
+      } else {
         statusTxt.innerText = "राउंड समाप्त हुआ";
         mDisplay.innerText = crashPoint.toFixed(2) + "x (CRASHED)";
       }
       
       setTimeout(() => {
-        mDisplay.style.color = "#ffffff";
-      }, 1500);
+        startCountdown();
+      }, 2000);
     }
   }, 100);
 }
 </script>
 </body>
-</html>as ka nam kiya rakhein yah batao
+</html>
