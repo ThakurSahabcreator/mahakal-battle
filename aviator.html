@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviator - Perfect Active Timer</title>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<title>Aviator - 100% Perfect Local Game</title>
 <style>
 body {
   background-color: #0b0f19;
@@ -31,7 +29,7 @@ body {
   align-items: center;
   margin-bottom: 8px;
 }
-h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: pointer; }
+h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; }
 .wallet-badge {
   background: #2ed573; color: #000; padding: 5px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;
 }
@@ -93,11 +91,10 @@ h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: poi
 }
 
 .red-plane-svg {
-  width: 55px;
-  height: 35px;
+  width: 75px;
+  height: 48px;
   fill: #ff4757;
-  filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.9));
-  transform: rotate(0deg);
+  filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));
 }
 
 .plane-mult { font-size: 48px; font-weight: bold; color: #ffffff; z-index: 4; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
@@ -116,11 +113,8 @@ input {
 .big-bet-btn {
   background: #2ed573; color: #000; border: none; padding: 11px; width: 100%; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 6px;
 }
-.admin-inline-box {
-  background: #2a1a1a; border: 2px solid #ff5252; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: left; display: none;
-}
 .msg { color: #2ed573; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
-.error { color: #ff5252; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
+.error { color: #ff4757; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
 .live-profit { color: #2ed573; font-size: 13px; font-weight: bold; margin-top: 5px; text-align: center; background: #051a0e; padding: 4px; border-radius: 4px; border: 1px solid #2ed573; display: none; }
 .auto-row {
   display: flex; align-items: center; justify-content: space-between; margin-top: 6px; font-size: 12px; color: #00b4d8;
@@ -140,21 +134,11 @@ input {
 
 <div class="container">
   <div class="header-row">
-    <h2 onclick="checkSecretTap()">Aviator</h2>
+    <h2>Aviator</h2>
     <div>
       <span class="wallet-badge">₹<span id="av-bal">90398</span></span>
       <button class="dep-btn" onclick="window.location.href='index.html'">Deposit</button>
     </div>
-  </div>
-
-  <div id="aviator-admin-box" class="admin-inline-box">
-    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
-    <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
-    <div style="display: flex; gap: 5px; margin-top: 5px;">
-      <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">लॉक करें</button>
-      <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAdmin()">बंद</button>
-    </div>
-    <div id="adm-status-msg" style="color: #2ed573; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
   </div>
 
   <div class="history-bar" id="history-bar"></div>
@@ -225,18 +209,17 @@ input {
 </div>
 
 <script>
-const firebaseConfig = {
-  databaseURL: "https://aviatorapp-9b1a6-default-rtdb.firebaseio.com/"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
 let walletBal = 90398;
+let gameState = "BETTING"; // BETTING, FLYING, CRASHED
+let timerLeft = 15; // 15 Second countdown
+let currentMultiplier = 1.00;
+let crashAtMultiplier = 2.00;
+let flightTime = 0;
+
 let isPlaying1 = false, isPlaying2 = false;
 let betAmt1 = 0, betAmt2 = 0;
 let autoTarget1 = 2.00, autoTarget2 = 2.00;
 let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
-let tapCount = 0, tapTimer = null;
 
 window.onload = function() {
   let saved = localStorage.getItem('mahakal_master_wallet');
@@ -244,151 +227,88 @@ window.onload = function() {
   document.getElementById('av-bal').innerText = walletBal;
   renderHistory();
 
-  db.ref("aviatorGameState").on("value", (snapshot) => {
-    let data = snapshot.val();
-    if(data) {
-      renderGame(data);
-    } else {
-      resetToServerDefault();
-    }
-  });
-
-  // Har 50ms mein check karega taaki timer bilkul fluid aur real-time chale
-  setInterval(heartbeatCheck, 50);
+  // Ekdam solid local game loop jo bina kisi delay ke chalege
+  setInterval(gameLoop, 100);
 };
 
-function resetToServerDefault() {
-  let now = Date.now();
-  db.ref("aviatorGameState").set({
-    status: "BETTING",
-    startTime: now,
-    duration: 15000 // 15 Second countdown duration
-  });
-}
-
-function heartbeatCheck() {
-  db.ref("aviatorGameState").once("value", (snapshot) => {
-    let data = snapshot.val();
-    if(!data) { resetToServerDefault(); return; }
-
-    let now = Date.now();
-    let startTime = data.startTime || now;
-    let duration = data.duration || 15000;
-    let elapsed = now - startTime;
-
-    if(data.status === "BETTING" && elapsed >= duration) {
-      db.ref("aviatorServerCrash").once("value", (snap) => {
-        let crashVal = snap.val() || parseFloat((Math.random() * 3.5 + 1.3).toFixed(2));
-        db.ref("aviatorGameState").set({
-          status: "FLYING",
-          multiplier: 1.00,
-          crashAt: crashVal,
-          flightStartTime: now
-        });
-        generateFakeLiveBets();
-      });
-    } 
-    else if(data.status === "FLYING") {
-      let flightElapsed = (now - (data.flightStartTime || now)) / 1000;
-      let m = 1.00 + Math.pow(flightElapsed, 1.7) * 0.10;
-      let crashLimit = data.crashAt || 2.00;
-
-      updateFakeLiveCashouts(m);
-
-      if(m >= crashLimit) {
-        db.ref("aviatorGameState").set({
-          status: "CRASHED",
-          multiplier: crashLimit,
-          crashTime: now
-        });
-        markFakeLiveCrashed();
-      } else {
-        db.ref("aviatorGameState").update({ multiplier: parseFloat(m.toFixed(2)) });
-      }
-    }
-    else if(data.status === "CRASHED" && now >= (data.crashTime || now) + 3000) {
-      resetToServerDefault();
-    }
-  });
-}
-
-function renderGame(data) {
-  let status = data.status;
-  let mult = data.multiplier || 1.00;
+function gameLoop() {
   let planeContainer = document.getElementById('plane-graphic');
   let curvePath = document.getElementById('curvePath');
   let linePath = document.getElementById('linePath');
+  let planeSvg = planeContainer.querySelector('.red-plane-svg');
 
   const planeSvgHtml = `
-    <svg class="red-plane-svg" viewBox="0 0 512 512">
+    <svg class="red-plane-svg" viewBox="0 0 512 512" style="width:75px;height:48px;fill:#ff4757;filter:drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));">
       <path d="M448 336v-48L288 192V96c0-17.67-14.33-32-32-32s-32 14.33-32 32v96L64 288v48l160-48v112l-48 32v32l80-24 80 24v-32l-48-32V288z"/>
     </svg>`;
 
-  if(status === "BETTING") {
-    let startTime = data.startTime || Date.now();
-    let duration = data.duration || 15000;
-    let elapsed = Date.now() - startTime;
-    let timeLeft = Math.max(0, Math.ceil((duration - elapsed) / 1000));
-
-    // Timer ab ekdam aktif aur live chalega (15s, 14s, 13s...)
-    document.getElementById('av-stat').innerText = `⏱️ अगला राउंड शुरू होने में: ${timeLeft}s`;
+  if (gameState === "BETTING") {
+    timerLeft -= 0.1;
+    let displaySec = Math.max(0, Math.ceil(timerLeft));
+    document.getElementById('av-stat').innerText = `⏱️ अगला राउंड शुरू होने में: ${displaySec}s`;
     document.getElementById('av-mult').innerText = "1.00x";
     document.getElementById('av-mult').style.color = "#ffffff";
-    
-    // Jahaj zameen par seedha khada rahega
+
     planeContainer.innerHTML = planeSvgHtml;
     planeContainer.style.left = "10px";
     planeContainer.style.bottom = "12px";
-    let planeSvg = planeContainer.querySelector('.red-plane-svg');
-    if(planeSvg) planeSvg.style.transform = "rotate(0deg)";
+    let ps = planeContainer.querySelector('.red-plane-svg');
+    if(ps) ps.style.transform = "rotate(0deg)";
 
     curvePath.setAttribute('d', 'M 0 210 Q 0 210, 0 210 L 0 210 Z');
     linePath.setAttribute('d', 'M 0 210 Q 0 210, 0 210');
 
-    if(isPlaying1 && timeLeft <= 1) {
-      isPlaying1 = false;
-      document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-1').style.background = "#2ed573";
-      document.getElementById('action-btn-1').style.color = "#000";
-      document.getElementById('live-profit-1').style.display = "none";
-    }
-    if(isPlaying2 && timeLeft <= 1) {
-      isPlaying2 = false;
-      document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-2').style.background = "#2ed573";
-      document.getElementById('action-btn-2').style.color = "#000";
-      document.getElementById('live-profit-2').style.display = "none";
+    if (timerLeft <= 0) {
+      // Game Start hone ka samay
+      gameState = "FLYING";
+      currentMultiplier = 1.00;
+      flightTime = 0;
+      crashAtMultiplier = parseFloat((Math.random() * 3.5 + 1.2).toFixed(2));
+      generateFakeLiveBets();
+
+      if (isPlaying1 && document.getElementById('action-btn-1').innerText.includes("WAITING")) {
+        document.getElementById('action-btn-1').innerText = `Cash Out`;
+        document.getElementById('action-btn-1').style.background = "#ffa502";
+      }
+      if (isPlaying2 && document.getElementById('action-btn-2').innerText.includes("WAITING")) {
+        document.getElementById('action-btn-2').innerText = `Cash Out`;
+        document.getElementById('action-btn-2').style.background = "#ffa502";
+      }
     }
   } 
-  else if(status === "FLYING") {
-    document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";
-    document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
+  else if (gameState === "FLYING") {
+    flightTime += 0.1;
+    currentMultiplier = 1.00 + Math.pow(flightTime, 1.7) * 0.12;
+    currentMultiplier = parseFloat(currentMultiplier.toFixed(2));
 
-    let elapsedFlight = mult - 1.00;
-    let progress = Math.min(1, elapsedFlight / 2.5);
+    document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";
+    document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
+
+    let progress = Math.min(1, flightTime / 3.0);
     let moveX = 10 + (progress * 280);
     let moveY = 12 + (Math.pow(progress, 1.5) * 130);
 
     planeContainer.style.left = moveX + "px";
     planeContainer.style.bottom = moveY + "px";
     
-    let planeSvg = planeContainer.querySelector('.red-plane-svg');
-    if(planeSvg) planeSvg.style.transform = `rotate(${25 + (progress * 15)}deg)`;
+    let ps = planeContainer.querySelector('.red-plane-svg');
+    if(ps) ps.style.transform = `rotate(${25 + (progress * 15)}deg)`;
 
     let pathD = `M 0 210 Q ${moveX/2} 210, ${moveX} ${210 - moveY} L ${moveX} 210 Z`;
     let lineD = `M 0 210 Q ${moveX/2} 210, ${moveX} ${210 - moveY}`;
     curvePath.setAttribute('d', pathD);
     linePath.setAttribute('d', lineD);
 
-    if(isPlaying1) {
-      let p1 = Math.floor(betAmt1 * mult);
+    updateFakeLiveCashouts(currentMultiplier);
+
+    // Panel 1 logic
+    if (isPlaying1) {
+      let p1 = Math.floor(betAmt1 * currentMultiplier);
       document.getElementById('live-profit-1').style.display = "block";
       document.getElementById('live-profit-1').innerText = `📈 लाइव जीत: ₹${p1}`;
       document.getElementById('action-btn-1').innerText = `Cash Out (₹${p1})`;
-      document.getElementById('action-btn-1').style.background = "#ffa502";
-      document.getElementById('action-btn-1').style.color = "#000";
 
-      if(mult >= autoTarget1) {
+      if (currentMultiplier >= autoTarget1) {
         walletBal += p1;
         updateBal();
         isPlaying1 = false;
@@ -401,15 +321,14 @@ function renderGame(data) {
       }
     }
 
-    if(isPlaying2) {
-      let p2 = Math.floor(betAmt2 * mult);
+    // Panel 2 logic
+    if (isPlaying2) {
+      let p2 = Math.floor(betAmt2 * currentMultiplier);
       document.getElementById('live-profit-2').style.display = "block";
       document.getElementById('live-profit-2').innerText = `📈 लाइव जीत: ₹${p2}`;
       document.getElementById('action-btn-2').innerText = `Cash Out (₹${p2})`;
-      document.getElementById('action-btn-2').style.background = "#ffa502";
-      document.getElementById('action-btn-2').style.color = "#000";
 
-      if(mult >= autoTarget2) {
+      if (currentMultiplier >= autoTarget2) {
         walletBal += p2;
         updateBal();
         isPlaying2 = false;
@@ -421,21 +340,31 @@ function renderGame(data) {
         document.getElementById('live-profit-2').style.display = "none";
       }
     }
-  } 
-  else if(status === "CRASHED") {
-    planeContainer.innerHTML = '<div style="font-size:45px;">💥</div>';
-    document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
+
+    // Check Crash
+    if (currentMultiplier >= crashAtMultiplier) {
+      gameState = "CRASHED";
+      setTimeout(() => {
+        timerLeft = 15;
+        gameState = "BETTING";
+      }, 3000);
+      markCrashedState();
+    }
+  }
+  else if (gameState === "CRASHED") {
+    planeContainer.innerHTML = '<div style="font-size:50px;">💥</div>';
+    document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
     document.getElementById('av-mult').style.color = "#ff4757";
     document.getElementById('av-stat').innerText = "💥 Flew Away!";
 
-    if(!window.lastCrashRecorded || window.lastCrashRecorded !== mult) {
-      window.lastCrashRecorded = mult;
-      historyList.push(mult);
-      if(historyList.length > 10) historyList.shift();
+    if (!window.lastCrashRecorded || window.lastCrashRecorded !== currentMultiplier) {
+      window.lastCrashRecorded = currentMultiplier;
+      historyList.push(currentMultiplier);
+      if (historyList.length > 10) historyList.shift();
       renderHistory();
     }
 
-    if(isPlaying1) {
+    if (isPlaying1) {
       document.getElementById('msg-1').className = "error";
       document.getElementById('msg-1').innerText = "❌ आप हार गए!";
       isPlaying1 = false;
@@ -444,7 +373,7 @@ function renderGame(data) {
       document.getElementById('action-btn-1').style.color = "#000";
       document.getElementById('live-profit-1').style.display = "none";
     }
-    if(isPlaying2) {
+    if (isPlaying2) {
       document.getElementById('msg-2').className = "error";
       document.getElementById('msg-2').innerText = "❌ आप हार गए!";
       isPlaying2 = false;
@@ -452,6 +381,18 @@ function renderGame(data) {
       document.getElementById('action-btn-2').style.background = "#2ed573";
       document.getElementById('action-btn-2').style.color = "#000";
       document.getElementById('live-profit-2').style.display = "none";
+    }
+  }
+}
+
+function markCrashedState() {
+  let listEl = document.getElementById('live-bets-list');
+  let items = listEl.getElementsByClassName('live-bet-item');
+  for(let item of items) {
+    let winSpan = item.querySelector('.u-win');
+    if(winSpan && winSpan.innerText.includes("⏳")) {
+      winSpan.style.color = "#ff4757";
+      winSpan.innerText = "❌ क्रैश";
     }
   }
 }
@@ -466,7 +407,7 @@ function generateFakeLiveBets() {
   for(let i = 0; i < count; i++) {
     let uName = names[Math.floor(Math.random() * names.length)];
     let uAmt = (Math.floor(Math.random() * 10) + 1) * 100;
-    fakeUsersData.push({ name: uName, amt: uAmt, status: "playing", cashAt: parseFloat((Math.random() * 2.5 + 1.1).toFixed(2)) });
+    fakeUsersData.push({ name: uName, amt: uAmt, cashAt: parseFloat((Math.random() * 2.5 + 1.1).toFixed(2)) });
     let item = document.createElement('div');
     item.className = 'live-bet-item';
     item.id = `fake-user-${i}`;
@@ -477,24 +418,13 @@ function generateFakeLiveBets() {
 
 function updateFakeLiveCashouts(currM) {
   fakeUsersData.forEach((user, idx) => {
-    if(user.status === "playing" && currM >= user.cashAt) {
-      user.status = "cashed";
-      let winAmt = Math.floor(user.amt * user.cashAt);
-      let el = document.getElementById(`fake-user-${idx}`);
-      if(el) {
-        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win">✅ ${user.cashAt}x (₹${winAmt})</span>`;
-      }
-    }
-  });
-}
-
-function markFakeLiveCrashed() {
-  fakeUsersData.forEach((user, idx) => {
-    if(user.status === "playing") {
-      user.status = "lost";
-      let el = document.getElementById(`fake-user-${idx}`);
-      if(el) {
-        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win" style="color:#ff4757;">❌ क्रैश</span>`;
+    let el = document.getElementById(`fake-user-${idx}`);
+    if(el) {
+      let winSpan = el.querySelector('.u-win');
+      if(winSpan && winSpan.innerText.includes("⏳") && currM >= user.cashAt) {
+        let winAmt = Math.floor(user.amt * user.cashAt);
+        winSpan.style.color = "#2ed573";
+        winSpan.innerText = `✅ ${user.cashAt}x (₹${winAmt})`;
       }
     }
   });
@@ -538,7 +468,7 @@ function handleBet(panelNo) {
     isPlaying2 = true; betAmt2 = amt; autoTarget2 = isNaN(target) ? 2.00 : target; 
   }
   
-  document.getElementById(btnId).innerText = "WAITING...";
+  document.getElementById(btnId).innerText = gameState === "BETTING" ? "WAITING..." : "Cash Out";
   document.getElementById(btnId).style.background = "#ffa502";
   document.getElementById(btnId).style.color = "#000";
   document.getElementById(msgId).className = "msg";
@@ -552,37 +482,6 @@ function updateBal() {
 
 function setAmt(v) { document.getElementById('bet-input-1').value = v; }
 function setAmt2(v) { document.getElementById('bet-input-2').value = v; }
-
-function checkSecretTap() {
-  tapCount++;
-  clearTimeout(tapTimer);
-  tapTimer = setTimeout(() => { tapCount = 0; }, 1200);
-  if(tapCount >= 7) {
-    tapCount = 0;
-    let p = prompt("एडमिन पासवर्ड दर्ज करें:");
-    if(p !== null && p.trim() === "78699") {
-      document.getElementById('aviator-admin-box').style.display = "block";
-    }
-  }
-}
-
-function closeAdmin() {
-  document.getElementById('aviator-admin-box').style.display = "none";
-}
-
-function saveAdminCrash() {
-  let val = parseFloat(document.getElementById('adm-crash-val').value);
-  if(!isNaN(val) && val >= 1.05) {
-    db.ref("aviatorServerCrash").set(val, (err) => {
-      if(!err) {
-        document.getElementById('adm-status-msg').innerText = `✅ क्रैश ${val}एक्स लॉक हुआ!`;
-        setTimeout(closeAdmin, 1500);
-      }
-    });
-  } else {
-    alert("सही वैल्यू डालें!");
-  }
-}
 
 function renderHistory() {
   let bar = document.getElementById('history-bar');
