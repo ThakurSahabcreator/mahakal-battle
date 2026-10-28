@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviator - Perfect Sync</title>
+<title>Aviator - Perfect Sync with Live Users</title>
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -169,6 +169,27 @@ input {
   padding: 4px;
   font-size: 12px;
 }
+.live-bets-box {
+  background: #161f2e;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+  text-align: left;
+  font-size: 11px;
+}
+.live-bet-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  border-bottom: 1px solid #1f293d;
+}
+.live-bet-item span { color: #aaa; }
+.live-bet-item .u-name { color: #fff; font-weight: bold; }
+.live-bet-item .u-amt { color: #00b4d8; }
+.live-bet-item .u-win { color: #00e676; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -182,7 +203,6 @@ input {
     </div>
   </div>
 
-  <!-- ADMIN PANEL -->
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
@@ -193,17 +213,14 @@ input {
     <div id="adm-status-msg" style="color: #00e676; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
   </div>
 
-  <!-- History Bar -->
   <div class="history-bar" id="history-bar"></div>
 
-  <!-- Game Screen -->
   <div class="game-box">
     <div class="plane-icon" id="plane-graphic">✈️</div>
     <div class="plane-mult" id="av-mult">1.00x</div>
     <div class="plane-status" id="av-stat">कनेक्ट हो रहा है...</div>
   </div>
 
-  <!-- Bet Panel 1 -->
   <div class="bet-card">
     <label style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</label>
     <input type="number" id="bet-input-1" value="500" min="10">
@@ -222,7 +239,6 @@ input {
     <div id="msg-1"></div>
   </div>
 
-  <!-- Bet Panel 2 -->
   <div class="bet-card">
     <label style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</label>
     <input type="number" id="bet-input-2" value="500" min="10">
@@ -240,8 +256,14 @@ input {
     <div id="live-profit-2" class="live-profit">लाइव जीत: ₹0</div>
     <div id="msg-2"></div>
   </div>
-</div>
 
+  <div class="live-bets-box" id="live-bets-container">
+    <div style="font-weight: bold; color: #00b4d8; margin-bottom: 4px; border-bottom: 1px solid #334155; padding-bottom: 2px;">🟢 लाइव प्लेयर्स (Bets & Cashouts)</div>
+    <div id="live-bets-list">
+      <div class="live-bet-item"><span class="u-name">Rahul_99</span> <span class="u-amt">₹500</span> <span class="u-win">⏳ खेल रहे हैं</span></div>
+    </div>
+  </div>
+</div>
 <script>
 const firebaseConfig = {
   databaseURL: "https://aviatorapp-9b1a6-default-rtdb.firebaseio.com/"
@@ -256,6 +278,7 @@ let autoTarget1 = 2.00, autoTarget2 = 2.00;
 let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
 
 let tapCount = 0, tapTimer = null;
+let localGameTimer = null;
 
 window.onload = function() {
   let saved = localStorage.getItem('mahakal_master_wallet');
@@ -263,24 +286,118 @@ window.onload = function() {
   document.getElementById('av-bal').innerText = walletBal;
   renderHistory();
 
-  // Firebase se real-time game status sunna
   db.ref("aviatorGameState").on("value", (snapshot) => {
     let data = snapshot.val();
     if(data) {
       updateGameScreen(data);
     } else {
-      // Agar pehli baar database khali ho toh default state set karein
       initializeServerState();
     }
   });
+
+  startLocalLoop();
 };
 
 function initializeServerState() {
   db.ref("aviatorGameState").set({
     status: "BETTING",
     timeLeft: 15,
-    multiplier: 1.00,
-    startTime: Date.now()
+    multiplier: 1.00
+  });
+}
+
+function startLocalLoop() {
+  if(localGameTimer) clearInterval(localGameTimer);
+  localGameTimer = setInterval(() => {
+    db.ref("aviatorGameState").once("value", (snapshot) => {
+      let data = snapshot.val();
+      if(!data) return;
+
+      if(data.status === "BETTING") {
+        let t = data.timeLeft - 1;
+        if(t > 0) {
+          db.ref("aviatorGameState").update({ timeLeft: t });
+        } else {
+          db.ref("aviatorServerCrash").once("value", (snap) => {
+            let crashVal = snap.val() || parseFloat((Math.random() * 3.5 + 1.2).toFixed(2));
+            db.ref("aviatorGameState").set({
+              status: "FLYING",
+              multiplier: 1.00,
+              crashAt: crashVal
+            });
+            generateFakeLiveBets("BETTING");
+          });
+        }
+      } 
+      else if(data.status === "FLYING") {
+        let m = data.multiplier + 0.03;
+        let crashLimit = data.crashAt || 2.00;
+        updateFakeLiveCashouts(m);
+
+        if(m >= crashLimit) {
+          db.ref("aviatorGameState").set({
+            status: "CRASHED",
+            multiplier: crashLimit
+          });
+          markFakeLiveCrashed();
+          setTimeout(() => {
+            db.ref("aviatorGameState").set({
+              status: "BETTING",
+              timeLeft: 15,
+              multiplier: 1.00
+            });
+          }, 3000);
+        } else {
+          db.ref("aviatorGameState").update({ multiplier: parseFloat(m.toFixed(2)) });
+        }
+      }
+    });
+  }, 1000);
+}
+
+let fakeUsersData = [];
+function generateFakeLiveBets(state) {
+  let names = ["Vikas_Kumar", "Rohit_Singh", "Aman_Verma", "Pooja_Sharma", "Amit_Gupta", "Neha_Yadav", "Sachin_King"];
+  fakeUsersData = [];
+  let listEl = document.getElementById('live-bets-list');
+  listEl.innerHTML = "";
+
+  let count = Math.floor(Math.random() * 3) + 3;
+  for(let i = 0; i < count; i++) {
+    let uName = names[Math.floor(Math.random() * names.length)];
+    let uAmt = (Math.floor(Math.random() * 10) + 1) * 100;
+    fakeUsersData.push({ name: uName, amt: uAmt, status: "playing", cashAt: parseFloat((Math.random() * 2.5 + 1.1).toFixed(2)) });
+    
+    let item = document.createElement('div');
+    item.className = 'live-bet-item';
+    item.id = `fake-user-${i}`;
+    item.innerHTML = `<span class="u-name">${uName}</span> <span class="u-amt">₹${uAmt}</span> <span class="u-win" style="color:#ffab00;">⏳ खेल रहे हैं</span>`;
+    listEl.appendChild(item);
+  }
+}
+
+function updateFakeLiveCashouts(currM) {
+  fakeUsersData.forEach((user, idx) => {
+    if(user.status === "playing" && currM >= user.cashAt) {
+      user.status = "cashed";
+      let winAmt = Math.floor(user.amt * user.cashAt);
+      let el = document.getElementById(`fake-user-${idx}`);
+      if(el) {
+        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win">✅ ${user.cashAt}x (₹${winAmt})</span>`;
+      }
+    }
+  });
+}
+
+function markFakeLiveCrashed() {
+  fakeUsersData.forEach((user, idx) => {
+    if(user.status === "playing") {
+      user.status = "lost";
+      let el = document.getElementById(`fake-user-${idx}`);
+      if(el) {
+        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win" style="color:#ff5252;">❌ क्रैश</span>`;
+      }
+    }
   });
 }
 
@@ -334,7 +451,6 @@ function renderHistory() {
   });
 }
 
-// GAME UI SYNC LOGIC
 function updateGameScreen(data) {
   let status = data.status;
   let mult = data.multiplier || 1.00;
@@ -346,7 +462,6 @@ function updateGameScreen(data) {
     document.getElementById('av-mult').style.color = "#fff";
     document.getElementById('plane-graphic').innerText = "✈️";
 
-    // Agar naya round shuru hua toh bets reset karein
     if(isPlaying1 && timeLeft === 15) {
       isPlaying1 = false;
       document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
@@ -364,7 +479,6 @@ function updateGameScreen(data) {
     document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";
     document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
 
-    // Panel 1 Auto Cashout check
     if(isPlaying1) {
       let p1 = Math.floor(betAmt1 * mult);
       document.getElementById('live-profit-1').style.display = "block";
@@ -384,7 +498,6 @@ function updateGameScreen(data) {
       }
     }
 
-    // Panel 2 Auto Cashout check
     if(isPlaying2) {
       let p2 = Math.floor(betAmt2 * mult);
       document.getElementById('live-profit-2').style.display = "block";
@@ -409,6 +522,13 @@ function updateGameScreen(data) {
     document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
     document.getElementById('av-mult').style.color = "#ff5252";
     document.getElementById('av-stat').innerText = "💥 क्रैश हो गया!";
+
+    if(!window.lastCrashRecorded || window.lastCrashRecorded !== mult) {
+      window.lastCrashRecorded = mult;
+      historyList.push(mult);
+      if(historyList.length > 10) historyList.shift();
+      renderHistory();
+    }
 
     if(isPlaying1) {
       document.getElementById('msg-1').className = "error";
