@@ -807,8 +807,21 @@ function admWitYes() {
 function admWitNo() {
   pendingWit = null; alert("❌ विथड्रॉवल खारिज कर दिया गया।");
   sendTelegram(`❌ Withdrawal Rejected by Admin`);
-  document.getElementById('adm-wit').innerText = "रद्द (Rejected)";
+
+document.getElementById('adm-wit').innerText = "रद्द (Rejected)";
 }
+  <div class="social-strip">
+    <a href="https://t.me/YOUR_USERNAME" target="_blank" class="s-icon" style="background:#0088cc"><i class="fab fa-telegram-plane"></i></a>
+    <a href="javascript:void(0);" class="s-icon" style="background:#1877F2"><i class="fab fa-facebook-f"></i></a>
+    <a href="javascript:void(0);" class="s-icon" style="background:#E1306C"><i class="fab fa-instagram"></i></a>
+    <a href="javascript:void(0);" class="s-icon" style="background:#25D366"><i class="fab fa-whatsapp"></i></a>
+</div>
+  }
+<style>
+.social-strip { display: flex; justify-content: center; gap: 12px; margin-top: 15px; }
+.s-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; text-decoration: none; border: 1px solid #d4af37; }
+</style>
+  
 </script>
 </body>
 </html>
