@@ -174,14 +174,13 @@ input {
   padding: 4px;
   font-size: 12px;
 }
-/* Live Bets List Box styling */
 .live-bets-box {
   background: #161f2e;
   border: 1px solid #334155;
   border-radius: 8px;
   padding: 8px;
   margin-bottom: 8px;
-  max-height: 120px;
+  max-height: 180px;
   overflow-y: auto;
   text-align: left;
   font-size: 11px;
@@ -189,7 +188,7 @@ input {
 .live-bet-item {
   display: flex;
   justify-content: space-between;
-  padding: 3px 0;
+  padding: 4px 2px;
   border-bottom: 1px solid #1f293d;
 }
 .live-bet-item span { color: #aaa; }
@@ -211,8 +210,9 @@ input {
 
   <!-- ADMIN CONTROL PANEL (Password: 78699) -->
   <div id="aviator-admin-box" class="admin-inline-box">
-    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल (Server Sync):</b>
-    <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
+    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन कंट्रोल & रियल यूजर्स मॉनिटर:</b>
+    <div style="margin-top: 6px; font-size: 12px; color: #ffab00;">इस राउंड में खेल रहे रियल यूजर्स: <span id="admin-real-count" style="color:#00e676; font-weight:bold;">0</span></div>
+    <input type="number" id="adm-crash-val" placeholder="उदा. 2.00 (क्रैश पॉइंट)" step="0.1" min="1.1" style="padding: 6px; font-size: 13px; margin-top: 5px;">
     <div style="display: flex; gap: 5px; margin-top: 5px;">
       <button class="big-bet-btn" style="padding: 6px; background: #00e676; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">सर्वर पर लॉक करें</button>
       <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAviatorAdmin()">बंद</button>
@@ -277,12 +277,8 @@ input {
 
   <!-- Live Users Bets & Cashout List -->
   <div class="live-bets-box" id="live-bets-container">
-    <div style="font-weight: bold; color: #00b4d8; margin-bottom: 4px; border-bottom: 1px solid #334155; padding-bottom: 2px;">🟢 लाइव प्लेयर्स (Bets & Cashouts)</div>
-    <div id="live-bets-list">
-      <div class="live-bet-item"><span class="u-name">Rahul_99</span> <span class="u-amt">₹500</span> <span class="u-win">⏳ खेल रहे हैं</span></div>
-      <div class="live-bet-item"><span class="u-name">Aman_K</span> <span class="u-amt">₹1,000</span> <span class="u-win">✅ 2.45x (₹2,450)</span></div>
-      <div class="live-bet-item"><span class="u-name">Deepak_V</span> <span class="u-amt">₹250</span> <span class="u-win">❌ क्रैश</span></div>
-    </div>
+    <div style="font-weight: bold; color: #00b4d8; margin-bottom: 4px; border-bottom: 1px solid #334155; padding-bottom: 2px; position: sticky; top: 0; background: #161f2e; z-index: 2;">🟢 लाइव प्लेयर्स (Bets & Cashouts)</div>
+    <div id="live-bets-list"></div>
   </div>
 
   <button class="big-bet-btn" style="background: #333; color: #fff; margin-top: 5px;" onclick="window.location.href='index.html'">मुख्य होमपेज पर वापस जाएं</button>
@@ -311,6 +307,13 @@ let autoTarget1 = 2.00, autoTarget2 = 2.00;
 
 let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
 
+// Unique ID for current player stored in localStorage so it stays persistent
+let myUserId = localStorage.getItem('aviator_real_user_id');
+if(!myUserId) {
+  myUserId = "Player_" + Math.floor(Math.random() * 90000 + 10000);
+  localStorage.setItem('aviator_real_user_id', myUserId);
+}
+
 // 7-Tap Secret Counter for Admin Panel
 let tapCount = 0;
 let tapTimer = null;
@@ -328,6 +331,12 @@ window.onload = function() {
     if(val !== null) {
       forcedCrash = parseFloat(val);
     }
+  });
+
+  // Listen to Realtime Live Bets from Firebase across all users
+  db.ref("aviatorServer/liveBets").on("value", (snapshot) => {
+    let data = snapshot.val();
+    renderLiveBetsList(data);
   });
 };
 
@@ -383,7 +392,9 @@ function startBettingTimer() {
   document.getElementById('live-profit-2').style.display = "none";
   document.getElementById('msg-2').innerText = "";
 
-  generateFakeLiveBets("BETTING");
+  // Clear previous round real bets on server if betting starts
+  db.ref("aviatorServer/liveBets").set({});
+  generateFakeLiveBets();
 
   if(timerInterval) clearInterval(timerInterval);
 
@@ -402,13 +413,12 @@ function startFlight() {
   gameState = "FLYING";
   if(forcedCrash !== null) {
     crashAt = forcedCrash;
-    forcedCrash = null; // reset after use
+    forcedCrash = null;
   } else {
     crashAt = parseFloat((Math.random() * 3.5 + 1.2).toFixed(2));
   }
 
   document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";
-  generateFakeLiveBets("FLYING");
 
   if(gameInterval) clearInterval(gameInterval);
 
@@ -417,7 +427,6 @@ function startFlight() {
     let mStr = currentMult.toFixed(2) + "x";
     document.getElementById('av-mult').innerText = mStr;
 
-    // Simulate fake users cashing out randomly during flight
     updateFakeLiveCashouts(currentMult);
 
     if(isPlaying1) {
@@ -436,6 +445,7 @@ function startFlight() {
         document.getElementById('msg-1').className = "msg";
         document.getElementById('msg-1').innerText = `🎉 ऑटो कैशआउट! ₹${p1} जीत गए!`;
         document.getElementById('live-profit-1').style.display = "none";
+        updateServerBetStatus(myUserId + "_1", "✅ " + currentMult.toFixed(2) + "x (₹" + p1 + ")");
       }
     }
 
@@ -455,6 +465,7 @@ function startFlight() {
         document.getElementById('msg-2').className = "msg";
         document.getElementById('msg-2').innerText = `🎉 ऑटो कैशआउट! ₹${p2} जीत गए!`;
         document.getElementById('live-profit-2').style.display = "none";
+        updateServerBetStatus(myUserId + "_2", "✅ " + currentMult.toFixed(2) + "x (₹" + p2 + ")");
       }
     }
 
@@ -466,7 +477,6 @@ function startFlight() {
       document.getElementById('av-mult').style.color = "#ff5252";
       document.getElementById('av-stat').innerText = "💥 क्रैश हो गया!";
 
-      // Add to History Bar
       historyList.push(crashAt);
       if(historyList.length > 10) historyList.shift();
       renderHistory();
@@ -480,6 +490,7 @@ function startFlight() {
         document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
         document.getElementById('action-btn-1').style.background = "#00c853";
         document.getElementById('live-profit-1').style.display = "none";
+        updateServerBetStatus(myUserId + "_1", "❌ क्रैश");
       }
       if(isPlaying2) {
         document.getElementById('msg-2').className = "error";
@@ -488,6 +499,7 @@ function startFlight() {
         document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
         document.getElementById('action-btn-2').style.background = "#00c853";
         document.getElementById('live-profit-2').style.display = "none";
+        updateServerBetStatus(myUserId + "_2", "❌ क्रैश");
       }
 
       setTimeout(startBettingTimer, 2500);
@@ -495,50 +507,117 @@ function startFlight() {
   }, 100);
 }
 
-// Fake Live Users Generator for Realistic Look
+// Fake Users Generator Pool
 let fakeUsersData = [];
-function generateFakeLiveBets(state) {
-  let names = ["Vikas_Kumar", "Rohit_Singh", "Aman_Verma", "Pooja_Sharma", "Amit_Gupta", "Neha_Yadav", "Sachin_King"];
+function generateFakeLiveBets() {
+  let firstNames = ["Aman", "Rohit", "Vikas", "Amit", "Pooja", "Neha", "Sachin", "Rahul", "Deepak", "Sunil", "Ankit", "Manish", "Karan", "Priya", "Kajal", "Vijay", "Ajay", "Sandeep", "Ravi", "Manoj"];
+  let lastNames = ["Verma", "Singh", "Gupta", "Sharma", "Yadav", "Kumar", "Mishra", "Pandey", "Thakur", "Chauhan"];
+  
   fakeUsersData = [];
-  let listEl = document.getElementById('live-bets-list');
-  listEl.innerHTML = "";
-
-  let count = Math.floor(Math.random() * 3) + 3; // 3 to 5 players
+  let count = Math.floor(Math.random() * 11) + 40; // 40 to 50 fake users
   for(let i = 0; i < count; i++) {
-    let uName = names[Math.floor(Math.random() * names.length)];
-    let uAmt = (Math.floor(Math.random() * 10) + 1) * 100;
-    fakeUsersData.push({ name: uName, amt: uAmt, status: "playing", cashAt: parseFloat((Math.random() * 2.5 + 1.1).toFixed(2)) });
-    
-    let item = document.createElement('div');
-    item.className = 'live-bet-item';
-    item.id = `fake-user-${i}`;
-    item.innerHTML = `<span class="u-name">${uName}</span> <span class="u-amt">₹${uAmt}</span> <span class="u-win" style="color:#ffab00;">⏳ बेट लगाई</span>`;
-    listEl.appendChild(item);
+    let fName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    let lName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    let uName = `${fName}_${lName}`;
+    let uAmt = (Math.floor(Math.random() * 20) + 1) * 50;
+    let targetCash = parseFloat((Math.random() * 4.0 + 1.1).toFixed(2));
+
+    fakeUsersData.push({ name: uName, amt: uAmt, statusText: "⏳ इंतज़ार", status: "playing", cashAt: targetCash });
   }
 }
 
 function updateFakeLiveCashouts(currM) {
-  fakeUsersData.forEach((user, idx) => {
+  fakeUsersData.forEach((user) => {
     if(user.status === "playing" && currM >= user.cashAt) {
       user.status = "cashed";
       let winAmt = Math.floor(user.amt * user.cashAt);
-      let el = document.getElementById(`fake-user-${idx}`);
-      if(el) {
-        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win">✅ ${user.cashAt}x (₹${winAmt})</span>`;
-      }
+      user.statusText = `✅ ${user.cashAt}x (₹${winAmt})`;
     }
   });
+  triggerListRefresh();
 }
 
 function markFakeLiveCrashed() {
-  fakeUsersData.forEach((user, idx) => {
+  fakeUsersData.forEach((user) => {
     if(user.status === "playing") {
       user.status = "lost";
-      let el = document.getElementById(`fake-user-${idx}`);
-      if(el) {
-        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win" style="color:#ff5252;">❌ क्रैश</span>`;
-      }
+      user.statusText = "❌ क्रैश";
     }
+  });
+  triggerListRefresh();
+}
+
+// Real User Firebase Sync
+function pushRealUserBetToFirebase(betKey, amt) {
+  db.ref("aviatorServer/liveBets/" + betKey).set({
+    name: "👑 " + myUserId,
+    amt: amt,
+    statusText: "⏳ खेल रहे हैं",
+    timestamp: Date.now()
+  });
+}
+
+function updateServerBetStatus(betKey, statusStr) {
+  db.ref("aviatorServer/liveBets/" + betKey).update({
+    statusText: statusStr
+  });
+}
+
+let latestRealBetsData = null;
+function renderLiveBetsList(firebaseData) {
+  latestRealBetsData = firebaseData;
+  triggerListRefresh();
+}
+
+function triggerListRefresh() {
+  let listEl = document.getElementById('live-bets-list');
+  let headerHtml = `<div style="font-weight: bold; color: #00b4d8; margin-bottom: 4px; border-bottom: 1px solid #334155; padding-bottom: 2px; position: sticky; top: 0; background: #161f2e; z-index: 2;">🟢 लाइव प्लेयर्स (Bets & Cashouts)</div>`;
+  listEl.innerHTML = headerHtml;
+
+  let combinedList = [];
+  let realCount = 0;
+
+  // 1. Add Real Users First
+  if(latestRealBetsData) {
+    Object.keys(latestRealBetsData).forEach(key => {
+      let rUser = latestRealBetsData[key];
+      realCount++;
+      combinedList.push({
+        name: rUser.name,
+        amt: rUser.amt,
+        statusText: rUser.statusText,
+        isReal: true
+      });
+    });
+  }
+
+  // Update admin panel real user counter if open
+  let adminCounter = document.getElementById('admin-real-count');
+  if(adminCounter) adminCounter.innerText = realCount;
+
+  // 2. Fill remaining slots with fake users to maintain crowd look
+  let maxDisplay = 50;
+  let neededFakeCount = Math.max(0, maxDisplay - combinedList.length);
+
+  for(let i = 0; i < Math.min(neededFakeCount, fakeUsersData.length); i++) {
+    let fUser = fakeUsersData[i];
+    combinedList.push({
+      name: fUser.name,
+      amt: fUser.amt,
+      statusText: fUser.statusText,
+      isReal: false
+    });
+  }
+
+  // Render list
+  combinedList.forEach(item => {
+    let div = document.createElement('div');
+    div.className = 'live-bet-item';
+    if(item.isReal) {
+      div.style.background = "#052614"; // Real user green highlight
+    }
+    div.innerHTML = `<span class="u-name">${item.name}</span> <span class="u-amt">₹${item.amt}</span> <span class="u-win" style="color:${item.statusText.includes('❌') ? '#ff5252' : (item.statusText.includes('✅') ? '#00e676' : '#ffab00')}">${item.statusText}</span>`;
+    listEl.appendChild(div);
   });
 }
 
@@ -563,6 +642,9 @@ function handleBet(panelNo) {
       isPlaying2 = true; betAmt2 = amt; autoTarget2 = isNaN(target) ? 2.00 : target; 
     }
     
+    // Send real bet to server so everyone and admin can see it
+    pushRealUserBetToFirebase(myUserId + "_" + panelNo, amt);
+
     document.getElementById(btnId).innerText = "WAITING (इंतज़ार करें)";
     document.getElementById(btnId).style.background = "#ff9800";
     document.getElementById(msgId).className = "msg";
@@ -582,6 +664,8 @@ function handleBet(panelNo) {
     document.getElementById(msgId).className = "msg";
     document.getElementById(msgId).innerText = `🎉 मैनुअल कैशआउट! ₹${win} जीत गए!`;
     document.getElementById(profitId).style.display = "none";
+
+    updateServerBetStatus(myUserId + "_" + panelNo, "✅ " + currentMult.toFixed(2) + "x (₹" + win + ")");
   }
 }
 
