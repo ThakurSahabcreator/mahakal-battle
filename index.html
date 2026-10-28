@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
-<title>Thakur Sahab Creator | Mahakal Battle</title>
+<title>ThakurSahabCreatorMahakalBattle</title>
 
-<!-- WhatsApp & Social Share Preview Meta Tags -->
-<meta property="og:title" content="Thakur Sahab Creator | Mahakal Battle">
-<meta property="og:description" content="पहेलियां सुलझाएं और ठाकुर साहब क्रिएटर के साथ गेमिंग का आनंद लें!">
+<!-- WhatsApp & Social Share Preview Meta Tags (बिना स्पेस के सेट) -->
+<meta property="og:title" content="ThakurSahabCreatorMahakalBattle">
+<meta property="og:description" content="Paheliyan suljhayein aur ThakurSahabCreator ke sath gaming ka anand lein!">
 <meta property="og:image" content="1792858963757.png">
+<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
 <meta property="og:type" content="website">
 
 <!-- FontAwesome Icons for Social Buttons -->
@@ -159,7 +160,7 @@ transition: 0.3s;
 <button id="installBtn" style="display:none; background:#ff7b00; color:#fff; padding:10px 20px; border:none; border-radius:8px; font-weight:bold; margin: 10px auto; cursor:pointer; width:100%;">📥 Game App Download Karein</button>
 
 <!-- Tiranga Flag & My Love India Badge -->
-<div class="top-badge">🇮🇳 🟨 ⬜ 🟩 Thakur Sahab Creator 🇮🇳</div>
+<div class="top-badge">🇮🇳 🟨 ⬜ 🟩 ThakurSahabCreator 🇮🇳</div>
 <h2 onclick="checkSecretAdminTap()">🔱 THAKUR SAHAB BATTLE 🔱</h2>
 
 <!-- Banner Image -->
@@ -520,7 +521,8 @@ function copyReferLink() {
 
 function shareOnWhatsApp() {
   let link = document.getElementById('ref-link-input').value;
-  let text = `🔥 Thakur Sahab Creator | Mahakal Battle!\n🧠 पहेलियां सुलझाएं और असली नकद जीतें!\n📥 ₹19 इंस्टेंट बोनस पाएं!\n\nअभी खेलें: ${link}`;
+  // यहाँ बिना मोबाइल नंबर के सिर्फ साफ़ नाम और लिंक सेट किया गया है
+  let text = `ThakurSahabCreatorMahakalBattle\nPaheliyan suljhayein aur asali nakad jeetein!\n${link}`;
   let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
   window.open(whatsappUrl, '_blank');
 }
