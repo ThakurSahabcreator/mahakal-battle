@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviator - Fast Connected Game</title>
+<title>Aviator Game</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -22,7 +22,7 @@ body {
   background: #131a26;
   padding: 10px;
   border-radius: 10px;
-  border: 2px solid #00b4d8;
+  border: 2px solid #ff4757;
   position: relative;
 }
 .header-row {
@@ -31,12 +31,12 @@ body {
   align-items: center;
   margin-bottom: 8px;
 }
-h2 { color: #ff5252; margin: 0; font-size: 22px; font-style: italic; cursor: pointer; }
+h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: pointer; }
 .wallet-badge {
-  background: #00c853; color: #000; padding: 5px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;
+  background: #2ed573; color: #000; padding: 5px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;
 }
 .dep-btn {
-  background: #00c853; color: #000; border: none; padding: 6px 12px; border-radius: 5px; font-weight: bold; cursor: pointer;
+  background: #2ed573; color: #000; border: none; padding: 6px 12px; border-radius: 5px; font-weight: bold; cursor: pointer;
 }
 .history-bar {
   display: flex; gap: 5px; overflow-x: auto; margin-bottom: 8px; padding-bottom: 4px; scrollbar-width: none;
@@ -47,29 +47,70 @@ h2 { color: #ff5252; margin: 0; font-size: 22px; font-style: italic; cursor: poi
 }
 .pill-blue { background: #1a2332; border: 1px solid #00b4d8; color: #00b4d8; }
 .pill-red { background: #3a1111; border: 1px solid #ff5252; color: #ff5252; }
+
 .game-box {
-  height: 170px; background: radial-gradient(circle, #221015 0%, #05070c 100%);
-  border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  border: 1px solid #ff5252; margin-bottom: 8px; position: relative; overflow: hidden;
+  height: 200px; 
+  background: linear-gradient(135deg, #2b0c12 0%, #05070c 70%);
+  border-radius: 8px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  border: 1px solid #ff4757; 
+  margin-bottom: 8px; 
+  position: relative; 
+  overflow: hidden;
 }
+
+.red-trail-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(255, 71, 87, 0.4), rgba(255, 71, 87, 0.05));
+  clip-path: polygon(0 100%, 0 100%, 100% 100%, 0 100%);
+  transition: width 0.1s linear;
+  z-index: 1;
+}
+
 .runway {
   position: absolute;
   bottom: 15px;
   left: 0;
   width: 100%;
   height: 2px;
-  background: #3d3d3d;
-  border-bottom: 2px dashed #747d8c;
+  background: #ff4757;
+  z-index: 2;
 }
-.plane-icon { 
-  font-size: 32px; 
-  position: absolute; 
-  bottom: 15px; 
-  left: 10px; 
+
+.plane-container {
+  position: absolute;
+  bottom: 15px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  z-index: 3;
   will-change: left, bottom, transform;
 }
-.plane-mult { font-size: 40px; font-weight: bold; color: #ffffff; z-index: 2; }
-.plane-status { font-size: 13px; color: #ffab00; margin-top: 4px; font-weight: bold; z-index: 2; }
+.plane-icon { 
+  font-size: 58px;
+  filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.8));
+}
+.propeller {
+  font-size: 20px;
+  margin-left: -14px;
+  margin-top: 8px;
+  animation: spinFast 0.03s linear infinite;
+}
+@keyframes spinFast {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.plane-mult { font-size: 46px; font-weight: bold; color: #ffffff; z-index: 4; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
+.plane-status { font-size: 13px; color: #ffa502; margin-top: 4px; font-weight: bold; z-index: 4; }
+
 .bet-card {
   background: #1a2332; border: 1px solid #334155; border-radius: 8px; padding: 8px; margin-bottom: 8px; text-align: left;
 }
@@ -81,14 +122,14 @@ input {
   width: 100%; padding: 8px; background: #0b0f19; border: 1px solid #444; color: white; border-radius: 5px; text-align: center; font-size: 14px; box-sizing: border-box; margin-top: 4px;
 }
 .big-bet-btn {
-  background: #00c853; color: #000; border: none; padding: 10px; width: 100%; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
+  background: #ff4757; color: #fff; border: none; padding: 10px; width: 100%; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
 }
 .admin-inline-box {
   background: #2a1a1a; border: 2px solid #ff5252; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: left; display: none;
 }
-.msg { color: #00e676; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
-.error { color: #ff5252; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
-.live-profit { color: #00e676; font-size: 13px; font-weight: bold; margin-top: 5px; text-align: center; background: #051a0e; padding: 4px; border-radius: 4px; border: 1px solid #00c853; display: none; }
+.msg { color: #2ed573; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
+.error { color: #ff4757; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
+.live-profit { color: #2ed573; font-size: 13px; font-weight: bold; margin-top: 5px; text-align: center; background: #051a0e; padding: 4px; border-radius: 4px; border: 1px solid #2ed573; display: none; }
 .auto-row {
   display: flex; align-items: center; justify-content: space-between; margin-top: 6px; font-size: 12px; color: #00b4d8;
 }
@@ -100,7 +141,7 @@ input {
 .live-bet-item span { color: #aaa; }
 .live-bet-item .u-name { color: #fff; font-weight: bold; }
 .live-bet-item .u-amt { color: #00b4d8; }
-.live-bet-item .u-win { color: #00e676; font-weight: bold; }
+.live-bet-item .u-win { color: #2ed573; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -118,17 +159,21 @@ input {
     <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
     <div style="display: flex; gap: 5px; margin-top: 5px;">
-      <button class="big-bet-btn" style="padding: 6px; background: #00e676; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">लॉक करें</button>
+      <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">लॉक करें</button>
       <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAdmin()">बंद</button>
     </div>
-    <div id="adm-status-msg" style="color: #00e676; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
+    <div id="adm-status-msg" style="color: #2ed573; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
   </div>
 
   <div class="history-bar" id="history-bar"></div>
 
   <div class="game-box">
+    <div class="red-trail-area" id="redTrail"></div>
     <div class="runway"></div>
-    <div class="plane-icon" id="plane-graphic">🛩️</div>
+    <div class="plane-container" id="plane-graphic">
+      <div class="plane-icon">✈️</div>
+      <div class="propeller">🌀</div>
+    </div>
     <div class="plane-mult" id="av-mult">1.00x</div>
     <div class="plane-status" id="av-stat">जुड़ रहा है...</div>
   </div>
@@ -260,7 +305,8 @@ function heartbeatCheck() {
 function renderGame(data) {
   let status = data.status;
   let mult = data.multiplier || 1.00;
-  let planeEl = document.getElementById('plane-graphic');
+  let planeContainer = document.getElementById('plane-graphic');
+  let redTrail = document.getElementById('redTrail');
 
   if(status === "BETTING") {
     let timeLeft = Math.max(0, Math.ceil((data.endTime - Date.now()) / 1000));
@@ -268,21 +314,22 @@ function renderGame(data) {
     document.getElementById('av-mult').innerText = "1.00x";
     document.getElementById('av-mult').style.color = "#ffffff";
     
-    planeEl.innerText = "🛩️";
-    planeEl.style.left = "10px";
-    planeEl.style.bottom = "15px";
-    planeEl.style.transform = "rotate(0deg)";
+    planeContainer.innerHTML = '<div class="plane-icon">✈️</div><div class="propeller">🌀</div>';
+    planeContainer.style.left = "10px";
+    planeContainer.style.bottom = "15px";
+    planeContainer.style.transform = "rotate(0deg)";
+    redTrail.style.width = "0%";
 
     if(isPlaying1 && timeLeft <= 1) {
       isPlaying1 = false;
       document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-1').style.background = "#00c853";
+      document.getElementById('action-btn-1').style.background = "#ff4757";
       document.getElementById('live-profit-1').style.display = "none";
     }
     if(isPlaying2 && timeLeft <= 1) {
       isPlaying2 = false;
       document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-2').style.background = "#00c853";
+      document.getElementById('action-btn-2').style.background = "#ff4757";
       document.getElementById('live-profit-2').style.display = "none";
     }
   } 
@@ -293,36 +340,39 @@ function renderGame(data) {
     let elapsedFlight = mult - 1.00;
     let moveX, moveY, tiltAngle;
 
-    if (elapsedFlight < 0.5) {
-      let progress = elapsedFlight / 0.5;
+    if (elapsedFlight < 0.3) {
+      let progress = elapsedFlight / 0.3;
       moveX = progress * 40; 
       moveY = 0;
       tiltAngle = 0;
-      planeEl.style.bottom = "15px";
+      planeContainer.style.bottom = "15px";
     } else {
-      let progress = Math.min(1, (elapsedFlight - 0.5) / 2.5);
-      moveX = 40 + (progress * 150);
-      moveY = progress * 115;
+      let progress = Math.min(1, (elapsedFlight - 0.3) / 2.7);
+      moveX = 40 + (progress * 180);
+      moveY = progress * 130;
       tiltAngle = 22;
-      planeEl.style.bottom = (15 + moveY) + "px";
+      planeContainer.style.bottom = (15 + moveY) + "px";
     }
 
-    planeEl.style.left = (10 + moveX) + "px";
-    planeEl.style.transform = `rotate(${tiltAngle}deg)`;
+    planeContainer.style.left = (10 + moveX) + "px";
+    planeContainer.style.transform = `rotate(${tiltAngle}deg)`;
+    
+    let trailPercent = Math.min(100, (moveX / 230) * 100);
+    redTrail.style.width = trailPercent + "%";
 
     if(isPlaying1) {
       let p1 = Math.floor(betAmt1 * mult);
       document.getElementById('live-profit-1').style.display = "block";
       document.getElementById('live-profit-1').innerText = `📈 लाइव जीत: ₹${p1}`;
-      document.getElementById('action-btn-1').innerText = `CASHOUT (₹${p1})`;
-      document.getElementById('action-btn-1').style.background = "#ff5252";
+      document.getElementById('action-btn-1').innerText = `Cash Out (₹${p1})`;
+      document.getElementById('action-btn-1').style.background = "#ffa502";
 
       if(mult >= autoTarget1) {
         walletBal += p1;
         updateBal();
         isPlaying1 = false;
         document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
-        document.getElementById('action-btn-1').style.background = "#00c853";
+        document.getElementById('action-btn-1').style.background = "#ff4757";
         document.getElementById('msg-1').className = "msg";
         document.getElementById('msg-1').innerText = `🎉 ऑटो कैशआउट! ₹${p1} जीत गए!`;
         document.getElementById('live-profit-1').style.display = "none";
@@ -333,15 +383,15 @@ function renderGame(data) {
       let p2 = Math.floor(betAmt2 * mult);
       document.getElementById('live-profit-2').style.display = "block";
       document.getElementById('live-profit-2').innerText = `📈 लाइव जीत: ₹${p2}`;
-      document.getElementById('action-btn-2').innerText = `CASHOUT (₹${p2})`;
-      document.getElementById('action-btn-2').style.background = "#ff5252";
+      document.getElementById('action-btn-2').innerText = `Cash Out (₹${p2})`;
+      document.getElementById('action-btn-2').style.background = "#ffa502";
 
       if(mult >= autoTarget2) {
         walletBal += p2;
         updateBal();
         isPlaying2 = false;
         document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
-        document.getElementById('action-btn-2').style.background = "#00c853";
+        document.getElementById('action-btn-2').style.background = "#ff4757";
         document.getElementById('msg-2').className = "msg";
         document.getElementById('msg-2').innerText = `🎉 ऑटो कैशआउट! ₹${p2} जीत गए!`;
         document.getElementById('live-profit-2').style.display = "none";
@@ -349,9 +399,10 @@ function renderGame(data) {
     }
   } 
   else if(status === "CRASHED") {
-    planeEl.innerText = "💥";
+    planeContainer.innerHTML = '<div class="plane-icon" style="font-size:55px;">💥</div>';
+    planeContainer.style.transform = "rotate(0deg)";
     document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
-    document.getElementById('av-mult').style.color = "#ff5252";
+    document.getElementById('av-mult').style.color = "#ff4757";
     document.getElementById('av-stat').innerText = "💥 क्रैश हो गया!";
 
     if(!window.lastCrashRecorded || window.lastCrashRecorded !== mult) {
@@ -366,7 +417,7 @@ function renderGame(data) {
       document.getElementById('msg-1').innerText = "❌ आप हार गए!";
       isPlaying1 = false;
       document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-1').style.background = "#00c853";
+      document.getElementById('action-btn-1').style.background = "#ff4757";
       document.getElementById('live-profit-1').style.display = "none";
     }
     if(isPlaying2) {
@@ -374,7 +425,7 @@ function renderGame(data) {
       document.getElementById('msg-2').innerText = "❌ आप हार गए!";
       isPlaying2 = false;
       document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-2').style.background = "#00c853";
+      document.getElementById('action-btn-2').style.background = "#ff4757";
       document.getElementById('live-profit-2').style.display = "none";
     }
   }
@@ -394,7 +445,7 @@ function generateFakeLiveBets() {
     let item = document.createElement('div');
     item.className = 'live-bet-item';
     item.id = `fake-user-${i}`;
-    item.innerHTML = `<span class="u-name">${uName}</span> <span class="u-amt">₹${uAmt}</span> <span class="u-win" style="color:#ffab00;">⏳ खेल रहे हैं</span>`;
+    item.innerHTML = `<span class="u-name">${uName}</span> <span class="u-amt">₹${uAmt}</span> <span class="u-win" style="color:#ffa502;">⏳ खेल रहे हैं</span>`;
     listEl.appendChild(item);
   }
 }
@@ -418,7 +469,7 @@ function markFakeLiveCrashed() {
       user.status = "lost";
       let el = document.getElementById(`fake-user-${idx}`);
       if(el) {
-        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win" style="color:#ff5252;">❌ क्रैश</span>`;
+        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win" style="color:#ff4757;">❌ क्रैश</span>`;
       }
     }
   });
@@ -438,7 +489,7 @@ function handleBet(panelNo) {
   if(walletBal < amt) { alert("बैलेंस कम है!"); return; }
 
   let currentText = document.getElementById(btnId).innerText;
-  if(currentText.includes("CASHOUT")) {
+  if(currentText.includes("Cash Out")) {
     let currMultText = parseFloat(document.getElementById('av-mult').innerText);
     let win = Math.floor((panelNo === 1 ? betAmt1 : betAmt2) * currMultText);
     walletBal += win;
@@ -446,7 +497,7 @@ function handleBet(panelNo) {
     
     if(panelNo === 1) isPlaying1 = false; else isPlaying2 = false;
     document.getElementById(btnId).innerText = "BET (लगाएं)";
-    document.getElementById(btnId).style.background = "#00c853";
+    document.getElementById(btnId).style.background = "#ff4757";
     document.getElementById(msgId).className = "msg";
     document.getElementById(msgId).innerText = `🎉 कैशआउट! ₹${win} जीत गए!`;
     document.getElementById(profitId).style.display = "none";
@@ -462,7 +513,7 @@ function handleBet(panelNo) {
   }
   
   document.getElementById(btnId).innerText = "WAITING...";
-  document.getElementById(btnId).style.background = "#ff9800";
+  document.getElementById(btnId).style.background = "#ffa502";
   document.getElementById(msgId).className = "msg";
   document.getElementById(msgId).innerText = "✅ बेट लग गई!";
 }
