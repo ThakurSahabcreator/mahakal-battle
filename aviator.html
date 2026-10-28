@@ -52,9 +52,9 @@ h2 { color: #ff5252; margin: 0; font-size: 22px; font-style: italic; cursor: poi
   border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;
   border: 1px solid #ff5252; margin-bottom: 8px; position: relative; overflow: hidden;
 }
-.plane-icon { font-size: 36px; margin-bottom: 2px; transition: transform 0.15s ease-out; }
-.plane-mult { font-size: 40px; font-weight: bold; color: #ffffff; }
-.plane-status { font-size: 13px; color: #ffab00; margin-top: 4px; font-weight: bold; }
+.plane-icon { font-size: 36px; margin-bottom: 2px; transition: transform 0.1s linear; position: absolute; bottom: 15px; left: 15px; }
+.plane-mult { font-size: 40px; font-weight: bold; color: #ffffff; z-index: 2; }
+.plane-status { font-size: 13px; color: #ffab00; margin-top: 4px; font-weight: bold; z-index: 2; }
 .bet-card {
   background: #1a2332; border: 1px solid #334155; border-radius: 8px; padding: 8px; margin-bottom: 8px; text-align: left;
 }
@@ -152,14 +152,6 @@ input {
     <div id="live-profit-2" class="live-profit">लाइव जीत: ₹0</div>
     <div id="msg-2"></div>
   </div>
-
-  <div class="live-bets-box" id="live-bets-container">
-    <div style="font-weight: bold; color: #00b4d8; margin-bottom: 4px; border-bottom: 1px solid #334155; padding-bottom: 2px;">🟢 लाइव प्लेयर्स (Bets & Cashouts)</div>
-    <div id="live-bets-list">
-      <div class="live-bet-item"><span class="u-name">Rahul_99</span> <span class="u-amt">₹500</span> <span class="u-win">⏳ खेल रहे हैं</span></div>
-    </div>
-  </div>
-</div>
 <script>
 const firebaseConfig = {
   databaseURL: "https://aviatorapp-9b1a6-default-rtdb.firebaseio.com/"
@@ -220,7 +212,7 @@ function heartbeatCheck() {
     } 
     else if(data.status === "FLYING") {
       let elapsed = (now - (data.startTime || now)) / 1000;
-      let m = 1.00 + Math.pow(elapsed, 1.6) * 0.15;
+      let m = 1.00 + Math.pow(elapsed, 1.7) * 0.10;
       let crashLimit = data.crashAt || 2.00;
 
       updateFakeLiveCashouts(m);
@@ -272,9 +264,9 @@ function renderGame(data) {
     document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
 
     let progress = Math.min(1, (mult - 1) / 3);
-    let moveX = progress * 35;
-    let moveY = progress * 40;
-    document.getElementById('plane-graphic').style.transform = `translate(${moveX}px, -${moveY}px) rotate(-22deg)`;
+    let moveX = progress * 190;
+    let moveY = progress * 130;
+    document.getElementById('plane-graphic').style.transform = `translate(${moveX}px, -${moveY}px) rotate(0deg)`;
 
     if(isPlaying1) {
       let p1 = Math.floor(betAmt1 * mult);
@@ -316,7 +308,7 @@ function renderGame(data) {
   } 
   else if(status === "CRASHED") {
     document.getElementById('plane-graphic').innerText = "💥";
-    document.getElementById('plane-graphic').style.transform = "translate(20px, 10px) rotate(45deg)";
+    document.getElementById('plane-graphic').style.transform = "translate(190px, -130px) rotate(0deg)";
     document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
     document.getElementById('av-mult').style.color = "#ff5252";
     document.getElementById('av-stat').innerText = "💥 क्रैश हो गया!";
@@ -486,3 +478,10 @@ function renderHistory() {
 </script>
 </body>
 </html>
+  <div class="live-bets-box" id="live-bets-container">
+    <div style="font-weight: bold; color: #00b4d8; margin-bottom: 4px; border-bottom: 1px solid #334155; padding-bottom: 2px;">🟢 लाइव प्लेयर्स (Bets & Cashouts)</div>
+    <div id="live-bets-list">
+      <div class="live-bet-item"><span class="u-name">Rahul_99</span> <span class="u-amt">₹500</span> <span class="u-win">⏳ खेल रहे हैं</span></div>
+    </div>
+  </div>
+</div>
