@@ -56,16 +56,19 @@ h2 { color: #ff5252; margin: 0; font-size: 22px; font-style: italic; cursor: poi
   overflow-x: auto;
   margin-bottom: 8px;
   padding-bottom: 4px;
+  scrollbar-width: none;
 }
+.history-bar::-webkit-scrollbar { display: none; }
 .hist-pill {
-  background: #1a2332;
-  border: 1px solid #334155;
   padding: 3px 8px;
   border-radius: 4px;
   font-size: 11px;
-  color: #00b4d8;
+  font-weight: bold;
   white-space: nowrap;
 }
+.pill-blue { background: #1a2332; border: 1px solid #00b4d8; color: #00b4d8; }
+.pill-red { background: #3a1111; border: 1px solid #ff5252; color: #ff5252; }
+
 .game-box {
   height: 170px;
   background: radial-gradient(circle, #221015 0%, #05070c 100%);
@@ -171,18 +174,28 @@ input {
   padding: 4px;
   font-size: 12px;
 }
-.secret-admin-btn {
-  background: #1a2332;
-  color: #ff5252;
-  border: 1px dashed #ff5252;
+/* Live Bets List Box styling */
+.live-bets-box {
+  background: #161f2e;
+  border: 1px solid #334155;
+  border-radius: 8px;
   padding: 8px;
-  width: 100%;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 6px;
+  margin-bottom: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+  text-align: left;
+  font-size: 11px;
 }
+.live-bet-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  border-bottom: 1px solid #1f293d;
+}
+.live-bet-item span { color: #aaa; }
+.live-bet-item .u-name { color: #fff; font-weight: bold; }
+.live-bet-item .u-amt { color: #00b4d8; }
+.live-bet-item .u-win { color: #00e676; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -207,14 +220,14 @@ input {
     <div id="adm-status-msg" style="color: #00e676; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
   </div>
 
-  <!-- Multiplier History Bar -->
-  <div class="history-bar">
-    <div class="hist-pill">2.03x</div>
-    <div class="hist-pill">4.39x</div>
-    <div class="hist-pill">3.73x</div>
-    <div class="hist-pill">1.18x</div>
-    <div class="hist-pill">1.12x</div>
-    <div class="hist-pill">41.89x</div>
+  <!-- Dynamic Multiplier History Bar -->
+  <div class="history-bar" id="history-bar">
+    <div class="hist-pill pill-blue">2.03x</div>
+    <div class="hist-pill pill-red">4.39x</div>
+    <div class="hist-pill pill-red">3.73x</div>
+    <div class="hist-pill pill-blue">1.18x</div>
+    <div class="hist-pill pill-blue">1.12x</div>
+    <div class="hist-pill pill-red">41.89x</div>
   </div>
 
   <!-- Game Screen -->
@@ -262,14 +275,21 @@ input {
     <div id="msg-2"></div>
   </div>
 
-  <!-- Direct Working Admin Button -->
-  <button class="secret-admin-btn" onclick="openAdminPanel()">⚙️ एडमिन पैनल खोलें (Admin)</button>
+  <!-- Live Users Bets & Cashout List -->
+  <div class="live-bets-box" id="live-bets-container">
+    <div style="font-weight: bold; color: #00b4d8; margin-bottom: 4px; border-bottom: 1px solid #334155; padding-bottom: 2px;">🟢 लाइव प्लेयर्स (Bets & Cashouts)</div>
+    <div id="live-bets-list">
+      <div class="live-bet-item"><span class="u-name">Rahul_99</span> <span class="u-amt">₹500</span> <span class="u-win">⏳ खेल रहे हैं</span></div>
+      <div class="live-bet-item"><span class="u-name">Aman_K</span> <span class="u-amt">₹1,000</span> <span class="u-win">✅ 2.45x (₹2,450)</span></div>
+      <div class="live-bet-item"><span class="u-name">Deepak_V</span> <span class="u-amt">₹250</span> <span class="u-win">❌ क्रैश</span></div>
+    </div>
+  </div>
 
   <button class="big-bet-btn" style="background: #333; color: #fff; margin-top: 5px;" onclick="window.location.href='index.html'">मुख्य होमपेज पर वापस जाएं</button>
 </div>
 
 <script>
-// --- FIREBASE CONFIGURATION (Connected to Realtime Database) ---
+// --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
   databaseURL: "https://aviatorapp-9b1a6-default-rtdb.firebaseio.com/"
 };
@@ -289,7 +309,9 @@ let isPlaying1 = false, isPlaying2 = false;
 let betAmt1 = 0, betAmt2 = 0;
 let autoTarget1 = 2.00, autoTarget2 = 2.00;
 
-// 7-Tap Secret Counter
+let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
+
+// 7-Tap Secret Counter for Admin Panel
 let tapCount = 0;
 let tapTimer = null;
 
@@ -297,6 +319,7 @@ window.onload = function() {
   let saved = localStorage.getItem('mahakal_master_wallet');
   if(saved !== null) walletBal = parseFloat(saved);
   document.getElementById('av-bal').innerText = walletBal;
+  renderHistory();
   startBettingTimer();
 
   // Listen to Server Realtime Updates for Crash Point
@@ -327,6 +350,17 @@ function checkSecretTap() {
   }
 }
 
+function renderHistory() {
+  let bar = document.getElementById('history-bar');
+  bar.innerHTML = "";
+  historyList.forEach(item => {
+    let div = document.createElement('div');
+    div.className = item >= 2.00 ? "hist-pill pill-red" : "hist-pill pill-blue";
+    div.innerText = item.toFixed(2) + "x";
+    bar.appendChild(div);
+  });
+}
+
 function startBettingTimer() {
   gameState = "BETTING";
   timeLeft = 15;
@@ -349,6 +383,8 @@ function startBettingTimer() {
   document.getElementById('live-profit-2').style.display = "none";
   document.getElementById('msg-2').innerText = "";
 
+  generateFakeLiveBets("BETTING");
+
   if(timerInterval) clearInterval(timerInterval);
 
   timerInterval = setInterval(() => {
@@ -366,11 +402,13 @@ function startFlight() {
   gameState = "FLYING";
   if(forcedCrash !== null) {
     crashAt = forcedCrash;
+    forcedCrash = null; // reset after use
   } else {
     crashAt = parseFloat((Math.random() * 3.5 + 1.2).toFixed(2));
   }
 
   document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";
+  generateFakeLiveBets("FLYING");
 
   if(gameInterval) clearInterval(gameInterval);
 
@@ -378,6 +416,9 @@ function startFlight() {
     currentMult += 0.03;
     let mStr = currentMult.toFixed(2) + "x";
     document.getElementById('av-mult').innerText = mStr;
+
+    // Simulate fake users cashing out randomly during flight
+    updateFakeLiveCashouts(currentMult);
 
     if(isPlaying1) {
       let p1 = Math.floor(betAmt1 * currentMult);
@@ -425,6 +466,13 @@ function startFlight() {
       document.getElementById('av-mult').style.color = "#ff5252";
       document.getElementById('av-stat').innerText = "💥 क्रैश हो गया!";
 
+      // Add to History Bar
+      historyList.push(crashAt);
+      if(historyList.length > 10) historyList.shift();
+      renderHistory();
+
+      markFakeLiveCrashed();
+
       if(isPlaying1) {
         document.getElementById('msg-1').className = "error";
         document.getElementById('msg-1').innerText = "❌ आप हार गए! (पैसे डूब गए)";
@@ -442,9 +490,56 @@ function startFlight() {
         document.getElementById('live-profit-2').style.display = "none";
       }
 
-      setTimeout(startBettingTimer, 2000);
+      setTimeout(startBettingTimer, 2500);
     }
   }, 100);
+}
+
+// Fake Live Users Generator for Realistic Look
+let fakeUsersData = [];
+function generateFakeLiveBets(state) {
+  let names = ["Vikas_Kumar", "Rohit_Singh", "Aman_Verma", "Pooja_Sharma", "Amit_Gupta", "Neha_Yadav", "Sachin_King"];
+  fakeUsersData = [];
+  let listEl = document.getElementById('live-bets-list');
+  listEl.innerHTML = "";
+
+  let count = Math.floor(Math.random() * 3) + 3; // 3 to 5 players
+  for(let i = 0; i < count; i++) {
+    let uName = names[Math.floor(Math.random() * names.length)];
+    let uAmt = (Math.floor(Math.random() * 10) + 1) * 100;
+    fakeUsersData.push({ name: uName, amt: uAmt, status: "playing", cashAt: parseFloat((Math.random() * 2.5 + 1.1).toFixed(2)) });
+    
+    let item = document.createElement('div');
+    item.className = 'live-bet-item';
+    item.id = `fake-user-${i}`;
+    item.innerHTML = `<span class="u-name">${uName}</span> <span class="u-amt">₹${uAmt}</span> <span class="u-win" style="color:#ffab00;">⏳ बेट लगाई</span>`;
+    listEl.appendChild(item);
+  }
+}
+
+function updateFakeLiveCashouts(currM) {
+  fakeUsersData.forEach((user, idx) => {
+    if(user.status === "playing" && currM >= user.cashAt) {
+      user.status = "cashed";
+      let winAmt = Math.floor(user.amt * user.cashAt);
+      let el = document.getElementById(`fake-user-${idx}`);
+      if(el) {
+        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win">✅ ${user.cashAt}x (₹${winAmt})</span>`;
+      }
+    }
+  });
+}
+
+function markFakeLiveCrashed() {
+  fakeUsersData.forEach((user, idx) => {
+    if(user.status === "playing") {
+      user.status = "lost";
+      let el = document.getElementById(`fake-user-${idx}`);
+      if(el) {
+        el.innerHTML = `<span class="u-name">${user.name}</span> <span class="u-amt">₹${user.amt}</span> <span class="u-win" style="color:#ff5252;">❌ क्रैश</span>`;
+      }
+    }
+  });
 }
 
 function handleBet(panelNo) {
