@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviator - Final Fixed Game</title>
+<title>Aviator - Perfect Active Timer</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -72,20 +72,32 @@ h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: poi
   pointer-events: none;
 }
 
+.runway-line {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #ff4757;
+  z-index: 2;
+}
+
 .plane-container {
   position: absolute;
-  bottom: 15px;
+  bottom: 12px;
   left: 10px;
   display: flex;
   align-items: center;
   z-index: 3;
-  will-change: left, bottom;
+  will-change: left, bottom, transform;
 }
-.plane-icon { 
-  font-size: 48px;
-  color: #ff4757;
-  filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));
-  transform: rotate(25deg);
+
+.red-plane-svg {
+  width: 55px;
+  height: 35px;
+  fill: #ff4757;
+  filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.9));
+  transform: rotate(0deg);
 }
 
 .plane-mult { font-size: 48px; font-weight: bold; color: #ffffff; z-index: 4; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
@@ -159,8 +171,11 @@ input {
       <path id="linePath" d="M 0 210 Q 0 210, 0 210" fill="none" stroke="#ff4757" stroke-width="3"></path>
     </svg>
 
+    <div class="runway-line"></div>
     <div class="plane-container" id="plane-graphic">
-      <div class="plane-icon">🛩️</div>
+      <svg class="red-plane-svg" viewBox="0 0 512 512">
+        <path d="M448 336v-48L288 192V96c0-17.67-14.33-32-32-32s-32 14.33-32 32v96L64 288v48l160-48v112l-48 32v32l80-24 80 24v-32l-48-32V288z"/>
+      </svg>
     </div>
     <div class="plane-mult" id="av-mult">1.00x</div>
     <div class="plane-status" id="av-stat">जुड़ रहा है...</div>
@@ -238,16 +253,16 @@ window.onload = function() {
     }
   });
 
-  // Har 100 millisecond mein timer aur game loop chalega taaki ekdam smooth ginti dikhe
-  setInterval(heartbeatCheck, 100);
+  // Har 50ms mein check karega taaki timer bilkul fluid aur real-time chale
+  setInterval(heartbeatCheck, 50);
 };
 
 function resetToServerDefault() {
-  let serverTime = Date.now();
+  let now = Date.now();
   db.ref("aviatorGameState").set({
     status: "BETTING",
-    startTime: serverTime,
-    duration: 15000 // 15 Second fix countdown
+    startTime: now,
+    duration: 15000 // 15 Second countdown duration
   });
 }
 
@@ -304,20 +319,29 @@ function renderGame(data) {
   let curvePath = document.getElementById('curvePath');
   let linePath = document.getElementById('linePath');
 
+  const planeSvgHtml = `
+    <svg class="red-plane-svg" viewBox="0 0 512 512">
+      <path d="M448 336v-48L288 192V96c0-17.67-14.33-32-32-32s-32 14.33-32 32v96L64 288v48l160-48v112l-48 32v32l80-24 80 24v-32l-48-32V288z"/>
+    </svg>`;
+
   if(status === "BETTING") {
     let startTime = data.startTime || Date.now();
     let duration = data.duration || 15000;
     let elapsed = Date.now() - startTime;
     let timeLeft = Math.max(0, Math.ceil((duration - elapsed) / 1000));
 
-    // Ab timer ekdam tezi se aur saaf-saaf 15, 14, 13... ki tarah kam hoga
+    // Timer ab ekdam aktif aur live chalega (15s, 14s, 13s...)
     document.getElementById('av-stat').innerText = `⏱️ अगला राउंड शुरू होने में: ${timeLeft}s`;
     document.getElementById('av-mult').innerText = "1.00x";
     document.getElementById('av-mult').style.color = "#ffffff";
     
-    planeContainer.innerHTML = '<div class="plane-icon">🛩️</div>';
+    // Jahaj zameen par seedha khada rahega
+    planeContainer.innerHTML = planeSvgHtml;
     planeContainer.style.left = "10px";
-    planeContainer.style.bottom = "15px";
+    planeContainer.style.bottom = "12px";
+    let planeSvg = planeContainer.querySelector('.red-plane-svg');
+    if(planeSvg) planeSvg.style.transform = "rotate(0deg)";
+
     curvePath.setAttribute('d', 'M 0 210 Q 0 210, 0 210 L 0 210 Z');
     linePath.setAttribute('d', 'M 0 210 Q 0 210, 0 210');
 
@@ -341,13 +365,15 @@ function renderGame(data) {
     document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
 
     let elapsedFlight = mult - 1.00;
-    // Jhatka hatane ke liye ekdam smooth mathematical progression curve
     let progress = Math.min(1, elapsedFlight / 2.5);
-    let moveX = 10 + (progress * 300);
-    let moveY = 15 + (Math.pow(progress, 1.5) * 140);
+    let moveX = 10 + (progress * 280);
+    let moveY = 12 + (Math.pow(progress, 1.5) * 130);
 
     planeContainer.style.left = moveX + "px";
     planeContainer.style.bottom = moveY + "px";
+    
+    let planeSvg = planeContainer.querySelector('.red-plane-svg');
+    if(planeSvg) planeSvg.style.transform = `rotate(${25 + (progress * 15)}deg)`;
 
     let pathD = `M 0 210 Q ${moveX/2} 210, ${moveX} ${210 - moveY} L ${moveX} 210 Z`;
     let lineD = `M 0 210 Q ${moveX/2} 210, ${moveX} ${210 - moveY}`;
@@ -397,7 +423,7 @@ function renderGame(data) {
     }
   } 
   else if(status === "CRASHED") {
-    planeContainer.innerHTML = '<div class="plane-icon" style="font-size:50px;">💥</div>';
+    planeContainer.innerHTML = '<div style="font-size:45px;">💥</div>';
     document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
     document.getElementById('av-mult').style.color = "#ff4757";
     document.getElementById('av-stat').innerText = "💥 Flew Away!";
