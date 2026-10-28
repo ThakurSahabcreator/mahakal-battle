@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviator - 100% Perfect Local Game</title>
+<title>Aviator - Final Fixed Game</title>
 <style>
 body {
   background-color: #0b0f19;
@@ -90,15 +90,16 @@ h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; }
   will-change: left, bottom, transform;
 }
 
+/* Jahaj ka size aur bada aur saaf kar diya gaya hai */
 .red-plane-svg {
-  width: 75px;
-  height: 48px;
+  width: 85px;
+  height: 55px;
   fill: #ff4757;
-  filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));
+  filter: drop-shadow(0 0 12px rgba(255, 71, 87, 0.9));
 }
 
 .plane-mult { font-size: 48px; font-weight: bold; color: #ffffff; z-index: 4; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
-.plane-status { font-size: 15px; color: #ffa502; margin-top: 4px; font-weight: bold; z-index: 4; }
+.plane-status { font-size: 16px; color: #ffa502; margin-top: 4px; font-weight: bold; z-index: 4; }
 
 .bet-card {
   background: #172133; border: 1px solid #2f3e5c; border-radius: 8px; padding: 8px; margin-bottom: 8px; text-align: left;
@@ -210,8 +211,8 @@ input {
 
 <script>
 let walletBal = 90398;
-let gameState = "BETTING"; // BETTING, FLYING, CRASHED
-let timerLeft = 15; // 15 Second countdown
+let gameState = "BETTING"; 
+let timerLeft = 15.0; // 15 Second precise countdown
 let currentMultiplier = 1.00;
 let crashAtMultiplier = 2.00;
 let flightTime = 0;
@@ -227,7 +228,7 @@ window.onload = function() {
   document.getElementById('av-bal').innerText = walletBal;
   renderHistory();
 
-  // Ekdam solid local game loop jo bina kisi delay ke chalege
+  // Har 100ms mein game loop chalega taaki timer ekdam smooth countdown dikhaye
   setInterval(gameLoop, 100);
 };
 
@@ -235,16 +236,17 @@ function gameLoop() {
   let planeContainer = document.getElementById('plane-graphic');
   let curvePath = document.getElementById('curvePath');
   let linePath = document.getElementById('linePath');
-  let planeSvg = planeContainer.querySelector('.red-plane-svg');
 
   const planeSvgHtml = `
-    <svg class="red-plane-svg" viewBox="0 0 512 512" style="width:75px;height:48px;fill:#ff4757;filter:drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));">
+    <svg class="red-plane-svg" viewBox="0 0 512 512" style="width:85px;height:55px;fill:#ff4757;filter:drop-shadow(0 0 12px rgba(255, 71, 87, 0.9));">
       <path d="M448 336v-48L288 192V96c0-17.67-14.33-32-32-32s-32 14.33-32 32v96L64 288v48l160-48v112l-48 32v32l80-24 80 24v-32l-48-32V288z"/>
     </svg>`;
 
   if (gameState === "BETTING") {
     timerLeft -= 0.1;
     let displaySec = Math.max(0, Math.ceil(timerLeft));
+    
+    // Timer ab live countdown (15s, 14s, 13s...) ke sath chalega
     document.getElementById('av-stat').innerText = `⏱️ अगला राउंड शुरू होने में: ${displaySec}s`;
     document.getElementById('av-mult').innerText = "1.00x";
     document.getElementById('av-mult').style.color = "#ffffff";
@@ -259,7 +261,6 @@ function gameLoop() {
     linePath.setAttribute('d', 'M 0 210 Q 0 210, 0 210');
 
     if (timerLeft <= 0) {
-      // Game Start hone ka samay
       gameState = "FLYING";
       currentMultiplier = 1.00;
       flightTime = 0;
@@ -301,7 +302,6 @@ function gameLoop() {
 
     updateFakeLiveCashouts(currentMultiplier);
 
-    // Panel 1 logic
     if (isPlaying1) {
       let p1 = Math.floor(betAmt1 * currentMultiplier);
       document.getElementById('live-profit-1').style.display = "block";
@@ -321,7 +321,6 @@ function gameLoop() {
       }
     }
 
-    // Panel 2 logic
     if (isPlaying2) {
       let p2 = Math.floor(betAmt2 * currentMultiplier);
       document.getElementById('live-profit-2').style.display = "block";
@@ -341,18 +340,17 @@ function gameLoop() {
       }
     }
 
-    // Check Crash
     if (currentMultiplier >= crashAtMultiplier) {
       gameState = "CRASHED";
       setTimeout(() => {
-        timerLeft = 15;
+        timerLeft = 15.0;
         gameState = "BETTING";
       }, 3000);
       markCrashedState();
     }
   }
   else if (gameState === "CRASHED") {
-    planeContainer.innerHTML = '<div style="font-size:50px;">💥</div>';
+    planeContainer.innerHTML = '<div style="font-size:55px;">💥</div>';
     document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
     document.getElementById('av-mult').style.color = "#ff4757";
     document.getElementById('av-stat').innerText = "💥 Flew Away!";
