@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviator Game</title>
+<title>Aviator - Final Fixed Game</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -19,9 +19,9 @@ body {
 .container {
   max-width: 400px;
   margin: auto;
-  background: #131a26;
+  background: #121824;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 2px solid #ff4757;
   position: relative;
 }
@@ -49,8 +49,8 @@ h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: poi
 .pill-red { background: #3a1111; border: 1px solid #ff5252; color: #ff5252; }
 
 .game-box {
-  height: 200px; 
-  background: linear-gradient(135deg, #2b0c12 0%, #05070c 70%);
+  height: 210px; 
+  background: radial-gradient(circle at bottom left, #2b0c12 0%, #080b12 70%);
   border-radius: 8px; 
   display: flex; 
   flex-direction: column; 
@@ -62,26 +62,14 @@ h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: poi
   overflow: hidden;
 }
 
-.red-trail-area {
+.red-curve-bg {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 0%;
-  height: 100%;
-  background: linear-gradient(to top, rgba(255, 71, 87, 0.4), rgba(255, 71, 87, 0.05));
-  clip-path: polygon(0 100%, 0 100%, 100% 100%, 0 100%);
-  transition: width 0.1s linear;
-  z-index: 1;
-}
-
-.runway {
-  position: absolute;
-  bottom: 15px;
-  left: 0;
   width: 100%;
-  height: 2px;
-  background: #ff4757;
-  z-index: 2;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .plane-container {
@@ -91,28 +79,20 @@ h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: poi
   display: flex;
   align-items: center;
   z-index: 3;
-  will-change: left, bottom, transform;
+  will-change: left, bottom;
 }
 .plane-icon { 
-  font-size: 58px;
-  filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.8));
-}
-.propeller {
-  font-size: 20px;
-  margin-left: -14px;
-  margin-top: 8px;
-  animation: spinFast 0.03s linear infinite;
-}
-@keyframes spinFast {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  font-size: 48px;
+  color: #ff4757;
+  filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));
+  transform: rotate(25deg);
 }
 
-.plane-mult { font-size: 46px; font-weight: bold; color: #ffffff; z-index: 4; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
-.plane-status { font-size: 13px; color: #ffa502; margin-top: 4px; font-weight: bold; z-index: 4; }
+.plane-mult { font-size: 48px; font-weight: bold; color: #ffffff; z-index: 4; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
+.plane-status { font-size: 15px; color: #ffa502; margin-top: 4px; font-weight: bold; z-index: 4; }
 
 .bet-card {
-  background: #1a2332; border: 1px solid #334155; border-radius: 8px; padding: 8px; margin-bottom: 8px; text-align: left;
+  background: #172133; border: 1px solid #2f3e5c; border-radius: 8px; padding: 8px; margin-bottom: 8px; text-align: left;
 }
 .amt-row { display: flex; gap: 4px; margin-top: 5px; }
 .quick-btn {
@@ -122,13 +102,13 @@ input {
   width: 100%; padding: 8px; background: #0b0f19; border: 1px solid #444; color: white; border-radius: 5px; text-align: center; font-size: 14px; box-sizing: border-box; margin-top: 4px;
 }
 .big-bet-btn {
-  background: #ff4757; color: #fff; border: none; padding: 10px; width: 100%; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
+  background: #2ed573; color: #000; border: none; padding: 11px; width: 100%; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 6px;
 }
 .admin-inline-box {
   background: #2a1a1a; border: 2px solid #ff5252; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: left; display: none;
 }
 .msg { color: #2ed573; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
-.error { color: #ff4757; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
+.error { color: #ff5252; font-size: 12px; margin-top: 4px; font-weight: bold; text-align: center; }
 .live-profit { color: #2ed573; font-size: 13px; font-weight: bold; margin-top: 5px; text-align: center; background: #051a0e; padding: 4px; border-radius: 4px; border: 1px solid #2ed573; display: none; }
 .auto-row {
   display: flex; align-items: center; justify-content: space-between; margin-top: 6px; font-size: 12px; color: #00b4d8;
@@ -168,11 +148,19 @@ input {
   <div class="history-bar" id="history-bar"></div>
 
   <div class="game-box">
-    <div class="red-trail-area" id="redTrail"></div>
-    <div class="runway"></div>
+    <svg class="red-curve-bg" viewBox="0 0 380 210" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="redGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#ff4757" stop-opacity="0.05"/>
+          <stop offset="100%" stop-color="#ff4757" stop-opacity="0.5"/>
+        </linearGradient>
+      </defs>
+      <path id="curvePath" d="M 0 210 Q 0 210, 0 210 L 0 210 Z" fill="url(#redGrad)"></path>
+      <path id="linePath" d="M 0 210 Q 0 210, 0 210" fill="none" stroke="#ff4757" stroke-width="3"></path>
+    </svg>
+
     <div class="plane-container" id="plane-graphic">
-      <div class="plane-icon">✈️</div>
-      <div class="propeller">🌀</div>
+      <div class="plane-icon">🛩️</div>
     </div>
     <div class="plane-mult" id="av-mult">1.00x</div>
     <div class="plane-status" id="av-stat">जुड़ रहा है...</div>
@@ -250,13 +238,16 @@ window.onload = function() {
     }
   });
 
-  setInterval(heartbeatCheck, 1000);
+  // Har 100 millisecond mein timer aur game loop chalega taaki ekdam smooth ginti dikhe
+  setInterval(heartbeatCheck, 100);
 };
 
 function resetToServerDefault() {
+  let serverTime = Date.now();
   db.ref("aviatorGameState").set({
     status: "BETTING",
-    endTime: Date.now() + 15000
+    startTime: serverTime,
+    duration: 15000 // 15 Second fix countdown
   });
 }
 
@@ -266,21 +257,25 @@ function heartbeatCheck() {
     if(!data) { resetToServerDefault(); return; }
 
     let now = Date.now();
-    if(data.status === "BETTING" && now >= data.endTime) {
+    let startTime = data.startTime || now;
+    let duration = data.duration || 15000;
+    let elapsed = now - startTime;
+
+    if(data.status === "BETTING" && elapsed >= duration) {
       db.ref("aviatorServerCrash").once("value", (snap) => {
         let crashVal = snap.val() || parseFloat((Math.random() * 3.5 + 1.3).toFixed(2));
         db.ref("aviatorGameState").set({
           status: "FLYING",
           multiplier: 1.00,
           crashAt: crashVal,
-          startTime: now
+          flightStartTime: now
         });
         generateFakeLiveBets();
       });
     } 
     else if(data.status === "FLYING") {
-      let elapsed = (now - (data.startTime || now)) / 1000;
-      let m = 1.00 + Math.pow(elapsed, 1.7) * 0.10;
+      let flightElapsed = (now - (data.flightStartTime || now)) / 1000;
+      let m = 1.00 + Math.pow(flightElapsed, 1.7) * 0.10;
       let crashLimit = data.crashAt || 2.00;
 
       updateFakeLiveCashouts(m);
@@ -306,30 +301,38 @@ function renderGame(data) {
   let status = data.status;
   let mult = data.multiplier || 1.00;
   let planeContainer = document.getElementById('plane-graphic');
-  let redTrail = document.getElementById('redTrail');
+  let curvePath = document.getElementById('curvePath');
+  let linePath = document.getElementById('linePath');
 
   if(status === "BETTING") {
-    let timeLeft = Math.max(0, Math.ceil((data.endTime - Date.now()) / 1000));
+    let startTime = data.startTime || Date.now();
+    let duration = data.duration || 15000;
+    let elapsed = Date.now() - startTime;
+    let timeLeft = Math.max(0, Math.ceil((duration - elapsed) / 1000));
+
+    // Ab timer ekdam tezi se aur saaf-saaf 15, 14, 13... ki tarah kam hoga
     document.getElementById('av-stat').innerText = `⏱️ अगला राउंड शुरू होने में: ${timeLeft}s`;
     document.getElementById('av-mult').innerText = "1.00x";
     document.getElementById('av-mult').style.color = "#ffffff";
     
-    planeContainer.innerHTML = '<div class="plane-icon">✈️</div><div class="propeller">🌀</div>';
+    planeContainer.innerHTML = '<div class="plane-icon">🛩️</div>';
     planeContainer.style.left = "10px";
     planeContainer.style.bottom = "15px";
-    planeContainer.style.transform = "rotate(0deg)";
-    redTrail.style.width = "0%";
+    curvePath.setAttribute('d', 'M 0 210 Q 0 210, 0 210 L 0 210 Z');
+    linePath.setAttribute('d', 'M 0 210 Q 0 210, 0 210');
 
     if(isPlaying1 && timeLeft <= 1) {
       isPlaying1 = false;
       document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-1').style.background = "#ff4757";
+      document.getElementById('action-btn-1').style.background = "#2ed573";
+      document.getElementById('action-btn-1').style.color = "#000";
       document.getElementById('live-profit-1').style.display = "none";
     }
     if(isPlaying2 && timeLeft <= 1) {
       isPlaying2 = false;
       document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-2').style.background = "#ff4757";
+      document.getElementById('action-btn-2').style.background = "#2ed573";
+      document.getElementById('action-btn-2').style.color = "#000";
       document.getElementById('live-profit-2').style.display = "none";
     }
   } 
@@ -338,27 +341,18 @@ function renderGame(data) {
     document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
 
     let elapsedFlight = mult - 1.00;
-    let moveX, moveY, tiltAngle;
+    // Jhatka hatane ke liye ekdam smooth mathematical progression curve
+    let progress = Math.min(1, elapsedFlight / 2.5);
+    let moveX = 10 + (progress * 300);
+    let moveY = 15 + (Math.pow(progress, 1.5) * 140);
 
-    if (elapsedFlight < 0.3) {
-      let progress = elapsedFlight / 0.3;
-      moveX = progress * 40; 
-      moveY = 0;
-      tiltAngle = 0;
-      planeContainer.style.bottom = "15px";
-    } else {
-      let progress = Math.min(1, (elapsedFlight - 0.3) / 2.7);
-      moveX = 40 + (progress * 180);
-      moveY = progress * 130;
-      tiltAngle = 22;
-      planeContainer.style.bottom = (15 + moveY) + "px";
-    }
+    planeContainer.style.left = moveX + "px";
+    planeContainer.style.bottom = moveY + "px";
 
-    planeContainer.style.left = (10 + moveX) + "px";
-    planeContainer.style.transform = `rotate(${tiltAngle}deg)`;
-    
-    let trailPercent = Math.min(100, (moveX / 230) * 100);
-    redTrail.style.width = trailPercent + "%";
+    let pathD = `M 0 210 Q ${moveX/2} 210, ${moveX} ${210 - moveY} L ${moveX} 210 Z`;
+    let lineD = `M 0 210 Q ${moveX/2} 210, ${moveX} ${210 - moveY}`;
+    curvePath.setAttribute('d', pathD);
+    linePath.setAttribute('d', lineD);
 
     if(isPlaying1) {
       let p1 = Math.floor(betAmt1 * mult);
@@ -366,13 +360,15 @@ function renderGame(data) {
       document.getElementById('live-profit-1').innerText = `📈 लाइव जीत: ₹${p1}`;
       document.getElementById('action-btn-1').innerText = `Cash Out (₹${p1})`;
       document.getElementById('action-btn-1').style.background = "#ffa502";
+      document.getElementById('action-btn-1').style.color = "#000";
 
       if(mult >= autoTarget1) {
         walletBal += p1;
         updateBal();
         isPlaying1 = false;
         document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
-        document.getElementById('action-btn-1').style.background = "#ff4757";
+        document.getElementById('action-btn-1').style.background = "#2ed573";
+        document.getElementById('action-btn-1').style.color = "#000";
         document.getElementById('msg-1').className = "msg";
         document.getElementById('msg-1').innerText = `🎉 ऑटो कैशआउट! ₹${p1} जीत गए!`;
         document.getElementById('live-profit-1').style.display = "none";
@@ -385,13 +381,15 @@ function renderGame(data) {
       document.getElementById('live-profit-2').innerText = `📈 लाइव जीत: ₹${p2}`;
       document.getElementById('action-btn-2').innerText = `Cash Out (₹${p2})`;
       document.getElementById('action-btn-2').style.background = "#ffa502";
+      document.getElementById('action-btn-2').style.color = "#000";
 
       if(mult >= autoTarget2) {
         walletBal += p2;
         updateBal();
         isPlaying2 = false;
         document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
-        document.getElementById('action-btn-2').style.background = "#ff4757";
+        document.getElementById('action-btn-2').style.background = "#2ed573";
+        document.getElementById('action-btn-2').style.color = "#000";
         document.getElementById('msg-2').className = "msg";
         document.getElementById('msg-2').innerText = `🎉 ऑटो कैशआउट! ₹${p2} जीत गए!`;
         document.getElementById('live-profit-2').style.display = "none";
@@ -399,11 +397,10 @@ function renderGame(data) {
     }
   } 
   else if(status === "CRASHED") {
-    planeContainer.innerHTML = '<div class="plane-icon" style="font-size:55px;">💥</div>';
-    planeContainer.style.transform = "rotate(0deg)";
+    planeContainer.innerHTML = '<div class="plane-icon" style="font-size:50px;">💥</div>';
     document.getElementById('av-mult').innerText = mult.toFixed(2) + "x";
     document.getElementById('av-mult').style.color = "#ff4757";
-    document.getElementById('av-stat').innerText = "💥 क्रैश हो गया!";
+    document.getElementById('av-stat').innerText = "💥 Flew Away!";
 
     if(!window.lastCrashRecorded || window.lastCrashRecorded !== mult) {
       window.lastCrashRecorded = mult;
@@ -417,7 +414,8 @@ function renderGame(data) {
       document.getElementById('msg-1').innerText = "❌ आप हार गए!";
       isPlaying1 = false;
       document.getElementById('action-btn-1').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-1').style.background = "#ff4757";
+      document.getElementById('action-btn-1').style.background = "#2ed573";
+      document.getElementById('action-btn-1').style.color = "#000";
       document.getElementById('live-profit-1').style.display = "none";
     }
     if(isPlaying2) {
@@ -425,7 +423,8 @@ function renderGame(data) {
       document.getElementById('msg-2').innerText = "❌ आप हार गए!";
       isPlaying2 = false;
       document.getElementById('action-btn-2').innerText = "BET (लगाएं)";
-      document.getElementById('action-btn-2').style.background = "#ff4757";
+      document.getElementById('action-btn-2').style.background = "#2ed573";
+      document.getElementById('action-btn-2').style.color = "#000";
       document.getElementById('live-profit-2').style.display = "none";
     }
   }
@@ -497,7 +496,8 @@ function handleBet(panelNo) {
     
     if(panelNo === 1) isPlaying1 = false; else isPlaying2 = false;
     document.getElementById(btnId).innerText = "BET (लगाएं)";
-    document.getElementById(btnId).style.background = "#ff4757";
+    document.getElementById(btnId).style.background = "#2ed573";
+    document.getElementById(btnId).style.color = "#000";
     document.getElementById(msgId).className = "msg";
     document.getElementById(msgId).innerText = `🎉 कैशआउट! ₹${win} जीत गए!`;
     document.getElementById(profitId).style.display = "none";
@@ -514,6 +514,7 @@ function handleBet(panelNo) {
   
   document.getElementById(btnId).innerText = "WAITING...";
   document.getElementById(btnId).style.background = "#ffa502";
+  document.getElementById(btnId).style.color = "#000";
   document.getElementById(msgId).className = "msg";
   document.getElementById(msgId).innerText = "✅ बेट लग गई!";
 }
