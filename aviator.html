@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - Final Perfect History Sync</title>
+<title>Aviator - Final Fixed Game</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -358,7 +358,6 @@ input {
         document.getElementById('av-mult').style.color = "#ff4757";
         document.getElementById('av-stat').innerText = "💥 प्लेन क्रैश हो गया!";
 
-        // Jaise hi plane crash ho, Firebase database me naya result push kar do
         if (lastProcessedCycle !== currentCycleId) {
           lastProcessedCycle = currentCycleId;
           historyList.unshift(liveForcedCrash);
