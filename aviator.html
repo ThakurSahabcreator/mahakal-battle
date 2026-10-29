@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - Live History Perfect Fix</title>
+<title>Aviator - Firebase Server Synced</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -148,10 +148,10 @@ input {
   </div>
 
   <div id="aviator-admin-box" class="admin-inline-box">
-    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
+    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल (Firebase Sync):</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
     <div style="display: flex; gap: 5px; margin-top: 5px;">
-      <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">लॉक करें</button>
+      <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">सर्वर पर लॉक करें</button>
       <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAdmin()">बंद</button>
     </div>
     <div id="adm-status-msg" style="color: #2ed573; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
@@ -178,7 +178,7 @@ input {
       </svg>
     </div>
     <div class="plane-mult" id="av-mult">1.00x</div>
-    <div class="plane-status" id="av-stat">जुड़ रहा है...</div>
+    <div class="plane-status" id="av-stat">सर्वर से जुड़ रहा है...</div>
   </div>
 
   <div class="bet-card">
@@ -228,17 +228,11 @@ input {
   let walletBal = 90398;
   let currentMultiplier = 1.00;
   let liveForcedCrash = 2.00;
-  
+  let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
+
   let isPlaying1 = false, isPlaying2 = false;
   let betAmt1 = 0, betAmt2 = 0;
   let autoTarget1 = 2.00, autoTarget2 = 2.00;
-  
-  // History list setup
-  let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
-  let savedHistory = localStorage.getItem('mahakal_history_v3');
-  if(savedHistory) {
-    try { historyList = JSON.parse(savedHistory); } catch(e) {}
-  }
 
   let tapCount = 0, tapTimer = null;
   const BETTING_TIME = 15000;  
@@ -249,11 +243,22 @@ input {
     let saved = localStorage.getItem('mahakal_master_wallet');
     if(saved !== null) walletBal = parseFloat(saved);
     document.getElementById('av-bal').innerText = walletBal;
-    renderHistory();
 
+    // Firebase se Admin Crash value sync karna
     db.ref('adminCrash').on('value', (snapshot) => {
       let val = snapshot.val();
       if(val) { liveForcedCrash = parseFloat(val); }
+    });
+
+    // Firebase se History List sync karna taki sabhi ke phone me ek jaisa dikhe
+    db.ref('gameHistory').on('value', (snapshot) => {
+      let data = snapshot.val();
+      if(data && Array.isArray(data)) {
+        historyList = data;
+        renderHistory();
+      } else {
+        renderHistory();
+      }
     });
 
     setInterval(gameLoop, 100);
@@ -289,11 +294,11 @@ input {
     }
   }
 
-  let lastProcessedRound = -1;
+  let lastProcessedCycle = -1;
 
   function gameLoop() {
     let now = Date.now();
-    let currentRoundId = Math.floor(now / TOTAL_CYCLE);
+    let currentCycleId = Math.floor(now / TOTAL_CYCLE);
     let cycleTime = now % TOTAL_CYCLE;
 
     let planeContainer = document.getElementById('plane-graphic');
@@ -355,13 +360,12 @@ input {
         document.getElementById('av-mult').style.color = "#ff4757";
         document.getElementById('av-stat').innerText = "💥 प्लेन क्रैश हो गया!";
 
-        // Yeh ensure karega ki har naya round khatam hone par history me jud jaye
-        if (lastProcessedRound !== currentRoundId) {
-          lastProcessedRound = currentRoundId;
+        // Firebase par history update karna taki sabhi ke phone me turant dikhe
+        if (lastProcessedCycle !== currentCycleId) {
+          lastProcessedCycle = currentCycleId;
           historyList.unshift(liveForcedCrash);
           if (historyList.length > 8) historyList.pop();
-          localStorage.setItem('mahakal_history_v3', JSON.stringify(historyList));
-          renderHistory();
+          db.ref('gameHistory').set(historyList);
         }
 
         if(isPlaying1) { isPlaying1 = false; handleLoss(1); }
