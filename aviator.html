@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - Firebase Server Synced</title>
+<title>Aviator - Final Perfect History Sync</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -148,10 +148,10 @@ input {
   </div>
 
   <div id="aviator-admin-box" class="admin-inline-box">
-    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल (Firebase Sync):</b>
+    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
     <div style="display: flex; gap: 5px; margin-top: 5px;">
-      <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">सर्वर पर लॉक करें</button>
+      <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">लॉक करें</button>
       <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAdmin()">बंद</button>
     </div>
     <div id="adm-status-msg" style="color: #2ed573; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
@@ -178,7 +178,7 @@ input {
       </svg>
     </div>
     <div class="plane-mult" id="av-mult">1.00x</div>
-    <div class="plane-status" id="av-stat">सर्वर से जुड़ रहा है...</div>
+    <div class="plane-status" id="av-stat">जुड़ रहा है...</div>
   </div>
 
   <div class="bet-card">
@@ -244,21 +244,19 @@ input {
     if(saved !== null) walletBal = parseFloat(saved);
     document.getElementById('av-bal').innerText = walletBal;
 
-    // Firebase se Admin Crash value sync karna
+    // Firebase se Admin Crash value sunna
     db.ref('adminCrash').on('value', (snapshot) => {
       let val = snapshot.val();
       if(val) { liveForcedCrash = parseFloat(val); }
     });
 
-    // Firebase se History List sync karna taki sabhi ke phone me ek jaisa dikhe
+    // Firebase se History List ko real-time sync karna
     db.ref('gameHistory').on('value', (snapshot) => {
       let data = snapshot.val();
       if(data && Array.isArray(data)) {
         historyList = data;
-        renderHistory();
-      } else {
-        renderHistory();
       }
+      renderHistory();
     });
 
     setInterval(gameLoop, 100);
@@ -360,7 +358,7 @@ input {
         document.getElementById('av-mult').style.color = "#ff4757";
         document.getElementById('av-stat').innerText = "💥 प्लेन क्रैश हो गया!";
 
-        // Firebase par history update karna taki sabhi ke phone me turant dikhe
+        // Jaise hi plane crash ho, Firebase database me naya result push kar do
         if (lastProcessedCycle !== currentCycleId) {
           lastProcessedCycle = currentCycleId;
           historyList.unshift(liveForcedCrash);
