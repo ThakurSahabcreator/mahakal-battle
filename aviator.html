@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - History Bar Fixed</title>
+<title>Aviator - Final Live History Fix</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -148,10 +148,10 @@ input {
   </div>
 
   <div id="aviator-admin-box" class="admin-inline-box">
-    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल (Firebase Live):</b>
+    <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
     <div style="display: flex; gap: 5px; margin-top: 5px;">
-      <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">सर्वर पर लॉक करें</button>
+      <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">लॉक करें</button>
       <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAdmin()">बंद</button>
     </div>
     <div id="adm-status-msg" style="color: #2ed573; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
@@ -178,7 +178,7 @@ input {
       </svg>
     </div>
     <div class="plane-mult" id="av-mult">1.00x</div>
-    <div class="plane-status" id="av-stat">सर्वर से जुड़ रहा है...</div>
+    <div class="plane-status" id="av-stat">जुड़ रहा है...</div>
   </div>
 
   <div class="bet-card">
@@ -234,9 +234,8 @@ input {
   let betAmt1 = 0, betAmt2 = 0;
   let autoTarget1 = 2.00, autoTarget2 = 2.00;
   
-  // History list setup with localStorage support
   let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
-  let savedHistory = localStorage.getItem('mahakal_history_list');
+  let savedHistory = localStorage.getItem('mahakal_history_fixed');
   if(savedHistory) {
     try { historyList = JSON.parse(savedHistory); } catch(e) {}
   }
@@ -254,9 +253,7 @@ input {
 
     db.ref('adminCrash').on('value', (snapshot) => {
       let val = snapshot.val();
-      if(val) {
-        liveForcedCrash = parseFloat(val);
-      }
+      if(val) { liveForcedCrash = parseFloat(val); }
     });
 
     setInterval(gameLoop, 100);
@@ -284,7 +281,7 @@ input {
     if(!isNaN(val) && val >= 1.05) {
       db.ref('adminCrash').set(val).then(() => {
         liveForcedCrash = val;
-        document.getElementById('adm-status-msg').innerText = `✅ सर्वर पर ${val}एक्स लॉक हो गया!`;
+        document.getElementById('adm-status-msg').innerText = `✅ सर्वर पर ${val}एक्स लॉक हुआ!`;
         setTimeout(closeAdmin, 1500);
       });
     } else {
@@ -307,7 +304,6 @@ input {
       </svg>`;
 
     if (cycleTime < BETTING_TIME) {
-      // --- BETTING PHASE ---
       let remainingMs = BETTING_TIME - cycleTime;
       let displaySec = Math.ceil(remainingMs / 1000);
 
@@ -342,7 +338,6 @@ input {
       linePath.setAttribute('d', 'M 0 200 Q 0 200, 0 200');
 
     } else {
-      // --- FLYING PHASE ---
       let flyingElapsed = (cycleTime - BETTING_TIME) / 1000; 
       let totalFlyingSec = FLYING_DURATION / 1000;
 
@@ -352,19 +347,17 @@ input {
       currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 1.5);
       currentMultiplier = parseFloat(currentMultiplier.toFixed(2));
 
-      // Check if round ended and push to history once per cycle
       if (flyingElapsed >= totalFlyingSec || currentMultiplier >= liveForcedCrash) {
         currentMultiplier = liveForcedCrash;
         document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x (CRASHED)";
         document.getElementById('av-mult').style.color = "#ff4757";
         document.getElementById('av-stat').innerText = "💥 प्लेन क्रैश हो गया!";
 
-        // Push new crash result to history bar once per cycle
         if (lastRecordedCycle !== currentCycleId) {
           lastRecordedCycle = currentCycleId;
           historyList.unshift(liveForcedCrash);
-          if(historyList.length > 10) historyList.pop();
-          localStorage.setItem('mahakal_history_list', JSON.stringify(historyList));
+          if(historyList.length > 8) historyList.pop();
+          localStorage.setItem('mahakal_history_fixed', JSON.stringify(historyList));
           renderHistory();
         }
 
