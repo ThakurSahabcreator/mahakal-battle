@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mera Naya Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans p-6">
+
+    <div class="max-w-md mx-auto bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-xl text-center">
+        <h1 class="text-2xl font-bold text-orange-400 mb-2">🚀 Mera Naya Game</h1>
+        <p class="text-xs text-gray-400 mb-6">Yeh bilkul alag file hai, purana code safe hai!</p>
+
+        <!-- Game Box -->
+        <div class="bg-black/40 border border-gray-700 rounded-xl p-6 mb-6">
+            <div id="planeAnim" class="text-5xl mb-3">✈️</div>
+            <h2 id="numberShow" class="text-4xl font-black text-green-400">1.00x</h2>
+            <p id="statusText" class="text-xs text-gray-400 mt-2">Game shuru hone ke liye taiyar hai</p>
+        </div>
+
+        <!-- Start Button -->
+        <button id="startBtn" onclick="startGame()" class="w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 rounded-xl text-sm transition shadow-lg">
+            GAME START KAREIN
+        </button>
+    </div>
+
+    <script>
+        let interval;
+        let mult = 1.00;
+        let running = false;
+
+        function startGame() {
+            let btn = document.getElementById('startBtn');
+            let status = document.getElementById('statusText');
+            
+            if (!running) {
+                running = true;
+                mult = 1.00;
+                btn.innerText = "CRASH HONE KA WAIT KAREIN...";
+                btn.className = "w-full bg-red-600 font-bold py-3 rounded-xl text-sm cursor-not-allowed";
+                status.innerText = "Plane ud raha hai...";
+
+                interval = setInterval(() => {
+                    mult += 0.08;
+                    document.getElementById('numberShow').innerText = mult.toFixed(2) + "x";
+
+                    if (mult >= 2.50) {
+                        clearInterval(interval);
+                        running = false;
+                        document.getElementById('numberShow').innerHTML = `<span class="text-red-500">CRASHED @ ${mult.toFixed(2)}x</span>`;
+                        status.innerText = "Khel khatam! Dobara shuru karein.";
+                        btn.innerText = "PHIR SE START KAREIN";
+                        btn.className = "w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 rounded-xl text-sm transition shadow-lg";
+                    }
+                }, 150);
+            }
+        }
+    </script>
+</body>
+</html>
