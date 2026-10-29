@@ -244,13 +244,11 @@ input {
     if(saved !== null) walletBal = parseFloat(saved);
     document.getElementById('av-bal').innerText = walletBal;
 
-    // Firebase se Admin Crash value sunna
     db.ref('adminCrash').on('value', (snapshot) => {
       let val = snapshot.val();
       if(val) { liveForcedCrash = parseFloat(val); }
     });
 
-    // Firebase se History List ko real-time sync karna
     db.ref('gameHistory').on('value', (snapshot) => {
       let data = snapshot.val();
       if(data && Array.isArray(data)) {
@@ -305,7 +303,7 @@ input {
 
     const planeSvgHtml = `
       <svg class="red-plane-svg" viewBox="0 0 512 512" style="width:75px;height:48px;fill:#ff4757;filter:drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));">
-        <path d="M448 336v-48L288 192V96c0-17.67-14.33-32-32-32s-32 14.33-32 32v96L64 288v48l160-48l112l-48 32v32l80-24 80 24v-32l-48-32V288z"/>
+        <path d="M448 336v-48L288 192V96c0-17.67-14.33-32-32-32s-32 14.33-32 32v96L64 288v48l160-48v112l-48 32v32l80-24 80 24v-32l-48-32V288z"/>
       </svg>`;
 
     if (cycleTime < BETTING_TIME) {
@@ -356,8 +354,7 @@ input {
         currentMultiplier = liveForcedCrash;
         document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x (CRASHED)";
         document.getElementById('av-mult').style.color = "#ff4757";
-        // Yahan plane udne ka time (second) dikhega crash hone par
-        document.getElementById('av-stat').innerText = `💥 प्लेन क्रैश हो गया! (${flyingElapsed.toFixed(1)}s बाद)`;
+        document.getElementById('av-stat').innerText = "💥 प्लेन क्रैश हो गया!";
 
         if (lastProcessedCycle !== currentCycleId) {
           lastProcessedCycle = currentCycleId;
