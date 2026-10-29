@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Aviator - Final Strict Betting Game</title>
 <style>
 body {
@@ -13,8 +13,10 @@ body {
   margin: 0;
   padding: 5px;
   user-select: none;
+  -webkit-text-size-adjust: 100%;
 }
 .container {
+  width: 100%;
   max-width: 400px;
   margin: auto;
   background: #121824;
@@ -22,6 +24,7 @@ body {
   border-radius: 12px;
   border: 2px solid #ff4757;
   position: relative;
+  box-sizing: border-box;
 }
 .header-row {
   display: flex;
@@ -29,25 +32,26 @@ body {
   align-items: center;
   margin-bottom: 8px;
 }
-h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: pointer; }
+h2 { color: #ff4757; margin: 0; font-size: 20px; font-style: italic; cursor: pointer; }
 .wallet-badge {
-  background: #2ed573; color: #000; padding: 5px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;
+  background: #2ed573; color: #000; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 13px;
 }
 .dep-btn {
-  background: #2ed573; color: #000; border: none; padding: 6px 12px; border-radius: 5px; font-weight: bold; cursor: pointer;
+  background: #2ed573; color: #000; border: none; padding: 5px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px;
 }
 .history-bar {
-  display: flex; gap: 5px; overflow-x: auto; margin-bottom: 8px; padding-bottom: 4px; scrollbar-width: none;
+  display: flex; gap: 5px; overflow-x: auto; margin-bottom: 8px; padding-bottom: 4px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
 }
 .history-bar::-webkit-scrollbar { display: none; }
 .hist-pill {
-  padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; white-space: nowrap;
+  padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; white-space: nowrap; flex-shrink: 0;
 }
 .pill-blue { background: #1a2332; border: 1px solid #00b4d8; color: #00b4d8; }
 .pill-red { background: #3a1111; border: 1px solid #ff5252; color: #ff5252; }
 
 .game-box {
-  height: 210px; 
+  width: 100%;
+  height: 200px; 
   background: radial-gradient(circle at bottom left, #2b0c12 0%, #080b12 70%);
   border-radius: 8px; 
   display: flex; 
@@ -58,6 +62,7 @@ h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: poi
   margin-bottom: 8px; 
   position: relative; 
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .red-curve-bg {
@@ -91,27 +96,27 @@ h2 { color: #ff4757; margin: 0; font-size: 22px; font-style: italic; cursor: poi
 }
 
 .red-plane-svg {
-  width: 85px;
-  height: 55px;
+  width: 75px;
+  height: 48px;
   fill: #ff4757;
-  filter: drop-shadow(0 0 12px rgba(255, 71, 87, 0.9));
+  filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));
 }
 
-.plane-mult { font-size: 48px; font-weight: bold; color: #ffffff; z-index: 4; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
-.plane-status { font-size: 16px; color: #ffa502; margin-top: 4px; font-weight: bold; z-index: 4; }
+.plane-mult { font-size: 42px; font-weight: bold; color: #ffffff; z-index: 4; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
+.plane-status { font-size: 14px; color: #ffa502; margin-top: 4px; font-weight: bold; z-index: 4; }
 
 .bet-card {
-  background: #172133; border: 1px solid #2f3e5c; border-radius: 8px; padding: 8px; margin-bottom: 8px; text-align: left;
+  background: #172133; border: 1px solid #2f3e5c; border-radius: 8px; padding: 8px; margin-bottom: 8px; text-align: left; box-sizing: border-box;
 }
 .amt-row { display: flex; gap: 4px; margin-top: 5px; }
 .quick-btn {
-  background: #0b0f19; color: #fff; border: 1px solid #444; flex: 1; padding: 4px; border-radius: 4px; font-size: 11px; cursor: pointer;
+  background: #0b0f19; color: #fff; border: 1px solid #444; flex: 1; padding: 6px 2px; border-radius: 4px; font-size: 11px; cursor: pointer; text-align: center;
 }
 input {
-  width: 100%; padding: 8px; background: #0b0f19; border: 1px solid #444; color: white; border-radius: 5px; text-align: center; font-size: 14px; box-sizing: border-box; margin-top: 4px;
+  width: 100%; padding: 8px; background: #0b0f19; border: 1px solid #444; color: white; border-radius: 5px; text-align: center; font-size: 14px; box-sizing: border-box; margin-top: 4px; outline: none;
 }
 .big-bet-btn {
-  background: #2ed573; color: #000; border: none; padding: 11px; width: 100%; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 6px;
+  background: #2ed573; color: #000; border: none; padding: 10px; width: 100%; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px;
 }
 .big-bet-btn:disabled {
   background: #555 !important;
@@ -129,7 +134,7 @@ input {
 }
 .auto-row input { width: 70px; padding: 4px; font-size: 12px; }
 .live-bets-box {
-  background: #161f2e; border: 1px solid #334155; border-radius: 8px; padding: 8px; margin-bottom: 8px; max-height: 120px; overflow-y: auto; text-align: left; font-size: 11px;
+  background: #161f2e; border: 1px solid #334155; border-radius: 8px; padding: 8px; margin-bottom: 8px; max-height: 110px; overflow-y: auto; text-align: left; font-size: 11px; box-sizing: border-box;
 }
 .live-bet-item { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #1f293d; }
 .live-bet-item span { color: #aaa; }
@@ -162,15 +167,15 @@ input {
   <div class="history-bar" id="history-bar"></div>
 
   <div class="game-box">
-    <svg class="red-curve-bg" viewBox="0 0 380 210" preserveAspectRatio="none">
+    <svg class="red-curve-bg" viewBox="0 0 350 200" preserveAspectRatio="none">
       <defs>
         <linearGradient id="redGrad" x1="0" y1="1" x2="0" y2="0">
           <stop offset="0%" stop-color="#ff4757" stop-opacity="0.05"/>
           <stop offset="100%" stop-color="#ff4757" stop-opacity="0.5"/>
         </linearGradient>
       </defs>
-      <path id="curvePath" d="M 0 210 Q 0 210, 0 210 L 0 210 Z" fill="url(#redGrad)"></path>
-      <path id="linePath" d="M 0 210 Q 0 210, 0 210" fill="none" stroke="#ff4757" stroke-width="3"></path>
+      <path id="curvePath" d="M 0 200 Q 0 200, 0 200 L 0 200 Z" fill="url(#redGrad)"></path>
+      <path id="linePath" d="M 0 200 Q 0 200, 0 200" fill="none" stroke="#ff4757" stroke-width="3"></path>
     </svg>
 
     <div class="runway-line"></div>
@@ -200,6 +205,7 @@ input {
     <div id="live-profit-1" class="live-profit">लाइव जीत: ₹0</div>
     <div id="msg-1"></div>
   </div>
+  
   <div class="bet-card">
     <label style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</label>
     <input type="number" id="bet-input-2" value="500" min="10">
@@ -225,7 +231,6 @@ input {
     </div>
   </div>
 </div>
-
 <script>
 let walletBal = 90398;
 let gameState = "BETTING"; 
@@ -247,7 +252,6 @@ window.onload = function() {
   if(saved !== null) walletBal = parseFloat(saved);
   document.getElementById('av-bal').innerText = walletBal;
   renderHistory();
-
   setInterval(gameLoop, 100);
 };
 
@@ -285,7 +289,7 @@ function gameLoop() {
   let linePath = document.getElementById('linePath');
 
   const planeSvgHtml = `
-    <svg class="red-plane-svg" viewBox="0 0 512 512" style="width:85px;height:55px;fill:#ff4757;filter:drop-shadow(0 0 12px rgba(255, 71, 87, 0.9));">
+    <svg class="red-plane-svg" viewBox="0 0 512 512" style="width:75px;height:48px;fill:#ff4757;filter:drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));">
       <path d="M448 336v-48L288 192V96c0-17.67-14.33-32-32-32s-32 14.33-32 32v96L64 288v48l160-48v112l-48 32v32l80-24 80 24v-32l-48-32V288z"/>
     </svg>`;
 
@@ -297,7 +301,6 @@ function gameLoop() {
     document.getElementById('av-mult').innerText = "1.00x";
     document.getElementById('av-mult').style.color = "#ffffff";
 
-    // Jab timer chal raha ho tab BET button active rahega
     if(!isPlaying1) {
       let btn1 = document.getElementById('action-btn-1');
       btn1.innerText = "BET (लगाएं)";
@@ -319,8 +322,8 @@ function gameLoop() {
     let ps = planeContainer.querySelector('.red-plane-svg');
     if(ps) ps.style.transform = "rotate(0deg)";
 
-    curvePath.setAttribute('d', 'M 0 210 Q 0 210, 0 210 L 0 210 Z');
-    linePath.setAttribute('d', 'M 0 210 Q 0 210, 0 210');
+    curvePath.setAttribute('d', 'M 0 200 Q 0 200, 0 200 L 0 200 Z');
+    linePath.setAttribute('d', 'M 0 200 Q 0 200, 0 200');
 
     if (timerLeft <= 0) {
       gameState = "FLYING";
@@ -336,7 +339,6 @@ function gameLoop() {
       
       generateFakeLiveBets();
 
-      // Jaise hi plane udne lage, agar user ne pehle se bet nahi lagayi hai toh button disable ho jayega
       if (!isPlaying1) {
         let b1 = document.getElementById('action-btn-1');
         b1.innerText = "अगले राउंड का इंतज़ार...";
@@ -360,8 +362,8 @@ function gameLoop() {
     document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
 
     let progress = Math.min(1, flightTime / 3.0);
-    let moveX = 10 + (progress * 280);
-    let moveY = 12 + (Math.pow(progress, 1.5) * 130);
+    let moveX = 10 + (progress * 250);
+    let moveY = 12 + (Math.pow(progress, 1.5) * 120);
 
     planeContainer.style.left = moveX + "px";
     planeContainer.style.bottom = moveY + "px";
@@ -369,8 +371,8 @@ function gameLoop() {
     let ps = planeContainer.querySelector('.red-plane-svg');
     if(ps) ps.style.transform = `rotate(${25 + (progress * 15)}deg)`;
 
-    let pathD = `M 0 210 Q ${moveX/2} 210, ${moveX} ${210 - moveY} L ${moveX} 210 Z`;
-    let lineD = `M 0 210 Q ${moveX/2} 210, ${moveX} ${210 - moveY}`;
+    let pathD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY} L ${moveX} 200 Z`;
+    let lineD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY}`;
     curvePath.setAttribute('d', pathD);
     linePath.setAttribute('d', lineD);
 
@@ -432,7 +434,7 @@ function gameLoop() {
     }
   }
   else if (gameState === "CRASHED") {
-    planeContainer.innerHTML = '<div style="font-size:55px;">💥</div>';
+    planeContainer.innerHTML = '<div style="font-size:45px;">💥</div>';
     document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
     document.getElementById('av-mult').style.color = "#ff4757";
     document.getElementById('av-stat').innerText = "💥 Flew Away!";
@@ -513,7 +515,6 @@ function updateFakeLiveCashouts(currM) {
 }
 
 function handleBet(panelNo) {
-  // Agar game chal raha hai (FLYING state), toh bet lagane ki permission nahi hogi
   if (gameState !== "BETTING") {
     alert("प्लेन उड़ रहा है! अब इस राउंड में बेट नहीं लग सकती। कृपया अगले राउंड का इंतज़ार करें।");
     return;
@@ -560,7 +561,7 @@ function handleBet(panelNo) {
   document.getElementById(btnId).style.background = "#ffa502";
   document.getElementById(btnId).style.color = "#000";
   document.getElementById(msgId).className = "msg";
-  document.getElementById(msgId).innerText = "✅ बेट सफलताપूर्वक लग गई!";
+  document.getElementById(msgId).innerText = "✅ बेट सफलतापूर्वक लग गई!";
 }
 
 function updateBal() {
