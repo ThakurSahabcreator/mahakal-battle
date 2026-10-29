@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - Final Live History Fix</title>
+<title>Aviator - Live History Perfect Fix</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -228,14 +228,14 @@ input {
   let walletBal = 90398;
   let currentMultiplier = 1.00;
   let liveForcedCrash = 2.00;
-  let lastRecordedCycle = -1;
-
+  
   let isPlaying1 = false, isPlaying2 = false;
   let betAmt1 = 0, betAmt2 = 0;
   let autoTarget1 = 2.00, autoTarget2 = 2.00;
   
+  // History list setup
   let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
-  let savedHistory = localStorage.getItem('mahakal_history_fixed');
+  let savedHistory = localStorage.getItem('mahakal_history_v3');
   if(savedHistory) {
     try { historyList = JSON.parse(savedHistory); } catch(e) {}
   }
@@ -289,9 +289,11 @@ input {
     }
   }
 
+  let lastProcessedRound = -1;
+
   function gameLoop() {
     let now = Date.now();
-    let currentCycleId = Math.floor(now / TOTAL_CYCLE);
+    let currentRoundId = Math.floor(now / TOTAL_CYCLE);
     let cycleTime = now % TOTAL_CYCLE;
 
     let planeContainer = document.getElementById('plane-graphic');
@@ -353,11 +355,12 @@ input {
         document.getElementById('av-mult').style.color = "#ff4757";
         document.getElementById('av-stat').innerText = "💥 प्लेन क्रैश हो गया!";
 
-        if (lastRecordedCycle !== currentCycleId) {
-          lastRecordedCycle = currentCycleId;
+        // Yeh ensure karega ki har naya round khatam hone par history me jud jaye
+        if (lastProcessedRound !== currentRoundId) {
+          lastProcessedRound = currentRoundId;
           historyList.unshift(liveForcedCrash);
-          if(historyList.length > 8) historyList.pop();
-          localStorage.setItem('mahakal_history_fixed', JSON.stringify(historyList));
+          if (historyList.length > 8) historyList.pop();
+          localStorage.setItem('mahakal_history_v3', JSON.stringify(historyList));
           renderHistory();
         }
 
