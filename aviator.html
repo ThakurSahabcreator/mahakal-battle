@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - Perfect Admin Crash Fix</title>
+<title>Aviator - History Bar Fixed</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -149,7 +149,7 @@ input {
 
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल (Firebase Live):</b>
-    <input type="number" id="adm-crash-val" placeholder="उदा. 6.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
+    <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
     <div style="display: flex; gap: 5px; margin-top: 5px;">
       <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">सर्वर पर लॉक करें</button>
       <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAdmin()">बंद</button>
@@ -227,17 +227,24 @@ input {
 
   let walletBal = 90398;
   let currentMultiplier = 1.00;
-  let liveForcedCrash = 5.00; // Default max crash limit
+  let liveForcedCrash = 2.00;
+  let lastRecordedCycle = -1;
 
   let isPlaying1 = false, isPlaying2 = false;
   let betAmt1 = 0, betAmt2 = 0;
   let autoTarget1 = 2.00, autoTarget2 = 2.00;
+  
+  // History list setup with localStorage support
   let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
+  let savedHistory = localStorage.getItem('mahakal_history_list');
+  if(savedHistory) {
+    try { historyList = JSON.parse(savedHistory); } catch(e) {}
+  }
 
   let tapCount = 0, tapTimer = null;
-  const BETTING_TIME = 15000;  // 15 sec betting phase
-  const FLYING_DURATION = 10000; // 10 sec flying phase per round
-  const TOTAL_CYCLE = 25000;   // Total 25 sec per round
+  const BETTING_TIME = 15000;  
+  const FLYING_DURATION = 10000; 
+  const TOTAL_CYCLE = 25000;   
 
   window.onload = function() {
     let saved = localStorage.getItem('mahakal_master_wallet');
@@ -245,7 +252,6 @@ input {
     document.getElementById('av-bal').innerText = walletBal;
     renderHistory();
 
-    // Firebase se live admin crash value sunna
     db.ref('adminCrash').on('value', (snapshot) => {
       let val = snapshot.val();
       if(val) {
@@ -288,6 +294,7 @@ input {
 
   function gameLoop() {
     let now = Date.now();
+    let currentCycleId = Math.floor(now / TOTAL_CYCLE);
     let cycleTime = now % TOTAL_CYCLE;
 
     let planeContainer = document.getElementById('plane-graphic');
@@ -336,32 +343,31 @@ input {
 
     } else {
       // --- FLYING PHASE ---
-      let flyingElapsed = (cycleTime - BETTING_TIME) / 1000; // 0 to 10 seconds
+      let flyingElapsed = (cycleTime - BETTING_TIME) / 1000; 
       let totalFlyingSec = FLYING_DURATION / 1000;
 
-      // Calculate multiplier dynamically to reach exactly 'liveForcedCrash' at the end of flying phase
       let progressRatio = flyingElapsed / totalFlyingSec;
       if (progressRatio > 1) progressRatio = 1;
 
-      // Smooth curve scaling up to the admin set limit
       currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 1.5);
       currentMultiplier = parseFloat(currentMultiplier.toFixed(2));
 
-      // Agar plane crash point par pahunch gaya ho
+      // Check if round ended and push to history once per cycle
       if (flyingElapsed >= totalFlyingSec || currentMultiplier >= liveForcedCrash) {
         currentMultiplier = liveForcedCrash;
         document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x (CRASHED)";
         document.getElementById('av-mult').style.color = "#ff4757";
         document.getElementById('av-stat').innerText = "💥 प्लेन क्रैश हो गया!";
 
-        // Add to history if not added recently
-        if(historyList[0] !== liveForcedCrash) {
+        // Push new crash result to history bar once per cycle
+        if (lastRecordedCycle !== currentCycleId) {
+          lastRecordedCycle = currentCycleId;
           historyList.unshift(liveForcedCrash);
-          if(historyList.length > 8) historyList.pop();
+          if(historyList.length > 10) historyList.pop();
+          localStorage.setItem('mahakal_history_list', JSON.stringify(historyList));
           renderHistory();
         }
 
-        // Fail active bets if not cashed out
         if(isPlaying1) { isPlaying1 = false; handleLoss(1); }
         if(isPlaying2) { isPlaying2 = false; handleLoss(2); }
         return;
@@ -385,7 +391,6 @@ input {
       curvePath.setAttribute('d', pathD);
       linePath.setAttribute('d', lineD);
 
-      // Panel 1 Auto Cashout check
       if (isPlaying1) {
         let p1 = Math.floor(betAmt1 * currentMultiplier);
         document.getElementById('live-profit-1').style.display = "block";
@@ -407,7 +412,6 @@ input {
         }
       }
 
-      // Panel 2 Auto Cashout check
       if (isPlaying2) {
         let p2 = Math.floor(betAmt2 * currentMultiplier);
         document.getElementById('live-profit-2').style.display = "block";
@@ -440,7 +444,7 @@ input {
     document.getElementById(btnId).style.background = "#555";
     document.getElementById(btnId).disabled = true;
     document.getElementById(msgId).className = "msg";
-    document.getElementById(msgId.replace('msg', 'msg')).style.color = "#ff4757";
+    document.getElementById(msgId).style.color = "#ff4757";
     document.getElementById(msgId).innerText = "❌ Plane Crash! Bet haar gaye.";
     document.getElementById(profitId).style.display = "none";
   }
@@ -448,7 +452,7 @@ input {
   function handleBet(panelNo) {
     let cycleTime = Date.now() % TOTAL_CYCLE;
     if (cycleTime >= BETTING_TIME) {
-      alert("प्लेन उड़ रहा hai! Ab is round mein bet nahi lag sakti.");
+      alert("प्लेन उड़ रहा है! अब इस राउंड में बेट नहीं लग सकती।");
       return;
     }
 
@@ -461,8 +465,8 @@ input {
     let amt = parseInt(document.getElementById(inpId).value);
     let target = parseFloat(document.getElementById(autoId).value);
 
-    if(isNaN(amt) || amt < 10) { alert("Kam se kam ₹10 lagayein!"); return; }
-    if(walletBal < amt) { alert("Balance kam hai!"); return; }
+    if(isNaN(amt) || amt < 10) { alert("कम से कम ₹10 लगाएं!"); return; }
+    if(walletBal < amt) { alert("बैलेंस कम है!"); return; }
 
     let currentText = document.getElementById(btnId).innerText;
     if(currentText.includes("Cash Out")) {
@@ -471,11 +475,11 @@ input {
       updateBal();
       
       if(panelNo === 1) isPlaying1 = false; else isPlaying2 = false;
-      document.getElementById(btnId).innerText = "BET (lagayein)";
+      document.getElementById(btnId).innerText = "BET (लगाएं)";
       document.getElementById(btnId).style.background = "#2ed573";
       document.getElementById(btnId).style.color = "#000";
       document.getElementById(msgId).className = "msg";
-      document.getElementById(msgId).innerText = `🎉 Cashout! ₹${win} jeet gaye!`;
+      document.getElementById(msgId).innerText = `🎉 कैशआउट! ₹${win} जीत गए!`;
       document.getElementById(profitId).style.display = "none";
       return;
     }
@@ -488,11 +492,11 @@ input {
       isPlaying2 = true; betAmt2 = amt; autoTarget2 = isNaN(target) ? 2.00 : target; 
     }
     
-    document.getElementById(btnId).innerText = "WAITING (Lag gayi)";
+    document.getElementById(btnId).innerText = "WAITING (लग गई)";
     document.getElementById(btnId).style.background = "#ffa502";
     document.getElementById(btnId).style.color = "#000";
     document.getElementById(msgId).className = "msg";
-    document.getElementById(msgId).innerText = "✅ Bet safaltaपूर्वक lag gayi!";
+    document.getElementById(msgId).innerText = "✅ बेट सफलतापूर्वक लग गई!";
   }
 
   function updateBal() {
@@ -509,7 +513,7 @@ input {
     historyList.forEach(item => {
       let div = document.createElement('div');
       div.className = item >= 2.00 ? "hist-pill pill-red" : "hist-pill pill-blue";
-      div.innerText = item.toFixed(2) + "x";
+      div.innerText = parseFloat(item).toFixed(2) + "x";
       bar.appendChild(div);
     });
   }
