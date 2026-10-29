@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - Firebase Live Realtime Game</title>
-<!-- Firebase App aur Database SDK -->
+<title>Aviator - Perfect Admin Crash Fix</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -150,7 +149,7 @@ input {
 
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल (Firebase Live):</b>
-    <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
+    <input type="number" id="adm-crash-val" placeholder="उदा. 6.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
     <div style="display: flex; gap: 5px; margin-top: 5px;">
       <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">सर्वर पर लॉक करें</button>
       <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAdmin()">बंद</button>
@@ -220,7 +219,6 @@ input {
 </div>
 
 <script>
-  // Firebase Configuration (Aapka Realtime Database Link)
   const firebaseConfig = {
     databaseURL: "https://aviatorapp-9b1a6-default-rtdb.firebaseio.com/"
   };
@@ -228,9 +226,8 @@ input {
   const db = firebase.database();
 
   let walletBal = 90398;
-  let gameState = "BETTING"; 
   let currentMultiplier = 1.00;
-  let liveForcedCrash = 2.00;
+  let liveForcedCrash = 5.00; // Default max crash limit
 
   let isPlaying1 = false, isPlaying2 = false;
   let betAmt1 = 0, betAmt2 = 0;
@@ -238,8 +235,9 @@ input {
   let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
 
   let tapCount = 0, tapTimer = null;
-  const BETTING_TIME = 15000; 
-  const TOTAL_CYCLE = 25000;  
+  const BETTING_TIME = 15000;  // 15 sec betting phase
+  const FLYING_DURATION = 10000; // 10 sec flying phase per round
+  const TOTAL_CYCLE = 25000;   // Total 25 sec per round
 
   window.onload = function() {
     let saved = localStorage.getItem('mahakal_master_wallet');
@@ -247,10 +245,12 @@ input {
     document.getElementById('av-bal').innerText = walletBal;
     renderHistory();
 
-    // Firebase se live crash value sunna (Listen karna)
+    // Firebase se live admin crash value sunna
     db.ref('adminCrash').on('value', (snapshot) => {
       let val = snapshot.val();
-      if(val) liveForcedCrash = val;
+      if(val) {
+        liveForcedCrash = parseFloat(val);
+      }
     });
 
     setInterval(gameLoop, 100);
@@ -276,8 +276,8 @@ input {
   function saveAdminCrash() {
     let val = parseFloat(document.getElementById('adm-crash-val').value);
     if(!isNaN(val) && val >= 1.05) {
-      // Firebase Database par value save karna taki sabhi users ke liye sync ho jaye
       db.ref('adminCrash').set(val).then(() => {
+        liveForcedCrash = val;
         document.getElementById('adm-status-msg').innerText = `✅ सर्वर पर ${val}एक्स लॉक हो गया!`;
         setTimeout(closeAdmin, 1500);
       });
@@ -300,7 +300,7 @@ input {
       </svg>`;
 
     if (cycleTime < BETTING_TIME) {
-      gameState = "BETTING";
+      // --- BETTING PHASE ---
       let remainingMs = BETTING_TIME - cycleTime;
       let displaySec = Math.ceil(remainingMs / 1000);
 
@@ -314,6 +314,7 @@ input {
         btn1.style.background = "#2ed573";
         btn1.style.color = "#000";
         btn1.disabled = false;
+        document.getElementById('msg-1').innerText = "";
       }
       if(!isPlaying2) {
         let btn2 = document.getElementById('action-btn-2');
@@ -321,6 +322,7 @@ input {
         btn2.style.background = "#2ed573";
         btn2.style.color = "#000";
         btn2.disabled = false;
+        document.getElementById('msg-2').innerText = "";
       }
 
       planeContainer.innerHTML = planeSvgHtml;
@@ -333,30 +335,57 @@ input {
       linePath.setAttribute('d', 'M 0 200 Q 0 200, 0 200');
 
     } else {
-      gameState = "FLYING";
-      let flyingElapsed = (cycleTime - BETTING_TIME) / 1000;
-      
-      currentMultiplier = 1.00 + Math.pow(flyingElapsed, 1.7) * 0.12;
+      // --- FLYING PHASE ---
+      let flyingElapsed = (cycleTime - BETTING_TIME) / 1000; // 0 to 10 seconds
+      let totalFlyingSec = FLYING_DURATION / 1000;
+
+      // Calculate multiplier dynamically to reach exactly 'liveForcedCrash' at the end of flying phase
+      let progressRatio = flyingElapsed / totalFlyingSec;
+      if (progressRatio > 1) progressRatio = 1;
+
+      // Smooth curve scaling up to the admin set limit
+      currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 1.5);
       currentMultiplier = parseFloat(currentMultiplier.toFixed(2));
+
+      // Agar plane crash point par pahunch gaya ho
+      if (flyingElapsed >= totalFlyingSec || currentMultiplier >= liveForcedCrash) {
+        currentMultiplier = liveForcedCrash;
+        document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x (CRASHED)";
+        document.getElementById('av-mult').style.color = "#ff4757";
+        document.getElementById('av-stat').innerText = "💥 प्लेन क्रैश हो गया!";
+
+        // Add to history if not added recently
+        if(historyList[0] !== liveForcedCrash) {
+          historyList.unshift(liveForcedCrash);
+          if(historyList.length > 8) historyList.pop();
+          renderHistory();
+        }
+
+        // Fail active bets if not cashed out
+        if(isPlaying1) { isPlaying1 = false; handleLoss(1); }
+        if(isPlaying2) { isPlaying2 = false; handleLoss(2); }
+        return;
+      }
 
       document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";
       document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
+      document.getElementById('av-mult').style.color = "#ffffff";
 
-      let progress = Math.min(1, flyingElapsed / 5.0);
-      let moveX = 10 + (progress * 250);
-      let moveY = 12 + (Math.pow(progress, 1.5) * 120);
+      let moveX = 10 + (progressRatio * 250);
+      let moveY = 12 + (Math.pow(progressRatio, 1.5) * 120);
 
       planeContainer.style.left = moveX + "px";
       planeContainer.style.bottom = moveY + "px";
       
       let ps = planeContainer.querySelector('.red-plane-svg');
-      if(ps) ps.style.transform = `rotate(${25 + (progress * 15)}deg)`;
+      if(ps) ps.style.transform = `rotate(${25 + (progressRatio * 15)}deg)`;
 
       let pathD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY} L ${moveX} 200 Z`;
       let lineD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY}`;
       curvePath.setAttribute('d', pathD);
       linePath.setAttribute('d', lineD);
 
+      // Panel 1 Auto Cashout check
       if (isPlaying1) {
         let p1 = Math.floor(betAmt1 * currentMultiplier);
         document.getElementById('live-profit-1').style.display = "block";
@@ -364,22 +393,21 @@ input {
         let b1 = document.getElementById('action-btn-1');
         b1.innerText = `Cash Out (₹${p1})`;
         b1.style.background = "#ffa502";
-        b1.disabled = false;
 
         if (currentMultiplier >= autoTarget1) {
           walletBal += p1;
           updateBal();
           isPlaying1 = false;
-          let btn1 = document.getElementById('action-btn-1');
-          btn1.innerText = "अगले राउंड का इंतज़ार...";
-          btn1.style.background = "#555";
-          btn1.disabled = true;
+          b1.innerText = "अगले राउंड का इंतज़ार...";
+          b1.style.background = "#555";
+          b1.disabled = true;
           document.getElementById('msg-1').className = "msg";
           document.getElementById('msg-1').innerText = `🎉 ऑटो कैशआउट! ₹${p1} जीत गए!`;
           document.getElementById('live-profit-1').style.display = "none";
         }
       }
 
+      // Panel 2 Auto Cashout check
       if (isPlaying2) {
         let p2 = Math.floor(betAmt2 * currentMultiplier);
         document.getElementById('live-profit-2').style.display = "block";
@@ -387,16 +415,14 @@ input {
         let b2 = document.getElementById('action-btn-2');
         b2.innerText = `Cash Out (₹${p2})`;
         b2.style.background = "#ffa502";
-        b2.disabled = false;
 
         if (currentMultiplier >= autoTarget2) {
           walletBal += p2;
           updateBal();
           isPlaying2 = false;
-          let btn2 = document.getElementById('action-btn-2');
-          btn2.innerText = "अगले राउंड का इंतज़ार...";
-          btn2.style.background = "#555";
-          btn2.disabled = true;
+          b2.innerText = "अगले राउंड का इंतज़ार...";
+          b2.style.background = "#555";
+          b2.disabled = true;
           document.getElementById('msg-2').className = "msg";
           document.getElementById('msg-2').innerText = `🎉 ऑटो कैशआउट! ₹${p2} जीत गए!`;
           document.getElementById('live-profit-2').style.display = "none";
@@ -405,9 +431,24 @@ input {
     }
   }
 
+  function handleLoss(panelNo) {
+    let btnId = panelNo === 1 ? 'action-btn-1' : 'action-btn-2';
+    let msgId = panelNo === 1 ? 'msg-1' : 'msg-2';
+    let profitId = panelNo === 1 ? 'live-profit-1' : 'live-profit-2';
+
+    document.getElementById(btnId).innerText = "HAR GAYE";
+    document.getElementById(btnId).style.background = "#555";
+    document.getElementById(btnId).disabled = true;
+    document.getElementById(msgId).className = "msg";
+    document.getElementById(msgId.replace('msg', 'msg')).style.color = "#ff4757";
+    document.getElementById(msgId).innerText = "❌ Plane Crash! Bet haar gaye.";
+    document.getElementById(profitId).style.display = "none";
+  }
+
   function handleBet(panelNo) {
-    if (gameState !== "BETTING") {
-      alert("प्लेन उड़ रहा है! अब इस राउंड में बेट नहीं लग सकती। कृपया अगले राउंड का इंतज़ार करें।");
+    let cycleTime = Date.now() % TOTAL_CYCLE;
+    if (cycleTime >= BETTING_TIME) {
+      alert("प्लेन उड़ रहा hai! Ab is round mein bet nahi lag sakti.");
       return;
     }
 
@@ -420,22 +461,21 @@ input {
     let amt = parseInt(document.getElementById(inpId).value);
     let target = parseFloat(document.getElementById(autoId).value);
 
-    if(isNaN(amt) || amt < 10) { alert("कम से कम ₹10 लगाएं!"); return; }
-    if(walletBal < amt) { alert("बैलेंस कम है!"); return; }
+    if(isNaN(amt) || amt < 10) { alert("Kam se kam ₹10 lagayein!"); return; }
+    if(walletBal < amt) { alert("Balance kam hai!"); return; }
 
     let currentText = document.getElementById(btnId).innerText;
     if(currentText.includes("Cash Out")) {
-      let currMultText = parseFloat(document.getElementById('av-mult').innerText);
-      let win = Math.floor((panelNo === 1 ? betAmt1 : betAmt2) * currMultText);
+      let win = Math.floor((panelNo === 1 ? betAmt1 : betAmt2) * currentMultiplier);
       walletBal += win;
       updateBal();
       
       if(panelNo === 1) isPlaying1 = false; else isPlaying2 = false;
-      document.getElementById(btnId).innerText = "BET (लगाएं)";
+      document.getElementById(btnId).innerText = "BET (lagayein)";
       document.getElementById(btnId).style.background = "#2ed573";
       document.getElementById(btnId).style.color = "#000";
       document.getElementById(msgId).className = "msg";
-      document.getElementById(msgId).innerText = `🎉 कैशआउट! ₹${win} जीत गए!`;
+      document.getElementById(msgId).innerText = `🎉 Cashout! ₹${win} jeet gaye!`;
       document.getElementById(profitId).style.display = "none";
       return;
     }
@@ -448,11 +488,11 @@ input {
       isPlaying2 = true; betAmt2 = amt; autoTarget2 = isNaN(target) ? 2.00 : target; 
     }
     
-    document.getElementById(btnId).innerText = "WAITING (लग गई)";
+    document.getElementById(btnId).innerText = "WAITING (Lag gayi)";
     document.getElementById(btnId).style.background = "#ffa502";
     document.getElementById(btnId).style.color = "#000";
     document.getElementById(msgId).className = "msg";
-    document.getElementById(msgId).innerText = "✅ बेट सफलतापूर्वक लग गई!";
+    document.getElementById(msgId).innerText = "✅ Bet safaltaपूर्वक lag gayi!";
   }
 
   function updateBal() {
