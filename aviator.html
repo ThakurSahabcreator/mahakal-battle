@@ -157,9 +157,11 @@ input {
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 एडमिन क्रैश कंट्रोल:</b>
     <input type="number" id="adm-crash-val" placeholder="उदा. 2.00" step="0.1" min="1.1" style="padding: 6px; font-size: 13px;">
-    <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 5px;" onclick="saveAdminCrash()">क्रैश लॉक करें</button>
-    <div id="adm-status-msg" style="color: #2ed573; font-size: 11px; margin-top: 2px; font-weight: bold;"></div>
-    <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 8px;" onclick="closeAdmin()">एडमिन बंद करें</button>
+    <div style="display: flex; gap: 5px; margin-top: 5px;">
+      <button class="big-bet-btn" style="padding: 6px; background: #2ed573; color: #000; font-size: 12px; margin-top: 0;" onclick="saveAdminCrash()">लॉक करें</button>
+      <button class="big-bet-btn" style="padding: 6px; background: #555; color: #fff; font-size: 12px; margin-top: 0;" onclick="closeAdmin()">बंद</button>
+    </div>
+    <div id="adm-status-msg" style="color: #2ed573; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
   </div>
 
   <div class="history-bar" id="history-bar"></div>
@@ -221,6 +223,15 @@ input {
     <div id="live-profit-2" class="live-profit">लाइव जीत: ₹0</div>
     <div id="msg-2"></div>
   </div>
+
+  <div class="live-bets-box" id="live-bets-container">
+    <div style="font-weight: bold; color: #00b4d8; margin-bottom: 4px; border-bottom: 1px solid #334155; padding-bottom: 2px;">🟢 लाइव प्लेयर्स (Bets & Cashouts)</div>
+    <div id="live-bets-list">
+      <div class="live-bet-item"><span class="u-name">Rahul_99</span> <span class="u-amt">₹500</span> <span class="u-win">⏳ खेल रहे हैं</span></div>
+    </div>
+  </div>
+</div>
+
 <script>
 let walletBal = 90398;
 let gameState = "BETTING"; 
@@ -234,20 +245,14 @@ let autoTarget1 = 2.00, autoTarget2 = 2.00;
 let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
 
 let tapCount = 0, tapTimer = null;
-let lastRecordedCycle = -1;
 
+// Naye sync ke liye constants (15s Betting + 10s Flying = Total 25s cycle)
 const BETTING_TIME = 15000; 
 const TOTAL_CYCLE = 25000;  
 
 window.onload = function() {
-  let savedBal = localStorage.getItem('mahakal_master_wallet');
-  if(savedBal !== null && !isNaN(parseFloat(savedBal)) && parseFloat(savedBal) > 0) {
-    walletBal = parseFloat(savedBal);
-  } else {
-    walletBal = 90398;
-    localStorage.setItem('mahakal_master_wallet', walletBal);
-  }
-
+  let saved = localStorage.getItem('mahakal_master_wallet');
+  if(saved !== null) walletBal = parseFloat(saved);
   document.getElementById('av-bal').innerText = walletBal;
   renderHistory();
   setInterval(gameLoop, 100);
@@ -275,49 +280,15 @@ function saveAdminCrash() {
   if(!isNaN(val) && val >= 1.05) {
     forcedCrashValue = val;
     document.getElementById('adm-status-msg').innerText = `✅ क्रैश ${val}एक्स लॉक हुआ!`;
-    setTimeout(() => { document.getElementById('adm-status-msg').innerText = ""; }, 2000);
+    setTimeout(closeAdmin, 1500);
   } else {
     alert("सही वैल्यू डालें!");
   }
 }
 
-let fakeUsersData = [];
-function generateFakeLiveBets() {
-  let names = ["Vikas_Kumar", "Rohit_Singh", "Aman_Verma", "Pooja_Sharma", "Amit_Gupta", "Neha_Yadav", "Sachin_King"];
-  fakeUsersData = [];
-  let listEl = document.getElementById('live-bets-list');
-  listEl.innerHTML = "";
-  let count = Math.floor(Math.random() * 3) + 3;
-  for(let i = 0; i < count; i++) {
-    let uName = names[Math.floor(Math.random() * names.length)];
-    let uAmt = (Math.floor(Math.random() * 10) + 1) * 100;
-    fakeUsersData.push({ name: uName, amt: uAmt, cashAt: parseFloat((Math.random() * 2.5 + 1.1).toFixed(2)) });
-    let item = document.createElement('div');
-    item.className = 'live-bet-item';
-    item.id = `fake-user-${i}`;
-    item.innerHTML = `<span class="u-name">${uName}</span> <span class="u-amt">₹${uAmt}</span> <span class="u-win" style="color:#ffa502;">⏳ खेल रहे हैं</span>`;
-    listEl.appendChild(item);
-  }
-}
-
-function updateFakeLiveCashouts(currM) {
-  fakeUsersData.forEach((user, idx) => {
-    let el = document.getElementById(`fake-user-${idx}`);
-    if(el) {
-      let winSpan = el.querySelector('.u-win');
-      if(winSpan && winSpan.innerText.includes("⏳") && currM >= user.cashAt) {
-        let winAmt = Math.floor(user.amt * user.cashAt);
-        winSpan.style.color = "#2ed573";
-        winSpan.innerText = `✅ ${user.cashAt}x (₹${winAmt})`;
-      }
-    }
-  });
-}
-
 function gameLoop() {
   let now = Date.now();
-  let currentCycleId = Math.floor(now / TOTAL_CYCLE);
-  let cycleTime = now % TOTAL_CYCLE; 
+  let cycleTime = now % TOTAL_CYCLE; // Phone ke time se dono apps ko perfectly match karega
 
   let planeContainer = document.getElementById('plane-graphic');
   let curvePath = document.getElementById('curvePath');
@@ -329,6 +300,7 @@ function gameLoop() {
     </svg>`;
 
   if (cycleTime < BETTING_TIME) {
+    // --- BETTING STATE ---
     gameState = "BETTING";
     let remainingMs = BETTING_TIME - cycleTime;
     let displaySec = Math.ceil(remainingMs / 1000);
@@ -336,17 +308,6 @@ function gameLoop() {
     document.getElementById('av-stat').innerText = `⏱️ अगला राउंड शुरू होने में: ${displaySec}s`;
     document.getElementById('av-mult').innerText = "1.00x";
     document.getElementById('av-mult').style.color = "#ffffff";
-
-    if (currentCycleId !== lastRecordedCycle) {
-      lastRecordedCycle = currentCycleId;
-      if(forcedCrashValue !== null) {
-        crashAtMultiplier = forcedCrashValue;
-        forcedCrashValue = null;
-      } else {
-        crashAtMultiplier = parseFloat((Math.random() * 3.5 + 1.2).toFixed(2));
-      }
-      generateFakeLiveBets();
-    }
 
     if(!isPlaying1) {
       let btn1 = document.getElementById('action-btn-1');
@@ -373,15 +334,12 @@ function gameLoop() {
     linePath.setAttribute('d', 'M 0 200 Q 0 200, 0 200');
 
   } else {
+    // --- FLYING STATE ---
     gameState = "FLYING";
-    let flyingElapsed = (cycleTime - BETTING_TIME) / 1000; 
+    let flyingElapsed = (cycleTime - BETTING_TIME) / 1000; // Udan ka samay seconds mein
     
     currentMultiplier = 1.00 + Math.pow(flyingElapsed, 1.7) * 0.12;
     currentMultiplier = parseFloat(currentMultiplier.toFixed(2));
-
-    if (currentMultiplier >= crashAtMultiplier) {
-      currentMultiplier = crashAtMultiplier;
-    }
 
     document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";
     document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
@@ -400,17 +358,6 @@ function gameLoop() {
     let lineD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY}`;
     curvePath.setAttribute('d', pathD);
     linePath.setAttribute('d', lineD);
-
-    updateFakeLiveCashouts(currentMultiplier);
-
-    if (currentMultiplier >= crashAtMultiplier || flyingElapsed >= 10.0) {
-      if (!window.recordedHistoryCycle || window.recordedHistoryCycle !== currentCycleId) {
-        window.recordedHistoryCycle = currentCycleId;
-        historyList.push(crashAtMultiplier);
-        if (historyList.length > 10) historyList.shift();
-        renderHistory();
-      }
-    }
 
     if (isPlaying1) {
       let p1 = Math.floor(betAmt1 * currentMultiplier);
@@ -531,11 +478,3 @@ function renderHistory() {
 </script>
 </body>
 </html>
-
-  <div class="live-bets-box" id="live-bets-container">
-    <div style="font-weight: bold; color: #00b4d8; margin-bottom: 4px; border-bottom: 1px solid #334155; padding-bottom: 2px;">🟢 लाइव प्लेयर्स (Bets & Cashouts)</div>
-    <div id="live-bets-list">
-      <div class="live-bet-item"><span class="u-name">Rahul_99</span> <span class="u-amt">₹500</span> <span class="u-win">⏳ खेल रहे हैं</span></div>
-    </div>
-  </div>
-</div>
