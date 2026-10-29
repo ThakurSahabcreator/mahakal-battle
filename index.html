@@ -6,7 +6,7 @@
 <link rel="manifest" href="manifest.json">
 <title>ThakurSahabCreatorMahakalBattle</title>
 
-<!-- WhatsApp & Social Share Preview Meta Tags (बिना स्पेस के सेट) -->
+<!-- WhatsApp & Social Share Preview Meta Tags -->
 <meta property="og:title" content="ThakurSahabCreatorMahakalBattle">
 <meta property="og:description" content="Paheliyan suljhayein aur ThakurSahabCreator ke sath gaming ka anand lein!">
 <meta property="og:image" content="1792858963757.png">
@@ -159,7 +159,7 @@ transition: 0.3s;
 <!-- App Download Button -->
 <button id="installBtn" style="display:none; background:#ff7b00; color:#fff; padding:10px 20px; border:none; border-radius:8px; font-weight:bold; margin: 10px auto; cursor:pointer; width:100%;">📥 Game App Download Karein</button>
 
-<!-- Tiranga Flag & My Love India Badge -->
+<!-- Tiranga Flag Badge -->
 <div class="top-badge">🇮🇳 🟨 ⬜ 🟩 ThakurSahabCreator 🇮🇳</div>
 <h2 onclick="checkSecretAdminTap()">🔱 THAKUR SAHAB BATTLE 🔱</h2>
 
@@ -178,7 +178,7 @@ transition: 0.3s;
 <div id="login-msg"></div>
 </div>
 
-<!-- Reset Password Box with 3 Password Fields -->
+<!-- Reset Password Box -->
 <div class="card-box" style="text-align: center; display: none;" id="reset-form-box">
 <h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔄 पासवर्ड रीसेट करें (3-Step Verification)</h3>
 <p style="font-size: 11px; color: #aaa;">अपना रजिस्टर्ड मोबाइल नंबर और तीनों खानों में नया पासवर्ड दर्ज करें:</p>
@@ -521,7 +521,6 @@ function copyReferLink() {
 
 function shareOnWhatsApp() {
   let link = document.getElementById('ref-link-input').value;
-  // यहाँ बिना मोबाइल नंबर के सिर्फ साफ़ नाम और लिंक सेट किया गया है
   let text = `ThakurSahabCreatorMahakalBattle\nPaheliyan suljhayein aur asali nakad jeetein!\n${link}`;
   let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
   window.open(whatsappUrl, '_blank');
@@ -803,7 +802,7 @@ function admDepYes() {
     walletBalance += pendingDep.amount;
     saveWallet();
     alert(`✅ डिपॉजिट स्वीकृत! यूजर के वॉलेट में पूरे ₹${pendingDep.amount} जोड़ दिए गए हैं।`);
-    sendTelegram(`✅ Deposit Approved & Full Amount (₹${pendingDep.amount}) Credited to User: ${pendingDep.phone}`);
+    sendTelegram(`✅ Deposit Approved & Full Amount (₹${pendingDep.00 || pendingDep.amount}) Credited to User: ${pendingDep.phone}`);
     
     document.getElementById('live-dep-details').innerHTML = "<span style='color:#00e676; font-weight:bold;'>✔ स्वीकृत (Full Amount Credited)</span>";
     document.getElementById('live-dep-buttons').style.display = "none";
