@@ -198,13 +198,11 @@ transition: 0.3s;
 <!-- DASHBOARD SECTION -->
 <div id="app-dashboard" class="hidden">
 
-<!-- FAKE ACTIVITY BOX (Ye sirf aam customer ko dikhega) -->
 <div id="fake-activity-container" class="fake-activity-box">
     🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
     <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle se ₹500 jeete!</span>
 </div>
 
-<!-- REAL ADMIN CONTAINER (Ye sirf Admin password dalne par dikhega) -->
 <div id="real-admin-container" class="fake-activity-box" style="background: linear-gradient(135deg, #1e3a8a, #1e1b4b); border: 1px solid #3b82f6; display: none; text-align: left; padding: 12px;">
     👑 <b style="color: #60a5fa;">Admin Real-Time Customer View:</b><br>
     👥 Total Registered Users: <span id="real-users-count" style="color: #fff; font-weight: bold;">0</span><br>
@@ -298,7 +296,7 @@ transition: 0.3s;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- HELPDESK SECTION (AI REMOVED) -->
+<!-- HELPDESK SECTION -->
 <div id="support-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">💬 हेल्पलाइन & Help Desk</h3>
@@ -336,7 +334,6 @@ const fakeGames = ["Mahakal Puzzle Battle", "Ludo Paasa Battle"];
 function updateFakeActivity() {
     let countEl = document.getElementById('fake-online-count');
     let tickerEl = document.getElementById('fake-winner-ticker');
-    // Jab tak admin login nahi hai, tab tak customer ko fake activity dikhegi
     if(countEl && !isAdminLoggedIn) {
         countEl.innerText = Math.floor(Math.random() * 100) + 600;
         tickerEl.innerHTML = `🏆 ${fakeNames[Math.floor(Math.random() * fakeNames.length)]} ne abhi game se ₹500 jeete!`;
@@ -447,13 +444,11 @@ function checkSecretAdminTap() {
   let now = new Date().getTime();
   if(now - lastT < 800) tapC++; else tapC = 1;
   lastT = now;
-  // 7 baar lagataar title par click karne par password puchenge
   if(tapC === 7) {
     tapC = 0;
     let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
     if(p === "78699") {
       isAdminLoggedIn = true;
-      // Customer wali fake activity hide ho jayegi, aur real users dikhenge
       document.getElementById('fake-activity-container').style.display = "none";
       document.getElementById('real-admin-container').style.display = "block";
       document.getElementById('admin-panel-div').style.display = "block";
