@@ -30,7 +30,7 @@ margin: auto;
 background: #131a26;
 padding: 15px;
 border-radius: 12px;
-border: none !important;
+border: 2px solid #ff7b00;
 box-shadow: 0 4px 20px rgba(255, 123, 0, 0.3);
 position: relative;
 }
@@ -164,6 +164,8 @@ transition: 0.3s;
 
 <div class="container">
 
+<button id="installBtn" style="display:none; background:#ff7b00; color:#fff; padding:10px 20px; border:none; border-radius:8px; font-weight:bold; margin: 10px auto; cursor:pointer; width:100%;">📥 Game App Download Karein</button>
+
 <div class="top-badge">🇮🇳 🟨 ⬜ 🟩 ThakurSahabCreator 🇮🇳</div>
 <h2 onclick="checkSecretAdminTap()">🔱 THAKUR SAHAB BATTLE 🔱</h2>
 
@@ -209,6 +211,7 @@ transition: 0.3s;
 
 <div class="wallet-box">
 <h3>💰 मेरा वॉलेट: ₹<span id="balance">19</span></h3>
+<p id="bonus-timer-msg" style="font-size: 11px; color: #ffab00; margin: 5px 0 0 0;">⏳ 3 महीने (90 दिन) लगातार खेलने के बाद ₹199 सीनियर बोनस मिलेगा...</p>
 </div>
 
 <button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="openSection('puzzle-section')">🧠 1. कठिन पहेली गेम</button>
