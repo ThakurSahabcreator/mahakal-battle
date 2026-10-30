@@ -178,7 +178,7 @@ input {
     </div>
   </div>
 
-  <!-- ADMIN PANEL BOX -->
+  <!-- ADMIN PANEL BOX (Sirf admin ke liye real users list) -->
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 मास्टर एडमिन कंट्रोल पैनल:</b>
     <hr style="border-color: #444; margin: 6px 0;">
@@ -190,7 +190,6 @@ input {
     </div>
     <div id="adm-status-msg" style="color: #2ed573; font-size: 11px; margin-top: 3px; font-weight: bold;"></div>
 
-    <!-- Real Registered Users Scrollable List (Yahan sirf real users dikhenge) -->
     <div style="margin-top: 12px; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; border: 1px solid #3b82f6;">
       👥 <b style="color: #60a5fa;">Real Registered Users List:</b><br>
       <span style="font-size: 11px; color: #aaa;">Total Real Users: <span id="real-users-count" style="color:#fff; font-weight:bold;">0</span></span>
@@ -199,12 +198,6 @@ input {
   </div>
 
   <div class="history-bar" id="history-bar"></div>
-
-  <!-- Fake Live Activity & Online Players (Hamesha game screen par dikhega customer ke liye) -->
-  <div class="fake-activity-box">
-      🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
-      <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Aviator se ₹500 jeete!</span>
-  </div>
 
   <div class="game-box">
     <svg class="red-curve-bg" viewBox="0 0 350 200" preserveAspectRatio="none">
@@ -266,7 +259,12 @@ input {
     <div id="msg-2"></div>
   </div>
 
-  <!-- Live Users Playing & Winning Feed (Normal view mein hamesha dikhega) -->
+  <!-- Ab yahan bet cards ke theek niche Live Online Players aur Winning Feed lagayi gayi hai -->
+  <div class="fake-activity-box" style="margin-top: 10px;">
+      🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
+      <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Aviator se ₹500 jeete!</span>
+  </div>
+
   <div style="font-size: 13px; color: #ffab00; font-weight: bold; margin-top: 10px; text-align: left;">🔥 Live Users Playing & Winning Feed:</div>
   <div class="live-bets-box" id="live-bets-feed">
       <div class="bet-row"><span>👤 Rohit (Agra) - Aviator Game</span><span style="color: #00e676;">Won ₹300</span></div>
@@ -320,7 +318,6 @@ input {
     requestAnimationFrame(gameLoop);
   };
 
-  // Fake activity live updater (Customer ke liye hamesha chalta rahega)
   function updateFakeActivity() {
     let countEl = document.getElementById('fake-online-count');
     let tickerEl = document.getElementById('fake-winner-ticker');
@@ -329,7 +326,7 @@ input {
     if(countEl) {
         countEl.innerText = Math.floor(Math.random() * 100) + 600;
         let rName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-        tickerEl.innerHTML = `🏆 ${rName} ne abhi Aviator game se ₹500 jeete!`;
+        tickerEl.innerHTML = `🏆 ${rName} ne abhi Aviator se ₹500 jeete!`;
 
         if(feedEl) {
             let r1 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
@@ -359,7 +356,6 @@ input {
       if(p !== null && p.trim() === "78699") {
         document.getElementById('aviator-admin-box').style.display = "block";
         
-        // Load Real Registered Users for Admin Only
         let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
         let keys = Object.keys(registeredUsers);
         document.getElementById('real-users-count').innerText = keys.length;
@@ -523,7 +519,7 @@ input {
             b2.style.background = "#555";
             b2.disabled = true;
             document.getElementById('msg-2').className = "msg";
-            document.getElementById('msg-2'].innerText = `🎉 ऑटो कैशआउट! ₹${p2} जीत गए!`;
+            document.getElementById('msg-2').innerText = `🎉 ऑटो कैशआउट! ₹${p2} जीत गए!`;
             document.getElementById('live-profit-2').style.display = "none";
           }
         }
@@ -549,7 +545,7 @@ input {
   function handleBet(panelNo) {
     let cycleTime = Date.now() % TOTAL_CYCLE;
     if (cycleTime >= BETTING_TIME) {
-      alert("प्लेन उड़ रहा है! अब इस राउंड में बेट नहीं लग सकती।संहिता");
+      alert("प्लेन उड़ रहा है! अब इस राउंड में बेट नहीं लग सकती।");
       return;
     }
 
