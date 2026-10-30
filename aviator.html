@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - Final Corrected Game</title>
+<title>Aviator - Night Sky Game</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -62,20 +62,51 @@ h2 { color: #ffab00; margin: 0; font-size: 18px; cursor: pointer; font-style: no
   color: #34d399;
 }
 
+/* Raat ka aasmaan background, taare aur chand */
 .game-box {
   width: 100%;
   height: 200px; 
-  background: radial-gradient(circle at bottom left, #2b0c12 0%, #080b12 70%);
+  background: radial-gradient(circle at top right, #1e1b4b 0%, #090d16 60%, #020617 100%);
   border-radius: 8px; 
   display: flex; 
   flex-direction: column; 
   align-items: center; 
   justify-content: center;
-  border: 1px solid #ff4757; 
+  border: 1px solid #3b82f6; 
   margin-bottom: 8px; 
   position: relative; 
   overflow: hidden;
   box-sizing: border-box;
+}
+
+/* Chamakte hue taare aur chand ka CSS effect */
+.night-sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(white 1px, transparent 0),
+    radial-gradient(white 1.5px, transparent 0),
+    radial-gradient(rgba(255,255,255,0.8) 1px, transparent 0);
+  background-size: 50px 50px, 80px 80px, 40px 40px;
+  background-position: 0 0, 20px 20px, 10px 30px;
+  opacity: 0.6;
+}
+
+.moon {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  width: 25px;
+  height: 25px;
+  background: #fef08a;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #fde047;
+  z-index: 1;
 }
 
 .red-curve-bg {
@@ -84,7 +115,7 @@ h2 { color: #ffab00; margin: 0; font-size: 18px; cursor: pointer; font-style: no
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
 }
 
@@ -94,8 +125,8 @@ h2 { color: #ffab00; margin: 0; font-size: 18px; cursor: pointer; font-style: no
   left: 0;
   width: 100%;
   height: 2px;
-  background: #ff4757;
-  z-index: 2;
+  background: #3b82f6;
+  z-index: 3;
 }
 
 .plane-container {
@@ -104,7 +135,7 @@ h2 { color: #ffab00; margin: 0; font-size: 18px; cursor: pointer; font-style: no
   left: 10px;
   display: flex;
   align-items: center;
-  z-index: 3;
+  z-index: 4;
   will-change: left, bottom, transform;
 }
 
@@ -115,8 +146,22 @@ h2 { color: #ffab00; margin: 0; font-size: 18px; cursor: pointer; font-style: no
   filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.9));
 }
 
-.plane-mult { font-size: 42px; font-weight: bold; color: #ffffff; z-index: 4; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
-.plane-status { font-size: 14px; color: #ffa502; margin-top: 4px; font-weight: bold; z-index: 4; }
+.fire-explosion {
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle, #ff4757 0%, #ffa502 50%, rgba(255,69,0,0) 80%);
+  border-radius: 50%;
+  box-shadow: 0 0 30px #ff4757, 0 0 60px #ffa502;
+  animation: fireAnim 0.4s infinite alternate;
+}
+
+@keyframes fireAnim {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.2); opacity: 1; }
+}
+
+.plane-mult { font-size: 42px; font-weight: bold; color: #ffffff; z-index: 5; text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
+.plane-status { font-size: 14px; color: #ffa502; margin-top: 4px; font-weight: bold; z-index: 5; }
 
 .bet-card {
   background: #172133; border: 1px solid #2f3e5c; border-radius: 8px; padding: 8px; margin-bottom: 8px; text-align: left; box-sizing: border-box;
@@ -178,7 +223,7 @@ input {
     </div>
   </div>
 
-  <!-- ADMIN PANEL BOX (Sirf admin ke liye real users list) -->
+  <!-- ADMIN PANEL BOX -->
   <div id="aviator-admin-box" class="admin-inline-box">
     <b style="color: #ff5252; font-size: 13px;">👑 मास्टर एडमिन कंट्रोल पैनल:</b>
     <hr style="border-color: #444; margin: 6px 0;">
@@ -199,7 +244,11 @@ input {
 
   <div class="history-bar" id="history-bar"></div>
 
+  <!-- Raat ka aasmaan, taare aur chand wala game box -->
   <div class="game-box">
+    <div class="night-sky"></div>
+    <div class="moon"></div>
+
     <svg class="red-curve-bg" viewBox="0 0 350 200" preserveAspectRatio="none">
       <defs>
         <linearGradient id="redGrad" x1="0" y1="1" x2="0" y2="0">
@@ -259,7 +308,6 @@ input {
     <div id="msg-2"></div>
   </div>
 
-  <!-- Ab yahan bet cards ke theek niche Live Online Players aur Winning Feed lagayi gayi hai -->
   <div class="fake-activity-box" style="margin-top: 10px;">
       🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
       <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Aviator se ₹500 jeete!</span>
@@ -403,6 +451,8 @@ input {
         <path d="M448 336v-48L288 192V96c0-17.67-14.33-32-32-32s-32 14.33-32 32v96L64 288v48l160-48l112l-48 32v32l80-24 80 24v-32l-48-32V288z"/>
       </svg>`;
 
+    const explosionHtml = `<div class="fire-explosion"></div>`;
+
     if (cycleTime < BETTING_TIME) {
       let remainingMs = BETTING_TIME - cycleTime;
       let displaySec = Math.ceil(remainingMs / 1000);
@@ -444,7 +494,7 @@ input {
       let progressRatio = flyingElapsed / totalFlyingSec;
       if (progressRatio > 1) progressRatio = 1;
 
-      currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 1.5);
+      currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 3.0);
       currentMultiplier = parseFloat(currentMultiplier.toFixed(2));
 
       if (flyingElapsed >= totalFlyingSec || currentMultiplier >= liveForcedCrash) {
@@ -453,6 +503,8 @@ input {
         document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
         document.getElementById('av-mult').style.color = "#ff4757";
         document.getElementById('av-stat').innerText = `💥 CRASHED (${currentMultiplier.toFixed(2)}x)`;
+
+        planeContainer.innerHTML = explosionHtml;
 
         if (lastProcessedCycle !== currentCycleId) {
           lastProcessedCycle = currentCycleId;
@@ -468,14 +520,16 @@ input {
         document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
         document.getElementById('av-mult').style.color = "#ffffff";
 
+        planeContainer.innerHTML = planeSvgHtml;
+
         let moveX = 10 + (progressRatio * 250);
-        let moveY = 12 + (Math.pow(progressRatio, 1.5) * 120);
+        let moveY = 12 + (Math.pow(progressRatio, 3.0) * 120);
 
         planeContainer.style.left = moveX + "px";
         planeContainer.style.bottom = moveY + "px";
         
         let ps = planeContainer.querySelector('.red-plane-svg');
-        if(ps) ps.style.transform = `rotate(${25 + (progressRatio * 15)}deg)`;
+        if(ps) ps.style.transform = `rotate(${10 + (progressRatio * 30)}deg)`;
 
         let pathD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY} L ${moveX} 200 Z`;
         let lineD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY}`;
@@ -592,13 +646,13 @@ input {
     document.getElementById(msgId).innerText = "✅ बेट सफलतापूर्वक लग गई!";
   }
 
+  window.setAmt = function(v) { document.getElementById('bet-input-1').value = v; }
+  window.setAmt2 = function(v) { document.getElementById('bet-input-2').value = v; }
+
   function updateBal() {
     document.getElementById('av-bal').innerText = walletBal;
     localStorage.setItem('mahakal_master_wallet', walletBal);
   }
-
-  function setAmt(v) { document.getElementById('bet-input-1').value = v; }
-  function setAmt2(v) { document.getElementById('bet-input-2').value = v; }
 
   function renderHistory() {
     let bar = document.getElementById('history-bar');
