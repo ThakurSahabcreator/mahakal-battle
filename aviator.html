@@ -51,6 +51,17 @@ h2 { color: #ffab00; margin: 0; font-size: 18px; cursor: pointer; font-style: no
 .pill-blue { background: #1a2332; border: 1px solid #00b4d8; color: #00b4d8; }
 .pill-red { background: #3a1111; border: 1px solid #ff5252; color: #ff5252; }
 
+.fake-activity-box {
+  background: linear-gradient(135deg, #064e3b, #022c22);
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  text-align: center;
+  color: #34d399;
+}
+
 .game-box {
   width: 100%;
   height: 200px; 
@@ -140,7 +151,7 @@ input {
   border: 1px solid #ff7b00;
   border-radius: 8px;
   padding: 10px;
-  margin: 12px 0 5px 0;
+  margin: 8px 0 5px 0;
   text-align: left;
   font-size: 12px;
   max-height: 130px;
@@ -178,6 +189,12 @@ input {
   </div>
 
   <div class="history-bar" id="history-bar"></div>
+
+  <!-- Live Online Counter & Ticker inside Aviator Game -->
+  <div class="fake-activity-box">
+      🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
+      <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Aviator se ₹500 jeete!</span>
+  </div>
 
   <div class="game-box">
     <svg class="red-curve-bg" viewBox="0 0 350 200" preserveAspectRatio="none">
@@ -239,7 +256,7 @@ input {
     <div id="msg-2"></div>
   </div>
 
-  <!-- Game ke andar Bet Cards ke theek neeche Live Winning Feed -->
+  <!-- Live Users Playing & Winning Feed inside Aviator -->
   <div style="font-size: 13px; color: #ffab00; font-weight: bold; margin-top: 10px; text-align: left;">🔥 Live Users Playing & Winning Feed:</div>
   <div class="live-bets-box" id="live-bets-feed">
       <div class="bet-row"><span>👤 Rohit (Agra) - Aviator Game</span><span style="color: #00e676;">Won ₹300</span></div>
@@ -293,24 +310,34 @@ input {
     requestAnimationFrame(gameLoop);
   };
 
-  function updateAviatorLiveFeed() {
+  // Live Online Counter & Feed Updater Function
+  function updateFakeActivity() {
+    let countEl = document.getElementById('fake-online-count');
+    let tickerEl = document.getElementById('fake-winner-ticker');
     let feedEl = document.getElementById('live-bets-feed');
-    if(feedEl) {
-      let r1 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-      let r2 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-      let r3 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-      let amt1 = (Math.floor(Math.random() * 6) + 1) * 100;
-      let amt2 = (Math.floor(Math.random() * 10) + 2) * 100;
-      let amt3 = (Math.floor(Math.random() * 15) + 3) * 100;
 
-      feedEl.innerHTML = `
-        <div class="bet-row"><span>👤 ${r1} - Aviator Game</span><span style="color: #2ed573;">Won ₹${amt1}</span></div>
-        <div class="bet-row"><span>👤 ${r2} - Aviator Game</span><span style="color: #2ed573;">Won ₹${amt2}</span></div>
-        <div class="bet-row"><span>👤 ${r3} - Aviator</span><span style="color: #2ed573;">Won ₹${amt3}</span></div>
-      `;
+    if(countEl) {
+        countEl.innerText = Math.floor(Math.random() * 100) + 600;
+        let rName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+        tickerEl.innerHTML = `🏆 ${rName} ne abhi Aviator game se ₹500 jeete!`;
+
+        if(feedEl) {
+            let r1 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+            let r2 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+            let r3 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+            let amt1 = (Math.floor(Math.random() * 6) + 1) * 100;
+            let amt2 = (Math.floor(Math.random() * 10) + 2) * 100;
+            let amt3 = (Math.floor(Math.random() * 15) + 3) * 100;
+
+            feedEl.innerHTML = `
+                <div class="bet-row"><span>👤 ${r1} - Aviator Game</span><span style="color: #2ed573;">Won ₹${amt1}</span></div>
+                <div class="bet-row"><span>👤 ${r2} - Aviator Game</span><span style="color: #2ed573;">Won ₹${amt2}</span></div>
+                <div class="bet-row"><span>👤 ${r3} - Aviator</span><span style="color: #2ed573;">Won ₹${amt3}</span></div>
+            `;
+        }
     }
   }
-  setInterval(updateAviatorLiveFeed, 3500);
+  setInterval(updateFakeActivity, 3500);
 
   function checkSecretTap() {
     tapCount++;
