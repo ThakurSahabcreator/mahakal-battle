@@ -24,7 +24,6 @@ body {
   background: #121824;
   padding: 10px;
   border-radius: 12px;
-  /* Laal border ko yahan se poori tarah hata diya gaya hai */
   border: none !important;
   position: relative;
   box-sizing: border-box;
@@ -135,6 +134,25 @@ input {
   display: flex; align-items: center; justify-content: space-between; margin-top: 6px; font-size: 12px; color: #00b4d8;
 }
 .auto-row input { width: 70px; padding: 4px; font-size: 12px; }
+
+.live-bets-box {
+  background: #1a2332;
+  border: 1px solid #ff7b00;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 12px 0 5px 0;
+  text-align: left;
+  font-size: 12px;
+  max-height: 130px;
+  overflow-y: auto;
+}
+.bet-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px dashed #334155;
+  color: #cbd5e1;
+}
 </style>
 </head>
 <body>
@@ -183,6 +201,7 @@ input {
     <div class="plane-status" id="av-stat">जुड़ रहा है...</div>
   </div>
 
+  <!-- Bet Panel 1 -->
   <div class="bet-card">
     <label style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</label>
     <input type="number" id="bet-input-1" value="500" min="10">
@@ -201,6 +220,7 @@ input {
     <div id="msg-1"></div>
   </div>
   
+  <!-- Bet Panel 2 -->
   <div class="bet-card">
     <label style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</label>
     <input type="number" id="bet-input-2" value="500" min="10">
@@ -218,6 +238,15 @@ input {
     <div id="live-profit-2" class="live-profit">लाइव जीत: ₹0</div>
     <div id="msg-2"></div>
   </div>
+
+  <!-- Game ke andar Bet Cards ke theek neeche Live Winning Feed -->
+  <div style="font-size: 13px; color: #ffab00; font-weight: bold; margin-top: 10px; text-align: left;">🔥 Live Users Playing & Winning Feed:</div>
+  <div class="live-bets-box" id="live-bets-feed">
+      <div class="bet-row"><span>👤 Rohit (Agra) - Aviator Game</span><span style="color: #00e676;">Won ₹300</span></div>
+      <div class="bet-row"><span>👤 Amit (Kanpur) - Aviator Game</span><span style="color: #00e676;">Won ₹800</span></div>
+      <div class="bet-row"><span>👤 Vikas (Etawah) - Aviator</span><span style="color: #00e676;">Won ₹900</span></div>
+  </div>
+
 </div>
 
 <script>
@@ -241,6 +270,8 @@ input {
   const FLYING_DURATION = 10000; 
   const TOTAL_CYCLE = 18000;     
 
+  const fakeNames = ["Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)", "Rohit (Agra)", "Pooja (Delhi)"];
+
   window.onload = function() {
     let saved = localStorage.getItem('mahakal_master_wallet');
     if(saved !== null) walletBal = parseFloat(saved);
@@ -261,6 +292,25 @@ input {
 
     requestAnimationFrame(gameLoop);
   };
+
+  function updateAviatorLiveFeed() {
+    let feedEl = document.getElementById('live-bets-feed');
+    if(feedEl) {
+      let r1 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+      let r2 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+      let r3 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+      let amt1 = (Math.floor(Math.random() * 6) + 1) * 100;
+      let amt2 = (Math.floor(Math.random() * 10) + 2) * 100;
+      let amt3 = (Math.floor(Math.random() * 15) + 3) * 100;
+
+      feedEl.innerHTML = `
+        <div class="bet-row"><span>👤 ${r1} - Aviator Game</span><span style="color: #2ed573;">Won ₹${amt1}</span></div>
+        <div class="bet-row"><span>👤 ${r2} - Aviator Game</span><span style="color: #2ed573;">Won ₹${amt2}</span></div>
+        <div class="bet-row"><span>👤 ${r3} - Aviator</span><span style="color: #2ed573;">Won ₹${amt3}</span></div>
+      `;
+    }
+  }
+  setInterval(updateAviatorLiveFeed, 3500);
 
   function checkSecretTap() {
     tapCount++;
