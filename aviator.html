@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - Final Fixed Game</title>
+<title>Aviator - Final Clean Game</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -24,7 +24,8 @@ body {
   background: #121824;
   padding: 10px;
   border-radius: 12px;
-  border: 2px solid #ff4757;
+  /* Laal border ko yahan se poori tarah hata diya gaya hai */
+  border: none !important;
   position: relative;
   box-sizing: border-box;
 }
@@ -267,7 +268,7 @@ input {
     tapTimer = setTimeout(() => { tapCount = 0; }, 1200);
     if(tapCount >= 7) {
       tapCount = 0;
-      let p = prompt("एडमिन पासवर्ड दर्ज करें[span_0](start_span)[span_0](end_span):");
+      let p = prompt("एडमिन पासवर्ड दर्ज करें:");
       if(p !== null && p.trim() === "78699") {
         document.getElementById('aviator-admin-box').style.display = "block";
       }
@@ -283,7 +284,7 @@ input {
     if(!isNaN(val) && val >= 1.05) {
       db.ref('adminCrash').set(val).then(() => {
         liveForcedCrash = val;
-        document.getElementById('adm-status-msg').innerText = `✅ सर्वर पर ${val}एक्स लॉक हुआ[span_1](start_span)[span_1](end_span)!`;
+        document.getElementById('adm-status-msg').innerText = `✅ सर्वर पर ${val}एक्स लॉक हुआ!`;
         setTimeout(closeAdmin, 1500);
       });
     } else {
@@ -354,7 +355,6 @@ input {
       if (flyingElapsed >= totalFlyingSec || currentMultiplier >= liveForcedCrash) {
         currentMultiplier = liveForcedCrash;
         
-        // Yeh line fix karti hai crash status ko upar dikhane ke liye
         document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
         document.getElementById('av-mult').style.color = "#ff4757";
         document.getElementById('av-stat').innerText = `💥 CRASHED (${currentMultiplier.toFixed(2)}x)`;
