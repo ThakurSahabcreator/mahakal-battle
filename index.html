@@ -207,17 +207,18 @@ transition: 0.3s;
 <!---------------- 2. MAIN SERVER DASHBOARD ---------------->
 <div id="app-dashboard" class="hidden">
 
-<!-- FAKE LIVE USERS & WINNERS TICKER (Jo admin khulne par gayab ho jayega) -->
+<!-- FAKE LIVE USERS & WINNERS TICKER (Jo aam customers ko hamesha dikhega) -->
 <div id="fake-activity-container" class="fake-activity-box">
     🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">458</span> Active Now<br>
-    <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle se ₹500 jeete!</span>
+    <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle से ₹500 jeete!</span>
 </div>
 
-<!-- REAL USERS DISPLAY BOX (Jo sirf Admin ko dikhega) -->
+<!-- REAL USERS DISPLAY BOX (Jo sirf Admin ko password dalne ke baad dikhega) -->
 <div id="real-admin-container" class="fake-activity-box" style="background: linear-gradient(135deg, #1e3a8a, #1e1b4b); border: 1px solid #3b82f6; display: none; text-align: left; padding: 12px;">
-    👑 <b style="color: #60a5fa;">Admin Real-Time Database View:</b><br>
-    👥 Total Registered Users: <span id="real-users-count" style="color: #fff; font-weight: bold;">0</span><br>
-    <div id="real-users-list" style="margin-top: 8px; font-size: 11px; max-height: 120px; overflow-y: auto;">No users registered yet.</div>
+    👑 <b style="color: #60a5fa;">Admin Real-Time Customer View:</b><br>
+    👥 Total Real Registered Users: <span id="real-users-count" style="color: #fff; font-weight: bold;">0</span><br>
+    🎮 Active Players Online Now: <span id="real-active-count" style="color: #00ffcc; font-weight: bold;">0</span><br>
+    <div id="real-users-list" style="margin-top: 8px; font-size: 11px; max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 4px;">No users registered yet.</div>
 </div>
 
 <div class="wallet-box">
@@ -407,7 +408,13 @@ window.onload = function() {
   document.getElementById('balance').innerText = walletBalance;
   loadPuzzle();
   updateReferralLink();
-  checkLoyalUserBonus();
+
+  // Track active real customer online status
+  if(loggedInPhone) {
+    let activeUsers = JSON.parse(localStorage.getItem('mahakal_active_online') || "{}");
+    activeUsers[loggedInPhone] = new Date().getTime();
+    localStorage.setItem('mahakal_active_online', JSON.stringify(activeUsers));
+  }
 };
 
 const fakeNames = ["Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)", "Sandeep (Kanpur Dehat)", "Rohit (Agra)"];
@@ -417,6 +424,7 @@ function updateFakeActivity() {
     let countEl = document.getElementById('fake-online-count');
     let tickerEl = document.getElementById('fake-winner-ticker');
     
+    // Sirf tabhi fake activity chalegi jab Admin login nahi hoga
     if(countEl && !isAdminLoggedIn) {
         let randomCount = Math.floor(Math.random() * 100) + 420; // 400 se 520 ke beech fake players
         countEl.innerText = randomCount.toLocaleString();
@@ -471,29 +479,6 @@ function sendQueryToTelegram() {
   alert("✅ आपकी समस्या एडमिन के पास भेज दी गई है[span_71](start_span)[span_71](end_span)!");
 }
 
-function checkLoyalUserBonus() {
-  let bonusClaimed = localStorage.getItem('mahakal_199_bonus_claimed');
-  let timerMsg = document.getElementById('bonus-timer-msg');
-
-  if(bonusClaimed === 'true') {
-    timerMsg.innerText = "🎉 ₹199 सीनियर एक्टिवेशन बोनस मिल चुका है[span_72](start_span)[span_72](end_span)!";
-    return;
-  }
-}
-
-function copyReferLink() {
-  let linkBox = document.getElementById('ref-link-input');
-  linkBox.select();
-  document.execCommand('copy');
-  alert("✅ रेफरल लिंक कॉपी हो गया है[span_73](start_span)[span_73](end_span)!");
-}
-
-function shareOnWhatsApp() {
-  let link = document.getElementById('ref-link-input').value;
-  let text = `ThakurSahabMahakalBattle\nPaheliyan suljhayein aur asali nakad jeetein!\n${link}`;
-  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-}
-
 function showResetBox() {
   document.getElementById('login-form-box').style.display = 'none';
   document.getElementById('reset-form-box').style.display = 'block';
@@ -511,44 +496,46 @@ function processResetPassword() {
   let p3 = document.getElementById('reset-pass3').value.trim();
   let msg = document.getElementById('reset-msg');
 
-  if(ph.length !== 10 || isNaN(ph)) { msg.className = "error"; msg.innerText = "❌ सही 10 अंकों का नंबर डालें[span_74](start_span)[span_74](end_span)!"; return; }
-  if(!p1 || !p2 || !p3) { msg.className = "error"; msg.innerText = "❌ सभी खाने भरें[span_75](start_span)[span_75](end_span)!"; return; }
-  if(p1 !== p2 || p2 !== p3) { msg.className = "error"; msg.innerText = "❌ पासवर्ड मेल नहीं खा रहे[span_76](start_span)[span_76](end_span)!"; return; }
+  if(ph.length !== 10 || isNaN(ph)) { msg.className = "error"; msg.innerText = "❌ सही 10 अंकों का नंबर डालें[span_72](start_span)[span_72](end_span)!"; return; }
+  if(!p1 || !p2 || !p3) { msg.className = "error"; msg.innerText = "❌ सभी खाने भरें[span_73](start_span)[span_73](end_span)!"; return; }
+  if(p1 !== p2 || p2 !== p3) { msg.className = "error"; msg.innerText = "❌ पासवर्ड मेल नहीं खा रहे[span_74](start_span)[span_74](end_span)!"; return; }
 
   let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
   registeredUsers[ph] = p1;
   localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
   
-  msg.className = "msg"; msg.innerText = "✅ पासवर्ड अपडेट हो गया[span_77](start_span)[span_77](end_span)!";
+  msg.className = "msg"; msg.innerText = "✅ पासवर्ड अपडेट हो गया[span_75](start_span)[span_75](end_span)!";
   setTimeout(backToLoginBox, 1500);
 }
 
 function processLogin() {
-  if(isSystemLocked) { alert("⚠️ नया लॉगिन बंद है[span_78](start_span)[span_78](end_span)!"); return; }
+  if(isSystemLocked) { alert("⚠️ नया लॉगिन बंद है[span_76](start_span)[span_76](end_span)!"); return; }
 
   let ph = document.getElementById('login-phone').value.trim();
   let ps = document.getElementById('login-pass').value.trim();
   let msg = document.getElementById('login-msg');
 
-  if(ph.length !== 10 || isNaN(ph)) { msg.className = "error"; msg.innerText = "❌ सही 10 अंकों का नंबर डालें[span_79](start_span)[span_79](end_span)!"; return; }
-  if(!ps) { msg.className = "error"; msg.innerText = "❌ पासवर्ड डालें[span_80](start_span)[span_80](end_span)!"; return; }
+  if(ph.length !== 10 || isNaN(ph)) { msg.className = "error"; msg.innerText = "❌ सही 10 अंकों का नंबर डालें[span_77](start_span)[span_77](end_span)!"; return; }
+  if(!ps) { msg.className = "error"; msg.innerText = "❌ पासवर्ड डालें[span_78](start_span)[span_78](end_span)!"; return; }
 
   loggedInPhone = ph; 
   updateReferralLink();
 
+  // Save in real users database
   let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
-  
-  if(registeredUsers[ph]) {
-    if(registeredUsers[ph] !== ps) { msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड[span_81](start_span)[span_81](end_span)!"; return; }
-    msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल[span_82](start_span)[span_82](end_span)!";
-  } else {
+  if(!registeredUsers[ph]) {
     registeredUsers[ph] = ps;
     localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
     walletBalance += 19;
     saveWallet();
-    msg.className = "msg"; msg.innerText = "🎉 खाता बना और ₹19 बोनस मिला[span_83](start_span)[span_83](end_span)!";
   }
 
+  // Mark user active online right now
+  let activeUsers = JSON.parse(localStorage.getItem('mahakal_active_online') || "{}");
+  activeUsers[ph] = new Date().getTime();
+  localStorage.setItem('mahakal_active_online', JSON.stringify(activeUsers));
+
+  msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल!";
   setTimeout(() => {
     document.getElementById('login-section').classList.add('hidden');
     document.getElementById('app-dashboard').classList.remove('hidden');
@@ -571,8 +558,8 @@ function backToDashboard() {
 }
 
 let puzzles = [
-  {q: "हरी थी मन भरी थी, मोती जड़ित थार थी?[span_84](start_span)[span_84](end_span)", opts: {A: "भुट्टा[span_85](start_span)[span_85](end_span)", B: "घास[span_86](start_span)[span_86](end_span)", C: "पत्ता[span_87](start_span)[span_87](end_span)", D: "अंगूर[span_88](start_span)[span_88](end_span)"}, ans: "A"},
-  {q: "ऐसी कौन सी चीज है जो ब्याह में हर आदमी को मिलती है, पर औरत को कभी नहीं मिलती?[span_89](start_span)[span_89](end_span)", opts: {A: "कपड़ा[span_90](start_span)[span_90](end_span)", B: "दूसरा घर[span_91](start_span)[span_91](end_span)", C: "दूल्हा बनने का सुख[span_92](start_span)[span_92](end_span)", D: "ताना[span_93](start_span)[span_93](end_span)"}, ans: "C"}
+  {q: "हरी थी मन भरी थी, मोती जड़ित थार थी?[span_79](start_span)[span_79](end_span)", opts: {A: "भुट्टा[span_80](start_span)[span_80](end_span)", B: "घास[span_81](start_span)[span_81](end_span)", C: "पत्ता[span_82](start_span)[span_82](end_span)", D: "अंगूर[span_83](start_span)[span_83](end_span)"}, ans: "A"},
+  {q: "ऐसी कौन सी चीज है जो ब्याह में हर आदमी को मिलती है, पर औरत को कभी नहीं मिलती?[span_84](start_span)[span_84](end_span)", opts: {A: "कपड़ा[span_85](start_span)[span_85](end_span)", B: "दूसरा घर[span_86](start_span)[span_86](end_span)", C: "दूल्हा बनने का सुख[span_87](start_span)[span_87](end_span)", D: "ताना[span_88](start_span)[span_88](end_span)"}, ans: "C"}
 ];
 let currentP = 0;
 
@@ -589,15 +576,15 @@ function loadPuzzle() {
 function checkPuzzle(choice) {
   let bet = parseInt(document.getElementById('p-bet').value);
   let res = document.getElementById('p-result');
-  if(walletBalance < bet) { alert("बैलेंस कम है[span_94](start_span)[span_94](end_span)!"); return; }
+  if(walletBalance < bet) { alert("बैलेंस कम है[span_89](start_span)[span_89](end_span)!"); return; }
 
   walletBalance -= bet;
   if(choice === puzzles[currentP].ans) {
     let win = bet * 2;
     walletBalance += win;
-    res.className = "msg"; res.innerText = `🎉 सही जवाब! ₹${win} जीते।[span_95](start_span)[span_95](end_span)`;
+    res.className = "msg"; res.innerText = `🎉 सही जवाब! ₹${win} जीते।[span_90](start_span)[span_90](end_span)`;
   } else {
-    res.className = "error"; res.innerText = `❌ गलत जवाब! हार गए।[span_96](start_span)[span_96](end_span)`;
+    res.className = "error"; res.innerText = `❌ गलत जवाब! हार गए।[span_91](start_span)[span_91](end_span)`;
   }
   saveWallet();
   currentP = (currentP + 1) % puzzles.length;
@@ -607,7 +594,7 @@ function checkPuzzle(choice) {
 function rollDice() {
   let bet = parseInt(document.getElementById('l-bet').value);
   let res = document.getElementById('l-result');
-  if(walletBalance < bet) { alert("बैलेंस कम है[span_97](start_span)[span_97](end_span)!"); return; }
+  if(walletBalance < bet) { alert("बैलेंस कम है[span_92](start_span)[span_92](end_span)!"); return; }
 
   walletBalance -= bet;
   saveWallet();
@@ -621,9 +608,9 @@ function rollDice() {
     if(roll >= 4) {
       let win = bet * 2;
       walletBalance += win;
-      res.className = "msg"; res.innerText = `🎉 पासा [${roll}] - ₹${win} जीते[span_98](start_span)[span_98](end_span)!`;
+      res.className = "msg"; res.innerText = `🎉 पासा [${roll}] - ₹${win} जीते[span_93](start_span)[span_93](end_span)!`;
     } else {
-      res.className = "error"; res.innerText = `❌ पासा [${roll}] - हार गए।[span_99](start_span)[span_99](end_span)`;
+      res.className = "error"; res.innerText = `❌ पासा [${roll}] - हार गए।[span_94](start_span)[span_94](end_span)`;
     }
     saveWallet();
   }, 600);
@@ -635,8 +622,8 @@ function sendDepositReq() {
   let tx = document.getElementById('dep-txnid').value.trim();
   let msg = document.getElementById('dep-msg');
 
-  if(isNaN(amt) || amt <= 0 || !upiNum || !tx) { msg.className = "error"; msg.innerText = "सही विवरण भरें[span_100](start_span)[span_100](end_span)!"; return; }
-  msg.className = "msg"; msg.innerText = "⏳ अनुरोध दर्ज हो गया है:[span_101](start_span)[span_101](end_span)";
+  if(isNaN(amt) || amt <= 0 || !upiNum || !tx) { msg.className = "error"; msg.innerText = "सही विवरण भरें[span_95](start_span)[span_95](end_span)!"; return; }
+  msg.className = "msg"; msg.innerText = "⏳ अनुरोध दर्ज हो गया है:[span_96](start_span)[span_96](end_span)";
   document.getElementById('live-dep-details').innerHTML = `📱 Mobile: ${loggedInPhone || 'अज्ञात'}<br>💰 Amount: ₹${amt}<br>🆔 Txn: ${tx}`;
   document.getElementById('direct-approval-box').style.display = "block";
 }
@@ -649,12 +636,12 @@ function sendWithdrawReq() {
   let amt = parseInt(document.getElementById('b-amt').value);
   let msg = document.getElementById('bank-msg');
 
-  if(!b || !h || !a || !i || isNaN(amt) || amt < 2500) { msg.className = "error"; msg.innerText = "न्यूनतम ₹2500 भरें[span_102](start_span)[span_102](end_span)!"; return; }
-  if(walletBalance < amt) { msg.className = "error"; msg.innerText = "बैलेंस कम है[span_103](start_span)[span_103](end_span)!"; return; }
+  if(!b || !h || !a || !i || isNaN(amt) || amt < 2500) { msg.className = "error"; msg.innerText = "न्यूनतम ₹2500 भरें[span_97](start_span)[span_97](end_span)!"; return; }
+  if(walletBalance < amt) { msg.className = "error"; msg.innerText = "बैलेंस कम है[span_98](start_span)[span_98](end_span)!"; return; }
 
   let finalAmt = amt - (amt * 0.02);
   pendingWit = { amt: amt, final: finalAmt };
-  msg.className = "msg"; msg.innerText = `⏳ निकासी अनुरोध स्वीकार! ₹${finalAmt} भेजे जा रहे हैं।[span_104](start_span)[span_104](end_span)`;
+  msg.className = "msg"; msg.innerText = `⏳ निकासी अनुरोध स्वीकार! ₹${finalAmt} भेजे जा रहे हैं।[span_99](start_span)[span_99](end_span)`;
   document.getElementById('adm-wit').innerText = `${b} | ₹${amt}`;
 }
 
@@ -666,31 +653,41 @@ function checkSecretAdminTap() {
 
   if(tapC === 7) {
     tapC = 0;
-    let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:[span_105](start_span)[span_105](end_span)");
+    let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:[span_100](start_span)[span_100](end_span)");
     if(p === "78699") {
       isAdminLoggedIn = true;
+      
+      // 1. Fake Activity Box ko screen se chhipa do taaki aam user jaisa kuch na dikhe
       document.getElementById('fake-activity-container').style.display = "none";
-      document.getElementById('real-admin-container').style.display = "block";
+      
+      // 2. Real Admin Customer Database View ko show karo
+      let realBox = document.getElementById('real-admin-container');
+      realBox.style.display = "block";
 
+      // 3. Database se real registered aur active users nikal kar dikhao
       let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
+      let activeUsers = JSON.parse(localStorage.getItem('mahakal_active_online') || "{}");
+      
       let keys = Object.keys(registeredUsers);
       document.getElementById('real-users-count').innerText = keys.length;
+      document.getElementById('real-active-count').innerText = Object.keys(activeUsers).length;
 
       if(keys.length > 0) {
-        let listHtml = "<ul>";
+        let listHtml = "<ul style='padding-left: 15px; margin: 0;'>";
         keys.forEach(phone => {
-          listHtml += `<li>📱 Mobile: ${phone} | Pass: ${registeredUsers[phone]}</li>`;
+          let status = activeUsers[phone] ? "🟢 Online / Active" : "⚪ Registered";
+          listHtml += `<li>📱 <b>${phone}</b> | Pass: ${registeredUsers[phone]} | <span style="color:#00ffcc;">${status}</span></li>`;
         });
         listHtml += "</ul>";
         document.getElementById('real-users-list').innerHTML = listHtml;
       } else {
-        document.getElementById('real-users-list').innerText = "Koi naya user register nahi hua hai abhi.";
+        document.getElementById('real-users-list').innerText = "Abhi tak koi real customer register nahi hua hai.";
       }
 
       document.getElementById('admin-panel-div').style.display = "block";
-      alert("✅ एडमिन पैनल खुल गया! अब आपको रियल डेटा दिख रहा है।[span_106](start_span)[span_106](end_span)");
+      alert("✅ एडमिन पैनल खुल गया! अब फेक एक्टिविटी छिप गई है और आपको असली कस्टमर डेटा दिख रहा है[span_101](start_span)[span_101](end_span).");
     } else if(p !== null) {
-      alert("❌ गलत पासवर्ड[span_107](start_span)[span_107](end_span)!");
+      alert("❌ गलत पासवर्ड[span_102](start_span)[span_102](end_span)!");
     }
   }
 }
@@ -707,9 +704,9 @@ function toggleMasterLock() {
   localStorage.setItem('mahakal_master_lock', isSystemLocked);
   let btn = document.getElementById('lock-status-btn');
   if(isSystemLocked) {
-    btn.innerText = "Lock Status: LOCKED[span_108](start_span)[span_108](end_span)"; btn.style.background = "#ff5252";
+    btn.innerText = "Lock Status: LOCKED[span_103](start_span)[span_103](end_span)"; btn.style.background = "#ff5252";
   } else {
-    btn.innerText = "Lock Status: UNLOCKED[span_109](start_span)[span_109](end_span)"; btn.style.background = "#00e676";
+    btn.innerText = "Lock Status: UNLOCKED[span_104](start_span)[span_104](end_span)"; btn.style.background = "#00e676";
   }
 }
 
@@ -722,7 +719,7 @@ function admDepYes() {
   if(pendingDep) {
     walletBalance += pendingDep.amount;
     saveWallet();
-    alert(`✅ डिपॉजिट स्वीकृत! पूरे ₹${pendingDep.amount} जोड़ दिए गए।[span_110](start_span)[span_110](end_span)`);
+    alert(`✅ डिपॉजिट स्वीकृत! पूरे ₹${pendingDep.amount} जोड़ दिए गए[span_105](start_span)[span_105](end_span).`);
     document.getElementById('direct-approval-box').style.display = "none";
     pendingDep = null;
   }
@@ -730,21 +727,21 @@ function admDepYes() {
 
 function admDepNo() {
   pendingDep = null; 
-  alert("❌ डिपॉजिट रद्द।[span_111](start_span)[span_111](end_span)");
+  alert("❌ डिपॉजिट रद्द[span_106](start_span)[span_106](end_span).");
   document.getElementById('direct-approval-box').style.display = "none";
 }
 
 function admWitYes() {
   if(pendingWit) {
-    if(walletBalance < pendingWit.amt) { alert("बैलेंस कम है[span_112](start_span)[span_112](end_span)!"); return; }
+    if(walletBalance < pendingWit.amt) { alert("बैलेंस कम है[span_107](start_span)[span_107](end_span)!"); return; }
     walletBalance -= pendingWit.amt; saveWallet();
-    alert(`✅ विथड्रॉवल स्वीकृत[span_113](start_span)[span_113](end_span)!`);
-    pendingWit = null; document.getElementById('adm-wit').innerText = "भुगतान हो गया[span_114](start_span)[span_114](end_span)";
+    alert(`✅ विथड्रॉवल स्वीकृत[span_108](start_span)[span_108](end_span)!`);
+    pendingWit = null; document.getElementById('adm-wit').innerText = "भुगतान हो गया[span_109](start_span)[span_109](end_span)";
   }
 }
 function admWitNo() {
-  pendingWit = null; alert("❌ विथड्रॉवल रद्द।[span_115](start_span)[span_115](end_span)");
-  document.getElementById('adm-wit').innerText = "रद्द[span_116](start_span)[span_116](end_span)";
+  pendingWit = null; alert("❌ विथड्रॉवल रद्द[span_110](start_span)[span_110](end_span).");
+  document.getElementById('adm-wit').innerText = "रद्द[span_111](start_span)[span_111](end_span)";
 }
 </script>
 </body>
