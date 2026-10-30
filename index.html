@@ -32,8 +32,8 @@ margin: auto;
 background: #131a26;
 padding: 15px;
 border-radius: 12px;
-/* Laal border/lakeer yahan se hata di gayi hai taaki clean lage */
-border: none;
+/* Yahan se laal border ko poori tarah hata diya gaya hai */
+border: none !important;
 box-shadow: 0 4px 20px rgba(255, 123, 0, 0.3);
 position: relative;
 }
@@ -274,7 +274,7 @@ transition: 0.3s;
 <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 
 <!-- Naya Direct UPI App Button jisse click karke seedha payment app khul jayega -->
-<a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=ThakurSahabMahakalBattle&cu=INR" class="btn" style="background: #25D366; color: #000; text-decoration: none; display: block; padding: 10px; margin: 8px 0; font-weight: bold; border-radius: 6px;">📱 Pay via PhonePe / GPay / Paytm</a>
+<a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=ThakurSahabMahakalBattle&cu=INR" class="btn" style="background: #25D366; color: #000; text-decoration: none; display: block; padding: 12px; margin: 10px 0; font-weight: bold; border-radius: 6px; text-align: center;">📱 Pay via PhonePe / GPay / Paytm (Click Here)</a>
 
 <input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
 <input type="text" id="dep-upinumber" placeholder="UPI Number / UPI ID दर्ज करें">
@@ -334,7 +334,7 @@ transition: 0.3s;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Helpline Support View (AI ki jagah Helpline likh diya gaya hai) -->
+<!-- Helpline Support View -->
 <div id="support-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">💬 हेल्पलाइन & Help Desk</h3>
@@ -415,7 +415,7 @@ function updateFakeActivity() {
     let tickerEl = document.getElementById('fake-winner-ticker');
     
     if(countEl && !isAdminLoggedIn) {
-        let randomCount = Math.floor(Math.random() * 100) + 420; // 400 se 520 ke beech fake players
+        let randomCount = Math.floor(Math.random() * 100) + 420;
         countEl.innerText = randomCount.toLocaleString();
 
         let randomName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
