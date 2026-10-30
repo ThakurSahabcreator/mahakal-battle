@@ -597,25 +597,10 @@ input {
   }
 
   function handleBet(panelNo) {
-    let cycleTime = Date.now() % TOTAL_CYCLE;
-    if (cycleTime >= BETTING_TIME) {
-      alert("प्लेन उड़ रहा है! अब इस राउंड में बेट नहीं लग सकती।");
-      return;
-    }
-
-    let inpId = panelNo === 1 ? 'bet-input-1' : 'bet-input-2';
-    let autoId = panelNo === 1 ? 'auto-val-1' : 'auto-val-2';
     let btnId = panelNo === 1 ? 'action-btn-1' : 'action-btn-2';
-    let msgId = panelNo === 1 ? 'msg-1' : 'msg-2';
-    let profitId = panelNo === 1 ? 'live-profit-1' : 'live-profit-2';
-    
-    let amt = parseInt(document.getElementById(inpId).value);
-    let target = parseFloat(document.getElementById(autoId).value);
-
-    if(isNaN(amt) || amt < 10) { alert("कम से कम ₹10 लगाएं!"); return; }
-    if(walletBal < amt) { alert("बैलेंस कम है!"); return; }
-
     let currentText = document.getElementById(btnId).innerText;
+
+    // अगर बटन पर "Cash Out" लिखा है, तो प्लेन उड़ते वक्त भी क्लिक करने पर पैसे तुरंत निकल जाएंगे (Alert नहीं आएगा)
     if(currentText.includes("Cash Out")) {
       let win = Math.floor((panelNo === 1 ? betAmt1 : betAmt2) * currentMultiplier);
       walletBal += win;
@@ -625,11 +610,30 @@ input {
       document.getElementById(btnId).innerText = "BET (लगाएं)";
       document.getElementById(btnId).style.background = "#2ed573";
       document.getElementById(btnId).style.color = "#000";
+      let msgId = panelNo === 1 ? 'msg-1' : 'msg-2';
+      let profitId = panelNo === 1 ? 'live-profit-1' : 'live-profit-2';
       document.getElementById(msgId).className = "msg";
       document.getElementById(msgId).innerText = `🎉 कैशआउट! ₹${win} जीत गए!`;
       document.getElementById(profitId).style.display = "none";
       return;
     }
+
+    // नई बेट लगाने के लिए समय चेक होगा
+    let cycleTime = Date.now() % TOTAL_CYCLE;
+    if (cycleTime >= BETTING_TIME) {
+      alert("प्लेन उड़ रहा है! अब इस राउंड में बेट नहीं लग सकती।");
+      return;
+    }
+
+    let inpId = panelNo === 1 ? 'bet-input-1' : 'bet-input-2';
+    let autoId = panelNo === 1 ? 'auto-val-1' : 'auto-val-2';
+    let msgId = panelNo === 1 ? 'msg-1' : 'msg-2';
+    
+    let amt = parseInt(document.getElementById(inpId).value);
+    let target = parseFloat(document.getElementById(autoId).value);
+
+    if(isNaN(amt) || amt < 10) { alert("कम से कम ₹10 लगाएं!"); return; }
+    if(walletBal < amt) { alert("बैलेंस कम है!"); return; }
 
     walletBal -= amt;
     updateBal();
