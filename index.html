@@ -138,7 +138,25 @@ text-align: center;
 color: #34d399;
 }
 
-/* Social Icons Strip Styles */
+.live-bets-box {
+background: #1a2332;
+border: 1px solid #ff7b00;
+border-radius: 8px;
+padding: 10px;
+margin: 12px 0;
+text-align: left;
+font-size: 12px;
+max-height: 130px;
+overflow-y: auto;
+}
+.bet-row {
+display: flex;
+justify-content: space-between;
+padding: 4px 0;
+border-bottom: 1px dashed #334155;
+color: #cbd5e1;
+}
+
 .social-strip { 
 display: flex; 
 justify-content: center; 
@@ -201,12 +219,12 @@ transition: 0.3s;
 
 <div id="fake-activity-container" class="fake-activity-box">
     🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
-    <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle से ₹500 jeete!</span>
+    <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle se ₹500 jeete!</span>
 </div>
 
 <div id="real-admin-container" class="fake-activity-box" style="background: linear-gradient(135deg, #1e3a8a, #1e1b4b); border: 1px solid #3b82f6; display: none; text-align: left; padding: 12px;">
     👑 <b style="color: #60a5fa;">Admin Real-Time Customer View:</b><br>
-    👥 Total Registered Users: <span id="real-users-count" style="color: #fff; font-weight: bold;">0</span><br>
+    👥 Total Real Registered Users: <span id="real-users-count" style="color: #fff; font-weight: bold;">0</span><br>
     <div id="real-users-list" style="margin-top: 8px; font-size: 11px; max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 4px;">No users registered yet.</div>
 </div>
 
@@ -222,6 +240,15 @@ transition: 0.3s;
 <button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 5. बैंक में पैसे भेजें (Withdrawal)</button>
 <button class="btn" style="background: linear-gradient(to right, #eab308, #ca8a04);" onclick="openSection('refer-section')">🎁 6. शेयर करें और 3% कमीशन पाएं</button>
 <button class="btn" style="background: linear-gradient(to right, #0284c7, #0369a1);" onclick="openSection('support-section')">💬 7. हेल्पलाइन & Help Desk</button>
+
+<div id="public-live-bets-section">
+<div style="font-size: 13px; color: #ffab00; font-weight: bold; margin-top: 15px; text-align: left;">🔥 Live Users Playing & Winning Feed:</div>
+<div class="live-bets-box" id="live-bets-feed">
+    <div class="bet-row"><span>👤 Rohit (Agra) - Puzzle</span><span style="color: #00e676;">Won ₹200</span></div>
+    <div class="bet-row"><span>👤 Amit (Kanpur) - Aviator</span><span style="color: #00e676;">Won ₹450</span></div>
+    <div class="bet-row"><span>👤 Vikas (Etawah) - Ludo</span><span style="color: #00e676;">Won ₹100</span></div>
+</div>
+</div>
 
 </div>
 
@@ -337,18 +364,33 @@ window.onload = function() {
   loadPuzzle();
 };
 
-const fakeNames = ["Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)"];
-const fakeGames = ["Mahakal Puzzle Battle", "Ludo Paasa Battle"];
+const fakeNames = ["Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)", "Rohit (Agra)", "Pooja (Delhi)"];
+const fakeGamesList = ["Puzzle Battle", "Ludo Paasa", "Aviator Game"];
 
 function updateFakeActivity() {
     let countEl = document.getElementById('fake-online-count');
     let tickerEl = document.getElementById('fake-winner-ticker');
+    let feedEl = document.getElementById('live-bets-feed');
+
     if(countEl && !isAdminLoggedIn) {
         countEl.innerText = Math.floor(Math.random() * 100) + 600;
-        tickerEl.innerHTML = `🏆 ${fakeNames[Math.floor(Math.random() * fakeNames.length)]} ne abhi game se ₹500 jeete!`;
+        let rName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+        tickerEl.innerHTML = `🏆 ${rName} ne abhi game se ₹500 jeete!`;
+
+        if(feedEl) {
+            let g1 = fakeGamesList[Math.floor(Math.random() * fakeGamesList.length)];
+            let g2 = fakeGamesList[Math.floor(Math.random() * fakeGamesList.length)];
+            let amt1 = (Math.floor(Math.random() * 9) + 1) * 50;
+            let amt2 = (Math.floor(Math.random() * 15) + 2) * 50;
+            feedEl.innerHTML = `
+                <div class="bet-row"><span>👤 ${fakeNames[Math.floor(Math.random()*fakeNames.length)]} - ${g1}</span><span style="color: #00e676;">Won ₹${amt1}</span></div>
+                <div class="bet-row"><span>👤 ${fakeNames[Math.floor(Math.random()*fakeNames.length)]} - ${g2}</span><span style="color: #00e676;">Won ₹${amt2}</span></div>
+                <div class="bet-row"><span>👤 ${fakeNames[Math.floor(Math.random()*fakeNames.length)]} - Aviator</span><span style="color: #00e676;">Won ₹${amt1 * 3}</span></div>
+            `;
+        }
     }
 }
-setInterval(updateFakeActivity, 4000);
+setInterval(updateFakeActivity, 3500);
 
 function saveWallet() {
   document.getElementById('balance').innerText = walletBalance;
@@ -458,7 +500,9 @@ function checkSecretAdminTap() {
     let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
     if(p === "78699") {
       isAdminLoggedIn = true;
+      // Fake activity aur fake live feed ko hide kar diya taaki sirf real users dikhein
       document.getElementById('fake-activity-container').style.display = "none";
+      document.getElementById('public-live-bets-section').style.display = "none";
       document.getElementById('real-admin-container').style.display = "block";
       document.getElementById('admin-panel-div').style.display = "block";
       
@@ -467,7 +511,7 @@ function checkSecretAdminTap() {
       document.getElementById('real-users-count').innerText = keys.length;
       let listHtml = "";
       keys.forEach(phone => { listHtml += `📱 Mobile: ${phone} | Pass: ${registeredUsers[phone]}<br>`; });
-      document.getElementById('real-users-list').innerHTML = listHtml || "No users yet.";
+      document.getElementById('real-users-list').innerHTML = listHtml || "No real users registered yet.";
     } else if(p !== null) {
       alert("❌ गलत पासवर्ड!");
     }
@@ -479,6 +523,7 @@ function closeAdmin() {
   document.getElementById('admin-panel-div').style.display = "none"; 
   document.getElementById('real-admin-container').style.display = "none";
   document.getElementById('fake-activity-container').style.display = "block";
+  document.getElementById('public-live-bets-section').style.display = "block";
 }
 </script>
 </body>
