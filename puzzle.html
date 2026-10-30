@@ -1,4 +1,3 @@
-Paheli ka code. 
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -26,7 +25,6 @@ border: 2px solid #ff7b00;
 box-shadow: 0 4px 15px rgba(255, 123, 0, 0.3);
 position: relative;
 }
-/* Title par 3 baar tap karne par admin khulega */
 h2 { color: #ffab00; margin-top: 10px; cursor: pointer; }
 
 .banner-img {
@@ -52,7 +50,6 @@ margin-top: 10px;
 }
 .btn:hover { opacity: 0.9; }
 
-/* ABCD Option Buttons */
 .option-btn {
 background: #2a2a2a;
 color: #ffab00;
@@ -103,7 +100,6 @@ padding: 15px;
 margin: 15px 0;
 }
 
-/* Secret Admin Panel */
 .admin-panel {
 background: #2a1a1a;
 border: 2px solid #ff5252;
@@ -122,12 +118,10 @@ display: none;
 
 <div class="container">
 
-<!-- Secret Admin Trigger: Is title par lagataar 3 baar click karein (Password: 78699) -->
-<h2 onclick="checkSecretAdminTap()">🔥 महाकाल कठिन पहेली ज़ोन</h2>
+<h2 onclick="checkSecretAdminTap()">🔥 महाकाल दुर्लभ पहेली ज़ोन</h2>
 
 <img src="1792858963757.png" alt="Mahakal Banner" class="banner-img">
 
-<!-- User Wallet & Level View -->
 <div class="unique-wallet-card">
 <h3>💰 मेरा वॉलेट: ₹<span id="balance">100</span></h3>
 <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #ffab00;">
@@ -136,16 +130,13 @@ display: none;
 </div>
 </div>
 
-<!-- Step 1: Bet Setup Box -->
 <div id="puzzle-setup-box" class="game-card-box">
-<h3 style="color: #ffab00; margin-top: 0;">🧠 पहेली चैलेंज (Level Up)</h3>
+<h3 style="color: #ffab00; margin-top: 0;">🧠 दुर्लभ पहेली चैलेंज</h3>
 <p style="font-size: 12px; color: #ccc;">न्यूनतम ₹5 या अधिक की बाजी लगाएं:</p>
 <input type="number" id="puzzle-bet-input" value="10" min="5">
-<p style="font-size: 12px; color: #aaa;">सही जवाब देकर Level 1 से Level 3 तक कठिन पहेलियां पार करें!</p>
 <button class="btn" onclick="startPuzzleGame()">🚀 चैलेंज शुरू करें</button>
 </div>
 
-<!-- Step 2: Actual Puzzle Game Box (Hidden initially) -->
 <div id="puzzle-play-box" class="game-card-box hidden">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
 <span id="level-display" style="background: #9c27b0; color: #fff; padding: 3px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">Level 1</span>
@@ -154,34 +145,28 @@ display: none;
 
 <p id="puzzle-question" style="font-size: 15px; color: #ffab00; margin: 12px 0; text-align: left; line-height: 1.5; font-weight: bold;"></p>
 
-<!-- ABCD Selection Buttons -->
 <div id="options-container">
-<button class="option-btn" id="btnA" onclick="checkAnswer('A')">A. <span id="textA"></span></button>
-<button class="option-btn" id="btnB" onclick="checkAnswer('B')">B. <span id="textB"></span></button>
-<button class="option-btn" id="btnC" onclick="checkAnswer('C')">C. <span id="textC"></span></button>
-<button class="option-btn" id="btnD" onclick="checkAnswer('D')">D. <span id="textD"></span></button>
+<button class="option-btn" onclick="checkAnswer('A')">A. <span id="textA"></span></button>
+<button class="option-btn" onclick="checkAnswer('B')">B. <span id="textB"></span></button>
+<button class="option-btn" onclick="checkAnswer('C')">C. <span id="textC"></span></button>
+<button class="option-btn" onclick="checkAnswer('D')">D. <span id="textD"></span></button>
 </div>
 
 <div id="puzzle-result"></div>
 <button class="btn" style="background: #555; margin-top: 15px;" onclick="backToSetup()">होम / सेटअप पर जाएं</button>
 </div>
 
-<!-- SECRET ADMIN PANEL (Sirf aapke liye) -->
 <div id="admin-panel-div" class="admin-panel">
 <b style="color: #ff5252;">👑 पहेली एडमिन मास्टर कंट्रोल:</b>
-<p style="font-size: 11px; color: #aaa; margin: 5px 0;">यहाँ से आप यूजर का लेवल और सही जवाब देखें:</p>
-
 <div style="background: #121212; padding: 8px; border-radius: 5px; margin-bottom: 10px; font-size: 12px; line-height: 1.5;">
 📊 यूजर की लाइव बाजी: <span id="admin-live-bet" style="color: #00e676; font-weight: bold;">₹0</span><br>
 📈 यूजर का करंट लेवल: <span id="admin-live-level" style="color: #00b0ff; font-weight: bold;">Level 1</span><br>
 💰 यूजर का वॉलेट: <span id="admin-live-wallet" style="color: #ffab00; font-weight: bold;">₹100</span><br>
 💡 <b style="color: #ffab00;">सही उत्तर (Secret):</b> <span id="admin-correct-ans" style="color: #00e676; font-weight: bold; font-size: 14px;">-</span>
 </div>
-
 <label style="font-size: 11px;">वॉलेट बैलेंस एडिट करें:</label>
 <input type="number" id="admin-wallet-input" placeholder="नया बैलेंस दर्ज करें">
 <button class="btn" style="padding: 6px; font-size: 13px; background: #00e676; color: #000;" onclick="adminUpdateWallet()">बैलेंस सेव करें</button>
-
 <button class="btn" style="background: #555; padding: 5px; font-size: 12px; margin-top: 10px;" onclick="closeSecretAdmin()">एडमिन पैनल बंद करें</button>
 </div>
 
@@ -190,32 +175,33 @@ display: none;
 <script>
 let walletBalance = 100;
 let currentBetAmount = 0;
-let currentLevel = 1; // Shuruat Level 1 se hogi
+let currentLevel = 1;
 let puzzleTimerInterval = null;
 let timeLeft = 15;
-let currentCorrectKey = 'A';
+let correctButtonLetter = 'A';
 
-// Alag-alag levels ki desi aur kathin pheliyan
+// Bilkul nayi, anokhi aur durlabh deshi pheliyan jo Google par asani se nahi milti hain
 let levelsData = {
 1: [
-{ q: "हरी थी मन ਭरी थी, मोती जड़ित थार थी, चारों तरफ़ दुशाला ओढ़े, ओढ़ी रेशमी तार थी?", options: { A: "मक्का की भुट्टा", B: "हरी घास", C: "केले का पत्ता", D: "अंगूर का गुच्छा" }, answer: "A" },
-{ q: "ऐसी कौन सी चीज है जो ब्याह में हर आदमी को मिलती है, पर औरत को कभी नहीं मिलती?", options: { A: "नया कपड़ा", B: "दूसरा घर", C: "दूल्हा बनने का सुख", D: "सास का ताना" }, answer: "C" }
+{ q: "एक थाल मोतियों से भरा, सबके सिर पर औंधा धरा; चारों तरफ़ वह थाली फिरे, मोती उससे एक न गिरे?", options: { A: "आसमान और तारे", B: "कुएं की जगत", C: "सूरजमुखी का फूल", D: "ओस की बूंदें" }, answer: "A" },
+{ q: "काला घोड़ा, सफेद सवारी, एक उतरे तो दूसरा सवारी?",options: { A: "तवा और रोटी", B: "जूता और पाँव", C: "रात और दिन", D: "कलम और स्याही" }, answer: "C" },
+{ q: "ऐसी कौन सी चीज है जिसके पास पंख नहीं हैं फिर भी वह उड़ती है, और हाथ नहीं हैं फिर भी दरवाजा खोलती है?", options: { A: "समय और हवा", B: "धूप की किरण", C: "कागज की नाव", D: "सपनों की उड़ान" }, answer: "A" }
 ],
 2: [
-{ q: "एक पाँव ऐसा है जिसका, सिर पर जिसके पाँव धरा; बिन पानी वह प्यासा रहता, जग भर की प्यास बुझाता खरा?", options: { A: "कुएँ की घिरनी", B: "दीपक की लौ", C: "पेड़ का तना", D: "बादल का टुकड़ा" }, answer: "A" },
-{ q: "ऐसी कौन सी चीज है जिसे भगवान ने आगे से बनाया और इंसान ने पीछे से?", options: { A: "बैलगाड़ी का पहिया", B: "नाव और पतवार", C: "घोड़े की नाल", D: "कुएं की जगत" }, answer: "B" }
+{ q: "हाथ में लोटा, मुँह में डोरी, सब कोई पूछे उसकी बोली?", options: { A: "कुएं की बाल्टी", B: "पनघट का घड़ा", C: "तुलसी का गमला", D: "मिट्टी का दीया" }, answer: "A" },
+{ q: "तीन अक्षर का मेरा नाम, उल्टा सीधा एक समान; खाने के काम आऊँ, जरा बताओ मेरा नाम?", options: { A: "कनक", B: "नयन", C: "ममम", D: "रस रस" }, answer: "A" },
+{ q: "न कभी खाया, न कभी पिया, फिर भी सबका पेट भरा?", options: { A: "किताब और शिक्षक", B: "आईना (शीशा)", C: "हवा का झोंका", D: "सूरज की रोशनी" }, answer: "B" }
 ],
 3: [
-{ q: "बिन पंखों के उड़ जाए, बिना हाथ के लड़े भिड़े; सबके घर में राज करे, पर हाथ किसी के ना आए?", options: { A: "हवा का तेज झोंका", B: "सपनों की दुनिया", C: "अंधेरा और परछाई", D: "समय का पहिया" }, answer: "C" },
-{ q: "ऐसी कौन सी चीज है जो खाने के लिए खरीदी जाती है, पर कभी खाई नहीं जाती?", options: { A: "प्लेट और चम्मच", B: "चाय की पत्ती", C: "खाना पकाने वाला चूल्हा", D: "कांटा और छुरी" }, answer: "A" }
+{ q: "जिंदा हूँ पर साँस नहीं, शीतल हूँ पर प्यास नहीं; बिन परों के उड़ जाऊँ, बिना पाँव के दौड़ लगाऊँ?", options: { A: "बिजली का करंट", B: "बादल और बारिश", C: "नदी की धारा", D: "सपनों का साया" }, answer: "C" },
+{ q: "ऐसी कौन सी चीज है जिसे जितना खींचेंगे, उतनी ही वह छोटी होती जाएगी?", options: { A: "सिगरेट का कश", B: "रबड़ का बैंड", C: "बीतता हुआ समय", D: "कुएं की रस्सी" }, answer: "A" },
+{ q: "एक गुफा में तीस चोर, दोनों हाथ से मचाएं शोर?",options: { A: "दाँत और जीभ", B: "ढोल और मंजीरा", C: "हाथ की उंगलियाँ", D: "बारिश की बूँदें" }, answer: "A" }
 ]
 };
 
 window.onload = function() {
 let savedBal = localStorage.getItem('mahakal_level_puzzle_wallet');
-if (savedBal !== null) {
-walletBalance = parseFloat(savedBal);
-}
+if (savedBal !== null) walletBalance = parseFloat(savedBal);
 updateBalanceDisplay();
 };
 
@@ -227,33 +213,22 @@ document.getElementById('admin-live-level').innerText = "Level " + currentLevel;
 localStorage.setItem('mahakal_level_puzzle_wallet', walletBalance);
 }
 
-// Secret Triple Tap Logic for Admin Panel (Password: 78699)
-let tapCount = 0;
-let lastTapTime = 0;
+let tapCount = 0, lastTapTime = 0;
 function checkSecretAdminTap() {
 let currentTime = new Date().getTime();
-if (currentTime - lastTapTime < 600) {
-tapCount++;
-} else {
-tapCount = 1;
-}
+if (currentTime - lastTapTime < 600) tapCount++; else tapCount = 1;
 lastTapTime = currentTime;
-
 if (tapCount === 3) {
 tapCount = 0;
 let pass = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
 if (pass === "78699") {
 document.getElementById('admin-panel-div').style.display = "block";
 alert("✅ पहेली एडमिन पैनल खुल गया है!");
-} else if (pass !== null) {
-alert("❌ गलत पासवर्ड!");
-}
+} else if (pass !== null) { alert("❌ गलत पासवर्ड!"); }
 }
 }
 
-function closeSecretAdmin() {
-document.getElementById('admin-panel-div').style.display = "none";
-}
+function closeSecretAdmin() { document.getElementById('admin-panel-div').style.display = "none"; }
 
 function adminUpdateWallet() {
 let newAmt = parseFloat(document.getElementById('admin-wallet-input').value);
@@ -264,20 +239,13 @@ alert("✅ वॉलेट बैलेंस अपडेट हो गया: 
 }
 }
 
-// Start Challenge
 function startPuzzleGame() {
 let betAmt = parseInt(document.getElementById('puzzle-bet-input').value);
-if (isNaN(betAmt) || betAmt < 5) {
-alert("❌ कृपया न्यूनतम ₹5 की बाजी लगाएं!");
-return;
-}
-if (walletBalance < betAmt) {
-alert("❌ आपके वॉलेट में पर्याप्त बैलेंस नहीं है!");
-return;
-}
+if (isNaN(betAmt) || betAmt < 5) { alert("❌ कृपया न्यूनतम ₹5 की बाजी लगाएं!"); return; }
+if (walletBalance < betAmt) { alert("❌ आपके वॉलेट में पर्याप्त बैलेंस नहीं है!"); return; }
 
 currentBetAmount = betAmt;
-currentLevel = 1; // Shuruat hamesha Level 1 se hogi
+currentLevel = 1;
 document.getElementById('last-bet-view').innerText = currentBetAmount;
 document.getElementById('admin-live-bet').innerText = "₹" + currentBetAmount;
 
@@ -286,41 +254,33 @@ updateBalanceDisplay();
 
 document.getElementById('puzzle-setup-box').classList.add('hidden');
 document.getElementById('puzzle-play-box').classList.remove('hidden');
-
 loadPuzzleForCurrentLevel();
 }
 
 function loadPuzzleForCurrentLevel() {
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 
-// Current level ki pheli list me se random chunna
 let list = levelsData[currentLevel] || levelsData[1];
-let randomIndex = Math.floor(Math.random() * list.length);
-let p = list[randomIndex];
+let p = list[Math.floor(Math.random() * list.length)];
 
-let allOpts = [
-{ text: p.options.A, key: 'A' },
-{ text: p.options.B, key: 'B' },
-{ text: p.options.C, key: 'C' },
-{ text: p.options.D, key: 'D' }
-];
+let correctOriginalText = p.options[p.answer];
+let optionTexts = [p.options.A, p.options.B, p.options.C, p.options.D];
+optionTexts.sort(() => Math.random() - 0.5);
 
-allOpts.sort(() => Math.random() - 0.5);
-
-document.getElementById('level-display').innerText = "Level " + currentLevel + (currentLevel === 1 ? " (सामान्य)" : currentLevel === 2 ? " (कठिन)" : " (अति कठिन)");
+document.getElementById('level-display').innerText = "Level " + currentLevel;
 document.getElementById('puzzle-question').innerText = "❓ " + p.q;
-document.getElementById('textA').innerText = allOpts[0].text;
-document.getElementById('textB').innerText = allOpts[1].text;
-document.getElementById('textC').innerText = allOpts[2].text;
-document.getElementById('textD').innerText = allOpts[3].text;
 
-let correctText = p.options[p.answer];
-if (allOpts[0].text === correctText) currentCorrectKey = 'A';
-else if (allOpts[1].text === correctText) currentCorrectKey = 'B';
-else if (allOpts[2].text === correctText) currentCorrectKey = 'C';
-else if (allOpts[3].text === correctText) currentCorrectKey = 'D';
+document.getElementById('textA').innerText = optionTexts[0];
+document.getElementById('textB').innerText = optionTexts[1];
+document.getElementById('textC').innerText = optionTexts[2];
+document.getElementById('textD').innerText = optionTexts[3];
 
-document.getElementById('admin-correct-ans').innerText = "Button " + currentCorrectKey + " (" + correctText + ")";
+if (optionTexts[0] === correctOriginalText) correctButtonLetter = 'A';
+else if (optionTexts[1] === correctOriginalText) correctButtonLetter = 'B';
+else if (optionTexts[2] === correctOriginalText) correctButtonLetter = 'C';
+else if (optionTexts[3] === correctOriginalText) correctButtonLetter = 'D';
+
+document.getElementById('admin-correct-ans').innerText = "Button " + correctButtonLetter + " (" + correctOriginalText + ")";
 
 document.getElementById('puzzle-result').innerText = "";
 enableOptions(true);
@@ -340,8 +300,8 @@ clearInterval(puzzleTimerInterval);
 enableOptions(false);
 let resultDiv = document.getElementById('puzzle-result');
 resultDiv.className = "error";
-resultDiv.innerText = `⏳ समय समाप्त! Level ${currentLevel} पर हार गए। गेम रीसेट हो रहा है।`;
-currentLevel = 1; // Haarne par wapas Level 1 par aa jayega
+resultDiv.innerText = `⏳ समय समाप्त! Level ${currentLevel} पर हार गए।`;
+currentLevel = 1;
 updateBalanceDisplay();
 setTimeout(backToSetup, 3000);
 }
@@ -353,31 +313,28 @@ if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 enableOptions(false);
 let resultDiv = document.getElementById('puzzle-result');
 
-let selectedBtnText = document.getElementById('text' + selectedKey).innerText;
-let correctBtnText = document.getElementById('text' + currentCorrectKey).innerText;
-
-if (selectedBtnText === correctBtnText) {
+if (selectedKey === correctButtonLetter) {
 let winAmt = currentBetAmount * 2;
 walletBalance += winAmt;
 updateBalanceDisplay();
 
 if (currentLevel < 3) {
-currentLevel++; // Agle kathin level par badh jayega
+currentLevel++;
 updateBalanceDisplay();
 resultDiv.className = "msg";
-resultDiv.innerText = `🎉 सही जवाब! ₹${winAmt} जीते! अब और कठिन Level ${currentLevel} पर जा रहे हैं...`;
+resultDiv.innerText = `🎉 सही जवाब! ₹${winAmt} जीते! अब Level ${currentLevel} पर जा रहे हैं...`;
 setTimeout(loadPuzzleForCurrentLevel, 3500);
 } else {
 resultDiv.className = "msg";
-resultDiv.innerText = `🏆 बधाई हो! आपने सभी 3 कठिन लेवल्स पार कर लिए और ₹${winAmt} जीत लिए!`;
+resultDiv.innerText = `🏆 बधाई हो! आपने सभी 3 लेवल्स पार कर लिए और ₹${winAmt} जीत लिए!`;
 currentLevel = 1;
 updateBalanceDisplay();
 setTimeout(backToSetup, 4000);
 }
 } else {
 resultDiv.className = "error";
-resultDiv.innerText = `❌ गलत जवाब! सही उत्तर Button ${currentCorrectKey} था। आप हार गए।`;
-currentLevel = 1; // Galat jawab par level reset
+resultDiv.innerText = `❌ गलत जवाब! सही उत्तर Button ${correctButtonLetter} था। आप हार गए।`;
+currentLevel = 1;
 updateBalanceDisplay();
 setTimeout(backToSetup, 3500);
 }
