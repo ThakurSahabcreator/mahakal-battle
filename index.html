@@ -129,7 +129,7 @@ font-size: 12px;
 .msg { color: #00e676; font-size: 13px; margin-top: 8px; font-weight: bold; text-align: center; }
 .error { color: #ff5252; font-size: 13px; margin-top: 8px; font-weight: bold; text-align: center; }
 
-/* Fake Activity Box Styles (500+ active users) */
+/* Fake Activity Box Styles (600+ active users) */
 .fake-activity-box {
 background: linear-gradient(135deg, #064e3b, #022c22);
 border: 1px solid #10b981;
@@ -207,13 +207,13 @@ transition: 0.3s;
 <!---------------- 2. MAIN SERVER DASHBOARD ---------------->
 <div id="app-dashboard" class="hidden">
 
-<!-- FAKE LIVE USERS & WINNERS TICKER (500+ active users simulation)[span_3](start_span)[span_3](end_span) -->
+<!-- FAKE LIVE USERS & WINNERS TICKER (600+ active users simulation) -->
 <div id="fake-activity-container" class="fake-activity-box">
-    🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">518</span> Active Now<br>
+    🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
     <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle se ₹500 jeete!</span>
 </div>
 
-<!-- REAL USERS DISPLAY BOX (Admin View)[span_4](start_span)[span_4](end_span) -->
+<!-- REAL USERS DISPLAY BOX (Admin View Only) -->
 <div id="real-admin-container" class="fake-activity-box" style="background: linear-gradient(135deg, #1e3a8a, #1e1b4b); border: 1px solid #3b82f6; display: none; text-align: left; padding: 12px;">
     👑 <b style="color: #60a5fa;">Admin Real-Time Customer View:</b><br>
     👥 Total Registered Users: <span id="real-users-count" style="color: #fff; font-weight: bold;">0</span><br>
@@ -244,23 +244,23 @@ transition: 0.3s;
     <div style="max-height: 220px; overflow-y: auto; padding-right: 8px; font-size: 12px; line-height: 1.6; color: #cccccc; scrollbar-width: thin; scrollbar-color: #ffd700 #222;">
         <p style="margin-top: 0;">
             <strong style="color: #00ffcc;">1. Spribe Company Dwara Aviator Game ka Nirman:</strong><br>
-            Yeh game duniya ki sabse badi iGaming software provider company <strong>Spribe OU</strong> ke official licensing aur advanced provably fair algorithm ke tahat taiyar kiya gaya hai[span_5](start_span)[span_5](end_span).
+            Yeh game duniya ki sabse badi iGaming software provider company <strong>Spribe OU</strong> ke official licensing aur advanced provably fair algorithm ke tahat taiyar kiya gaya hai.
         </p>
         <p>
             <strong style="color: #00ffcc;">2. Game Kaise Khele aur Rules Kya Hain:</strong><br>
-            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur original Aviator Plane Game ka anand le sakte hain[span_6](start_span)[span_6](end_span).
+            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur original Aviator Plane Game ka anand le sakte hain.
         </p>
         <p>
             <strong style="color: #00ffcc;">3. Refer & Earn Aur Commission System:</strong><br>
-            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai[span_7](start_span)[span_7](end_span).
+            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai.
         </p>
         <p>
             <strong style="color: #ff9900; font-weight: 700;">4. Withdrawal ki 100% Guarantee aur Time Limit:</strong><br>
-            Spribe certified automated payment gateway ke zariye, withdrawal request lagane par kuch hi samay mein paise aapke account mein pahunch jate hain[span_8](start_span)[span_8](end_span).
+            Spribe certified automated payment gateway ke zariye, withdrawal request lagane par kuch hi samay mein paise aapke account mein pahunch jate hain.
         </p>
         <p style="margin-bottom: 0;">
             <strong style="color: #ff4d4d; font-weight: 700;">5. Fraud-Giri aur Security ki Full Guarantee:</strong><br>
-            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai[span_9](start_span)[span_9](end_span).
+            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai.
         </p>
     </div>
     <div style="text-align: center; margin-top: 12px; border-top: 1px solid rgba(255,215,0,0.3); padding-top: 8px; font-size: 11px; color: #00ff66; font-weight: 600;">
@@ -302,15 +302,15 @@ transition: 0.3s;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Deposit View (QR + Direct UPI App Button Added)[span_10](start_span)[span_10](end_span) -->
+<!-- Deposit View (QR + Direct UPI Payment App Button Included) -->
 <div id="deposit-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">📥 पैसे जोड़े (QR Deposit)</h3>
 <img src="qrcode.jpg" alt="QR" class="qr-img">
 <p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 
-<!-- Direct UPI App Button Added -->
-<a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=ThakurSahabMahakalBattle&cu=INR" class="btn" style="background: #25D366; color: #000; text-decoration: none; display: block; padding: 12px; margin: 10px 0; font-weight: bold; border-radius: 6px; text-align: center;">📱 Pay via PhonePe / GPay / Paytm (Click Here)[span_11](start_span)[span_11](end_span)</a>
+<!-- Direct UPI Payment App Button -->
+<a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=ThakurSahabMahakalBattle&cu=INR" class="btn" style="background: #25D366; color: #000; text-decoration: none; display: block; padding: 12px; margin: 10px 0; font-weight: bold; border-radius: 6px; text-align: center;">📱 Pay via PhonePe / GPay / Paytm (Click Here)</a>
 
 <input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
 <input type="text" id="dep-upinumber" placeholder="UPI Number / UPI ID दर्ज करें">
@@ -375,7 +375,7 @@ transition: 0.3s;
 <div id="support-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">💬 हेल्पलाइन & Help Desk</h3>
-<p style="font-size: 11px; color: #aaa;">अपनी समस्या नीचे लिखें, instant समाधान मिलेगा। समाधान न मिलने पर सीधे एडमिन (Telegram) को संदेश भेजें:</p>
+<p style="font-size: 11px; color: #aaa;">अपनी समस्या नीचे लिखें, तुरंत हेल्पलाइन से समाधान मिलेगा। समाधान न मिलने पर सीधे एडमिन (Telegram) को संदेश भेजें:</p>
 <textarea id="user-query" rows="3" placeholder="यहाँ अपनी समस्या लिखें (उदा. डिपॉजिट नहीं हुआ)..."></textarea>
 <button class="btn" style="background: #0284c7;" onclick="askAiSupport()">⚡ हेल्पलाइन से उत्तर पूछें</button>
 <div id="ai-response-box" style="background: #1a2332; border: 1px solid #ffab00; padding: 8px; border-radius: 6px; margin-top: 10px; font-size: 12px; text-align: left; display: none;"></div>
@@ -453,8 +453,9 @@ function updateFakeActivity() {
     let countEl = document.getElementById('fake-online-count');
     let tickerEl = document.getElementById('fake-winner-ticker');
     
+    // जब तक एडमिन लॉगिन नहीं है, तब तक फेक एक्टिविटी कस्टमर को दिखेगी
     if(countEl && !isAdminLoggedIn) {
-        let randomCount = Math.floor(Math.random() * 100) + 500; // 500+ fake online players
+        let randomCount = Math.floor(Math.random() * 100) + 600; // 600+ active users
         countEl.innerText = randomCount.toLocaleString();
 
         let randomName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
