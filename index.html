@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
-<title>ThakurSahabCreatorMahakalBattle</title>
+<title>Thakur Sahab Creator Mahakal Battle</title>
 
-<meta property="og:title" content="ThakurSahabCreatorMahakalBattle">
-<meta property="og:description" content="Paheliyan suljhayein aur ThakurSahabCreator ke sath gaming ka anand lein!">
-<meta property="og:image" content="1792858963757.png">
+<meta property="og:title" content="Thakur Sahab Creator Mahakal Battle">
+<meta property="og:description" content="Paheliyan suljhayein aur Thakur Sahab Creator ke sath gaming ka anand lein!">
+<meta property="og:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
 <meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
 <meta property="og:type" content="website">
 
@@ -219,7 +219,7 @@ transition: 0.3s;
 
 <div id="fake-activity-container" class="fake-activity-box">
     🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
-    <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle se ₹500 jeete!</span>
+    <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle से ₹500 jeete!</span>
 </div>
 
 <div id="real-admin-container" class="fake-activity-box" style="background: linear-gradient(135deg, #1e3a8a, #1e1b4b); border: 1px solid #3b82f6; display: none; text-align: left; padding: 12px;">
@@ -318,8 +318,10 @@ transition: 0.3s;
 <div id="refer-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">🎁 शेयर करें और 3% कमीशन पाएं</h3>
-<input type="text" id="ref-link-input" readonly style="background:#121212; color:#ffab00; font-weight:bold;">
-<button class="btn" style="background: #00897b;" onclick="copyReferLink()">🔗 लिंक कॉपी करें</button>
+<p style="font-size: 11px; color: #aaa;">Apna referral link copy karein ya WhatsApp par share karein:</p>
+<input type="text" id="ref-link-input" readonly style="background:#121212; color:#ffab00; font-weight:bold; text-align:center;">
+<button class="btn" style="background: #00897b; margin-top: 5px;" onclick="copyReferLink()">🔗 लिंक कॉपी करें</button>
+<button class="btn" style="background: #25D366; color: #000; margin-top: 5px;" onclick="shareOnWhatsApp()">💬 WhatsApp पर शेयर करें</button>
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
@@ -433,6 +435,10 @@ function openSection(secId) {
     if(d.id !== 'admin-panel-div' && d.id !== 'login-section' && d.id !== 'app-dashboard') d.classList.add('hidden');
   });
   document.getElementById(secId).classList.remove('hidden');
+
+  if(secId === 'refer-section') {
+    document.getElementById('ref-link-input').value = window.location.href;
+  }
 }
 
 function backToDashboard() {
@@ -477,7 +483,7 @@ function rollDice() {
     walletBalance += bet * 2;
     document.getElementById('l-result').innerText = `🎉 पासा [${roll}] - जीत गए!`;
   } else {
-    document.getElementById('l-result').innerText = `❌ पासा [${roll}] - हार गए।`;
+    document.getElementById('l-result'.innerText = `❌ पासा [${roll}] - हार गए।`);
   }
   saveWallet();
 }
@@ -490,6 +496,21 @@ function sendWithdrawReq() {
   alert("✅ विथड्रॉवल अनुरोध दर्ज हो गया है!");
 }
 
+function copyReferLink() {
+  let linkInput = document.getElementById('ref-link-input');
+  linkInput.select();
+  linkInput.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(linkInput.value);
+  alert("🔗 Link copy ho gaya hai!");
+}
+
+function shareOnWhatsApp() {
+  let gameUrl = window.location.href;
+  let message = "🔱 Thakur Sahab Creator Mahakal Battle khele, paheliyan suljhayein aur daily cash jeetein! Abhi join karein: " + gameUrl;
+  let whatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(message);
+  window.open(whatsappUrl, '_blank');
+}
+
 let tapC = 0, lastT = 0;
 function checkSecretAdminTap() {
   let now = new Date().getTime();
@@ -500,7 +521,6 @@ function checkSecretAdminTap() {
     let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
     if(p === "78699") {
       isAdminLoggedIn = true;
-      // Fake activity aur fake live feed ko hide kar diya taaki sirf real users dikhein
       document.getElementById('fake-activity-container').style.display = "none";
       document.getElementById('public-live-bets-section').style.display = "none";
       document.getElementById('real-admin-container').style.display = "block";
