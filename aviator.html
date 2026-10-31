@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thakur Sahab - Aviator Master Game</title>
+<title>Aviator - Thakur Sahab</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 body {
@@ -21,8 +21,8 @@ body {
     background: #131a26;
     padding: 12px;
     border-radius: 12px;
-    border: none;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
 }
 .header-row {
     display: flex;
@@ -112,6 +112,7 @@ body {
     transition: 0.2s linear;
 }
 
+/* Bet Card Styling (Only 2 Boxes as requested) */
 .bet-card {
     background: #1a2332;
     border: 1px solid #334155;
@@ -177,7 +178,7 @@ body {
     cursor: pointer;
 }
 
-/* Game ke andar Scrollable Live Winners Feed Box */
+/* In-game scrollable feed */
 .in-game-feed-card {
     background: #1a2332;
     border: 1px solid #334155;
@@ -193,23 +194,48 @@ body {
     padding: 6px;
     font-size: 11px;
     color: #00ff66;
-    max-height: 95px;
+    max-height: 85px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #ffab00 #0b0f19;
 }
 .feed-item {
-    padding: 3px 0;
+    padding: 2px 0;
     border-bottom: 1px dashed rgba(255,255,255,0.1);
+}
+
+/* Hidden Admin Modal for Aviator */
+.aviator-admin-modal {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    right: 10px;
+    background: #1c1100;
+    border: 2px solid #ffab00;
+    padding: 15px;
+    border-radius: 8px;
+    z-index: 999;
+    display: none;
+    text-align: left;
 }
 </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- Hidden Admin Panel Modal -->
+    <div id="aviator-admin-modal" class="aviator-admin-modal">
+        <b style="color: #ffab00; font-size: 13px;">👑 Aviator Admin Control:</b>
+        <p style="font-size: 11px; color: #ccc; margin: 5px 0;">Next Round Crash Multiplier (Target):</p>
+        <input type="number" id="admin-target-mult" class="bet-input" value="2.00" step="0.1">
+        <button class="action-btn" style="background:#00e676; color:#000; padding:6px; margin-top:5px;" onclick="saveAdminSettings()">Save Target</button>
+        <button class="action-btn" style="background:#ef4444; color:#fff; padding:6px; margin-top:5px;" onclick="closeAviatorAdmin()">Close Panel</button>
+    </div>
+
     <div class="header-row">
         <button class="back-btn" onclick="history.back()">Back</button>
-        <span style="font-size: 16px; font-weight: bold; color: #ffab00;">Aviator Master</span>
+        <!-- 7 Taps on 'Aviator' Title opens Admin Panel -->
+        <span id="aviator-title-tap" style="font-size: 18px; font-weight: bold; color: #ffab00; cursor: pointer;" onclick="handleTitleTap()">Aviator</span>
         <div style="display: flex; gap: 5px; align-items: center;">
             <div class="wallet-display">₹<span id="aviator-bal">19</span></div>
             <a href="index.html#deposit-section" class="deposit-btn-top">Deposit</a>
@@ -229,7 +255,7 @@ body {
         <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-plane"></i></div>
     </div>
 
-    <!-- Bet Card 1 -->
+    <!-- Bet Card 1 (Only 2 Boxes as requested) -->
     <div class="bet-card">
         <div style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</div>
         <input type="number" id="bet-amt-1" class="bet-input" value="100">
@@ -263,26 +289,49 @@ body {
         <button class="action-btn" id="bet-btn-2" onclick="toggleBet(2)">BET (लगाएं)</button>
     </div>
 
-    <!-- GAME KE ANDAR SCROLLABLE LIVE WINNERS FEED CARD -->
+    <!-- Scrollable Live Winners Feed Inside Game -->
     <div class="in-game-feed-card">
         <div style="font-size: 11px; color: #ffab00; margin-bottom: 4px; font-weight: bold; display: flex; justify-content: space-between;">
-            <span>🟢 Live Players & Winners Feed</span>
+            <span>🟢 Live Winners Feed (Scroll)</span>
             <span style="color: #00ff66;">Active: 682</span>
         </div>
         <div class="live-feed-box" id="live-winners-container">
-            <div class="feed-item">🏆 Rahul Thakur (Kanpur Dehat) jeete ₹1,500 (Cashout @ 3.2x)</div>
-            <div class="feed-item">🏆 Sandeep Kumar (Rasulabad) jeete ₹850 (Cashout @ 2.1x)</div>
-            <div class="feed-item">🏆 Amit Singh (Unnao) jeete ₹2,400 (Cashout @ 4.5x)</div>
-            <div class="feed-item">🏆 Deepak Verma (Kanpur Nagar) jeete ₹500 (Cashout @ 1.9x)</div>
-            <div class="feed-item">🏆 Rohit Yadav (Farrukhabad) jeete ₹1,200 (Cashout @ 2.8x)</div>
-            <div class="feed-item">🏆 Vikas Dubey (Auraiya) jeete ₹3,000 (Cashout @ 5.0x)</div>
-            <div class="feed-item">🏆 Ankit Gupta (Kanpur) jeete ₹950 (Cashout @ 2.3x)</div>
-            <div class="feed-item">🏆 Manish Kumar (Etawah) jeete ₹1,800 (Cashout @ 3.6x)</div>
+            <div class="feed-item">🏆 Rahul Thakur (Kanpur) jeete ₹1,500 (3.2x)</div>
+            <div class="feed-item">🏆 Sandeep Kumar (Rasulabad) jeete ₹850 (2.1x)</div>
+            <div class="feed-item">🏆 Amit Singh (Unnao) jeete ₹2,400 (4.5x)</div>
+            <div class="feed-item">🏆 Deepak Verma (Kanpur) jeete ₹500 (1.9x)</div>
+            <div class="feed-item">🏆 Rohit Yadav (Farrukhabad) jeete ₹1,200 (2.8x)</div>
         </div>
     </div>
 </div>
 
 <script>
+let titleTapCount = 0;
+function handleTitleTap() {
+    titleTapCount++;
+    if(titleTapCount >= 7) {
+        let pin = prompt("Admin PIN darj karein:");
+        if(pin === "78699") {
+            document.getElementById('aviator-admin-modal').style.display = 'block';
+        }
+        titleTapCount = 0;
+    }
+}
+
+function closeAviatorAdmin() {
+    document.getElementById('aviator-admin-modal').style.display = 'none';
+}
+
+let customAdminCrash = null;
+function saveAdminSettings() {
+    let val = parseFloat(document.getElementById('admin-target-mult').value);
+    if(!isNaN(val)) {
+        customAdminCrash = val;
+        alert("Admin target multiplier set ho gaya: " + val + "x");
+        closeAviatorAdmin();
+    }
+}
+
 function getActiveUser() {
     return localStorage.getItem('active_user');
 }
@@ -355,7 +404,9 @@ function startAviatorGameLoop() {
     let planeIcon = document.getElementById('plane-graphic');
     
     currentMultiplier = 1.00;
-    let crashPoint = (Math.random() * 5 + 1.3).toFixed(2);
+    let crashPoint = customAdminCrash ? customAdminCrash : (Math.random() * 4 + 1.3).toFixed(2);
+    customAdminCrash = null; // reset after use
+
     let posLeft = 40;
     let posBottom = 30;
 
@@ -416,21 +467,21 @@ function startAviatorGameLoop() {
 
 function startDynamicFeedGenerator() {
     let names = ["Ankit", "Manish", "Pankaj", "Suraj", "Ajay", "Pradeep", "Kuldeep", "Vipin", "Sachin", "Mohit", "Rahul", "Sandeep"];
-    let places = ["Kanpur", "Rasulabad", "Unnao", "Etawah", "Kannauj", "Auraiya", "Lucknow", "Farrukhabad", "Bithoor", "Jhinjhak"];
+    let places = ["Kanpur", "Rasulabad", "Unnao", "Etawah", "Kannauj", "Auraiya", "Lucknow", "Farrukhabad"];
     let container = document.getElementById('live-winners-container');
 
     setInterval(() => {
         let randomName = names[Math.floor(Math.random() * names.length)];
         let randomPlace = places[Math.floor(Math.random() * places.length)];
-        let randomAmt = Math.floor(Math.random() * 4500) + 200;
-        let randomMult = (Math.random() * 4 + 1.2).toFixed(2);
+        let randomAmt = Math.floor(Math.random() * 3500) + 150;
+        let randomMult = (Math.random() * 3.5 + 1.2).toFixed(2);
 
         let newItem = document.createElement('div');
         newItem.className = 'feed-item';
-        newItem.innerHTML = `🏆 ${randomName} (${randomPlace}) jeete ₹${randomAmt.toLocaleString()} (Cashout @ ${randomMult}x)`;
+        newItem.innerHTML = `🏆 ${randomName} (${randomPlace}) jeete ₹${randomAmt.toLocaleString()} (${randomMult}x)`;
         
         container.insertBefore(newItem, container.firstChild);
-        if(container.children.length > 30) {
+        if(container.children.length > 25) {
             container.removeChild(container.lastChild);
         }
     }, 3000);
