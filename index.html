@@ -196,6 +196,7 @@ transition: 0.3s;
 <div id="app-dashboard" class="hidden">
 <div class="wallet-box">
 <h3>💰 मेरा वॉलेट: ₹<span id="balance">19</span></h3>
+<p id="user-display-phone" style="font-size: 11px; color: #00e676; margin: 2px 0;"></p>
 <p id="bonus-timer-msg" style="font-size: 11px; color: #ffab00; margin: 5px 0 0 0;">⏳ 3 महीने (90 दिन) लगातार खेलने के बाद ₹199 सीनियर बोनस मिलेगा...</p>
 </div>
 
@@ -292,6 +293,10 @@ transition: 0.3s;
 <h3 style="color: #ffab00; margin-top: 0; text-align: center;">📥 पैसे जोड़े (QR Deposit)</h3>
 <img src="qrcode.jpg" alt="QR" class="qr-img">
 <p style="font-size: 11px; color: #aaa; text-align: center;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
+
+<!-- Direct UPI Payment Button added back here -->
+<a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=ThakurSahabMahakal&cu=INR" class="btn" style="background: linear-gradient(to right, #25D366, #128C7E); display: block; text-decoration: none; text-align: center; margin-bottom: 10px; font-size: 14px;">📲 Google Pay / PhonePe पर सीधा भुगतान करें</a>
+
 <input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
 <input type="text" id="dep-upinumber" placeholder="UPI Number / UPI ID दर्ज करें">
 <input type="text" id="dep-txnid" placeholder="UPI Txn ID दर्ज करें">
@@ -421,21 +426,28 @@ if(installBtn) {
   });
 }
 
-// Active user session manage karne ke liye functions
+// -------------------------------------------------------------------------
+// STRICT USER SESSION & ISOLATED BALANCE STORAGE FUNCTIONS (Fixed)
+// -------------------------------------------------------------------------
 function getCurrentUser() {
-    return localStorage.getItem('active_user');
+    return localStorage.getItem('active_session_phone');
 }
 
 function getWalletBalance() {
     let user = getCurrentUser();
     if(!user) return 19;
-    return parseFloat(localStorage.getItem('balance_' + user) || '19');
+    let bal = localStorage.getItem('user_bal_' + user);
+    if(bal === null) {
+        bal = '19';
+        localStorage.setItem('user_bal_' + user, bal);
+    }
+    return parseFloat(bal);
 }
 
 function setWalletBalance(amount) {
     let user = getCurrentUser();
     if(user) {
-        localStorage.setItem('balance_' + user, amount);
+        localStorage.setItem('user_bal_' + user, amount);
         updateWalletDisplay();
     }
 }
@@ -444,9 +456,14 @@ function updateWalletDisplay() {
     let bal = getWalletBalance();
     let balEl = document.getElementById('balance');
     if(balEl) balEl.innerText = bal;
+    
+    let user = getCurrentUser();
+    let phoneDisp = document.getElementById('user-display-phone');
+    if(phoneDisp && user) {
+        phoneDisp.innerText = "📱 Logged in: " + user;
+    }
 }
 
-// Login Process with Number-based Isolation
 function processLogin() {
     let phone = document.getElementById('login-phone').value.trim();
     let pass = document.getElementById('login-pass').value.trim();
@@ -456,22 +473,30 @@ function processLogin() {
         return;
     }
 
-    // Is number ko active user set karein
-    localStorage.setItem('active_user', phone);
+    if(pass === "") {
+        document.getElementById('login-msg').innerHTML = "<span class='error'>Kripya password darj karein!</span>";
+        return;
+    }
 
-    // Agar is number ka account pehle nahi bana, toh default balance ₹19 dein
-    if(!localStorage.getItem('balance_' + phone)) {
-        localStorage.setItem('balance_' + phone, '19');
+    localStorage.setItem('active_session_phone', phone);
+
+    if(!localStorage.getItem('user_pass_' + phone)) {
+        localStorage.setItem('user_pass_' + phone, pass);
+    }
+
+    if(localStorage.getItem('user_bal_' + phone) === null) {
+        localStorage.setItem('user_bal_' + phone, '19');
     }
     
     document.getElementById('login-section').classList.add('hidden');
     document.getElementById('app-dashboard').classList.remove('hidden');
     updateWalletDisplay();
     document.getElementById('login-msg').innerHTML = "";
+    loadNewPuzzle();
 }
 
 function logoutUser() {
-    localStorage.removeItem('active_user');
+    localStorage.removeItem('active_session_phone');
     document.getElementById('app-dashboard').classList.add('hidden');
     document.getElementById('login-section').classList.remove('hidden');
     document.getElementById('login-phone').value = '';
@@ -488,6 +513,12 @@ function openSection(sectionId) {
     
     let target = document.getElementById(sectionId);
     if(target) target.classList.remove('hidden');
+
+    if(sectionId === 'puzzle-section') {
+        loadNewPuzzle();
+    } else if(sectionId === 'refer-section') {
+        setupReferralLink();
+    }
 }
 
 function backToDashboard() {
@@ -499,7 +530,117 @@ function backToDashboard() {
     updateWalletDisplay();
 }
 
-// Page load hone par check karein ki koi pehle se logged-in hai ya nahi
+const puzzleList = [
+    { q: "Aisi kaun si cheez hai jo sochte hi thak jati hai?", options: { A: "Dimag", B: "Pair", C: "Hath", D: "Aankh" }, ans: "A" },
+    { q: "Voh kaun sa fal hai jise pakne par meetha aur kachha hone par khata hota hai?", options: { A: "Aam", B: "Kela", C: "Angoor", D: "Papita" }, ans: "B" },
+    { q: "Aisa kaun sa shabdh hai jise ulta likhne par ladki ka naam banta hai?", options: { A: "Madhu", B: "Kajal", C: "Sarita", D: "Nisha" }, ans: "D" }
+];
+let currentPuzzleIndex = 0;
+
+function loadNewPuzzle() {
+    currentPuzzleIndex = Math.floor(Math.random() * puzzleList.length);
+    let p = puzzleList[currentPuzzleIndex];
+    document.getElementById('p-question').innerText = p.q;
+    document.getElementById('optA').innerText = p.options.A;
+    document.getElementById('optB').innerText = p.options.B;
+    document.getElementById('optC').innerText = p.options.C;
+    document.getElementById('optD').innerText = p.options.D;
+    document.getElementById('p-result').innerHTML = "";
+}
+
+function checkPuzzle(selectedOpt) {
+    let bet = parseFloat(document.getElementById('p-bet').value) || 5;
+    let bal = getWalletBalance();
+    
+    if(bal < bet) {
+        document.getElementById('p-result').innerHTML = "<span class='error'>Wallet mein paryapt balance nahi hai! Kripya deposit karein.</span>";
+        return;
+    }
+
+    let p = puzzleList[currentPuzzleIndex];
+    if(selectedOpt === p.ans) {
+        setWalletBalance(bal + bet);
+        document.getElementById('p-result').innerHTML = `<span class='msg'>🎉 Sahi jawab! Aapne ₹${bet} jeet liye hain!</span>`;
+        try { document.getElementById('bonus-sound').play(); } catch(e){}
+    } else {
+        setWalletBalance(bal - bet);
+        document.getElementById('p-result').innerHTML = `<span class='error'>❌ Galat jawab! Aapke ₹${bet} kat gaye.</span>`;
+    }
+}
+
+function rollDice() {
+    let bet = parseFloat(document.getElementById('l-bet').value) || 5;
+    let bal = getWalletBalance();
+    
+    if(bal < bet) {
+        document.getElementById('l-result').innerHTML = "<span class='error'>Wallet mein paryapt balance nahi hai!</span>";
+        return;
+    }
+
+    let diceVal = Math.floor(Math.random() * 6) + 1;
+    let diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+    document.getElementById('dice-view').innerText = diceFaces[diceVal - 1];
+
+    if(diceVal >= 4) {
+        setWalletBalance(bal + bet);
+        document.getElementById('l-result').innerHTML = `<span class='msg'>🎉 Badhai ho! Paasa ${diceVal} aaya, aap jeet gaye ₹${bet}!</span>`;
+    } else {
+        setWalletBalance(bal - bet);
+        document.getElementById('l-result').innerHTML = `<span class='error'>❌ Paasa ${diceVal} aaya, aap haar gaye ₹${bet}.</span>`;
+    }
+}
+
+function sendDepositReq() {
+    let amt = document.getElementById('dep-amount').value;
+    let upi = document.getElementById('dep-upinumber').value;
+    let txn = document.getElementById('dep-txnid').value;
+    if(!amt || !upi || !txn) {
+        document.getElementById('dep-msg').innerHTML = "<span class='error'>Kripya sabhi details bharein!</span>";
+        return;
+    }
+    document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ Deposit anurodh bhej diya gaya hai!</span>";
+}
+
+function sendWithdrawReq() {
+    let amt = parseFloat(document.getElementById('b-amt').value) || 0;
+    let bal = getWalletBalance();
+    if(amt < 2500 || bal < amt) {
+        document.getElementById('bank-msg').innerHTML = "<span class='error'>Minimum amount ₹2500 hai ya balance kam hai!</span>";
+        return;
+    }
+    setWalletBalance(bal - amt);
+    document.getElementById('bank-msg').innerHTML = "<span class='msg'>🏦 Withdrawal anurodh safal ho gaya!</span>";
+}
+
+function setupReferralLink() {
+    let user = getCurrentUser();
+    let refLink = "https://thakursahabcreator.github.io/mahakal-battle/?ref=" + (user || "thakur");
+    document.getElementById('ref-link-input').value = refLink;
+}
+
+function copyReferLink() {
+    let copyText = document.getElementById('ref-link-input');
+    copyText.select();
+    navigator.clipboard.writeText(copyText.value);
+    document.getElementById('ref-msg').innerHTML = "<span class='msg'>🔗 Link copy ho gaya hai!</span>";
+}
+
+function askAiSupport() {
+    let query = document.getElementById('user-query').value.trim();
+    if(!query) {
+        document.getElementById('support-msg').innerHTML = "<span class='error'>Kripya samasya likhein!</span>";
+        return;
+    }
+    let box = document.getElementById('ai-response-box');
+    box.style.display = 'block';
+    box.innerHTML = "🤖 <b>AI Assistant:</b> Aapki samasya par vichaar kiya ja raha hai. Kripya thoda prateeksha karein.";
+    document.getElementById('send-to-telegram-btn').style.display = 'block';
+}
+
+function sendQueryToTelegram() {
+    window.open("https://t.me/THAKUR_SAHAB_CREATOR", "_blank");
+}
+
 window.onload = function() {
     let user = getCurrentUser();
     if(user) {
@@ -508,6 +649,63 @@ window.onload = function() {
         updateWalletDisplay();
     }
 };
+
+function showResetBox() {
+    document.getElementById('login-form-box').style.display = 'none';
+    document.getElementById('reset-form-box').style.display = 'block';
+}
+function backToLoginBox() {
+    document.getElementById('reset-form-box').style.display = 'none';
+    document.getElementById('login-form-box').style.display = 'block';
+}
+function processResetPassword() {
+    let phone = document.getElementById('reset-phone').value.trim();
+    let p1 = document.getElementById('reset-pass1').value.trim();
+    if(phone.length !== 10 || !p1) {
+        document.getElementById('reset-msg').innerHTML = "<span class='error'>Sahi mobile number aur password dalein!</span>";
+        return;
+    }
+    localStorage.setItem('user_pass_' + phone, p1);
+    document.getElementById('reset-msg').innerHTML = "<span class='msg'>✅ Password update ho gaya!</span>";
+    setTimeout(() => { backToLoginBox(); }, 1500);
+}
+
+let tapCount = 0;
+function checkSecretAdminTap() {
+    tapCount++;
+    if(tapCount >= 5) {
+        let code = prompt("Enter Master Admin Code:");
+        if(code === "78699") {
+            document.getElementById('admin-panel-div').style.display = 'block';
+            alert("👑 Welcome Master Admin!");
+        }
+        tapCount = 0;
+    }
+}
+function closeAdmin() {
+    document.getElementById('admin-panel-div').style.display = 'none';
+}
+function admUpdateBal() {
+    let newBal = parseFloat(document.getElementById('adm-new-bal').value);
+    if(!isNaN(newBal)) {
+        setWalletBalance(newBal);
+        alert("Wallet balance updated to ₹" + newBal);
+    }
+}
+let masterLocked = false;
+function toggleMasterLock() {
+    masterLocked = !masterLocked;
+    let btn = document.getElementById('lock-status-btn');
+    if(masterLocked) {
+        btn.innerText = "Lock Status: LOCKED";
+        btn.style.background = "#ff5252";
+    } else {
+        btn.innerText = "Lock Status: UNLOCKED";
+        btn.style.background = "#00e676";
+    }
+}
+function admWitYes() { alert("Withdrawal Approved!"); }
+function admWitNo() { alert("Withdrawal Cancelled!"); }
 </script>
 
 </body>
