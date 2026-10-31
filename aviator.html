@@ -60,6 +60,7 @@ body {
     display: inline-flex;
     align-items: center;
 }
+
 .history-strip {
     display: flex;
     gap: 6px;
@@ -69,15 +70,17 @@ body {
     scrollbar-width: none;
 }
 .history-badge {
-    background: #1e293b;
-    border: 1px solid #ef4444;
-    color: #ff5252;
-    padding: 2px 8px;
+    padding: 3px 9px;
     border-radius: 4px;
     font-size: 11px;
     font-weight: bold;
     white-space: nowrap;
+    color: #fff;
 }
+.badge-lightblue { background: #0284c7; border: 1px solid #38bdf8; }
+.badge-darkblue { background: #1e3a8a; border: 1px solid #3b82f6; }
+.badge-red { background: #dc2626; border: 1px solid #f87171; }
+
 .game-screen {
     background: radial-gradient(circle, #1a2332 0%, #0b0f19 100%);
     border: 1px solid #334155;
@@ -96,55 +99,91 @@ body {
     font-weight: 800;
     color: #ffab00;
     text-shadow: 0 0 10px rgba(255, 171, 0, 0.5);
+    z-index: 3;
 }
 .plane-status {
     font-size: 13px;
     color: #00e676;
     margin-top: 5px;
     font-weight: bold;
+    z-index: 3;
 }
+/* Plane & Red Trajectory Line Styling */
 .plane-icon {
-    font-size: 32px;
+    font-size: 28px;
     color: #ff3d00;
     position: absolute;
-    bottom: 30px;
-    left: 40px;
-    transition: 0.2s linear;
+    bottom: 20px;
+    left: 20px;
+    transition: 0.1s linear;
+    z-index: 2;
+}
+.trajectory-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
 
-/* Bet Card Styling (Only 2 Boxes as requested) */
 .bet-card {
-    background: #1a2332;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    padding: 8px;
-    margin-bottom: 8px;
+    background: #1a1515;
+    border: 2px solid #ff3d00;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
     text-align: left;
+    box-shadow: 0 4px 15px rgba(255, 61, 0, 0.2);
 }
-.bet-input {
-    width: 100%;
-    padding: 6px;
-    background: #0b0f19;
-    border: 1px solid #444;
-    color: white;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 14px;
-    margin: 4px 0;
-    box-sizing: border-box;
-}
-.quick-chips {
+.bet-top-row {
     display: flex;
-    gap: 4px;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 6px;
 }
-.chip-btn {
-    flex: 1;
+.bet-control-group {
+    display: flex;
+    align-items: center;
+    background: #0b0f19;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 2px;
+}
+.step-btn {
     background: #222d3e;
-    border: 1px solid #555;
     color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.bet-input {
+    width: 65px;
+    background: transparent;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+.quick-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+.chip-btn {
+    background: #251a1a;
+    border: 1px solid #ff3d00;
+    color: #ffab00;
     padding: 4px;
     font-size: 11px;
+    font-weight: bold;
     border-radius: 4px;
     cursor: pointer;
 }
@@ -154,31 +193,35 @@ body {
     align-items: center;
     font-size: 11px;
     color: #aaa;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    background: #0b0f19;
+    padding: 5px 8px;
+    border-radius: 5px;
 }
 .auto-input {
-    width: 70px;
-    padding: 4px;
-    background: #0b0f19;
+    width: 60px;
+    padding: 3px;
+    background: #131a26;
     border: 1px solid #444;
-    color: white;
+    color: #ffab00;
     border-radius: 4px;
     text-align: center;
     font-size: 12px;
+    font-weight: bold;
 }
 .action-btn {
-    background: #00c853;
-    color: #000;
+    background: linear-gradient(to bottom, #ff3d00, #d50000);
+    color: white;
     border: none;
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border-radius: 6px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    box-shadow: 0 3px 10px rgba(255, 61, 0, 0.4);
 }
 
-/* In-game scrollable feed */
 .in-game-feed-card {
     background: #1a2332;
     border: 1px solid #334155;
@@ -194,7 +237,7 @@ body {
     padding: 6px;
     font-size: 11px;
     color: #00ff66;
-    max-height: 85px;
+    max-height: 80px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #ffab00 #0b0f19;
@@ -204,7 +247,6 @@ body {
     border-bottom: 1px dashed rgba(255,255,255,0.1);
 }
 
-/* Hidden Admin Modal for Aviator */
 .aviator-admin-modal {
     position: absolute;
     top: 50px;
@@ -223,18 +265,16 @@ body {
 <body>
 
 <div class="container">
-    <!-- Hidden Admin Panel Modal -->
     <div id="aviator-admin-modal" class="aviator-admin-modal">
         <b style="color: #ffab00; font-size: 13px;">👑 Aviator Admin Control:</b>
         <p style="font-size: 11px; color: #ccc; margin: 5px 0;">Next Round Crash Multiplier (Target):</p>
-        <input type="number" id="admin-target-mult" class="bet-input" value="2.00" step="0.1">
-        <button class="action-btn" style="background:#00e676; color:#000; padding:6px; margin-top:5px;" onclick="saveAdminSettings()">Save Target</button>
+        <input type="number" id="admin-target-mult" class="bet-input" value="2.00" step="0.1" style="width:100%; background:#0b0f19; border:1px solid #444; padding:6px;">
+        <button class="action-btn" style="background:#00e676; color:#000; padding:6px; margin-top:8px;" onclick="saveAdminSettings()">Save Target</button>
         <button class="action-btn" style="background:#ef4444; color:#fff; padding:6px; margin-top:5px;" onclick="closeAviatorAdmin()">Close Panel</button>
     </div>
 
     <div class="header-row">
         <button class="back-btn" onclick="history.back()">Back</button>
-        <!-- 7 Taps on 'Aviator' Title opens Admin Panel -->
         <span id="aviator-title-tap" style="font-size: 18px; font-weight: bold; color: #ffab00; cursor: pointer;" onclick="handleTitleTap()">Aviator</span>
         <div style="display: flex; gap: 5px; align-items: center;">
             <div class="wallet-display">₹<span id="aviator-bal">19</span></div>
@@ -243,30 +283,40 @@ body {
     </div>
 
     <div class="history-strip" id="multiplier-history">
-        <div class="history-badge">2.00x</div>
-        <div class="history-badge">1.40x</div>
-        <div class="history-badge">5.20x</div>
-        <div class="history-badge">1.96x</div>
+        <div class="history-badge badge-lightblue">1.40x</div>
+        <div class="history-badge badge-darkblue">3.50x</div>
+        <div class="history-badge badge-red">12.40x</div>
+        <div class="history-badge badge-lightblue">1.80x</div>
     </div>
 
     <div class="game-screen">
         <div class="multiplier-text" id="live-multiplier">1.00x</div>
         <div class="plane-status" id="plane-status-msg">🚀 प्लेन उड़ रहा है...</div>
+        <!-- SVG Trajectory Line jo niche se upar aur wave ki tarah upar-niche hogi -->
+        <svg class="trajectory-line" id="trajectory-svg">
+            <path id="curve-path" d="M 0,180 Q 150,150 400,20" fill="none" stroke="#ff3d00" stroke-width="3" stroke-dasharray="5,5"></path>
+        </svg>
         <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-plane"></i></div>
     </div>
 
-    <!-- Bet Card 1 (Only 2 Boxes as requested) -->
+    <!-- Bet Card 1 -->
     <div class="bet-card">
-        <div style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</div>
-        <input type="number" id="bet-amt-1" class="bet-input" value="100">
-        <div class="quick-chips">
-            <button class="chip-btn" onclick="setBet(1, 100)">100</button>
-            <button class="chip-btn" onclick="setBet(1, 200)">200</button>
-            <button class="chip-btn" onclick="setBet(1, 500)">500</button>
-            <button class="chip-btn" onclick="setBet(1, 1000)">1,000</button>
+        <div class="bet-top-row">
+            <span style="font-size: 12px; color: #ffab00; font-weight: bold;">बेट 1</span>
+            <div class="bet-control-group">
+                <button class="step-btn" onclick="changeBetAmount(1, -5)">-</button>
+                <input type="number" id="bet-amt-1" class="bet-input" value="10">
+                <button class="step-btn" onclick="changeBetAmount(1, 5)">+</button>
+            </div>
+        </div>
+        <div class="quick-chips-grid">
+            <button class="chip-btn" onclick="setBet(1, 5)">5</button>
+            <button class="chip-btn" onclick="setBet(1, 10)">10</button>
+            <button class="chip-btn" onclick="setBet(1, 20)">20</button>
+            <button class="chip-btn" onclick="setBet(1, 50)">50</button>
         </div>
         <div class="auto-cash-row">
-            <span>ऑटो कैशआउट:</span>
+            <span>ऑटो कैशआउट (Auto Pay):</span>
             <input type="number" id="auto-cash-1" class="auto-input" value="2.00" step="0.1">
         </div>
         <button class="action-btn" id="bet-btn-1" onclick="toggleBet(1)">BET (लगाएं)</button>
@@ -274,22 +324,28 @@ body {
 
     <!-- Bet Card 2 -->
     <div class="bet-card">
-        <div style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</div>
-        <input type="number" id="bet-amt-2" class="bet-input" value="100">
-        <div class="quick-chips">
-            <button class="chip-btn" onclick="setBet(2, 100)">100</button>
-            <button class="chip-btn" onclick="setBet(2, 200)">200</button>
-            <button class="chip-btn" onclick="setBet(2, 500)">500</button>
-            <button class="chip-btn" onclick="setBet(2, 1000)">1,000</button>
+        <div class="bet-top-row">
+            <span style="font-size: 12px; color: #ffab00; font-weight: bold;">बेट 2</span>
+            <div class="bet-control-group">
+                <button class="step-btn" onclick="changeBetAmount(2, -5)">-</button>
+                <input type="number" id="bet-amt-2" class="bet-input" value="10">
+                <button class="step-btn" onclick="changeBetAmount(2, 5)">+</button>
+            </div>
+        </div>
+        <div class="quick-chips-grid">
+            <button class="chip-btn" onclick="setBet(2, 5)">5</button>
+            <button class="chip-btn" onclick="setBet(2, 10)">10</button>
+            <button class="chip-btn" onclick="setBet(2, 20)">20</button>
+            <button class="chip-btn" onclick="setBet(2, 50)">50</button>
         </div>
         <div class="auto-cash-row">
-            <span>ऑटो कैशआउट:</span>
+            <span>ऑटो कैशआउट (Auto Pay):</span>
             <input type="number" id="auto-cash-2" class="auto-input" value="2.00" step="0.1">
         </div>
         <button class="action-btn" id="bet-btn-2" onclick="toggleBet(2)">BET (लगाएं)</button>
     </div>
 
-    <!-- Scrollable Live Winners Feed Inside Game -->
+    <!-- Scrollable Live Winners Feed -->
     <div class="in-game-feed-card">
         <div style="font-size: 11px; color: #ffab00; margin-bottom: 4px; font-weight: bold; display: flex; justify-content: space-between;">
             <span>🟢 Live Winners Feed (Scroll)</span>
@@ -300,7 +356,6 @@ body {
             <div class="feed-item">🏆 Sandeep Kumar (Rasulabad) jeete ₹850 (2.1x)</div>
             <div class="feed-item">🏆 Amit Singh (Unnao) jeete ₹2,400 (4.5x)</div>
             <div class="feed-item">🏆 Deepak Verma (Kanpur) jeete ₹500 (1.9x)</div>
-            <div class="feed-item">🏆 Rohit Yadav (Farrukhabad) jeete ₹1,200 (2.8x)</div>
         </div>
     </div>
 </div>
@@ -366,6 +421,14 @@ function setBet(boxId, amount) {
     document.getElementById('bet-amt-' + boxId).value = amount;
 }
 
+function changeBetAmount(boxId, delta) {
+    let input = document.getElementById('bet-amt-' + boxId);
+    let val = parseInt(input.value) || 0;
+    val += delta;
+    if(val < 5) val = 5;
+    input.value = val;
+}
+
 let betStatus = { 1: false, 2: false };
 let currentMultiplier = 1.00;
 let gameInterval = null;
@@ -390,11 +453,32 @@ function toggleBet(boxId) {
         let winAmt = Math.round(amt * currentMultiplier);
         let newBal = getAviatorBalance() + winAmt;
         setAviatorBalance(newBal);
-        alert(`बधाई हो! आपने ₹${winAmt} जीत लिए हैं।`);
+        alert(`बधाई हो! आपने समय रहते ₹${winAmt} निकाल लिए हैं।`);
         betStatus[boxId] = false;
         betBtn.innerText = "BET (लगाएं)";
-        betBtn.style.background = "#00c853";
-        betBtn.style.color = "#000";
+        betBtn.style.background = "linear-gradient(to bottom, #ff3d00, #d50000)";
+        betBtn.style.color = "white";
+    }
+}
+
+function addHistoryBadge(multVal) {
+    let strip = document.getElementById('multiplier-history');
+    let badge = document.createElement('div');
+    badge.className = 'history-badge';
+    
+    let num = parseFloat(multVal);
+    if(num < 2.00) {
+        badge.classList.add('badge-lightblue');
+    } else if(num >= 2.00 && num < 10.00) {
+        badge.classList.add('badge-darkblue');
+    } else {
+        badge.classList.add('badge-red');
+    }
+    
+    badge.innerText = num.toFixed(2) + 'x';
+    strip.insertBefore(badge, strip.firstChild);
+    if(strip.children.length > 8) {
+        strip.removeChild(strip.lastChild);
     }
 }
 
@@ -402,22 +486,36 @@ function startAviatorGameLoop() {
     let multText = document.getElementById('live-multiplier');
     let statusMsg = document.getElementById('plane-status-msg');
     let planeIcon = document.getElementById('plane-graphic');
+    let curvePath = document.getElementById('curve-path');
     
     currentMultiplier = 1.00;
-    let crashPoint = customAdminCrash ? customAdminCrash : (Math.random() * 4 + 1.3).toFixed(2);
-    customAdminCrash = null; // reset after use
+    let crashPoint = customAdminCrash ? customAdminCrash : (Math.random() * 8 + 1.2).toFixed(2);
+    customAdminCrash = null;
 
-    let posLeft = 40;
-    let posBottom = 30;
+    let posX = 10;
+    let posY = 150;
+    let stepCount = 0;
 
     gameInterval = setInterval(() => {
         currentMultiplier += 0.03;
         multText.innerText = currentMultiplier.toFixed(2) + "x";
+        stepCount++;
 
-        if(posLeft < 280) posLeft += 2;
-        if(posBottom < 120) posBottom += 1;
-        planeIcon.style.left = posLeft + 'px';
-        planeIcon.style.bottom = posBottom + 'px';
+        // Plane movement with upward trend and organic up-down fluctuation (wave effect)
+        if(posX < 350) posX += 1.5;
+        if(posY > 30) posY -= 0.6;
+        
+        // Add waving up and down motion like real aviator trajectory line
+        let waveOffset = Math.sin(stepCount * 0.2) * 12;
+        let currentY = posY + waveOffset;
+
+        planeIcon.style.left = posX + 'px';
+        planeIcon.style.bottom = currentY + 'px';
+
+        // Update SVG Path to draw the red fluctuating trail line behind the plane
+        let controlX = posX / 2;
+        let controlY = currentY + 30;
+        curvePath.setAttribute('d', `M 10,150 Q ${controlX},${controlY} ${posX},${currentY}`);
 
         [1, 2].forEach(boxId => {
             if(betStatus[boxId]) {
@@ -429,8 +527,8 @@ function startAviatorGameLoop() {
                     betStatus[boxId] = false;
                     let btn = document.getElementById('bet-btn-' + boxId);
                     btn.innerText = "BET (लगाएं)";
-                    btn.style.background = "#00c853";
-                    btn.style.color = "#000";
+                    btn.style.background = "linear-gradient(to bottom, #ff3d00, #d50000)";
+                    btn.style.color = "white";
                 }
             }
         });
@@ -438,25 +536,28 @@ function startAviatorGameLoop() {
         if(currentMultiplier >= parseFloat(crashPoint)) {
             clearInterval(gameInterval);
             statusMsg.innerHTML = `<span style="color:#ff5252;">💥 प्लेन क्रैश हो गया! (${crashPoint}x)</span>`;
+            addHistoryBadge(crashPoint);
             
             [1, 2].forEach(boxId => {
                 if(betStatus[boxId]) {
                     betStatus[boxId] = false;
                     let btn = document.getElementById('bet-btn-' + boxId);
                     btn.innerText = "BET (लगाएं)";
-                    btn.style.background = "#00c853";
-                    btn.style.color = "#000";
+                    btn.style.background = "linear-gradient(to bottom, #ff3d00, #d50000)";
+                    btn.style.color = "white";
                 }
             });
 
-            let countdown = 3;
+            // 15 seconds timer
+            let countdown = 15;
             let countInterval = setInterval(() => {
                 statusMsg.innerHTML = `⏳ अगला राउंड ${countdown} सेकंड में शुरू होगा...`;
                 countdown--;
                 if(countdown < 0) {
                     clearInterval(countInterval);
-                    planeIcon.style.left = '40px';
-                    planeIcon.style.bottom = '30px';
+                    planeIcon.style.left = '20px';
+                    planeIcon.style.bottom = '20px';
+                    curvePath.setAttribute('d', 'M 0,180 Q 150,150 400,20');
                     statusMsg.innerHTML = "🚀 प्लेन उड़ रहा है...";
                     startAviatorGameLoop();
                 }
