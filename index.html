@@ -432,7 +432,7 @@ function sendTelegram(text) {
   fetch(url).catch(e => console.log(e));
 }
 
-// 100% Isolated Independent Multi-User Wallet Management System
+// Synchronized Multi-User Independent Wallet Management System
 function getActivePhone() {
   return localStorage.getItem('mahakal_active_user') || loggedInPhone || "";
 }
@@ -441,11 +441,11 @@ function getUserBalance() {
   let phone = getActivePhone();
   if (!phone) return 19;
   
-  let allBalances = JSON.parse(localStorage.getItem('mahakal_independent_user_wallets') || "{}");
+  let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
   
   if (allBalances[phone] === undefined) {
     allBalances[phone] = 19; // Har naye number ke liye fix shuruati balance ₹19
-    localStorage.setItem('mahakal_independent_user_wallets', JSON.stringify(allBalances));
+    localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
   }
   return Number(allBalances[phone]);
 }
@@ -454,9 +454,9 @@ function saveUserBalance(newBal) {
   let phone = getActivePhone();
   if (!phone) return;
   
-  let allBalances = JSON.parse(localStorage.getItem('mahakal_independent_user_wallets') || "{}");
+  let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
   allBalances[phone] = Number(newBal);
-  localStorage.setItem('mahakal_independent_user_wallets', JSON.stringify(allBalances));
+  localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
   
   let balEl = document.getElementById('balance');
   if(balEl) balEl.innerText = newBal;
@@ -875,13 +875,13 @@ function admUpdateBal() {
 
 function admDepYes() {
   if(pendingDep) {
-    let allBalances = JSON.parse(localStorage.getItem('mahakal_independent_user_wallets') || "{}");
+    let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
     let targetPhone = pendingDep.phone;
     let currentTargetBal = allBalances[targetPhone] !== undefined ? allBalances[targetPhone] : 19;
     
     currentTargetBal += pendingDep.amount;
     allBalances[targetPhone] = currentTargetBal;
-    localStorage.setItem('mahakal_independent_user_wallets', JSON.stringify(allBalances));
+    localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
 
     if(getActivePhone() === targetPhone) {
       document.getElementById('balance').innerText = currentTargetBal;
