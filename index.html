@@ -155,6 +155,75 @@ border-bottom: 1px dashed #334155;
 color: #cbd5e1;
 }
 
+/* Asli Highway Road Look */
+#game-container {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    background: #111827;
+    border: 2px solid #ffab00;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px auto;
+}
+
+.road-track {
+    position: absolute;
+    width: 100%;
+    height: 90px;
+    background: #1f2937;
+    top: 110px;
+    border-top: 4px solid #374151;
+    border-bottom: 4px solid #374151;
+}
+
+.road-stripe {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: #facc15;
+    top: 153px;
+    box-shadow: 0 0 8px #facc15;
+}
+
+/* Real Truck Design (Left Side) */
+#m-car-left {
+    position: absolute;
+    width: 110px;
+    height: 50px;
+    background: linear-gradient(135deg, #b91c1c, #ef4444);
+    top: 130px;
+    left: -130px;
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+    color: #fff;
+    border: 2px solid #fee2e2;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    z-index: 5;
+}
+
+/* Real Bus Design (Right Side) */
+#m-car-right {
+    position: absolute;
+    width: 110px;
+    height: 50px;
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    top: 130px;
+    right: -130px;
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+    color: #fff;
+    border: 2px solid #e0f2fe;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    z-index: 5;
+}
+
 .social-strip { 
 display: flex; 
 justify-content: center; 
@@ -279,30 +348,25 @@ transition: 0.3s;
 <h3 style="color: #ffab00; margin-top: 0;">🐔 मुर्गा रोड क्रॉस गेम (Dual Side Traffic)</h3>
 <p style="font-size: 12px; color: #aaa; margin: 2px 0;">दोनो तरफ से गाड़ियां चलेंगी और रुकेंगी (2x Double Win)!</p>
 
-<div id="game-container" style="position: relative; width: 100%; height: 300px; background: #1a2332; border: 2px solid #ffab00; border-radius: 10px; overflow: hidden; margin: 10px auto;">
-    <!-- Road Track -->
-    <div style="position: absolute; width: 100%; height: 60px; background: #2b3748; top: 120px; border-top: 2px dashed #facc15; border-bottom: 2px dashed #facc15;"></div>
+<div id="game-container">
+    <!-- Asli Sadak Track -->
+    <div class="road-track"></div>
+    <div class="road-stripe"></div>
     
-    <!-- Left Side Truck -->
-    <div id="m-car-left" style="position: absolute; width: 90px; height: 40px; background: #dc2626; top: 130px; left: -100px; border-radius: 6px; font-size: 11px; text-align: center; line-height: 40px; font-weight: bold; color: #fff; border: 1px solid #fef08a; box-shadow: 0 3px 6px rgba(0,0,0,0.5); z-index: 5;">🚚 ट्रक</div>
+    <!-- Left Side Real Truck -->
+    <div id="m-car-left">🚚 10-Tyre Truck</div>
 
-    <!-- Right Side Bus -->
-    <div id="m-car-right" style="position: absolute; width: 90px; height: 40px; background: #2563eb; top: 130px; right: -100px; border-radius: 6px; font-size: 11px; text-align: center; line-height: 40px; font-weight: bold; color: #fff; border: 1px solid #fef08a; box-shadow: 0 3px 6px rgba(0,0,0,0.5); z-index: 5;">🚌 बस</div>
+    <!-- Right Side Real Bus -->
+    <div id="m-car-right">🚌 Roadways Bus</div>
 
     <!-- Big Murga with Legs -->
-    <div id="m-chicken" style="position: absolute; bottom: 12px; left: 140px; z-index: 10; transition: transform 0.2s ease-in-out;">
-        <svg width="60" height="60" viewBox="0 0 100 100">
-            <!-- Body -->
+    <div id="m-chicken" style="position: absolute; bottom: 20px; left: 140px; z-index: 10; transition: transform 0.2s ease-in-out;">
+        <svg width="65" height="65" viewBox="0 0 100 100">
             <ellipse cx="50" cy="55" rx="32" ry="24" fill="#ffffff" stroke="#ffab00" stroke-width="3"/>
-            <!-- Head -->
             <circle cx="72" cy="32" r="16" fill="#ffffff" stroke="#ffab00" stroke-width="3"/>
-            <!-- Comb (Kalgi) -->
             <path d="M66 16 Q72 6 78 16 Q84 6 90 16 Z" fill="#dc2626"/>
-            <!-- Beak -->
             <polygon points="88,32 98,35 88,40" fill="#f59e0b"/>
-            <!-- Eye -->
             <circle cx="77" cy="29" r="3.5" fill="#000"/>
-            <!-- Legs -->
             <line x1="38" y1="78" x2="38" y2="98" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
             <line x1="62" y1="78" x2="62" y2="98" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
             <line x1="30" y1="98" x2="46" y2="98" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
@@ -522,12 +586,12 @@ function mResetGame() {
     let carLeft = document.getElementById('m-car-left');
     let carRight = document.getElementById('m-car-right');
     if(carLeft) {
-        carLeft.style.left = "-100px";
-        carLeft.innerText = "🚚 ट्रक";
+        carLeft.style.left = "-130px";
+        carLeft.innerText = "🚚 10-Tyre Truck";
     }
     if(carRight) {
-        carRight.style.right = "-100px";
-        carRight.innerText = "🚌 बस";
+        carRight.style.right = "-130px";
+        carRight.innerText = "🚌 Roadways Bus";
     }
     let chickenEl = document.getElementById('m-chicken');
     if(chickenEl) {
@@ -554,21 +618,21 @@ function mJumpAndPlay() {
     let carLeft = document.getElementById('m-car-left');
     let carRight = document.getElementById('m-car-right');
     
-    let leftX = -100;
-    let rightX = -100;
-    let stopPoint = 95; // Stop position in middle
+    let leftX = -130;
+    let rightX = -130;
+    let stopPoint = 45; // Dono gaadiyan yahan aakar rukengi
     
     let moveInterval = setInterval(() => {
-        leftX += 7;
-        rightX += 7;
+        leftX += 6;
+        rightX += 6;
         
-        if(carLeft) carLeft.style.left = leftX + "px";
-        if(carRight) carRight.style.right = rightX + "px";
+        if(carLeft && leftX <= stopPoint) carLeft.style.left = leftX + "px";
+        if(carRight && rightX <= stopPoint) carRight.style.right = rightX + "px";
         
         if(leftX >= stopPoint && rightX >= stopPoint) {
             clearInterval(moveInterval);
-            if(carLeft) carLeft.innerText = "🛑 ट्रक रुका";
-            if(carRight) carRight.innerText = "🛑 बस रुकी";
+            if(carLeft) carLeft.innerText = "🛑 रुका ट्रक";
+            if(carRight) carRight.innerText = "🛑 रुकी बस";
             
             // Murga Jump
             let chickenEl = document.getElementById('m-chicken');
