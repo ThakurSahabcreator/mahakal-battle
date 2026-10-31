@@ -237,7 +237,7 @@ input {
 
   let tapCount = 0, tapTimer = null;
   const BETTING_TIME = 8000;    
-  const FLYING_DURATION = 12000; // ✈️ 12 सेकंड का शानदार और रोमांचक समय
+  const FLYING_DURATION = 12000; 
   const TOTAL_CYCLE = 20000;     
 
   window.onload = function() {
@@ -330,8 +330,6 @@ input {
       let progressRatio = flyingElapsed / totalFlyingSec;
       if (progressRatio > 1) progressRatio = 1;
 
-      // ✈️ **INITIAL BOOST + ROCKET SPEED ACCELERATION LOGIC**
-      // शुरुआत में शानदार पिकअप, और जैसे-जैसे ऊपर (3x, 5x, 20x...) जाए, रफ़्तार छलांग मारकर तेज़ (Rail Banane Wali Speed) हो जाएगी!
       let boostedRatio = Math.pow(progressRatio, 1.8);
 
       currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * boostedRatio;
@@ -463,17 +461,8 @@ input {
     document.getElementById(msgId).className = "msg"; document.getElementById(msgId).innerText = "✅ बेट सफलतापूर्वक लग गई!";
   }
 
-  window.setAmt = function(v) { document.getElementById('bet-input-1').value = v; }
-  window.setAmt2 = function(v) { document.getElementById('bet-input-2').value = v; }
-
-  window.onload = function() {
-    let saved = localStorage.getItem('mahakal_master_wallet');
-    if(saved !== null) walletBal = parseFloat(saved);
-    document.getElementById('av-bal').innerText = walletBal;
-    db.ref('adminCrash').on('value', (snapshot) => { let val = snapshot.val(); if(val) liveForcedCrash = parseFloat(val); });
-    db.ref('gameHistory').on('value', (snapshot) => { let data = snapshot.val(); if(data && Array.isArray(data)) historyList = data; renderHistory(); });
-    requestAnimationFrame(gameLoop);
-  }
+  function setAmt(v) { document.getElementById('bet-input-1').value = v; }
+  function setAmt2(v) { document.getElementById('bet-input-2').value = v; }
 
   function updateBal() {
     document.getElementById('av-bal').innerText = walletBal;
