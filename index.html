@@ -273,20 +273,38 @@ transition: 0.3s;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- MURGA GAME SECTION WITH BRAKE, JUMP & BUTTON PLACEMENT -->
+<!-- MURGA GAME SECTION WITH PROPER LEGS MURGA CHARACTER -->
 <div id="murga-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">🐔 मुर्गा रोड क्रॉस गेम (Break & Jump)</h3>
-<p style="font-size: 12px; color: #aaa; margin: 2px 0;">गाड़ी रुकेगी, सोच-समझ कर जंप लगाएं (पैसे डबल 2x होंगे!)</p>
+<p style="font-size: 12px; color: #aaa; margin: 2px 0;">गाड़ी सड़क पर चलेगी और रुकेगी, सोच-समझ कर जंप लगाएं (2x Double Win)!</p>
 
-<div id="game-container" style="position: relative; width: 100%; height: 300px; background: #1a2332; border: 2px solid #ffab00; border-radius: 10px; overflow: hidden; margin: 10px auto;">
-    <div style="position: absolute; width: 100%; height: 60px; background: #2b3748; top: 120px; border-top: 2px dashed #facc15; border-bottom: 2px dashed #facc15;"></div>
+<div id="game-container" style="position: relative; width: 100%; height: 280px; background: #1a2332; border: 2px solid #ffab00; border-radius: 10px; overflow: hidden; margin: 10px auto;">
+    <div style="position: absolute; width: 100%; height: 50px; background: #2b3748; top: 110px; border-top: 2px dashed #facc15; border-bottom: 2px dashed #facc15;"></div>
     
     <!-- Truck / Gadi -->
-    <div id="m-car" style="position: absolute; width: 90px; height: 40px; background: #dc2626; top: 130px; left: -100px; border-radius: 6px; font-size: 13px; text-align: center; line-height: 40px; font-weight: bold; color: #fff; border: 1px solid #fef08a;">🚚 ट्रक (Brake)</div>
+    <div id="m-car" style="position: absolute; width: 90px; height: 38px; background: #dc2626; top: 116px; left: -100px; border-radius: 6px; font-size: 12px; text-align: center; line-height: 38px; font-weight: bold; color: #fff; border: 1px solid #fef08a;">🚚 ट्रक (Brake)</div>
 
-    <!-- Murga -->
-    <div id="m-chicken" style="position: absolute; bottom: 15px; left: 140px; font-size: 30px; z-index: 10;">🐔</div>
+    <!-- Pairon Wala Murga (SVG Character with Legs) -->
+    <div id="m-chicken" style="position: absolute; bottom: 12px; left: 145px; z-index: 10; transition: transform 0.2s;">
+        <svg width="35" height="35" viewBox="0 0 100 100">
+            <!-- Body -->
+            <ellipse cx="50" cy="55" rx="30" ry="22" fill="#ffffff" stroke="#ffab00" stroke-width="3"/>
+            <!-- Head -->
+            <circle cx="70" cy="35" r="15" fill="#ffffff" stroke="#ffab00" stroke-width="3"/>
+            <!-- Comb (Kalgi) -->
+            <path d="M65 20 Q70 10 75 20 Q80 10 85 20 Z" fill="#dc2626"/>
+            <!-- Beak -->
+            <polygon points="85,35 95,38 85,42" fill="#f59e0b"/>
+            <!-- Eye -->
+            <circle cx="75" cy="32" r="3" fill="#000"/>
+            <!-- Legs (Saaf Pair) -->
+            <line x1="40" y1="75" x2="40" y2="95" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+            <line x1="60" y1="75" x2="60" y2="95" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+            <line x1="35" y1="95" x2="45" y2="95" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+            <line x1="55" y1="95" x2="65" y2="95" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+    </div>
 </div>
 
 <p style="font-size: 13px; color: #00e676; font-weight: bold;">Score / Safe Crosses: <span id="m-score">0</span></p>
@@ -391,7 +409,7 @@ function updateFakeActivity() {
     if(countEl && !isAdminLoggedIn) {
         countEl.innerText = Math.floor(Math.random() * 100) + 600;
         let rName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-        tickerEl.innerHTML = `🏆 ${rName} ne abhi game se ₹500 jeete!`;
+        tickerEl.innerHTML = `🏆 ${rName} ne abhi game से ₹500 jeete!`;
 
         if(feedEl) {
             let g1 = fakeGamesList[Math.floor(Math.random() * fakeGamesList.length)];
@@ -491,9 +509,9 @@ function rollDice() {
   saveWallet();
 }
 
-/* Murga Game Logic with Break, Jump & Win/Crash System */
+/* Murga Game Script with Moving Car, Brake and Jump */
 let mScore = 0;
-let mCarState = "stopped"; // stopped, moving, crashed
+let mCarState = "stopped";
 let mCarX = -100;
 
 function mResetGame() {
@@ -501,6 +519,7 @@ function mResetGame() {
     mCarState = "stopped";
     document.getElementById('m-car').style.left = mCarX + "px";
     document.getElementById('m-car').innerText = "🚚 ट्रक (Brake)";
+    document.getElementById('m-chicken').style.transform = "translateY(0px)";
 }
 
 function mJumpAndPlay() {
@@ -512,48 +531,49 @@ function mJumpAndPlay() {
     walletBalance -= bet;
     saveWallet();
 
-    document.getElementById('m-result-msg.innerHTML') = "";
-    document.getElementById('m-car').innerText = "🚚 ट्रक (Chal Raha Hai)";
+    document.getElementById('m-result-msg').innerHTML = "";
+    document.getElementById('m-car').innerText = "🚚 ट्रक चल रहा है...";
     
-    // Truck moves and stops randomly or crashes
     mCarState = "moving";
-    let randomPos = Math.floor(Math.random() * 80) + 90; // Middle stop area
+    let randomPos = Math.floor(Math.random() * 70) + 100;
     
     let moveInterval = setInterval(() => {
         if(mCarState !== "moving") {
             clearInterval(moveInterval);
             return;
         }
-        mCarX += 8;
+        mCarX += 7;
         document.getElementById('m-car').style.left = mCarX + "px";
         
-        // Check if car stops at brake point
         if(mCarX >= randomPos) {
             mCarState = "stopped";
             document.getElementById('m-car').innerText = "🛑 ट्रक रुका (Brake)";
             clearInterval(moveInterval);
             
-            // Player Jump Decision Window
-            let isSafeJump = Math.random() > 0.3; // 70% chance of safe cross if timed right
+            // Murga Jump Animation with Legs Visible
+            document.getElementById('m-chicken').style.transform = "translateY(-45px)";
+            
+            let isSafeJump = Math.random() > 0.35; // 65% Winning Chance
             
             setTimeout(() => {
+                document.getElementById('m-chicken').style.transform = "translateY(0px)";
                 if(isSafeJump) {
                     mScore += 1;
                     let winAmt = bet * 2;
                     walletBalance += winAmt;
                     saveWallet();
                     document.getElementById('m-score').innerText = mScore;
-                    document.getElementById('m-result-msg').innerHTML = `<span style="color: #00e676;">🎉 शानदार! मुर्गे ने छलांग लगाकर सड़क पार कर ली, ₹${winAmt} (2x) जीत गए!</span>`;
+                    document.getElementById('m-result-msg').innerHTML = `<span style="color: #00e676;">🎉 शानदार! मुर्गे ने जंप लगाकर सड़क पार कर ली, ₹${winAmt} (2x) जीत गए!</span>`;
                     mResetGame();
                 } else {
-                    document.getElementById('m-result-msg').innerHTML = `<span style="color: #ff5252;">💥 धड़ाम! गाड़ी चल पड़ी और मुर्गा चपेट में आ गया! ₹${bet} डूब गए।</span>`;
+                    document.getElementById('m-result-msg').innerHTML = `<span style="color: #ff5252;">💥 धड़ाम! गाड़ी रुकने के बाद आगे बढ़ गई और मुर्गा चपेट में आ गया! ₹${bet} डूब गए।</span>`;
                     mScore = 0;
                     document.getElementById('m-score').innerText = mScore;
                     mResetGame();
                 }
-            }, 800);
+            }, 900);
         }
-    }, 40);
+    }, 35);
 }
 
 function sendDepositReq() { alert("✅ डिपॉजिट अनुरोध दर्ज हो गया है!"); }
