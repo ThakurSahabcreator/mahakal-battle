@@ -108,17 +108,15 @@ body {
     font-weight: bold;
     z-index: 3;
 }
-/* Fighter Jet Icon starting precisely from bottom-left corner */
+/* Fighter Jet locked exactly on top of the red trajectory line */
 .plane-icon {
     font-size: 26px;
     color: #38bdf8;
     position: absolute;
-    bottom: 2px;
-    left: 2px;
-    transition: 0.1s linear;
-    z-index: 2;
-    transform: rotate(25deg);
-    text-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+    transition: 0.05s linear;
+    z-index: 4;
+    transform: rotate(35deg);
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
 }
 .trajectory-line {
     position: absolute;
@@ -127,7 +125,7 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
 }
 
 .bet-card {
@@ -294,10 +292,11 @@ body {
     <div class="game-screen">
         <div class="multiplier-text" id="live-multiplier">1.00x</div>
         <div class="plane-status" id="plane-status-msg">🚀 प्लेन उड़ रहा है...</div>
-        <!-- SVG Trajectory Line starting strictly from bottom-left corner (0,180) -->
+        <!-- SVG Trajectory Line -->
         <svg class="trajectory-line" id="trajectory-svg">
-            <path id="curve-path" d="M 0,180 Q 150,150 400,20" fill="none" stroke="#ff3d00" stroke-width="3"></path>
+            <path id="curve-path" d="M 0,180 Q 150,150 400,20" fill="none" stroke="#ff3d00" stroke-width="4"></path>
         </svg>
+        <!-- Fighter Jet Icon locked to path -->
         <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
     </div>
 
@@ -495,7 +494,7 @@ function startAviatorGameLoop() {
     customAdminCrash = null;
 
     let posX = 0;
-    let posY = 180; // Starting strictly from the bottom-left corner (0, 180)
+    let posY = 175; // Ground level start at bottom-left corner
     let stepCount = 0;
 
     gameInterval = setInterval(() => {
@@ -503,17 +502,18 @@ function startAviatorGameLoop() {
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
-        if(posX < 350) posX += 1.5;
-        if(posY > 20) posY -= 0.6;
+        if(posX < 360) posX += 1.8;
+        if(posY > 25) posY -= 0.5;
         
-        let waveOffset = Math.sin(stepCount * 0.2) * 12;
+        let waveOffset = Math.sin(stepCount * 0.2) * 10;
         let currentY = posY + waveOffset;
 
+        // Position the fighter jet precisely on the trajectory path
         planeIcon.style.left = posX + 'px';
         planeIcon.style.bottom = currentY + 'px';
 
         let controlX = posX / 2;
-        let controlY = currentY + 30;
+        let controlY = currentY + 25;
         curvePath.setAttribute('d', `M 0,180 Q ${controlX},${controlY} ${posX},${currentY}`);
 
         [1, 2].forEach(boxId => {
@@ -555,7 +555,7 @@ function startAviatorGameLoop() {
                 if(countdown < 0) {
                     clearInterval(countInterval);
                     planeIcon.style.left = '0px';
-                    planeIcon.style.bottom = '0px';
+                    planeIcon.style.bottom = '5px';
                     curvePath.setAttribute('d', 'M 0,180 Q 150,150 400,20');
                     statusMsg.innerHTML = "🚀 प्लेन उड़ रहा है...";
                     startAviatorGameLoop();
