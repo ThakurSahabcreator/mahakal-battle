@@ -81,7 +81,6 @@ body {
 .badge-darkblue { background: #1e3a8a; border: 1px solid #3b82f6; }
 .badge-red { background: #dc2626; border: 1px solid #f87171; }
 
-/* Cinematic Sky Screen with Strict Overflow Hidden to Prevent Border Crossing */
 .game-screen {
     background: radial-gradient(circle at center, #1e293b 0%, #060913 100%);
     border: 1px solid #334155;
@@ -144,7 +143,7 @@ body {
     z-index: 3;
 }
 
-/* Fighter Jet Locked Safely Inside Boundaries */
+/* Fighter Jet & Tail Line inside safe boundary */
 .plane-icon {
     font-size: 24px;
     color: #38bdf8;
@@ -153,7 +152,6 @@ body {
     left: 5px;
     transition: 0.08s linear;
     z-index: 4;
-    transform: rotate(38deg);
     text-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
 }
 .tail-line {
@@ -342,14 +340,12 @@ body {
     </div>
 
     <div class="game-screen" id="game-screen-box">
-        <!-- Moon and Stars -->
         <div class="moon"></div>
         <div class="star" style="top: 30px; left: 50px; width: 2px; height: 2px;"></div>
         <div class="star" style="top: 60px; left: 120px; width: 3px; height: 3px;"></div>
         <div class="star" style="top: 25px; left: 220px; width: 2px; height: 2px;"></div>
         <div class="star" style="top: 70px; left: 320px; width: 3px; height: 3px;"></div>
         
-        <!-- Moving Clouds -->
         <div class="cloud" style="top: 40px; width: 60px; height: 15px; animation-duration: 8s;"></div>
         <div class="cloud" style="top: 90px; width: 90px; height: 20px; animation-duration: 12s; animation-delay: 3s;"></div>
 
@@ -360,7 +356,6 @@ body {
         <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
     </div>
 
-    <!-- Bet Card 1 -->
     <div class="bet-card">
         <div class="bet-top-row">
             <span style="font-size: 12px; color: #ffab00; font-weight: bold;">बेट 1</span>
@@ -383,7 +378,6 @@ body {
         <button class="action-btn" id="bet-btn-1" onclick="toggleBet(1)">BET (लगाएं)</button>
     </div>
 
-    <!-- Bet Card 2 -->
     <div class="bet-card">
         <div class="bet-top-row">
             <span style="font-size: 12px; color: #ffab00; font-weight: bold;">बेट 2</span>
@@ -406,7 +400,6 @@ body {
         <button class="action-btn" id="bet-btn-2" onclick="toggleBet(2)">BET (लगाएं)</button>
     </div>
 
-    <!-- Scrollable Live Winners Feed -->
     <div class="in-game-feed-card">
         <div style="font-size: 11px; color: #ffab00; margin-bottom: 4px; font-weight: bold; display: flex; justify-content: space-between;">
             <span>🟢 Live Winners Feed (Scroll)</span>
@@ -551,43 +544,48 @@ function startAviatorGameLoop() {
     let screenBox = document.getElementById('game-screen-box');
     
     currentMultiplier = 1.00;
-    let crashPoint = customAdminCrash ? customAdminCrash : (Math.random() * 8 + 1.2).toFixed(2);
+    let crashPoint = customAdminCrash ? customAdminCrash : (Math.random() * 95 + 1.5).toFixed(2);
     customAdminCrash = null;
 
-    let posX = 5;
-    let posY = 5;
+    let posX = 10;
+    let posY = 10;
     let stepCount = 0;
 
     gameInterval = setInterval(() => {
-        currentMultiplier += 0.03;
+        currentMultiplier += 0.04;
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
-        // Strict movement boundaries inside the game screen box
-        if(posX < 280) posX += 1.5;
-        if(posY < 95) posY += 0.5;
+        // Strict boundary limits: max posX = 210, max posY = 65 to never cross screen box walls
+        if(posX < 210) posX += 1.0;
+        if(posY < 65) posY += 0.35;
         
-        let waveOffset = Math.sin(stepCount * 0.2) * 4;
+        // Gentle wave oscillation
+        let waveOffset = Math.sin(stepCount * 0.25) * 3;
         let currentY = posY + waveOffset;
 
         planeIcon.style.left = posX + 'px';
         planeIcon.style.bottom = currentY + 'px';
 
-        let startX = 5;
-        let startY = 5;
+        let startX = 10;
+        let startY = 10;
         let length = Math.sqrt(Math.pow(posX - startX, 2) + Math.pow(currentY - startY, 2));
         let angle = Math.atan2(currentY - startY, posX - startX) * (180 / Math.PI);
+        
         tailLine.style.width = length + 'px';
         tailLine.style.transform = `rotate(-${angle}deg)`;
+        
+        // Correct forward nose orientation
+        planeIcon.style.transform = `rotate(${angle}deg)`;
 
-        // Smoke effect behind jet
+        // Smoke effect
         if(stepCount % 2 === 0) {
             let smoke = document.createElement('div');
             smoke.className = 'smoke-puff';
             smoke.style.left = (posX + 5) + 'px';
             smoke.style.bottom = (currentY + 5) + 'px';
-            smoke.style.width = '8px';
-            smoke.style.height = '8px';
+            smoke.style.width = '6px';
+            smoke.style.height = '6px';
             screenBox.appendChild(smoke);
             setTimeout(() => { smoke.remove(); }, 800);
         }
@@ -630,8 +628,8 @@ function startAviatorGameLoop() {
                 countdown--;
                 if(countdown < 0) {
                     clearInterval(countInterval);
-                    planeIcon.style.left = '5px';
-                    planeIcon.style.bottom = '5px';
+                    planeIcon.style.left = '10px';
+                    planeIcon.style.bottom = '10px';
                     tailLine.style.width = '0px';
                     statusMsg.innerHTML = "🚀 प्लेन उड़ रहा है...";
                     startAviatorGameLoop();
