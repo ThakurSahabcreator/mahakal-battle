@@ -326,9 +326,19 @@ input {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // Strict Independent Multi-User Wallet Management System for Aviator
+  // Strict Synchronized Multi-User Independent Wallet System for Aviator
   function getActivePhone() {
-    return localStorage.getItem('mahakal_active_user') || "";
+    let activeUser = localStorage.getItem('mahakal_active_user');
+    if (!activeUser) {
+      for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if (key && key.startsWith('wallet_user_')) {
+          activeUser = key.replace('wallet_user_', '');
+          break;
+        }
+      }
+    }
+    return activeUser || "";
   }
 
   function getUserBalance() {
