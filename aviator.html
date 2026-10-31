@@ -81,7 +81,7 @@ body {
 .badge-darkblue { background: #1e3a8a; border: 1px solid #3b82f6; }
 .badge-red { background: #dc2626; border: 1px solid #f87171; }
 
-/* Cinematic Sky Screen with Moon, Stars, Clouds and Smoke Effect */
+/* Cinematic Sky Screen with Moon, Stars, Clouds within safe boundaries */
 .game-screen {
     background: radial-gradient(circle at center, #1e293b 0%, #060913 100%);
     border: 1px solid #334155;
@@ -144,7 +144,7 @@ body {
     z-index: 3;
 }
 
-/* Fighter Jet & Red Tail Line with Smoke */
+/* Fighter Jet pointing strictly UPWARD with controlled safe coordinates */
 .plane-icon {
     font-size: 26px;
     color: #38bdf8;
@@ -153,7 +153,7 @@ body {
     left: 5px;
     transition: 0.08s linear;
     z-index: 4;
-    transform: rotate(45deg);
+    transform: rotate(42deg); /* Perfect upward climbing angle */
     text-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
 }
 .tail-line {
@@ -563,10 +563,11 @@ function startAviatorGameLoop() {
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
-        if(posX < 350) posX += 1.8;
-        if(posY < 135) posY += 0.85;
+        // Controlled safe movement boundaries so it never enters the moon area
+        if(posX < 320) posX += 1.6;
+        if(posY < 100) posY += 0.6; 
         
-        let waveOffset = Math.sin(stepCount * 0.2) * 6;
+        let waveOffset = Math.sin(stepCount * 0.2) * 5;
         let currentY = posY + waveOffset;
 
         planeIcon.style.left = posX + 'px';
@@ -579,7 +580,7 @@ function startAviatorGameLoop() {
         tailLine.style.width = length + 'px';
         tailLine.style.transform = `rotate(-${angle}deg)`;
 
-        // Dynamic Smoke effect generated behind the plane
+        // Smoke effect behind the jet
         if(stepCount % 2 === 0) {
             let smoke = document.createElement('div');
             smoke.className = 'smoke-puff';
