@@ -218,7 +218,7 @@ input {
     <button class="dep-btn" style="background:#ff5252; color:#fff;" onclick="window.location.href='index.html'">Back</button>
     <h2 onclick="checkSecretTap()">Aviator</h2>
     <div>
-      <span class="wallet-badge">₹<span id="av-bal">90398</span></span>
+      <span class="wallet-badge">₹<span id="av-bal">19</span></span>
       <button class="dep-btn" onclick="window.location.href='index.html'">Deposit</button>
     </div>
   </div>
@@ -329,7 +329,31 @@ input {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  let walletBal = 90398;
+  // Multi-User Wallet Management
+  let loggedInPhone = localStorage.getItem('mahakal_active_user') || "";
+
+  function getUserBalance() {
+    if (!loggedInPhone) return 19;
+    let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
+    if (allBalances[loggedInPhone] !== undefined) {
+      return allBalances[loggedInPhone];
+    } else {
+      allBalances[loggedInPhone] = 19;
+      localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
+      return 19;
+    }
+  }
+
+  function saveUserBalance(newBal) {
+    if (!loggedInPhone) return;
+    let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
+    allBalances[loggedInPhone] = newBal;
+    localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
+    let balEl = document.getElementById('av-bal');
+    if(balEl) balEl.innerText = newBal;
+  }
+
+  let walletBal = getUserBalance();
   let currentMultiplier = 1.00;
   let liveForcedCrash = 2.00;
   let historyList = [2.03, 4.39, 3.73, 1.18, 1.12, 41.89];
@@ -340,14 +364,13 @@ input {
 
   let tapCount = 0, tapTimer = null;
   const BETTING_TIME = 8000;    
-  const FLYING_DURATION = 10000; 
-  const TOTAL_CYCLE = 18000;     
+  const FLYING_DURATION = 15000; // ⏱️ प्लेन उड़ने का समय बढ़ा दिया गया है ताकि स्पीड बहुत धीमी और स्मूथ हो जाए
+  const TOTAL_CYCLE = 23000;     
 
   const fakeNames = ["Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)", "Rohit (Agra)", "Pooja (Delhi)"];
 
   window.onload = function() {
-    let saved = localStorage.getItem('mahakal_master_wallet');
-    if(saved !== null) walletBal = parseFloat(saved);
+    walletBal = getUserBalance();
     document.getElementById('av-bal').innerText = walletBal;
 
     db.ref('adminCrash').on('value', (snapshot) => {
@@ -494,7 +517,8 @@ input {
       let progressRatio = flyingElapsed / totalFlyingSec;
       if (progressRatio > 1) progressRatio = 1;
 
-      currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 3.0);
+      // धीमी गति और स्मूथ वृद्धि के लिए पॉवर कर्व को हल्का किया गया है
+      currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 2.0);
       currentMultiplier = parseFloat(currentMultiplier.toFixed(2));
 
       if (flyingElapsed >= totalFlyingSec || currentMultiplier >= liveForcedCrash) {
@@ -523,13 +547,13 @@ input {
         planeContainer.innerHTML = planeSvgHtml;
 
         let moveX = 10 + (progressRatio * 250);
-        let moveY = 12 + (Math.pow(progressRatio, 3.0) * 120);
+        let moveY = 12 + (Math.pow(progressRatio, 2.0) * 110);
 
         planeContainer.style.left = moveX + "px";
         planeContainer.style.bottom = moveY + "px";
         
         let ps = planeContainer.querySelector('.red-plane-svg');
-        if(ps) ps.style.transform = `rotate(${10 + (progressRatio * 30)}deg)`;
+        if(ps) ps.style.transform = `rotate(${5 + (progressRatio * 15)}deg)`;
 
         let pathD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY} L ${moveX} 200 Z`;
         let lineD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY}`;
@@ -545,8 +569,8 @@ input {
           b1.style.background = "#ffa502";
 
           if (currentMultiplier >= autoTarget1) {
-            walletBal += p1;
-            updateBal();
+            walletBal = getUserBalance() + p1;
+            saveUserBalance(walletBal);
             isPlaying1 = false;
             b1.innerText = "अगले राउंड का इंतज़ार...";
             b1.style.background = "#555";
@@ -566,8 +590,8 @@ input {
           b2.style.background = "#ffa502";
 
           if (currentMultiplier >= autoTarget2) {
-            walletBal += p2;
-            updateBal();
+            walletBal = getUserBalance() + p2;
+            saveUserBalance(walletBal);
             isPlaying2 = false;
             b2.innerText = "अगले राउंड का इंतज़ार...";
             b2.style.background = "#555";
@@ -600,11 +624,10 @@ input {
     let btnId = panelNo === 1 ? 'action-btn-1' : 'action-btn-2';
     let currentText = document.getElementById(btnId).innerText;
 
-    // अगर बटन पर "Cash Out" लिखा है, तो प्लेन उड़ते वक्त भी क्लिक करने पर पैसे तुरंत निकल जाएंगे (Alert नहीं आएगा)
     if(currentText.includes("Cash Out")) {
       let win = Math.floor((panelNo === 1 ? betAmt1 : betAmt2) * currentMultiplier);
-      walletBal += win;
-      updateBal();
+      walletBal = getUserBalance() + win;
+      saveUserBalance(walletBal);
       
       if(panelNo === 1) isPlaying1 = false; else isPlaying2 = false;
       document.getElementById(btnId).innerText = "BET (लगाएं)";
@@ -618,7 +641,6 @@ input {
       return;
     }
 
-    // नई बेट लगाने के लिए समय चेक होगा
     let cycleTime = Date.now() % TOTAL_CYCLE;
     if (cycleTime >= BETTING_TIME) {
       alert("प्लेन उड़ रहा है! अब इस राउंड में बेट नहीं लग सकती।");
@@ -633,10 +655,14 @@ input {
     let target = parseFloat(document.getElementById(autoId).value);
 
     if(isNaN(amt) || amt < 10) { alert("कम से कम ₹10 लगाएं!"); return; }
-    if(walletBal < amt) { alert("बैलेंस कम है!"); return; }
+    
+    let currentBal = getUserBalance();
+    if(currentBal < amt) { alert("बैलेंस कम है!"); return; }
 
-    walletBal -= amt;
-    updateBal();
+    currentBal -= amt;
+    saveUserBalance(currentBal);
+    walletBal = currentBal;
+
     if(panelNo === 1) { 
       isPlaying1 = true; betAmt1 = amt; autoTarget1 = isNaN(target) ? 2.00 : target; 
     } else { 
@@ -653,11 +679,6 @@ input {
   window.setAmt = function(v) { document.getElementById('bet-input-1').value = v; }
   window.setAmt2 = function(v) { document.getElementById('bet-input-2').value = v; }
 
-  function updateBal() {
-    document.getElementById('av-bal').innerText = walletBal;
-    localStorage.setItem('mahakal_master_wallet', walletBal);
-  }
-
   function renderHistory() {
     let bar = document.getElementById('history-bar');
     bar.innerHTML = "";
@@ -671,4 +692,3 @@ input {
 </script>
 </body>
 </html>
-Jahaj ki speed kitni Bani Dekho Jara
