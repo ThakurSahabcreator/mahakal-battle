@@ -236,10 +236,11 @@ transition: 0.3s;
 <button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="openSection('puzzle-section')">🧠 1. कठिन पहेली गेम</button>
 <button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="openSection('ludo-section')">🎲 2. लूडो पासा बैटल</button>
 <button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='aviator.html'">✈️ 3. Aviator प्लेन गेम</button>
-<button class="btn" style="background: linear-gradient(to right, #00897b, #00acc1);" onclick="openSection('deposit-section')">📥 4. पैसे जोड़े (BharatPe QR Deposit)</button>
-<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 5. बैंक में पैसे भेजें (Withdrawal)</button>
-<button class="btn" style="background: linear-gradient(to right, #eab308, #ca8a04);" onclick="openSection('refer-section')">🎁 6. शेयर करें और 3% कमीशन पाएं</button>
-<button class="btn" style="background: linear-gradient(to right, #0284c7, #0369a1);" onclick="openSection('support-section')">💬 7. हेल्पलाइन & Help Desk</button>
+<button class="btn" style="background: linear-gradient(to right, #ff1493, #ff69b4);" onclick="openSection('murga-section')">🐔 4. Murga Road Cross Game (2x Win)</button>
+<button class="btn" style="background: linear-gradient(to right, #00897b, #00acc1);" onclick="openSection('deposit-section')">📥 5. पैसे जोड़े (BharatPe QR Deposit)</button>
+<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 6. बैंक में पैसे भेजें (Withdrawal)</button>
+<button class="btn" style="background: linear-gradient(to right, #eab308, #ca8a04);" onclick="openSection('refer-section')">🎁 7. शेयर करें और 3% कमीशन पाएं</button>
+<button class="btn" style="background: linear-gradient(to right, #0284c7, #0369a1);" onclick="openSection('support-section')">💬 8. हेल्पलाइन & Help Desk</button>
 
 <div id="public-live-bets-section">
 <div style="font-size: 13px; color: #ffab00; font-weight: bold; margin-top: 15px; text-align: left;">🔥 Live Users Playing & Winning Feed:</div>
@@ -276,6 +277,37 @@ transition: 0.3s;
 <div style="font-size: 50px; background: #121212; border: 2px solid #ffab00; border-radius: 8px; width: 70px; height: 70px; margin: 10px auto; display: flex; align-items: center; justify-content: center;" id="dice-view">🎲</div>
 <button class="btn" onclick="rollDice()">पासा फेंको (Roll)</button>
 <div id="l-result"></div>
+</div>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+</div>
+
+<!-- MURGA GAME SECTION WITH 2X WIN & SPEED INCREASE -->
+<div id="murga-section" class="hidden">
+<div class="card-box" style="text-align: center;">
+<h3 style="color: #ffab00; margin-top: 0;">🐔 मुर्गा रोड क्रॉस गेम (2x Double)</h3>
+<p style="font-size: 12px; color: #aaa; margin: 2px 0;">दांव लगाएं और मुर्गे को बचाकर सड़क पार कराएं (पैसे डबल होंगे!)</p>
+<div style="margin: 8px 0;">
+    <label style="font-size: 13px; color: #ffab00;">दांव लगाएं (Bet Amount): ₹</label>
+    <input type="number" id="m-bet" value="10" min="5" style="width: 100px; display: inline-block;">
+</div>
+<p style="font-size: 13px; color: #00e676; font-weight: bold;">Score / Safe Crosses: <span id="m-score">0</span></p>
+
+<div id="game-container" style="position: relative; width: 100%; height: 320px; background: #444; border: 2px solid #fff; border-radius: 8px; overflow: hidden; margin: 10px auto;">
+    <div style="position: absolute; width: 100%; height: 50px; background: #222; top: 80px; border-top: 2px dashed #ffeb3b; border-bottom: 2px dashed #ffeb3b;"></div>
+    <div style="position: absolute; width: 100%; height: 50px; background: #222; top: 200px; border-top: 2px dashed #ffeb3b; border-bottom: 2px dashed #ffeb3b;"></div>
+    
+    <div id="m-car1" style="position: absolute; width: 45px; height: 22px; background: #e74c3c; top: 94px; left: -50px; border-radius: 4px; font-size: 10px; text-align: center; line-height: 22px; font-weight: bold;">🚗 कार</div>
+    <div id="m-car2" style="position: absolute; width: 45px; height: 22px; background: #2980b9; top: 214px; left: 300px; border-radius: 4px; font-size: 10px; text-align: center; line-height: 22px; font-weight: bold;">🚙 जीप</div>
+
+    <div id="m-chicken" style="position: absolute; bottom: 10px; left: 140px; font-size: 22px; z-index: 10;">🐔</div>
+</div>
+
+<div style="display: flex; gap: 5px; justify-content: center; margin-top: 10px;">
+    <button class="btn" style="background: #2980b9; padding: 8px;" onclick="mMoveLeft()">◀️ बाएं</button>
+    <button class="btn" style="background: #e67e22; padding: 8px;" onclick="mMoveChicken()">आगे ⬆️</button>
+    <button class="btn" style="background: #2980b9; padding: 8px;" onclick="mMoveRight()">दाएं ▶️</button>
+</div>
+<div id="m-result-msg" style="margin-top: 8px; font-size: 13px; font-weight: bold;"></div>
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
@@ -364,10 +396,11 @@ window.onload = function() {
   if(savedBal !== null) walletBalance = parseFloat(savedBal);
   document.getElementById('balance').innerText = walletBalance;
   loadPuzzle();
+  setInterval(mGameLoop, 30);
 };
 
 const fakeNames = ["Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)", "Rohit (Agra)", "Pooja (Delhi)"];
-const fakeGamesList = ["Puzzle Battle", "Ludo Paasa", "Aviator Game"];
+const fakeGamesList = ["Puzzle Battle", "Ludo Paasa", "Aviator Game", "Murga Game"];
 
 function updateFakeActivity() {
     let countEl = document.getElementById('fake-online-count');
@@ -387,7 +420,7 @@ function updateFakeActivity() {
             feedEl.innerHTML = `
                 <div class="bet-row"><span>👤 ${fakeNames[Math.floor(Math.random()*fakeNames.length)]} - ${g1}</span><span style="color: #00e676;">Won ₹${amt1}</span></div>
                 <div class="bet-row"><span>👤 ${fakeNames[Math.floor(Math.random()*fakeNames.length)]} - ${g2}</span><span style="color: #00e676;">Won ₹${amt2}</span></div>
-                <div class="bet-row"><span>👤 ${fakeNames[Math.floor(Math.random()*fakeNames.length)]} - Aviator</span><span style="color: #00e676;">Won ₹${amt1 * 3}</span></div>
+                <div class="bet-row"><span>👤 ${fakeNames[Math.floor(Math.random()*fakeNames.length)]} - Murga Game</span><span style="color: #00e676;">Won ₹${amt1 * 2}</span></div>
             `;
         }
     }
@@ -486,6 +519,97 @@ function rollDice() {
     document.getElementById('l-result').innerText = `❌ पासा [${roll}] - हार गए।`;
   }
   saveWallet();
+}
+
+// Murga Game Logic with 2x Win & Increasing Speed
+let mY = 270, mX = 140, mScore = 0;
+let mCar1X = -50, mCar2X = 300;
+let isMurgaAlive = true;
+let isBetDeducted = false;
+
+function mMoveLeft() {
+    if(!isMurgaAlive) return;
+    if(mX > 10) mX -= 15;
+    document.getElementById('m-chicken').style.left = mX + "px";
+}
+
+function mMoveRight() {
+    if(!isMurgaAlive) return;
+    if(mX < 280) mX += 15;
+    document.getElementById('m-chicken').style.left = mX + "px";
+}
+
+function mMoveChicken() {
+    if(!isMurgaAlive) return;
+    
+    // Pehli baar aage chalne par bet amount kaat lo
+    if(!isBetDeducted) {
+        let bet = parseInt(document.getElementById('m-bet').value);
+        if(walletBalance < bet) {
+            alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है!");
+            return;
+        }
+        walletBalance -= bet;
+        saveWallet();
+        isBetDeducted = true;
+    }
+
+    mY -= 40;
+    if(mY <= 20) {
+        let bet = parseInt(document.getElementById('m-bet').value);
+        let winAmt = bet * 2; // Paisa Double (2x)
+        mScore += 1;
+        document.getElementById('m-score').innerText = mScore;
+        walletBalance += winAmt;
+        saveWallet();
+        
+        document.getElementById('m-result-msg').innerHTML = `<span style="color: #00e676;">🎉 शानदार! सड़क पार हो गई, ₹${winAmt} (2x) जीत गए!</span>`;
+        mResetChicken();
+    }
+    document.getElementById('m-chicken').style.bottom = (280 - mY) + "px";
+}
+
+function mResetChicken() {
+    mY = 270;
+    mX = 140;
+    document.getElementById('m-chicken').style.left = mX + "px";
+    document.getElementById('m-chicken').style.bottom = "10px";
+    isMurgaAlive = true;
+    isBetDeducted = false;
+}
+
+function mGameLoop() {
+    if(document.getElementById('murga-section').classList.contains('hidden')) return;
+    
+    // Score ke sath gaadiyon ki speed badhti jayegi
+    let currentSpeedCar1 = 4 + (mScore * 0.8);
+    let currentSpeedCar2 = 5 + (mScore * 0.8);
+
+    mCar1X += currentSpeedCar1;
+    if(mCar1X > 320) mCar1X = -50;
+    document.getElementById('m-car1').style.left = mCar1X + "px";
+
+    mCar2X -= currentSpeedCar2;
+    if(mCar2X < -50) mCar2X = 300;
+    document.getElementById('m-car2').style.left = mCar2X + "px";
+
+    // Collision check
+    if(mY > 80 && mY < 130 && mX + 22 > mCar1X && mX < mCar1X + 45) {
+        mGameOver();
+    }
+    if(mY > 190 && mY < 240 && mX + 22 > mCar2X && mX < mCar2X + 45) {
+        mGameOver();
+    }
+}
+
+function mGameOver() {
+    isMurgaAlive = false;
+    document.getElementById('m-result-msg').innerHTML = `<span style="color: #ff5252;">💥 धड़ाम! मुर्गा गाड़ी के नीचे आ गया! दांव के पैसे डूब गए।</span>`;
+    mScore = 0;
+    document.getElementById('m-score').innerText = mScore;
+    setTimeout(() => {
+        mResetChicken();
+    }, 1500);
 }
 
 function sendDepositReq() {
