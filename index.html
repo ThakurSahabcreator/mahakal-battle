@@ -277,17 +277,17 @@ transition: 0.3s;
 <div id="murga-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">🐔 मुर्गा रोड क्रॉस गेम (Dual Side Traffic)</h3>
-<p style="font-size: 12px; color: #aaa; margin: 2px 0;">हर बार खेलें, गाड़ियां चलेंगी और ब्रेक लगेंगी (2x Double Win)!</p>
+<p style="font-size: 12px; color: #aaa; margin: 2px 0;">दोनो तरफ से गाड़ियां चलेंगी और रुकेंगी (2x Double Win)!</p>
 
 <div id="game-container" style="position: relative; width: 100%; height: 300px; background: #1a2332; border: 2px solid #ffab00; border-radius: 10px; overflow: hidden; margin: 10px auto;">
     <!-- Road Track -->
     <div style="position: absolute; width: 100%; height: 60px; background: #2b3748; top: 120px; border-top: 2px dashed #facc15; border-bottom: 2px dashed #facc15;"></div>
     
     <!-- Left Side Truck -->
-    <div id="m-car-left" style="position: absolute; width: 100px; height: 44px; background: #dc2626; top: 128px; left: -120px; border-radius: 6px; font-size: 12px; text-align: center; line-height: 44px; font-weight: bold; color: #fff; border: 1px solid #fef08a; box-shadow: 0 3px 6px rgba(0,0,0,0.5); z-index: 5;">🚚 ट्रक (Left)</div>
+    <div id="m-car-left" style="position: absolute; width: 90px; height: 40px; background: #dc2626; top: 130px; left: -100px; border-radius: 6px; font-size: 11px; text-align: center; line-height: 40px; font-weight: bold; color: #fff; border: 1px solid #fef08a; box-shadow: 0 3px 6px rgba(0,0,0,0.5); z-index: 5;">🚚 ट्रक</div>
 
     <!-- Right Side Bus -->
-    <div id="m-car-right" style="position: absolute; width: 100px; height: 44px; background: #2563eb; top: 128px; right: -120px; border-radius: 6px; font-size: 12px; text-align: center; line-height: 44px; font-weight: bold; color: #fff; border: 1px solid #fef08a; box-shadow: 0 3px 6px rgba(0,0,0,0.5); z-index: 5;">🚌 बस (Right)</div>
+    <div id="m-car-right" style="position: absolute; width: 90px; height: 40px; background: #2563eb; top: 130px; right: -100px; border-radius: 6px; font-size: 11px; text-align: center; line-height: 40px; font-weight: bold; color: #fff; border: 1px solid #fef08a; box-shadow: 0 3px 6px rgba(0,0,0,0.5); z-index: 5;">🚌 बस</div>
 
     <!-- Big Murga with Legs -->
     <div id="m-chicken" style="position: absolute; bottom: 12px; left: 140px; z-index: 10; transition: transform 0.2s ease-in-out;">
@@ -513,7 +513,7 @@ function rollDice() {
   saveWallet();
 }
 
-/* Continuous Play Murga Game Script */
+/* Dual Side Traffic Active Murga Game Script */
 let mScore = 0;
 let mIsGameRunning = false;
 
@@ -522,12 +522,12 @@ function mResetGame() {
     let carLeft = document.getElementById('m-car-left');
     let carRight = document.getElementById('m-car-right');
     if(carLeft) {
-        carLeft.style.left = "-120px";
-        carLeft.innerText = "🚚 ट्रक (Left)";
+        carLeft.style.left = "-100px";
+        carLeft.innerText = "🚚 ट्रक";
     }
     if(carRight) {
-        carRight.style.right = "-120px";
-        carRight.innerText = "🚌 बस (Right)";
+        carRight.style.right = "-100px";
+        carRight.innerText = "🚌 बस";
     }
     let chickenEl = document.getElementById('m-chicken');
     if(chickenEl) {
@@ -554,24 +554,21 @@ function mJumpAndPlay() {
     let carLeft = document.getElementById('m-car-left');
     let carRight = document.getElementById('m-car-right');
     
-    if(carLeft) carLeft.innerText = "🚚 ट्रक आ रहा है...";
-    if(carRight) carRight.innerText = "🚌 बस आ रही है...";
-    
-    let leftX = -120;
-    let rightX = -120;
-    let stopPoint = 90; 
+    let leftX = -100;
+    let rightX = -100;
+    let stopPoint = 95; // Stop position in middle
     
     let moveInterval = setInterval(() => {
-        leftX += 8;
-        rightX += 8;
+        leftX += 7;
+        rightX += 7;
         
         if(carLeft) carLeft.style.left = leftX + "px";
         if(carRight) carRight.style.right = rightX + "px";
         
         if(leftX >= stopPoint && rightX >= stopPoint) {
             clearInterval(moveInterval);
-            if(carLeft) carLeft.innerText = "🛑 ट्रक रुका (Brake)";
-            if(carRight) carRight.innerText = "🛑 बस रुकी (Brake)";
+            if(carLeft) carLeft.innerText = "🛑 ट्रक रुका";
+            if(carRight) carRight.innerText = "🛑 बस रुकी";
             
             // Murga Jump
             let chickenEl = document.getElementById('m-chicken');
