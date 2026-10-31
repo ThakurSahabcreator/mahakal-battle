@@ -81,7 +81,7 @@ body {
 .badge-darkblue { background: #1e3a8a; border: 1px solid #3b82f6; }
 .badge-red { background: #dc2626; border: 1px solid #f87171; }
 
-/* Cinematic Sky Screen with Moon, Stars, Clouds within safe boundaries */
+/* Cinematic Sky Screen with Strict Overflow Hidden to Prevent Border Crossing */
 .game-screen {
     background: radial-gradient(circle at center, #1e293b 0%, #060913 100%);
     border: 1px solid #334155;
@@ -144,16 +144,16 @@ body {
     z-index: 3;
 }
 
-/* Fighter Jet pointing strictly UPWARD with controlled safe coordinates */
+/* Fighter Jet Locked Safely Inside Boundaries */
 .plane-icon {
-    font-size: 26px;
+    font-size: 24px;
     color: #38bdf8;
     position: absolute;
     bottom: 5px;
     left: 5px;
     transition: 0.08s linear;
     z-index: 4;
-    transform: rotate(42deg); /* Perfect upward climbing angle */
+    transform: rotate(38deg);
     text-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
 }
 .tail-line {
@@ -563,11 +563,11 @@ function startAviatorGameLoop() {
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
-        // Controlled safe movement boundaries so it never enters the moon area
-        if(posX < 320) posX += 1.6;
-        if(posY < 100) posY += 0.6; 
+        // Strict movement boundaries inside the game screen box
+        if(posX < 280) posX += 1.5;
+        if(posY < 95) posY += 0.5;
         
-        let waveOffset = Math.sin(stepCount * 0.2) * 5;
+        let waveOffset = Math.sin(stepCount * 0.2) * 4;
         let currentY = posY + waveOffset;
 
         planeIcon.style.left = posX + 'px';
@@ -580,14 +580,14 @@ function startAviatorGameLoop() {
         tailLine.style.width = length + 'px';
         tailLine.style.transform = `rotate(-${angle}deg)`;
 
-        // Smoke effect behind the jet
+        // Smoke effect behind jet
         if(stepCount % 2 === 0) {
             let smoke = document.createElement('div');
             smoke.className = 'smoke-puff';
             smoke.style.left = (posX + 5) + 'px';
             smoke.style.bottom = (currentY + 5) + 'px';
-            smoke.style.width = '10px';
-            smoke.style.height = '10px';
+            smoke.style.width = '8px';
+            smoke.style.height = '8px';
             screenBox.appendChild(smoke);
             setTimeout(() => { smoke.remove(); }, 800);
         }
