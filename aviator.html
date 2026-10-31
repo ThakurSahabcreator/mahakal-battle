@@ -307,7 +307,7 @@ input {
 
   <div class="fake-activity-box" style="margin-top: 10px;">
       🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
-      <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Aviator se ₹500 jeete!</span>
+      <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Aviator se ₹500 jeete[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)!</span>
   </div>
 
   <div style="font-size: 13px; color: #ffab00; font-weight: bold; margin-top: 10px; text-align: left;">🔥 Live Users Playing & Winning Feed:</div>
@@ -326,40 +326,26 @@ input {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // Strict Synchronized Multi-User Independent Wallet System for Aviator
+  // Strict Synchronized Multi-User Independent Wallet System for Aviator (Fixed)
   function getActivePhone() {
-    let activeUser = localStorage.getItem('mahakal_active_user');
-    if (!activeUser) {
-      for (let i = 0; i < localStorage.length; i++) {
-        let key = localStorage.key(i);
-        if (key && key.startsWith('wallet_user_')) {
-          activeUser = key.replace('wallet_user_', '');
-          break;
-        }
-      }
-    }
-    return activeUser || "";
+    return localStorage.getItem('active_session_phone') || "";
   }
 
   function getUserBalance() {
     let phone = getActivePhone();
     if (!phone) return 19;
-    let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
-    if (allBalances[phone] !== undefined) {
-      return Number(allBalances[phone]);
-    } else {
-      allBalances[phone] = 19;
-      localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
-      return 19;
+    let bal = localStorage.getItem('user_bal_' + phone);
+    if(bal === null) {
+      bal = '19';
+      localStorage.setItem('user_bal_' + phone, bal);
     }
+    return Number(bal);
   }
 
   function saveUserBalance(newBal) {
     let phone = getActivePhone();
     if (!phone) return;
-    let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
-    allBalances[phone] = Number(newBal);
-    localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
+    localStorage.setItem('user_bal_' + phone, Number(newBal));
     let balEl = document.getElementById('av-bal');
     if(balEl) balEl.innerText = newBal;
   }
@@ -407,7 +393,7 @@ input {
     if(countEl) {
         countEl.innerText = Math.floor(Math.random() * 100) + 600;
         let rName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-        tickerEl.innerHTML = `🏆 ${rName} ne abhi Aviator se ₹500 jeete!`;
+        tickerEl.innerHTML = `🏆 ${rName} ne abhi Aviator se ₹500 jeete[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)!`;
 
         if(feedEl) {
             let r1 = fakeNames[Math.floor(Math.random() * fakeNames.length)];
@@ -549,7 +535,7 @@ input {
         if(isPlaying1) { isPlaying1 = false; handleLoss(1); }
         if(isPlaying2) { isPlaying2 = false; handleLoss(2); }
       } else {
-        document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";
+        document.getElementById('av-stat').innerText = "✈️ प्लेन उड़ रहा है...";[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)
         document.getElementById('av-mult').innerText = currentMultiplier.toFixed(2) + "x";
         document.getElementById('av-mult').style.color = "#ffffff";
 
