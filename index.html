@@ -186,42 +186,70 @@ color: #cbd5e1;
     box-shadow: 0 0 8px #facc15;
 }
 
-/* Red SUV Design (Left Side) */
-#m-car-left {
+/* Asli Car/SUV Design with Wheels */
+.real-car {
     position: absolute;
-    width: 105px;
-    height: 45px;
-    background: linear-gradient(135deg, #dc2626, #991b1b);
-    top: 132px;
-    left: -140px;
-    border-radius: 8px 15px 6px 6px;
-    font-size: 12px;
-    text-align: center;
-    line-height: 45px;
-    font-weight: bold;
-    color: #fff;
-    border: 2px solid #fca5a5;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    width: 110px;
+    height: 50px;
+    top: 130px;
     z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Blue SUV Design (Right Side) */
-#m-car-right {
-    position: absolute;
-    width: 105px;
-    height: 45px;
-    background: linear-gradient(135deg, #2563eb, #1e40af);
-    top: 132px;
-    left: 340px;
-    border-radius: 15px 8px 6px 6px;
-    font-size: 12px;
-    text-align: center;
-    line-height: 45px;
+.car-body {
+    width: 100%;
+    height: 35px;
+    border-radius: 12px 16px 4px 4px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 11px;
     font-weight: bold;
-    color: #fff;
+    color: white;
+}
+
+/* Red SUV Styling */
+#m-car-left .car-body {
+    background: linear-gradient(135deg, #ef4444, #991b1b);
+    border: 2px solid #fca5a5;
+}
+
+/* Blue SUV Styling (Facing opposite) */
+#m-car-right .car-body {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
     border: 2px solid #93c5fd;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.8);
-    z-index: 5;
+    flex-direction: row-reverse; /* Samne se aane ka look dene ke liye */
+}
+
+/* Car Windows / Windshield */
+.car-window {
+    width: 30px;
+    height: 14px;
+    background: #e0f2fe;
+    opacity: 0.8;
+    border-radius: 4px;
+}
+
+/* Car Wheels (Pahiye) */
+.car-wheels {
+    width: 90px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: -3px;
+}
+
+.wheel {
+    width: 16px;
+    height: 16px;
+    background: #111;
+    border: 3px solid #cbd5e1;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
 .social-strip { 
@@ -353,11 +381,29 @@ transition: 0.3s;
     <div class="road-track"></div>
     <div class="road-stripe"></div>
     
-    <!-- Red SUV (Left Side) -->
-    <div id="m-car-left">🚗 Red SUV</div>
+    <!-- Red SUV (Left Side) with Wheels -->
+    <div id="m-car-left" class="real-car" style="left: -140px;">
+        <div class="car-body">
+            <div class="car-window"></div>
+            <span>Red SUV</span>
+        </div>
+        <div class="car-wheels">
+            <div class="wheel"></div>
+            <div class="wheel"></div>
+        </div>
+    </div>
 
-    <!-- Blue SUV (Right Side) -->
-    <div id="m-car-right">🚙 Blue SUV</div>
+    <!-- Blue SUV (Right Side) with Wheels -->
+    <div id="m-car-right" class="real-car" style="left: 340px;">
+        <div class="car-body">
+            <div class="car-window"></div>
+            <span>Blue SUV</span>
+        </div>
+        <div class="car-wheels">
+            <div class="wheel"></div>
+            <div class="wheel"></div>
+        </div>
+    </div>
 
     <!-- Big Murga with Legs -->
     <div id="m-chicken" style="position: absolute; bottom: 20px; left: 140px; z-index: 10; transition: transform 0.2s ease-in-out;">
@@ -587,11 +633,9 @@ function mResetGame() {
     let carRight = document.getElementById('m-car-right');
     if(carLeft) {
         carLeft.style.left = "-140px";
-        carLeft.innerText = "🚗 Red SUV";
     }
     if(carRight) {
         carRight.style.left = "340px";
-        carRight.innerText = "🚙 Blue SUV";
     }
     let chickenEl = document.getElementById('m-chicken');
     if(chickenEl) {
@@ -621,8 +665,8 @@ function mJumpAndPlay() {
     let leftX = -140;
     let rightX = 340;
     
-    let stopLeft = 20;    // Red SUV yahan aakar rukegi
-    let stopRight = 190;  // Blue SUV yahan aakar rukegi (dono ke beech mein gap rahega)
+    let stopLeft = 25;    // Red SUV yahan aakar rukegi
+    let stopRight = 195;  // Blue SUV yahan aakar rukegi (dono ke beech mein proper gap rahega)
     
     let moveInterval = setInterval(() => {
         leftX += 5;
@@ -637,8 +681,6 @@ function mJumpAndPlay() {
         
         if(leftX >= stopLeft && rightX <= stopRight) {
             clearInterval(moveInterval);
-            if(carLeft) carLeft.innerText = "🛑 Red SUV";
-            if(carRight) carRight.innerText = "🛑 Blue SUV";
             
             // Murga Jump
             let chickenEl = document.getElementById('m-chicken');
