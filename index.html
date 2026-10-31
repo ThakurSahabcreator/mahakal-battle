@@ -186,41 +186,41 @@ color: #cbd5e1;
     box-shadow: 0 0 8px #facc15;
 }
 
-/* Real Truck Design (Left Side) */
+/* Real Red SUV Design (Left Side) */
 #m-car-left {
     position: absolute;
-    width: 110px;
-    height: 50px;
-    background: linear-gradient(135deg, #b91c1c, #ef4444);
-    top: 130px;
-    left: -130px;
-    border-radius: 6px;
-    font-size: 13px;
+    width: 120px;
+    height: 45px;
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    top: 132px;
+    left: -140px;
+    border-radius: 8px 15px 6px 6px;
+    font-size: 12px;
     text-align: center;
-    line-height: 50px;
+    line-height: 45px;
     font-weight: bold;
     color: #fff;
-    border: 2px solid #fee2e2;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    border: 2px solid #fca5a5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.8);
     z-index: 5;
 }
 
-/* Real Bus Design (Right Side) */
+/* Real Blue SUV Design (Right Side) */
 #m-car-right {
     position: absolute;
-    width: 110px;
-    height: 50px;
-    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
-    top: 130px;
-    right: -130px;
-    border-radius: 6px;
-    font-size: 13px;
+    width: 120px;
+    height: 45px;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    top: 132px;
+    right: -140px;
+    border-radius: 15px 8px 6px 6px;
+    font-size: 12px;
     text-align: center;
-    line-height: 50px;
+    line-height: 45px;
     font-weight: bold;
     color: #fff;
-    border: 2px solid #e0f2fe;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    border: 2px solid #93c5fd;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.8);
     z-index: 5;
 }
 
@@ -353,11 +353,11 @@ transition: 0.3s;
     <div class="road-track"></div>
     <div class="road-stripe"></div>
     
-    <!-- Left Side Real Truck -->
-    <div id="m-car-left">🚚 10-Tyre Truck</div>
+    <!-- Real Red SUV (Left Side) -->
+    <div id="m-car-left">🚗 Red SUV</div>
 
-    <!-- Right Side Real Bus -->
-    <div id="m-car-right">🚌 Roadways Bus</div>
+    <!-- Real Blue SUV (Right Side) -->
+    <div id="m-car-right">🚙 Blue SUV</div>
 
     <!-- Big Murga with Legs -->
     <div id="m-chicken" style="position: absolute; bottom: 20px; left: 140px; z-index: 10; transition: transform 0.2s ease-in-out;">
@@ -477,7 +477,7 @@ function updateFakeActivity() {
     if(countEl && !isAdminLoggedIn) {
         countEl.innerText = Math.floor(Math.random() * 100) + 600;
         let rName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-        tickerEl.innerHTML = `🏆 ${rName} ne abhi game se ₹500 jeete!`;
+        tickerEl.innerHTML = `🏆 ${rName} ne abhi game से ₹500 jeete!`;
 
         if(feedEl) {
             let g1 = fakeGamesList[Math.floor(Math.random() * fakeGamesList.length)];
@@ -586,12 +586,12 @@ function mResetGame() {
     let carLeft = document.getElementById('m-car-left');
     let carRight = document.getElementById('m-car-right');
     if(carLeft) {
-        carLeft.style.left = "-130px";
-        carLeft.innerText = "🚚 10-Tyre Truck";
+        carLeft.style.left = "-140px";
+        carLeft.innerText = "🚗 Red SUV";
     }
     if(carRight) {
-        carRight.style.right = "-130px";
-        carRight.innerText = "🚌 Roadways Bus";
+        carRight.style.right = "-140px";
+        carRight.innerText = "🚙 Blue SUV";
     }
     let chickenEl = document.getElementById('m-chicken');
     if(chickenEl) {
@@ -618,21 +618,21 @@ function mJumpAndPlay() {
     let carLeft = document.getElementById('m-car-left');
     let carRight = document.getElementById('m-car-right');
     
-    let leftX = -130;
-    let rightX = -130;
-    let stopPoint = 45; // Dono gaadiyan yahan aakar rukengi
+    let leftX = -140;
+    let rightX = -140;
+    let stopPoint = 50; // Dono SUV yahan aakar rukengi bina over-lap hue
     
     let moveInterval = setInterval(() => {
-        leftX += 6;
-        rightX += 6;
+        leftX += 5;
+        rightX += 5;
         
         if(carLeft && leftX <= stopPoint) carLeft.style.left = leftX + "px";
         if(carRight && rightX <= stopPoint) carRight.style.right = rightX + "px";
         
         if(leftX >= stopPoint && rightX >= stopPoint) {
             clearInterval(moveInterval);
-            if(carLeft) carLeft.innerText = "🛑 रुका ट्रक";
-            if(carRight) carRight.innerText = "🛑 रुकी बस";
+            if(carLeft) carLeft.innerText = "🛑 Red SUV";
+            if(carRight) carRight.innerText = "🛑 Blue SUV";
             
             // Murga Jump
             let chickenEl = document.getElementById('m-chicken');
@@ -651,7 +651,7 @@ function mJumpAndPlay() {
                     document.getElementById('m-score').innerText = mScore;
                     document.getElementById('m-result-msg').innerHTML = `<span style="color: #00e676;">🎉 शानदार! मुर्गे ने छलांग लगाकर सड़क पार कर ली, ₹${winAmt} (2x) जीत गए!</span>`;
                 } else {
-                    document.getElementById('m-result-msg').innerHTML = `<span style="color: #ff5252;">💥 धड़ाम! गाड़ी आगे बढ़ गई और मुर्गा चपेट में आ गया! ₹${bet} डूब गए।</span>`;
+                    document.getElementById('m-result-msg').innerHTML = `<span style="color: #ff5252;">💥 धड़ाम! SUV आगे बढ़ गई और मुर्गा चपेट में आ गया! ₹${bet} डूब गए।</span>`;
                     mScore = 0;
                     document.getElementById('m-score').innerText = mScore;
                 }
