@@ -220,11 +220,18 @@ input {
 </div>
 
 <script>
-  const firebaseConfig = {
-    databaseURL: "https://aviatorapp-9b1a6-default-rtdb.firebaseio.com/"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+  let db = null;
+  try {
+    if (typeof firebase !== 'undefined') {
+      const firebaseConfig = {
+        databaseURL: "https://aviatorapp-9b1a6-default-rtdb.firebaseio.com/"
+      };
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+    }
+  } catch(e) {
+    console.log("Firebase Init Error:", e);
+  }
 
   let walletBal = 90398;
   let currentMultiplier = 1.00;
@@ -245,16 +252,20 @@ input {
     if(saved !== null) walletBal = parseFloat(saved);
     document.getElementById('av-bal').innerText = walletBal;
 
-    db.ref('adminCrash').on('value', (snapshot) => {
-      let val = snapshot.val();
-      if(val) { liveForcedCrash = parseFloat(val); }
-    });
+    if (db) {
+      db.ref('adminCrash').on('value', (snapshot) => {
+        let val = snapshot.val();
+        if(val) { liveForcedCrash = parseFloat(val); }
+      });
 
-    db.ref('gameHistory').on('value', (snapshot) => {
-      let data = snapshot.val();
-      if(data && Array.isArray(data)) { historyList = data; }
+      db.ref('gameHistory').on('value', (snapshot) => {
+        let data = snapshot.val();
+        if(data && Array.isArray(data)) { historyList = data; }
+        renderHistory();
+      });
+    } else {
       renderHistory();
-    });
+    }
 
     requestAnimationFrame(gameLoop);
   };
@@ -277,11 +288,17 @@ input {
   function saveAdminCrash() {
     let val = parseFloat(document.getElementById('adm-crash-val').value);
     if(!isNaN(val) && val >= 1.05) {
-      db.ref('adminCrash').set(val).then(() => {
+      if (db) {
+        db.ref('adminCrash').set(val).then(() => {
+          liveForcedCrash = val;
+          document.getElementById('adm-status-msg').innerText = `✅ ${val}एक्स लॉक हुआ!`;
+          setTimeout(closeAdmin, 1500);
+        });
+      } else {
         liveForcedCrash = val;
-        document.getElementById('adm-status-msg').innerText = `✅ ${val}एक्स लॉक हुआ!`;
+        document.getElementById('adm-status-msg').innerText = `✅ ${val}एक्स लोक हुआ (लोकल)!`;
         setTimeout(closeAdmin, 1500);
-      });
+      }
     }
   }
 
@@ -348,7 +365,9 @@ input {
           lastProcessedCycle = currentCycleId;
           historyList.unshift(liveForcedCrash);
           if (historyList.length > 8) historyList.pop();
-          db.ref('gameHistory').set(historyList);
+          if (db) {
+            db.ref('gameHistory').set(historyList);
+          }
         }
 
         if(isPlaying1) { isPlaying1 = false; handleLoss(1); }
