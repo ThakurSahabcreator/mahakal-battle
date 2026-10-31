@@ -209,6 +209,7 @@ transition: 0.3s;
 
 <button class="btn" style="background: linear-gradient(to right, #eab308, #ca8a04);" onclick="openSection('refer-section')">🎁 6. शेयर करें और 3% कमीशन पाएं (Refer & Earn)</button>
 <button class="btn" style="background: linear-gradient(to right, #0284c7, #0369a1);" onclick="openSection('support-section')">💬 7. 24/7 कस्टमर सपोर्ट (Help Desk)</button>
+<button class="btn" style="background: #ef4444; font-size: 13px; padding: 8px;" onclick="logoutUser()">🚪 लॉगआउट (Logout / नंबर बदलें)</button>
     
 <!-- THAKUR SAHAB OFFICIAL GAMING PARTNER BOX -->
 <div style="background: linear-gradient(135deg, #141414, #1f1f1f); border: 2px solid #ffd700; border-radius: 12px; padding: 18px; margin: 15px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #e0e0e0; box-shadow: 0 6px 20px rgba(0,0,0,0.7); text-align: left;">
@@ -223,27 +224,27 @@ transition: 0.3s;
         
         <p style="margin-top: 0;">
             <strong style="color: #00ffcc;">1. Thakur Sahab Platform Dwara Game ka Nirman:</strong><br>
-            Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>Thakur Sahab Official Gaming Partner Network</strong> dwara taiyar kiya gaya hai. Isme 256-bit SSL encryption ka pura palan kiya gaya hai taaki aapka har ek data 100% surakshit rahe.
+            Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>Thakur Sahab Official Gaming Partner Network</strong> dwara taiyar kiya gaya hai. Isme 256-bit SSL encryption ka pura palan kiya gaya hai taaki aapka har ek data 100% surakshit rahe[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span).
         </p>
 
         <p>
             <strong style="color: #00ffcc;">2. Game Kaise Khele aur Rules Kya Hain:</strong><br>
-            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain. Har game me transparent RNG system kaam karta hai, jisse sabhi khiladiyon ko jeetne ke barabar aur fair mauke milte hain.
+            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain. Har game me transparent RNG system kaam karta hai, jisse sabhi khiladiyon ko jeetne ke barabar aur fair mauke milte hain[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span).
         </p>
 
         <p>
             <strong style="color: #00ffcc;">3. Refer & Earn Aur Commission System:</strong><br>
-            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai jo turant aapke wallet mein add ho jata hai.
+            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai jo turant aapke wallet mein add ho jata hai[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span).
         </p>
 
         <p>
             <strong style="color: #ff9900; font-weight: 700;">4. Withdrawal (Pase Nikalne) ki 100% Guarantee aur Time Limit:</strong><br>
-            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein paise safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai!
+            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein paise safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)!
         </p>
 
         <p style="margin-bottom: 0;">
             <strong style="color: #ff4d4d; font-weight: 700;">5. Fraud-Giri aur Security ki Full Guarantee:</strong><br>
-            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai.
+            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span).
         </p>
         
     </div>
@@ -458,6 +459,15 @@ function saveUserBalance(newBal) {
 }
 
 window.onload = function() {
+  // Check if user was already logged in before refresh
+  let savedPhone = localStorage.getItem('mahakal_active_user');
+  if(savedPhone) {
+    loggedInPhone = savedPhone;
+    document.getElementById('login-section').classList.add('hidden');
+    document.getElementById('app-dashboard').classList.remove('hidden');
+    document.getElementById('balance').innerText = getUserBalance();
+  }
+
   let lockState = localStorage.getItem('mahakal_master_lock');
   if(lockState === 'true') {
     isSystemLocked = true;
@@ -638,6 +648,7 @@ function processLogin() {
   }
 
   loggedInPhone = ph; 
+  localStorage.setItem('mahakal_active_user', ph); // Save active session
   updateReferralLink();
 
   let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
@@ -671,6 +682,11 @@ function processLogin() {
     document.getElementById('login-section').classList.add('hidden');
     document.getElementById('app-dashboard').classList.remove('hidden');
   }, 1000);
+}
+
+function logoutUser() {
+  localStorage.removeItem('mahakal_active_user');
+  location.reload();
 }
 
 function openSection(secId) {
@@ -864,7 +880,6 @@ function admUpdateBal() {
 
 function admDepYes() {
   if(pendingDep) {
-    // Note: Since pendingDep stores phone, we update that specific user's balance if needed, or active balance
     let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
     let targetPhone = pendingDep.phone;
     let currentTargetBal = allBalances[targetPhone] !== undefined ? allBalances[targetPhone] : 19;
