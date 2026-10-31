@@ -81,8 +81,9 @@ body {
 .badge-darkblue { background: #1e3a8a; border: 1px solid #3b82f6; }
 .badge-red { background: #dc2626; border: 1px solid #f87171; }
 
+/* Cinematic Sky Screen with Moon, Stars, Clouds and Smoke Effect */
 .game-screen {
-    background: radial-gradient(circle, #1a2332 0%, #0b0f19 100%);
+    background: radial-gradient(circle at center, #1e293b 0%, #060913 100%);
     border: 1px solid #334155;
     border-radius: 10px;
     height: 180px;
@@ -94,6 +95,40 @@ body {
     justify-content: center;
     margin-bottom: 8px;
 }
+.moon {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    width: 25px;
+    height: 25px;
+    background: #fef08a;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #fde047;
+    z-index: 1;
+}
+.star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    animation: twinkle 2s infinite alternate;
+    z-index: 1;
+}
+@keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    z-index: 1;
+    animation: moveCloud linear infinite;
+}
+@keyframes moveCloud {
+    0% { transform: translateX(400px); }
+    100% { transform: translateX(-150px); }
+}
+
 .multiplier-text {
     font-size: 38px;
     font-weight: 800;
@@ -109,7 +144,7 @@ body {
     z-index: 3;
 }
 
-/* Fighter Jet & Upward Red Tail Line */
+/* Fighter Jet & Red Tail Line with Smoke */
 .plane-icon {
     font-size: 26px;
     color: #38bdf8;
@@ -131,6 +166,18 @@ body {
     pointer-events: none;
     z-index: 2;
     box-shadow: 0 0 8px #ff3d00;
+}
+.smoke-puff {
+    position: absolute;
+    background: rgba(200, 200, 200, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    animation: fadeSmoke 0.8s linear forwards;
+}
+@keyframes fadeSmoke {
+    0% { transform: scale(0.5); opacity: 0.6; }
+    100% { transform: scale(2); opacity: 0; }
 }
 
 .bet-card {
@@ -294,9 +341,21 @@ body {
         <div class="history-badge badge-lightblue">1.80x</div>
     </div>
 
-    <div class="game-screen">
+    <div class="game-screen" id="game-screen-box">
+        <!-- Moon and Stars -->
+        <div class="moon"></div>
+        <div class="star" style="top: 30px; left: 50px; width: 2px; height: 2px;"></div>
+        <div class="star" style="top: 60px; left: 120px; width: 3px; height: 3px;"></div>
+        <div class="star" style="top: 25px; left: 220px; width: 2px; height: 2px;"></div>
+        <div class="star" style="top: 70px; left: 320px; width: 3px; height: 3px;"></div>
+        
+        <!-- Moving Clouds -->
+        <div class="cloud" style="top: 40px; width: 60px; height: 15px; animation-duration: 8s;"></div>
+        <div class="cloud" style="top: 90px; width: 90px; height: 20px; animation-duration: 12s; animation-delay: 3s;"></div>
+
         <div class="multiplier-text" id="live-multiplier">1.00x</div>
         <div class="plane-status" id="plane-status-msg">🚀 प्लेन उड़ रहा है...</div>
+        
         <div class="tail-line" id="tail-line"></div>
         <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
     </div>
@@ -489,6 +548,7 @@ function startAviatorGameLoop() {
     let statusMsg = document.getElementById('plane-status-msg');
     let planeIcon = document.getElementById('plane-graphic');
     let tailLine = document.getElementById('tail-line');
+    let screenBox = document.getElementById('game-screen-box');
     
     currentMultiplier = 1.00;
     let crashPoint = customAdminCrash ? customAdminCrash : (Math.random() * 8 + 1.2).toFixed(2);
@@ -503,9 +563,8 @@ function startAviatorGameLoop() {
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
-        // Smooth diagonal upward movement matching the tail line trajectory
         if(posX < 350) posX += 1.8;
-        if(posY < 135) posY += 0.75;
+        if(posY < 135) posY += 0.85;
         
         let waveOffset = Math.sin(stepCount * 0.2) * 6;
         let currentY = posY + waveOffset;
@@ -513,13 +572,24 @@ function startAviatorGameLoop() {
         planeIcon.style.left = posX + 'px';
         planeIcon.style.bottom = currentY + 'px';
 
-        // Tail line strictly following from bottom-left corner (5,5) to current plane position
         let startX = 5;
         let startY = 5;
         let length = Math.sqrt(Math.pow(posX - startX, 2) + Math.pow(currentY - startY, 2));
         let angle = Math.atan2(currentY - startY, posX - startX) * (180 / Math.PI);
         tailLine.style.width = length + 'px';
         tailLine.style.transform = `rotate(-${angle}deg)`;
+
+        // Dynamic Smoke effect generated behind the plane
+        if(stepCount % 2 === 0) {
+            let smoke = document.createElement('div');
+            smoke.className = 'smoke-puff';
+            smoke.style.left = (posX + 5) + 'px';
+            smoke.style.bottom = (currentY + 5) + 'px';
+            smoke.style.width = '10px';
+            smoke.style.height = '10px';
+            screenBox.appendChild(smoke);
+            setTimeout(() => { smoke.remove(); }, 800);
+        }
 
         [1, 2].forEach(boxId => {
             if(betStatus[boxId]) {
