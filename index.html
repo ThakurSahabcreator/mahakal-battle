@@ -155,7 +155,7 @@ border-bottom: 1px dashed #374151;
 color: #cbd5e1;
 }
 
-/* --- CHICKEN ROAD PROFESSIONAL GAME STYLING (Jaise Screenshot Mein Hai) --- */
+/* --- CHICKEN ROAD PROFESSIONAL GAME STYLING --- */
 #game-container {
     position: relative;
     width: 100%;
@@ -169,15 +169,36 @@ color: #cbd5e1;
 
 .road-vertical {
     position: absolute;
-    width: 60%;
+    width: 70%;
     height: 100%;
     background: #1f2937;
-    left: 20%;
+    left: 15%;
     border-left: 3px dashed #9ca3af;
     border-right: 3px dashed #9ca3af;
 }
 
-/* Multiplier checkpoints */
+/* Yellow Car Styling - Proper Positioning */
+.game-car {
+    position: absolute;
+    width: 65px;
+    height: 90px;
+    background: #fbbf24;
+    border-radius: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 90px;
+    z-index: 5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    border: 2px solid #d97706;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #111;
+}
+
+/* Multiplier Node */
 .multiplier-node {
     position: absolute;
     width: 50px;
@@ -192,42 +213,19 @@ color: #cbd5e1;
     font-weight: bold;
     color: #e5e7eb;
     box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-    left: 50%;
-    transform: translateX(-50%);
-    top: 120px;
+    right: 25px;
+    top: 110px;
 }
 
-/* Modern Car Styling */
-.game-car {
-    position: absolute;
-    width: 70px;
-    height: 40px;
-    background: #f59e0b;
-    border-radius: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 125px;
-    z-index: 5;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
-    border: 2px solid #fbbf24;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: bold;
-    color: #111;
-}
-
-/* Cute Chicken on Side */
 #game-chicken {
     position: absolute;
-    left: 15px;
-    bottom: 20px;
+    left: 20px;
+    bottom: 30px;
     z-index: 10;
     transition: transform 0.2s ease-in-out;
 }
 
-/* Betting Control Panel (Screenshot Style) */
+/* Betting Control Panel */
 .bet-control-panel {
     background: #111827;
     padding: 10px;
@@ -310,7 +308,7 @@ transition: 0.3s;
 
 <div id="fake-activity-container" class="fake-activity-box">
     🟢 <b>Online Players:</b> <span id="fake-online-count" style="font-weight: bold; color: #fff;">4882</span> Active<br>
-    <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne Chicken Road se ₹1106 jeete[span_3](start_span)[span_3](end_span)!</span>
+    <span style="font-size: 11px; color: #a7f3d0;" id="fake-winner-ticker">🏆 राहुल (Kanpur) ne Chicken Road se ₹1106 jeete[span_0](start_span)[span_0](end_span)!</span>
 </div>
 
 <div id="real-admin-container" class="fake-activity-box" style="background: linear-gradient(135deg, #1e3a8a, #1e1b4b); border: 1px solid #3b82f6; display: none; text-align: left; padding: 10px;">
@@ -368,18 +366,16 @@ transition: 0.3s;
 <button class="btn" style="background:#4b5563;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- CHICKEN ROAD (MURGA GAME) SECTION - SCREENSHOT STYLE -->
+<!-- CHICKEN ROAD (MURGA GAME) SECTION -->
 <div id="murga-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0; font-size: 15px;">🐔 Chicken Road Game</h3>
 
 <div id="game-container">
     <div class="road-vertical"></div>
-    
-    <!-- Multiplier Checkpoint (Jaise screenshot mein 1.03x hai) -->
     <div class="multiplier-node">1.03x</div>
     
-    <!-- Moving Car -->
+    <!-- Yellow Car -->
     <div class="game-car" id="game-car-el">INOUT</div>
 
     <!-- Cute Chicken -->
@@ -398,7 +394,7 @@ transition: 0.3s;
 
 <p style="font-size: 12px; color: #10b981; font-weight: bold; margin: 5px 0;">Safe Crosses / Score: <span id="m-score">0</span></p>
 
-<!-- Betting Control Panel (Screenshot Style Layout) -->
+<!-- Betting Control Panel -->
 <div class="bet-control-panel">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 12px; color: #9ca3af;">
         <span>MIN / MAX BET</span>
@@ -517,7 +513,7 @@ function updateFakeActivity() {
     if(countEl && !isAdminLoggedIn) {
         countEl.innerText = Math.floor(Math.random() * 200) + 4700;
         let rName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-        tickerEl.innerHTML = `🏆 ${rName} ne Chicken Road se ₹1106 jeete[span_4](start_span)[span_4](end_span)!`;
+        tickerEl.innerHTML = `🏆 ${rName} ne Chicken Road se ₹1106 jeete[span_1](start_span)[span_1](end_span)!`;
 
         if(feedEl) {
             let g1 = fakeGamesList[Math.floor(Math.random() * fakeGamesList.length)];
@@ -641,7 +637,6 @@ function mJumpAndPlay() {
     let chickenEl = document.getElementById('game-chicken');
     let carEl = document.getElementById('game-car-el');
     
-    // Animation effect
     if(chickenEl) chickenEl.style.transform = "translateY(-40px)";
     if(carEl) carEl.style.transform = "translateX(-50%) scale(1.1)";
     
