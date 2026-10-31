@@ -186,10 +186,10 @@ color: #cbd5e1;
     box-shadow: 0 0 8px #facc15;
 }
 
-/* Real Red SUV Design (Left Side) */
+/* Red SUV Design (Left Side) */
 #m-car-left {
     position: absolute;
-    width: 120px;
+    width: 105px;
     height: 45px;
     background: linear-gradient(135deg, #dc2626, #991b1b);
     top: 132px;
@@ -205,14 +205,14 @@ color: #cbd5e1;
     z-index: 5;
 }
 
-/* Real Blue SUV Design (Right Side) */
+/* Blue SUV Design (Right Side) */
 #m-car-right {
     position: absolute;
-    width: 120px;
+    width: 105px;
     height: 45px;
     background: linear-gradient(135deg, #2563eb, #1e40af);
     top: 132px;
-    right: -140px;
+    left: 340px;
     border-radius: 15px 8px 6px 6px;
     font-size: 12px;
     text-align: center;
@@ -353,10 +353,10 @@ transition: 0.3s;
     <div class="road-track"></div>
     <div class="road-stripe"></div>
     
-    <!-- Real Red SUV (Left Side) -->
+    <!-- Red SUV (Left Side) -->
     <div id="m-car-left">🚗 Red SUV</div>
 
-    <!-- Real Blue SUV (Right Side) -->
+    <!-- Blue SUV (Right Side) -->
     <div id="m-car-right">🚙 Blue SUV</div>
 
     <!-- Big Murga with Legs -->
@@ -477,7 +477,7 @@ function updateFakeActivity() {
     if(countEl && !isAdminLoggedIn) {
         countEl.innerText = Math.floor(Math.random() * 100) + 600;
         let rName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-        tickerEl.innerHTML = `🏆 ${rName} ne abhi game से ₹500 jeete!`;
+        tickerEl.innerHTML = `🏆 ${rName} ne abhi game se ₹500 jeete!`;
 
         if(feedEl) {
             let g1 = fakeGamesList[Math.floor(Math.random() * fakeGamesList.length)];
@@ -590,7 +590,7 @@ function mResetGame() {
         carLeft.innerText = "🚗 Red SUV";
     }
     if(carRight) {
-        carRight.style.right = "-140px";
+        carRight.style.left = "340px";
         carRight.innerText = "🚙 Blue SUV";
     }
     let chickenEl = document.getElementById('m-chicken');
@@ -619,17 +619,23 @@ function mJumpAndPlay() {
     let carRight = document.getElementById('m-car-right');
     
     let leftX = -140;
-    let rightX = -140;
-    let stopPoint = 50; // Dono SUV yahan aakar rukengi bina over-lap hue
+    let rightX = 340;
+    
+    let stopLeft = 20;    // Red SUV yahan aakar rukegi
+    let stopRight = 190;  // Blue SUV yahan aakar rukegi (dono ke beech mein gap rahega)
     
     let moveInterval = setInterval(() => {
         leftX += 5;
-        rightX += 5;
+        rightX -= 5;
         
-        if(carLeft && leftX <= stopPoint) carLeft.style.left = leftX + "px";
-        if(carRight && rightX <= stopPoint) carRight.style.right = rightX + "px";
+        if(carLeft && leftX <= stopLeft) {
+            carLeft.style.left = leftX + "px";
+        }
+        if(carRight && rightX >= stopRight) {
+            carRight.style.left = rightX + "px";
+        }
         
-        if(leftX >= stopPoint && rightX >= stopPoint) {
+        if(leftX >= stopLeft && rightX <= stopRight) {
             clearInterval(moveInterval);
             if(carLeft) carLeft.innerText = "🛑 Red SUV";
             if(carRight) carRight.innerText = "🛑 Blue SUV";
