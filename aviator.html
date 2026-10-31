@@ -326,7 +326,7 @@ input {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // STRICT MULTI-USER INDEPENDENT WALLET SYSTEM FOR AVIATOR
+  // Synchronized Multi-User Independent Wallet System for Aviator
   function getActivePhone() {
     return localStorage.getItem('mahakal_active_user') || "";
   }
@@ -336,7 +336,7 @@ input {
     if (!phone) return 19;
     let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
     if (allBalances[phone] !== undefined) {
-      return allBalances[phone];
+      return Number(allBalances[phone]);
     } else {
       allBalances[phone] = 19;
       localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
@@ -348,7 +348,7 @@ input {
     let phone = getActivePhone();
     if (!phone) return;
     let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
-    allBalances[phone] = newBal;
+    allBalances[phone] = Number(newBal);
     localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
     let balEl = document.getElementById('av-bal');
     if(balEl) balEl.innerText = newBal;
