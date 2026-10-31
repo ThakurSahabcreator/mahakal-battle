@@ -214,12 +214,10 @@ transition: 0.3s;
 <!-- THAKUR SAHAB OFFICIAL GAMING PARTNER BOX -->
 <div style="background: linear-gradient(135deg, #141414, #1f1f1f); border: 2px solid #ffd700; border-radius: 12px; padding: 18px; margin: 15px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #e0e0e0; box-shadow: 0 6px 20px rgba(0,0,0,0.7); text-align: left;">
     
-    <!-- Heading -->
     <h3 style="color: #ffcc00; font-size: 13px; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">
         ⚡ THAKUR SAHAB OFFICIAL GAMING PARTNER PORTAL ⚡
     </h3>
     
-    <!-- Scrollable Detailed Notice Box -->
     <div style="max-height: 220px; overflow-y: auto; padding-right: 8px; font-size: 12px; line-height: 1.6; color: #cccccc; scrollbar-width: thin; scrollbar-color: #ffd700 #222;">
         
         <p style="margin-top: 0;">
@@ -249,7 +247,6 @@ transition: 0.3s;
         
     </div>
     
-    <!-- Footer Tag inside box -->
     <div style="text-align: center; margin-top: 12px; border-top: 1px solid rgba(255,215,0,0.3); padding-top: 8px; font-size: 11px; color: #00ff66; font-weight: 600;">
         ✅ Officially Verified & Secure Gaming Portal by Thakur Sahab Network.
     </div>
@@ -407,528 +404,111 @@ const installBtn = document.getElementById('installBtn');
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  installBtn.style.display = 'block';
-
-  installBtn.addEventListener('click', () => {
-    installBtn.style.display = 'none';
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      deferredPrompt = null;
-    });
-  });
+  if(installBtn) installBtn.style.display = 'block';
 });
 
-let loggedInPhone = ""; 
-let pendingDep = null; 
-let pendingWit = null;
-let isSystemLocked = false; 
-let referrerPhone = "";
-
-const BOT_TOKEN = "8531701253:AAFoYZkt3kJhPCEipll6Lk-ut1XR1uC2epE";
-const CHAT_ID = "7880447645";
-
-function sendTelegram(text) {
-  let url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}`;
-  fetch(url).catch(e => console.log(e));
-}
-
-// Strict Independent Multi-User Wallet Management System
-function getActivePhone() {
-  return localStorage.getItem('mahakal_active_user') || loggedInPhone || "";
-}
-
-function getUserBalance() {
-  let phone = getActivePhone();
-  if (!phone) return 19;
-  
-  let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
-  
-  if (allBalances[phone] === undefined) {
-    allBalances[phone] = 19; // Har naye number ke liye fix shuruati balance ₹19
-    localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
-  }
-  return Number(allBalances[phone]);
-}
-
-function saveUserBalance(newBal) {
-  let phone = getActivePhone();
-  if (!phone) return;
-  
-  let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
-  allBalances[phone] = Number(newBal);
-  localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
-  
-  let balEl = document.getElementById('balance');
-  if(balEl) balEl.innerText = newBal;
-}
-
-window.onload = function() {
-  let savedPhone = localStorage.getItem('mahakal_active_user');
-  if(savedPhone) {
-    loggedInPhone = savedPhone;
-    document.getElementById('login-section').classList.add('hidden');
-    document.getElementById('app-dashboard').classList.remove('hidden');
-    document.getElementById('balance').innerText = getUserBalance();
-  }
-
-  let lockState = localStorage.getItem('mahakal_master_lock');
-  if(lockState === 'true') {
-    isSystemLocked = true;
-    document.getElementById('lock-status-btn').innerText = "Lock Status: LOCKED";
-    document.getElementById('lock-status-btn').style.background = "#ff5252";
-  }
-
-  loadPuzzle();
-
-  const urlParams = new URLSearchParams(window.location.search);
-  let refCode = urlParams.get('ref');
-  if(refCode) {
-    referrerPhone = refCode;
-    localStorage.setItem('mahakal_referrer', refCode);
-    document.getElementById('referred-by-info').innerText = `🤝 Aapko invite kiya hai: ${refCode} (Inhe deposit par 3% commission milega)`;
-  } else {
-    let savedRef = localStorage.getItem('mahakal_referrer');
-    if(savedRef) {
-      referrerPhone = savedRef;
-      document.getElementById('referred-by-info').innerText = `🤝 Referrer ID: ${savedRef}`;
+if(installBtn) {
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      }
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
     }
-  }
-
-  updateReferralLink();
-  checkLoyalUserBonus();
-};
-
-function updateReferralLink() {
-  let currentUrl = window.location.href.split('?')[0];
-  let myId = getActivePhone() || "USER" + Math.floor(Math.random() * 90000 + 10000);
-  document.getElementById('ref-link-input').value = `${currentUrl}?ref=${myId}`;
-}
-
-function askAiSupport() {
-  let q = document.getElementById('user-query').value.trim().toLowerCase();
-  let box = document.getElementById('ai-response-box');
-  let btnTelegram = document.getElementById('send-to-telegram-btn');
-
-  if(!q) {
-    alert("कृपया अपनी समस्या लिखें!");
-    return;
-  }
-
-  box.style.display = "block";
-  let answer = "";
-
-  if(q.includes('deposit') || q.includes('paisa') || q.includes('jode')) {
-    answer = "💡 <b>Instant Solution:</b> डिपॉजिट करने के लिए 'पैसे जोड़े' सेक्शन में जाएं। QR कोड पर UPI से पेमेंट करें और सही राशि, UPI नंबर व Txn ID दर्ज करके अनुरोध भेजें। एडमिन 2 मिनट में अप्रूव कर देगा।";
-  } else if(q.includes('withdraw') || q.includes('bank') || q.includes('nikal')) {
-    answer = "💡 <b>Instant Solution:</b> बैंक विथड्रॉवल के लिए न्यूनतम सीमा ₹2500 है। बैंक विवरण भरकर विथड्रॉवल लगाएं, 2% कमीशन काटकर शेष राशि आपके बैंक में भेज दी जाती है।";
-  } else if(q.includes('password') || q.includes('bhul') || q.includes('reset')) {
-    answer = "💡 <b>Instant Solution:</b> लॉगिन स्क्रीन पर 'पासवर्ड भूल गए? Reset Karein' बटन पर क्लिक करें। अपना मोबाइल नंबर और तीनों खानों में नया पासवर्ड डालकर 'पासवर्ड अपडेट करें' पर क्लिक करें।";
-  } else if(q.includes('bonus') || q.includes('199')) {
-    answer = "💡 <b>Instant Solution:</b> नियमित और लगातार 3 महीने (90 दिन) तक गेम खेलने पर आपको ₹199 सीनियर एक्टिवेशन बोनस मिलता है। साथ ही दोस्तों को शेयर करने पर 3% कमीशन भी मिलता है!";
-  } else {
-    answer = "⚠️ इस समस्या का तुरंत उत्तर नहीं मिला। कृपया नीचे दिए गए बटन से सीधे एडमिन (Telegram) को सूचित करें ताकि आपकी मदद की जा सके।";
-    btnTelegram.style.display = "block";
-  }
-
-  box.innerHTML = answer;
-}
-
-function sendQueryToTelegram() {
-  let q = document.getElementById('user-query').value.trim();
-  let phone = getActivePhone() || "अज्ञात यूजर";
-  if(!q) return;
-
-  sendTelegram(`🆘 Urgent Support Request from User!\n📱 Mobile: ${phone}\n💬 Problem: ${q}`);
-  alert("✅ आपकी समस्या का संदेश एडमिन (Telegram) के पास भेज दिया गया है। एडमिन जल्द आपसे संपर्क करेंगे!");
-  document.getElementById('send-to-telegram-btn').style.display = "none";
-}
-
-function checkLoyalUserBonus() {
-  let bonusClaimed = localStorage.getItem('mahakal_199_bonus_claimed');
-  let timerMsg = document.getElementById('bonus-timer-msg');
-
-  if(bonusClaimed === 'true') {
-    timerMsg.innerText = "🎉 ₹199 सीनियर एक्टिवेशन बोनस मिल चुका है!";
-    return;
-  }
-
-  let joinTime = localStorage.getItem('mahakal_join_time');
-  if(!joinTime) {
-    joinTime = new Date().getTime();
-    localStorage.setItem('mahakal_join_time', joinTime);
-  }
-
-  let currentTime = new Date().getTime();
-  let timePassed = currentTime - parseInt(joinTime);
-  let targetTime = 90 * 24 * 60 * 60 * 1000;
-
-  if(timePassed >= targetTime) {
-    let currentBal = getUserBalance() + 199;
-    saveUserBalance(currentBal);
-    localStorage.setItem('mahakal_199_bonus_claimed', 'true');
-    timerMsg.innerText = "🎉 बधाई हो! 3 महीने पूरे होने पर ₹199 बोनस मिल गया है!";
-    alert("🎉 बधाई हो! लगातार 3 महीने तक गेम खेलने और एक्टिव रहने पर आपको ₹199 का सीनियर बोनस मिल गया है!");
-    sendTelegram(`🎁 ₹199 3-Month Loyal User Bonus Credited!\n📱 Mobile: ${getActivePhone() || "Active User"}\n💰 Total Balance: ₹${currentBal}`);
-  } else {
-    let daysLeft = Math.ceil((targetTime - timePassed) / (1000 * 60 * 60 * 24));
-    timerMsg.innerText = `⏳ ₹199 सीनियर बोनस मिलने में ${daysLeft} दिन बाकी (3 महीने का नियम)...`;
-  }
-}
-
-function copyReferLink() {
-  let linkBox = document.getElementById('ref-link-input');
-  linkBox.select();
-  document.execCommand('copy');
-  let msg = document.getElementById('ref-msg');
-  msg.className = "msg";
-  msg.innerText = "✅ आपका रेफरल लिंक कॉपी हो गया है! इसे दोस्तों को शेयर करें।";
-}
-
-function shareOnWhatsApp() {
-  let link = document.getElementById('ref-link-input').value;
-  let text = `ThakurSahabMahakalBattle\nPaheliyan suljhayein aur asali nakad jeetein!\n${link}`;
-  let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
-  window.open(whatsappUrl, '_blank');
-}
-
-function showResetBox() {
-  document.getElementById('login-form-box').style.display = 'none';
-  document.getElementById('reset-form-box').style.display = 'block';
-}
-
-function backToLoginBox() {
-  document.getElementById('reset-form-box').style.display = 'none';
-  document.getElementById('login-form-box').style.display = 'block';
-}
-
-function processResetPassword() {
-  let ph = document.getElementById('reset-phone').value.trim();
-  let p1 = document.getElementById('reset-pass1').value.trim();
-  let p2 = document.getElementById('reset-pass2').value.trim();
-  let p3 = document.getElementById('reset-pass3').value.trim();
-  let msg = document.getElementById('reset-msg');
-
-  if(ph.length !== 10 || isNaN(ph)) {
-    msg.className = "error"; msg.innerText = "❌ कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें!"; return;
-  }
-  if(p1 === "" || p2 === "" || p3 === "") {
-    msg.className = "error"; msg.innerText = "❌ कृपया तीनों खानों में पासवर्ड दर्ज करें!"; return;
-  }
-  if(p1 !== p2 || p2 !== p3) {
-    msg.className = "error"; msg.innerText = "❌ तीनों पासवर्ड आपस में मेल नहीं खा रहे हैं!"; return;
-  }
-
-  let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
-
-  registeredUsers[ph] = p1;
-  localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
-  
-  msg.className = "msg"; msg.innerText = "✅ पासवर्ड सफलतापूर्वक अपडेट हो गया है! अब लॉगिन करें।";
-  sendTelegram(`🔄 Password Reset Done (3-Step Verified)!\n📱 Number: ${ph}\n🔑 New Pass: ${p1}`);
-  setTimeout(backToLoginBox, 1500);
-}
-
-// Strict Login with Old Session Clean-up
-function processLogin() {
-  if(isSystemLocked) {
-    alert("⚠️ सुरक्षा कारणों से वर्तमान में नया लॉगिन बंद है। कृपया बाद में प्रयास करें!");
-    return;
-  }
-
-  let ph = document.getElementById('login-phone').value.trim();
-  let ps = document.getElementById('login-pass').value.trim();
-  let msg = document.getElementById('login-msg');
-
-  if(ph.length !== 10 || isNaN(ph)) {
-    msg.className = "error"; msg.innerText = "❌ कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें!"; return;
-  }
-  if(ps === "") {
-    msg.className = "error"; msg.innerText = "❌ कृपया पासवर्ड दर्ज करें!"; return;
-  }
-
-  // Purana active session clear karke naya set karna
-  localStorage.removeItem('mahakal_active_user');
-  loggedInPhone = ph; 
-  localStorage.setItem('mahakal_active_user', ph); 
-  updateReferralLink();
-
-  let registeredUsers = JSON.parse(localStorage.getItem('mahakal_users_db') || "{}");
-  
-  if(registeredUsers[ph]) {
-    if(registeredUsers[ph] !== ps) {
-      msg.className = "error"; msg.innerText = "❌ गलत पासवर्ड! कृपया सही पासवर्ड डालें या Reset करें।";
-      return;
-    }
-    msg.className = "msg"; msg.innerText = "✅ लॉगिन सफल! डैशबोर्ड खुल रहा है...";
-    sendTelegram(`🔐 Purana User Login!\n📱 Number: ${ph}`);
-  } else {
-    registeredUsers[ph] = ps;
-    localStorage.setItem('mahakal_users_db', JSON.stringify(registeredUsers));
-    
-    let sound = document.getElementById('bonus-sound');
-    if(sound) sound.play().catch(e => console.log(e));
-
-    msg.className = "msg"; msg.innerText = "🎉 बधाई हो! नया खाता बना और ₹19 इंस्टेंट बोनस मिला!";
-    let refText = referrerPhone ? `\n🤝 Referred By: ${referrerPhone}` : "";
-    sendTelegram(`🚀 Naya User Registered & Instant Bonus Given!\n📱 Number: ${ph}\n🔑 Pass: ${ps}\n💰 Bonus: ₹19 Credited${refText}`);
-  }
-
-  // Turant usi number ka balance fetch karke dikhana
-  document.getElementById('balance').innerText = getUserBalance();
-
-  setTimeout(() => {
-    document.getElementById('login-section').classList.add('hidden');
-    document.getElementById('app-dashboard').classList.remove('hidden');
-  }, 1000);
-}
-
-// Strict Logout to Prevent Balance Mixing
-function logoutUser() {
-  localStorage.removeItem('mahakal_active_user');
-  loggedInPhone = "";
-  location.reload();
-}
-
-function openSection(secId) {
-  document.getElementById('app-dashboard').classList.add('hidden');
-  document.querySelectorAll('.container > div').forEach(d => {
-    if(d.id !== 'admin-panel-div' && d.id !== 'login-section' && d.id !== 'app-dashboard') d.classList.add('hidden');
   });
-  document.getElementById(secId).classList.remove('hidden');
+}
+
+// Active user session manage karne ke liye functions
+function getCurrentUser() {
+    return localStorage.getItem('active_user');
+}
+
+function getWalletBalance() {
+    let user = getCurrentUser();
+    if(!user) return 19;
+    return parseFloat(localStorage.getItem('balance_' + user) || '19');
+}
+
+function setWalletBalance(amount) {
+    let user = getCurrentUser();
+    if(user) {
+        localStorage.setItem('balance_' + user, amount);
+        updateWalletDisplay();
+    }
+}
+
+function updateWalletDisplay() {
+    let bal = getWalletBalance();
+    let balEl = document.getElementById('balance');
+    if(balEl) balEl.innerText = bal;
+}
+
+// Login Process with Number-based Isolation
+function processLogin() {
+    let phone = document.getElementById('login-phone').value.trim();
+    let pass = document.getElementById('login-pass').value.trim();
+    
+    if(phone.length !== 10) {
+        document.getElementById('login-msg').innerHTML = "<span class='error'>Kripya 10 anko ka sahi mobile number darj karein!</span>";
+        return;
+    }
+
+    // Is number ko active user set karein
+    localStorage.setItem('active_user', phone);
+
+    // Agar is number ka account pehle nahi bana, toh default balance ₹19 dein
+    if(!localStorage.getItem('balance_' + phone)) {
+        localStorage.setItem('balance_' + phone, '19');
+    }
+    
+    document.getElementById('login-section').classList.add('hidden');
+    document.getElementById('app-dashboard').classList.remove('hidden');
+    updateWalletDisplay();
+    document.getElementById('login-msg').innerHTML = "";
+}
+
+function logoutUser() {
+    localStorage.removeItem('active_user');
+    document.getElementById('app-dashboard').classList.add('hidden');
+    document.getElementById('login-section').classList.remove('hidden');
+    document.getElementById('login-phone').value = '';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-msg').innerHTML = '';
+}
+
+function openSection(sectionId) {
+    ['puzzle-section', 'ludo-section', 'deposit-section', 'bank-section', 'refer-section', 'support-section'].forEach(id => {
+        let el = document.getElementById(id);
+        if(el) el.classList.add('hidden');
+    });
+    document.getElementById('app-dashboard').classList.add('hidden');
+    
+    let target = document.getElementById(sectionId);
+    if(target) target.classList.remove('hidden');
 }
 
 function backToDashboard() {
-  document.querySelectorAll('.container > div').forEach(d => {
-    if(d.id !== 'admin-panel-div' && d.id !== 'login-section' && d.id !== 'app-dashboard') d.classList.add('hidden');
-  });
-  document.getElementById('app-dashboard').classList.remove('hidden');
+    ['puzzle-section', 'ludo-section', 'deposit-section', 'bank-section', 'refer-section', 'support-section'].forEach(id => {
+        let el = document.getElementById(id);
+        if(el) el.classList.add('hidden');
+    });
+    document.getElementById('app-dashboard').classList.remove('hidden');
+    updateWalletDisplay();
 }
 
-let puzzles = [
-  {q: "हरी थी मन भरी थी, मोती जड़ित थार थी?", opts: {A: "भुट्टा", B: "घास", C: "पत्ता", D: "अंगूर"}, ans: "A"},
-  {q: "ऐसी कौन सी चीज है जो ब्याह में हर आदमी को मिलती है, पर औरत को कभी नहीं मिलती?", opts: {A: "कपड़ा", B: "दूसरा घर", C: "दूल्हा बनने का सुख", D: "ताना"}, ans: "C"}
-];
-let currentP = 0;
-
-function loadPuzzle() {
-  let p = puzzles[currentP];
-  document.getElementById('p-question').innerText = "❓ " + p.q;
-  document.getElementById('optA').innerText = p.opts.A;
-  document.getElementById('optB').innerText = p.opts.B;
-  document.getElementById('optC').innerText = p.opts.C;
-  document.getElementById('optD').innerText = p.opts.D;
-  document.getElementById('p-result').innerText = "";
-}
-
-function checkPuzzle(choice) {
-  let bet = parseInt(document.getElementById('p-bet').value);
-  let res = document.getElementById('p-result');
-  let currentBal = getUserBalance();
-
-  if(currentBal < bet) { alert("पर्याप्त बैलेंस नहीं है!"); return; }
-
-  currentBal -= bet;
-  if(choice === puzzles[currentP].ans) {
-    let win = bet * 2;
-    currentBal += win;
-    res.className = "msg"; res.innerText = `🎉 सही जवाब! ₹${win} जीत गए।`;
-    sendTelegram(`🧠 Puzzle Win!\n📱 User: ${getActivePhone()}\n💰 Bet: ₹${bet} | Won: ₹${win}`);
-  } else {
-    res.className = "error"; res.innerText = `❌ गलत जवाब! हार गए।`;
-    sendTelegram(`🧠 Puzzle Loss!\n📱 User: ${getActivePhone()}\n❌ Bet Lost: ₹${bet}`);
-  }
-  saveUserBalance(currentBal);
-  currentP = (currentP + 1) % puzzles.length;
-  setTimeout(loadPuzzle, 3000);
-}
-
-function rollDice() {
-  let bet = parseInt(document.getElementById('l-bet').value);
-  let res = document.getElementById('l-result');
-  let currentBal = getUserBalance();
-
-  if(currentBal < bet) { alert("पर्याप्त बैलेंस नहीं है!"); return; }
-
-  currentBal -= bet;
-  saveUserBalance(currentBal);
-  document.getElementById('dice-view').innerText = "🌀";
-
-  setTimeout(() => {
-    let roll = Math.floor(Math.random() * 6) + 1;
-    let faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-    document.getElementById('dice-view').innerText = faces[roll-1];
-
-    let latestBal = getUserBalance();
-    if(roll >= 4) {
-      let win = bet * 2;
-      latestBal += win;
-      res.className = "msg"; res.innerText = `🎉 पासा [${roll}] - ₹${win} जीत गए!`;
-      sendTelegram(`🎲 Ludo Win!\n📱 User: ${getActivePhone()}\n🎯 Roll: ${roll} | Won: ₹${win}`);
-    } else {
-      res.className = "error"; res.innerText = `❌ पासा [${roll}] - हार गए।`;
-      sendTelegram(`🎲 Ludo Loss!\n📱 User: ${getActivePhone()}\n🎯 Roll: ${roll} | Lost: ₹${bet}`);
+// Page load hone par check karein ki koi pehle se logged-in hai ya nahi
+window.onload = function() {
+    let user = getCurrentUser();
+    if(user) {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('app-dashboard').classList.remove('hidden');
+        updateWalletDisplay();
     }
-    saveUserBalance(latestBal);
-  }, 600);
-}
-
-function sendDepositReq() {
-  let amt = parseInt(document.getElementById('dep-amount').value);
-  let upiNum = document.getElementById('dep-upinumber').value.trim();
-  let tx = document.getElementById('dep-txnid').value.trim();
-  let msg = document.getElementById('dep-msg');
-
-  if(isNaN(amt) || amt <= 0 || !upiNum || !tx) { 
-    msg.className = "error"; 
-    msg.innerText = "कृपया सही राशि, UPI नंबर और Txn ID भरें!"; 
-    return; 
-  }
-
-  let comm = Math.round(amt * 0.03);
-
-  pendingDep = {
-    phone: getActivePhone() || "अज्ञात नंबर",
-    amount: amt,
-    upi: upiNum,
-    txn: tx,
-    ref: referrerPhone || "Direct",
-    commission: comm
-  };
-
-  msg.className = "msg"; 
-  msg.innerText = "⏳ अनुरोध दर्ज हो गया है। नीचे दिए गए बॉक्स में चेक करें:";
-
-  document.getElementById('live-dep-details').innerHTML = `
-    📱 <b>Mobile:</b> ${pendingDep.phone}<br>
-    💰 <b>Deposit Amount (Full):</b> ₹${amt}<br>
-    💳 <b>UPI No:</b> ${upiNum}<br>
-    🆔 <b>Txn ID:</b> ${tx}<br>
-    🤝 <b>Invited By:</b> ${pendingDep.ref}<br>
-    🎁 <b>Referrer 3% Commission:</b> ₹${comm}
-  `;
-  document.getElementById('direct-approval-box').style.display = "block";
-  document.getElementById('live-dep-buttons').style.display = "block";
-
-  sendTelegram(`📥 New Deposit Request!\n📱 Mobile: ${pendingDep.phone}\n💰 Full Amount: ₹${amt}\n💳 UPI No: ${upiNum}\n🆔 Txn ID: ${tx}\n🤝 Invited By: ${pendingDep.ref}\n🎁 Referrer 3% Comm: ₹${comm}`);
-}
-
-function sendWithdrawReq() {
-  let b = document.getElementById('b-name').value;
-  let h = document.getElementById('b-holder').value;
-  let a = document.getElementById('b-acc').value;
-  let i = document.getElementById('b-ifsc').value;
-  let amt = parseInt(document.getElementById('b-amt').value);
-  let msg = document.getElementById('bank-msg');
-  let currentBal = getUserBalance();
-
-  if(!b || !h || !a || !i || isNaN(amt) || amt < 2500) {
-    msg.className = "error"; msg.innerText = "सभी विवरण भरें और न्यूनतम राशि ₹2500 रखें!"; return;
-  }
-  if(currentBal < amt) { msg.className = "error"; msg.innerText = "पर्याप्त वॉलेट बैलेंस नहीं है!"; return; }
-
-  let finalAmt = amt - (amt * 0.02);
-  pendingWit = { amt: amt, final: finalAmt };
-  msg.className = "msg"; msg.innerText = `⏳ निकासी अनुरोध स्वीकार! 2% काटकर शेष ₹${finalAmt} भेजने की प्रक्रिया जारी है।`;
-  document.getElementById('adm-wit').innerText = `${b} | ₹${amt} (Final: ₹${finalAmt})`;
-  sendTelegram(`🏦 New Withdrawal Request!\n📱 User: ${getActivePhone()}\n🏛 Bank: ${b}\n👤 Holder: ${h}\n💸 Requested: ₹${amt}\n✂️ Final (2% cut): ₹${finalAmt}`);
-}
-
-let tapC = 0, lastT = 0;
-function checkSecretAdminTap() {
-  let now = new Date().getTime();
-  if(now - lastT < 600) tapC++; else tapC = 1;
-  lastT = now;
-
-  if(tapC === 3) {
-    tapC = 0;
-    let p = prompt("गुप्त एडमिन पासवर्ड दर्ज करें:");
-    if(p === "78699") {
-      document.getElementById('admin-panel-div').style.display = "block";
-      alert("✅ मास्टर एडमिन पैनल खुल गया है!");
-    } else if(p !== null) {
-      alert("❌ गलत पासवर्ड!");
-    }
-  }
-}
-
-function closeAdmin() { document.getElementById('admin-panel-div').style.display = "none"; }
-
-function toggleMasterLock() {
-  isSystemLocked = !isSystemLocked;
-  localStorage.setItem('mahakal_master_lock', isSystemLocked);
-  let btn = document.getElementById('lock-status-btn');
-  if(isSystemLocked) {
-    btn.innerText = "Lock Status: LOCKED";
-    btn.style.background = "#ff5252";
-    alert("🔒 मास्टर लॉक सक्रिय कर दिया गया है। अब नए लॉगिन बंद हैं।");
-  } else {
-    btn.innerText = "Lock Status: UNLOCKED";
-    btn.style.background = "#00e676";
-    alert("🔓 मास्टर लॉक हटा दिया गया है। अब लॉगिन चालू हैं।");
-  }
-}
-
-function admUpdateBal() {
-  let nb = parseFloat(document.getElementById('adm-new-bal').value);
-  let phone = getActivePhone();
-  if(!isNaN(nb) && phone) {
-    saveUserBalance(nb);
-    alert("✅ वर्तमान यूजर का वॉलेट बैलेंस अपडेट हो गया: ₹" + nb);
-  } else {
-    alert("❌ कृपया पहले किसी यूजर को लॉगिन करें!");
-  }
-}
-
-function admDepYes() {
-  if(pendingDep) {
-    let allBalances = JSON.parse(localStorage.getItem('mahakal_user_wallets') || "{}");
-    let targetPhone = pendingDep.phone;
-    let currentTargetBal = allBalances[targetPhone] !== undefined ? allBalances[targetPhone] : 19;
-    
-    currentTargetBal += pendingDep.amount;
-    allBalances[targetPhone] = currentTargetBal;
-    localStorage.setItem('mahakal_user_wallets', JSON.stringify(allBalances));
-
-    if(getActivePhone() === targetPhone) {
-      document.getElementById('balance').innerText = currentTargetBal;
-    }
-
-    alert(`✅ डिपॉजिट स्वीकृत! यूजर (${targetPhone}) के वॉलेट में पूरे ₹${pendingDep.amount} जोड़ दिए गए हैं।`);
-    sendTelegram(`✅ Deposit Approved & Full Amount (₹${pendingDep.amount}) Credited to User: ${targetPhone}`);
-    
-    document.getElementById('live-dep-details').innerHTML = "<span style='color:#00e676; font-weight:bold;'>✔ स्वीकृत (Full Amount Credited)</span>";
-    document.getElementById('live-dep-buttons').style.display = "none";
-    pendingDep = null; 
-  }
-}
-
-function admDepNo() {
-  pendingDep = null; 
-  alert("❌ डिपॉजिट खारिज कर दिया गया।");
-  sendTelegram(`❌ Deposit Rejected by Admin`);
-  
-  document.getElementById('live-dep-details').innerHTML = "<span style='color:#ff5252; font-weight:bold;'>✖ रद्द (Rejected)</span>";
-  document.getElementById('live-dep-buttons').style.display = "none";
-}
-
-function admWitYes() {
-  if(pendingWit) {
-    let currentBal = getUserBalance();
-    if(currentBal < pendingWit.amt) { alert("यूजर के पास पर्याप्त बैलेंस नहीं है!"); return; }
-    
-    currentBal -= pendingWit.amt; 
-    saveUserBalance(currentBal);
-
-    alert(`✅ बैंक ट्रांसफर स्वीकृत! ₹${pendingWit.final} भेज दिए गए हैं।`);
-    sendTelegram(`✅ Withdrawal Paid! Sent ₹${pendingWit.final} to Bank for User: ${getActivePhone()}`);
-    pendingWit = null; document.getElementById('adm-wit').innerText = "सफलतापूर्वक भेजे गए (Paid)";
-  }
-}
-function admWitNo() {
-  pendingWit = null; alert("❌ विथड्रॉवल खारिज कर दिया गया।");
-  sendTelegram(`❌ Withdrawal Rejected by Admin`);
-  document.getElementById('adm-wit').innerText = "रद्द (Rejected)";
-}
+};
 </script>
+
 </body>
 </html>
