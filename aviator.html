@@ -19,16 +19,16 @@ body {
     max-width: 420px;
     margin: auto;
     background: #131a26;
-    padding: 15px;
+    padding: 12px;
     border-radius: 12px;
-    border: 2px solid #ff7b00;
-    box-shadow: 0 4px 20px rgba(255, 123, 0, 0.3);
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 .header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 .back-btn {
     background: #ef4444;
@@ -55,19 +55,41 @@ body {
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
+    text-decoration: none;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+}
+.history-strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 4px 0;
+    margin-bottom: 8px;
+    scrollbar-width: none;
+}
+.history-badge {
+    background: #1e293b;
+    border: 1px solid #ef4444;
+    color: #ff5252;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
 }
 .game-screen {
     background: radial-gradient(circle, #1a2332 0%, #0b0f19 100%);
-    border: 2px solid #334155;
+    border: 1px solid #334155;
     border-radius: 10px;
-    height: 200px;
+    height: 180px;
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 }
 .multiplier-text {
     font-size: 38px;
@@ -81,96 +103,119 @@ body {
     margin-top: 5px;
     font-weight: bold;
 }
-.history-strip {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding: 5px 0;
-    margin-bottom: 10px;
-    scrollbar-width: none;
+.plane-icon {
+    font-size: 32px;
+    color: #ff3d00;
+    position: absolute;
+    bottom: 30px;
+    left: 40px;
+    transition: 0.2s linear;
 }
-.history-badge {
-    background: #1e293b;
-    border: 1px solid #ef4444;
-    color: #ff5252;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: bold;
-    white-space: nowrap;
-}
+
 .bet-card {
     background: #1a2332;
     border: 1px solid #334155;
     border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 8px;
+    margin-bottom: 8px;
     text-align: left;
 }
 .bet-input {
     width: 100%;
-    padding: 8px;
+    padding: 6px;
     background: #0b0f19;
     border: 1px solid #444;
     color: white;
     border-radius: 5px;
     text-align: center;
-    font-size: 15px;
-    margin: 5px 0;
+    font-size: 14px;
+    margin: 4px 0;
     box-sizing: border-box;
 }
 .quick-chips {
     display: flex;
-    gap: 5px;
-    margin-bottom: 8px;
+    gap: 4px;
+    margin-bottom: 6px;
 }
 .chip-btn {
     flex: 1;
     background: #222d3e;
     border: 1px solid #555;
     color: white;
-    padding: 5px;
+    padding: 4px;
     font-size: 11px;
     border-radius: 4px;
     cursor: pointer;
+}
+.auto-cash-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+.auto-input {
+    width: 70px;
+    padding: 4px;
+    background: #0b0f19;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 12px;
 }
 .action-btn {
     background: #00c853;
     color: #000;
     border: none;
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 5px;
+}
+
+/* Game ke andar Scrollable Live Winners Feed Box */
+.in-game-feed-card {
+    background: #1a2332;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 8px;
+    text-align: left;
 }
 .live-feed-box {
-    background: #141a23;
+    background: #0b0f19;
     border: 1px solid #2a364f;
     border-radius: 6px;
-    padding: 8px;
+    padding: 6px;
     font-size: 11px;
     color: #00ff66;
-    text-align: center;
-    margin-top: 10px;
+    max-height: 95px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ffab00 #0b0f19;
+}
+.feed-item {
+    padding: 3px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.1);
 }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Top Nav -->
     <div class="header-row">
         <button class="back-btn" onclick="history.back()">Back</button>
-        <span style="font-size: 18px; font-weight: bold; color: #ffab00;">Aviator</span>
-        <div style="display: flex; gap: 5px;">
+        <span style="font-size: 16px; font-weight: bold; color: #ffab00;">Aviator Master</span>
+        <div style="display: flex; gap: 5px; align-items: center;">
             <div class="wallet-display">₹<span id="aviator-bal">19</span></div>
+            <a href="index.html#deposit-section" class="deposit-btn-top">Deposit</a>
         </div>
     </div>
 
-    <!-- Multiplier History Strip -->
     <div class="history-strip" id="multiplier-history">
         <div class="history-badge">2.00x</div>
         <div class="history-badge">1.40x</div>
@@ -178,15 +223,15 @@ body {
         <div class="history-badge">1.96x</div>
     </div>
 
-    <!-- Game Animation Screen -->
     <div class="game-screen">
         <div class="multiplier-text" id="live-multiplier">1.00x</div>
         <div class="plane-status" id="plane-status-msg">🚀 प्लेन उड़ रहा है...</div>
+        <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-plane"></i></div>
     </div>
 
-    <!-- Bet Control Box 1 -->
+    <!-- Bet Card 1 -->
     <div class="bet-card">
-        <div style="font-size: 12px; color: #aaa;">बेट राशि (रुपए):</div>
+        <div style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</div>
         <input type="number" id="bet-amt-1" class="bet-input" value="100">
         <div class="quick-chips">
             <button class="chip-btn" onclick="setBet(1, 100)">100</button>
@@ -194,18 +239,50 @@ body {
             <button class="chip-btn" onclick="setBet(1, 500)">500</button>
             <button class="chip-btn" onclick="setBet(1, 1000)">1,000</button>
         </div>
+        <div class="auto-cash-row">
+            <span>ऑटो कैशआउट:</span>
+            <input type="number" id="auto-cash-1" class="auto-input" value="2.00" step="0.1">
+        </div>
         <button class="action-btn" id="bet-btn-1" onclick="toggleBet(1)">BET (लगाएं)</button>
     </div>
 
-    <!-- Live Online Players Feed -->
-    <div class="live-feed-box">
-        🟢 Live Online Players: <span id="active-players">678</span> Active Now<br>
-        🏆 <span id="winner-announcement">राहुल (Kanpur) ने अभी Aviator से ₹500 जीते!</span>
+    <!-- Bet Card 2 -->
+    <div class="bet-card">
+        <div style="font-size: 11px; color: #aaa;">बेट राशि (रुपए):</div>
+        <input type="number" id="bet-amt-2" class="bet-input" value="100">
+        <div class="quick-chips">
+            <button class="chip-btn" onclick="setBet(2, 100)">100</button>
+            <button class="chip-btn" onclick="setBet(2, 200)">200</button>
+            <button class="chip-btn" onclick="setBet(2, 500)">500</button>
+            <button class="chip-btn" onclick="setBet(2, 1000)">1,000</button>
+        </div>
+        <div class="auto-cash-row">
+            <span>ऑटो कैशआउट:</span>
+            <input type="number" id="auto-cash-2" class="auto-input" value="2.00" step="0.1">
+        </div>
+        <button class="action-btn" id="bet-btn-2" onclick="toggleBet(2)">BET (लगाएं)</button>
+    </div>
+
+    <!-- GAME KE ANDAR SCROLLABLE LIVE WINNERS FEED CARD -->
+    <div class="in-game-feed-card">
+        <div style="font-size: 11px; color: #ffab00; margin-bottom: 4px; font-weight: bold; display: flex; justify-content: space-between;">
+            <span>🟢 Live Players & Winners Feed</span>
+            <span style="color: #00ff66;">Active: 682</span>
+        </div>
+        <div class="live-feed-box" id="live-winners-container">
+            <div class="feed-item">🏆 Rahul Thakur (Kanpur Dehat) jeete ₹1,500 (Cashout @ 3.2x)</div>
+            <div class="feed-item">🏆 Sandeep Kumar (Rasulabad) jeete ₹850 (Cashout @ 2.1x)</div>
+            <div class="feed-item">🏆 Amit Singh (Unnao) jeete ₹2,400 (Cashout @ 4.5x)</div>
+            <div class="feed-item">🏆 Deepak Verma (Kanpur Nagar) jeete ₹500 (Cashout @ 1.9x)</div>
+            <div class="feed-item">🏆 Rohit Yadav (Farrukhabad) jeete ₹1,200 (Cashout @ 2.8x)</div>
+            <div class="feed-item">🏆 Vikas Dubey (Auraiya) jeete ₹3,000 (Cashout @ 5.0x)</div>
+            <div class="feed-item">🏆 Ankit Gupta (Kanpur) jeete ₹950 (Cashout @ 2.3x)</div>
+            <div class="feed-item">🏆 Manish Kumar (Etawah) jeete ₹1,800 (Cashout @ 3.6x)</div>
+        </div>
     </div>
 </div>
 
 <script>
-// LocalStorage se active user ka balance fetch karna
 function getActiveUser() {
     return localStorage.getItem('active_user');
 }
@@ -233,78 +310,130 @@ function updateAviatorDisplay() {
 window.onload = function() {
     updateAviatorDisplay();
     startAviatorGameLoop();
+    startDynamicFeedGenerator();
 };
 
 function setBet(boxId, amount) {
-    document.getElementById('bet-amt-1').value = amount;
+    document.getElementById('bet-amt-' + boxId).value = amount;
 }
 
-let isBetPlaced = false;
+let betStatus = { 1: false, 2: false };
 let currentMultiplier = 1.00;
 let gameInterval = null;
 
 function toggleBet(boxId) {
-    let betInput = document.getElementById('bet-amt-1');
-    let betBtn = document.getElementById('bet-btn-1');
+    let betInput = document.getElementById('bet-amt-' + boxId);
+    let betBtn = document.getElementById('bet-btn-' + boxId);
     let amt = parseFloat(betInput.value);
     let bal = getAviatorBalance();
 
-    if(!isBetPlaced) {
+    if(!betStatus[boxId]) {
         if(amt > bal) {
             alert("वॉलेट में पर्याप्त बैलेंस नहीं है!");
             return;
         }
-        // Deduct bet amount
         setAviatorBalance(bal - amt);
-        isBetPlaced = true;
+        betStatus[boxId] = true;
         betBtn.innerText = "CASH OUT (निकाले)";
         betBtn.style.background = "#ffab00";
         betBtn.style.color = "#000";
     } else {
-        // Cash out win
         let winAmt = Math.round(amt * currentMultiplier);
         let newBal = getAviatorBalance() + winAmt;
         setAviatorBalance(newBal);
         alert(`बधाई हो! आपने ₹${winAmt} जीत लिए हैं।`);
-        isBetPlaced = false;
+        betStatus[boxId] = false;
         betBtn.innerText = "BET (लगाएं)";
         betBtn.style.background = "#00c853";
         betBtn.style.color = "#000";
     }
 }
 
-// Smooth Aviator Multiplier Game Loop
 function startAviatorGameLoop() {
     let multText = document.getElementById('live-multiplier');
     let statusMsg = document.getElementById('plane-status-msg');
+    let planeIcon = document.getElementById('plane-graphic');
     
     currentMultiplier = 1.00;
-    let crashPoint = (Math.random() * 5 + 1.2).toFixed(2); // Random crash between 1.20x to 6.20x
+    let crashPoint = (Math.random() * 5 + 1.3).toFixed(2);
+    let posLeft = 40;
+    let posBottom = 30;
 
     gameInterval = setInterval(() => {
         currentMultiplier += 0.03;
         multText.innerText = currentMultiplier.toFixed(2) + "x";
 
+        if(posLeft < 280) posLeft += 2;
+        if(posBottom < 120) posBottom += 1;
+        planeIcon.style.left = posLeft + 'px';
+        planeIcon.style.bottom = posBottom + 'px';
+
+        [1, 2].forEach(boxId => {
+            if(betStatus[boxId]) {
+                let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
+                if(currentMultiplier >= autoVal) {
+                    let amt = parseFloat(document.getElementById('bet-amt-' + boxId).value);
+                    let winAmt = Math.round(amt * autoVal);
+                    setAviatorBalance(getAviatorBalance() + winAmt);
+                    betStatus[boxId] = false;
+                    let btn = document.getElementById('bet-btn-' + boxId);
+                    btn.innerText = "BET (लगाएं)";
+                    btn.style.background = "#00c853";
+                    btn.style.color = "#000";
+                }
+            }
+        });
+
         if(currentMultiplier >= parseFloat(crashPoint)) {
             clearInterval(gameInterval);
             statusMsg.innerHTML = `<span style="color:#ff5252;">💥 प्लेन क्रैश हो गया! (${crashPoint}x)</span>`;
             
-            // Auto-reset bet if user didn't cash out
-            if(isBetPlaced) {
-                isBetPlaced = false;
-                let betBtn = document.getElementById('bet-btn-1');
-                betBtn.innerText = "BET (लगाएं)";
-                betBtn.style.background = "#00c853";
-                betBtn.style.color = "#000";
-            }
+            [1, 2].forEach(boxId => {
+                if(betStatus[boxId]) {
+                    betStatus[boxId] = false;
+                    let btn = document.getElementById('bet-btn-' + boxId);
+                    btn.innerText = "BET (लगाएं)";
+                    btn.style.background = "#00c853";
+                    btn.style.color = "#000";
+                }
+            });
 
-            // Restart next round after 3 seconds
-            setTimeout(() => {
-                statusMsg.innerHTML = "🚀 नया राउंड शुरू हो रहा है...";
-                setTimeout(startAviatorGameLoop, 1500);
-            }, 2000);
+            let countdown = 3;
+            let countInterval = setInterval(() => {
+                statusMsg.innerHTML = `⏳ अगला राउंड ${countdown} सेकंड में शुरू होगा...`;
+                countdown--;
+                if(countdown < 0) {
+                    clearInterval(countInterval);
+                    planeIcon.style.left = '40px';
+                    planeIcon.style.bottom = '30px';
+                    statusMsg.innerHTML = "🚀 प्लेन उड़ रहा है...";
+                    startAviatorGameLoop();
+                }
+            }, 1000);
         }
     }, 100);
+}
+
+function startDynamicFeedGenerator() {
+    let names = ["Ankit", "Manish", "Pankaj", "Suraj", "Ajay", "Pradeep", "Kuldeep", "Vipin", "Sachin", "Mohit", "Rahul", "Sandeep"];
+    let places = ["Kanpur", "Rasulabad", "Unnao", "Etawah", "Kannauj", "Auraiya", "Lucknow", "Farrukhabad", "Bithoor", "Jhinjhak"];
+    let container = document.getElementById('live-winners-container');
+
+    setInterval(() => {
+        let randomName = names[Math.floor(Math.random() * names.length)];
+        let randomPlace = places[Math.floor(Math.random() * places.length)];
+        let randomAmt = Math.floor(Math.random() * 4500) + 200;
+        let randomMult = (Math.random() * 4 + 1.2).toFixed(2);
+
+        let newItem = document.createElement('div');
+        newItem.className = 'feed-item';
+        newItem.innerHTML = `🏆 ${randomName} (${randomPlace}) jeete ₹${randomAmt.toLocaleString()} (Cashout @ ${randomMult}x)`;
+        
+        container.insertBefore(newItem, container.firstChild);
+        if(container.children.length > 30) {
+            container.removeChild(container.lastChild);
+        }
+    }, 3000);
 }
 </script>
 
