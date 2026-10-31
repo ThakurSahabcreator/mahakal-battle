@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Aviator - Slow Speed Game</title>
+<title>Aviator - Super Slow Speed Game</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
@@ -237,8 +237,8 @@ input {
 
   let tapCount = 0, tapTimer = null;
   const BETTING_TIME = 8000;    
-  const FLYING_DURATION = 30000; // ✈️ समय को बढ़ाकर पूरे 30 सेकंड कर दिया गया है ताकि स्पीड एकदम शांत और धीमी रहे!
-  const TOTAL_CYCLE = 38000;     
+  const FLYING_DURATION = 45000; // ✈️ समय को बढ़ाकर 45 सेकंड कर दिया गया है ताकि ऊपर जाते वक्त रफ़्तार बेहद धीमी और कंट्रोल रहे!
+  const TOTAL_CYCLE = 53000;     
 
   window.onload = function() {
     let saved = localStorage.getItem('mahakal_master_wallet');
@@ -330,8 +330,8 @@ input {
       let progressRatio = flyingElapsed / totalFlyingSec;
       if (progressRatio > 1) progressRatio = 1;
 
-      // ✈️ यहाँ पावर को घटाकर बिल्कुल हल्का (1.2) कर दिया गया है ताकि एवरेज स्पीड एकदम धीमी और कंट्रोल में रहे!
-      currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 1.2);
+      // ✈️ यहाँ पावर को और घटाकर 1.05 कर दिया गया है ताकि ऊपर जाते वक्त रफ़्तार बिल्कुल मक्खन की तरह धीमी और शानदार रहे!
+      currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 1.05);
       currentMultiplier = parseFloat(currentMultiplier.toFixed(2));
 
       if (flyingElapsed >= totalFlyingSec || currentMultiplier >= liveForcedCrash) {
@@ -360,7 +360,7 @@ input {
         planeContainer.innerHTML = planeSvgHtml;
 
         let moveX = 10 + (progressRatio * 250);
-        let moveY = 12 + (Math.pow(progressRatio, 1.2) * 120);
+        let moveY = 12 + (Math.pow(progressRatio, 1.05) * 120);
 
         planeContainer.style.left = moveX + "px";
         planeContainer.style.bottom = moveY + "px";
