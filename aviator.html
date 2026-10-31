@@ -340,8 +340,8 @@ input {
 
   let tapCount = 0, tapTimer = null;
   const BETTING_TIME = 8000;    
-  const FLYING_DURATION = 10000; 
-  const TOTAL_CYCLE = 18000;     
+  const FLYING_DURATION = 14000; // ✈️ समय को बढ़ाकर 14 सेकंड कर दिया गया है ताकि रफ़्तार और धीमी और कंट्रोल में रहे!
+  const TOTAL_CYCLE = 22000;     
 
   const fakeNames = ["Rahul (Kanpur)", "Amit (Lucknow)", "Vikas (Etawah)", "Deepak (Unnao)", "Rohit (Agra)", "Pooja (Delhi)"];
 
@@ -494,7 +494,8 @@ input {
       let progressRatio = flyingElapsed / totalFlyingSec;
       if (progressRatio > 1) progressRatio = 1;
 
-      currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 3.0);
+      // ✈️ यहाँ पावर को 3.0 से बढ़ाकर 2.2 कर दिया गया है ताकि शुरुआत में और बीच में रफ्तार बिल्कुल मक्खन जैसी स्मूथ चले और अचानक बहुत तेज न भागे!
+      currentMultiplier = 1.00 + (liveForcedCrash - 1.00) * Math.pow(progressRatio, 2.2);
       currentMultiplier = parseFloat(currentMultiplier.toFixed(2));
 
       if (flyingElapsed >= totalFlyingSec || currentMultiplier >= liveForcedCrash) {
@@ -523,13 +524,13 @@ input {
         planeContainer.innerHTML = planeSvgHtml;
 
         let moveX = 10 + (progressRatio * 250);
-        let moveY = 12 + (Math.pow(progressRatio, 3.0) * 120);
+        let moveY = 12 + (Math.pow(progressRatio, 2.2) * 120);
 
         planeContainer.style.left = moveX + "px";
         planeContainer.style.bottom = moveY + "px";
         
         let ps = planeContainer.querySelector('.red-plane-svg');
-        if(ps) ps.style.transform = `rotate(${10 + (progressRatio * 30)}deg)`;
+        if(ps) ps.style.transform = `rotate(${10 + (progressRatio * 25)}deg)`;
 
         let pathD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY} L ${moveX} 200 Z`;
         let lineD = `M 0 200 Q ${moveX/2} 200, ${moveX} ${200 - moveY}`;
@@ -559,6 +560,7 @@ input {
 
         if (isPlaying2) {
           let p2 = Math.floor(betAmt2 * currentMultiplier);
+          document.getElementById('live-profit-2').style.display = "block";
           document.getElementById('live-profit-2').style.display = "block";
           document.getElementById('live-profit-2').innerText = `📈 लाइव जीत: ₹${p2}`;
           let b2 = document.getElementById('action-btn-2');
@@ -600,7 +602,6 @@ input {
     let btnId = panelNo === 1 ? 'action-btn-1' : 'action-btn-2';
     let currentText = document.getElementById(btnId).innerText;
 
-    // अगर बटन पर "Cash Out" लिखा है, तो प्लेन उड़ते वक्त भी क्लिक करने पर पैसे तुरंत निकल जाएंगे (Alert नहीं आएगा)
     if(currentText.includes("Cash Out")) {
       let win = Math.floor((panelNo === 1 ? betAmt1 : betAmt2) * currentMultiplier);
       walletBal += win;
@@ -618,7 +619,6 @@ input {
       return;
     }
 
-    // नई बेट लगाने के लिए समय चेक होगा
     let cycleTime = Date.now() % TOTAL_CYCLE;
     if (cycleTime >= BETTING_TIME) {
       alert("प्लेन उड़ रहा है! अब इस राउंड में बेट नहीं लग सकती।");
