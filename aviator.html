@@ -21,13 +21,9 @@
 
   <div id="loginSection">
     <h2>Admin Login</h2>
-    <input id="adminPhone" type="text" placeholder="9600000000" />
+    <input id="adminPhone" type="text" placeholder="Enter Admin Phone" />
     <input id="adminPass" type="password" placeholder="Password" />
     <button onclick="adminLogin()">Login</button>
-    <!-- Bypass link for quick access: -->
-    <p style="font-size:0.9em; margin-top:8px;">
-      <a href="#" onclick="bypassLogin(); return false;" style="color:#0af;">Bypass Login</a>
-    </p>
   </div>
 
   <div id="panel" style="display:none">
@@ -60,27 +56,48 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 2) Admin Credentials
-    const ADMIN_PHONE = "9598501336";
-    const ADMIN_PASS  = "ANEES ADMIN";
+    // 3) Secure Login handler via Firebase Database
+    async function adminLogin() {
+      const phone = document.getElementById('adminPhone').value.trim();
+      const pass = document.getElementById('adminPass').value.trim();
 
-    // 3) Login handler
-    function adminLogin() {
-      const phone = adminPhone.value.trim();
-      const pass  = adminPass.value.trim();
-      if (phone === ADMIN_PHONE && pass === ADMIN_PASS) {
-        showPanel();
-      } else {
-        alert('Invalid credentials');
+      if (!phone || !pass) {
+        alert('Kripya phone number aur password darj karein!');
+        return;
+      }
+
+      try {
+        // Firebase me check karega ki is phone number ka user admin hai ya nahi
+        const snapshot = await db.collection('users').where('phone', '==', phone).get();
+        
+        if (snapshot.empty) {
+          alert('Yeh user database mein nahi mila!');
+          return;
+        }
+
+        let isAdminValid = false;
+        snapshot.forEach(doc => {
+          let data = doc.data();
+          // Yahan check hoga ki user ka role admin hai aur password match karta hai
+          if (data.isAdmin === true && data.password === pass) {
+            isAdminValid = true;
+          }
+        });
+
+        if (isAdminValid) {
+          showPanel();
+        } else {
+          alert('Invalid Admin Credentials!');
+        }
+      } catch (error) {
+        console.error("Login error: ", error);
+        alert('Login karne mein samasya aayi.');
       }
     }
-    // 3b) Bypass Login
-    function bypassLogin() {
-      showPanel();
-    }
+
     function showPanel() {
-      loginSection.style.display = 'none';
-      panel.style.display = 'block';
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
       loadGlobalMsgs();
       loadUsers();
     }
@@ -147,4 +164,4 @@
     }
   </script>
 </body>
-</html>ismein jahaj ki looking kaisi hai photo dikhana Jara sport mein yah wale court mein jo jahaj dikh raha hai jaisa bhi hai surprise ka jahaj ka setup karo
+</html>
