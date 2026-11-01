@@ -124,6 +124,7 @@ display: none;
 
 <div class="unique-wallet-card">
 <h3>💰 मेरा वॉलेट: ₹<span id="balance">100</span></h3>
+<p style="font-size: 11px; color: #00e676; margin: 3px 0;" id="puzzle-user-phone"></p>
 <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #ffab00;">
 <span>लगाई बाजी: ₹<span id="last-bet-view">0</span></span>
 <span style="background: #ff5722; color: #fff; padding: 2px 8px; border-radius: 10px;" id="current-level-tag">Level 1 (सामान्य)</span>
@@ -170,17 +171,17 @@ display: none;
 <button class="btn" style="background: #555; padding: 5px; font-size: 12px; margin-top: 10px;" onclick="closeSecretAdmin()">एडमिन पैनल बंद करें</button>
 </div>
 
+<button class="btn" style="background: #334155; margin-top: 15px;" onclick="window.location.href='index.html'">🏠 Main Dashboard Par Wapas Jayein</button>
+
 </div>
 
 <script>
-let walletBalance = 100;
 let currentBetAmount = 0;
 let currentLevel = 1;
 let puzzleTimerInterval = null;
 let timeLeft = 15;
 let correctButtonLetter = 'A';
 
-// Bilkul nayi, anokhi aur durlabh deshi pheliyan jo Google par asani se nahi milti hain
 let levelsData = {
 1: [
 { q: "एक थाल मोतियों से भरा, सबके सिर पर औंधा धरा; चारों तरफ़ वह थाली फिरे, मोती उससे एक न गिरे?", options: { A: "आसमान और तारे", B: "कुएं की जगत", C: "सूरजमुखी का फूल", D: "ओस की बूंदें" }, answer: "A" },
@@ -199,18 +200,48 @@ let levelsData = {
 ]
 };
 
+function getCurrentUserPhone() {
+    return localStorage.getItem('active_session_phone') || localStorage.getItem('logged_in_phone') || 'Guest_User';
+}
+
+function getWalletBalance() {
+    let user = getCurrentUserPhone();
+    if(!user || user === 'Guest_User') return 100;
+    let bal = localStorage.getItem('user_bal_' + user);
+    if(bal === null) {
+        bal = '100';
+        localStorage.setItem('user_bal_' + user, bal);
+    }
+    return parseFloat(bal);
+}
+
+function setWalletBalance(amount) {
+    let user = getCurrentUserPhone();
+    if(user && user !== 'Guest_User') {
+        localStorage.setItem('user_bal_' + user, amount);
+        updateBalanceDisplay();
+    }
+}
+
 window.onload = function() {
-let savedBal = localStorage.getItem('mahakal_level_puzzle_wallet');
-if (savedBal !== null) walletBalance = parseFloat(savedBal);
-updateBalanceDisplay();
+    updateBalanceDisplay();
 };
 
 function updateBalanceDisplay() {
-document.getElementById('balance').innerText = walletBalance;
-document.getElementById('admin-live-wallet').innerText = "₹" + walletBalance;
-document.getElementById('current-level-tag').innerText = "Level " + currentLevel;
-document.getElementById('admin-live-level').innerText = "Level " + currentLevel;
-localStorage.setItem('mahakal_level_puzzle_wallet', walletBalance);
+    let bal = getWalletBalance();
+    document.getElementById('balance').innerText = bal;
+    let adminLiveBal = document.getElementById('admin-live-wallet');
+    if(adminLiveBal) adminLiveBal.innerText = "₹" + bal;
+    
+    document.getElementById('current-level-tag').innerText = "Level " + currentLevel;
+    let adminLiveLvl = document.getElementById('admin-live-level');
+    if(adminLiveLvl) adminLiveLvl.innerText = "Level " + currentLevel;
+    
+    let user = getCurrentUserPhone();
+    let phoneDisp = document.getElementById('puzzle-user-phone');
+    if(phoneDisp && user) {
+        phoneDisp.innerText = "📱 Logged in: " + user;
+    }
 }
 
 let tapCount = 0, lastTapTime = 0;
@@ -233,24 +264,24 @@ function closeSecretAdmin() { document.getElementById('admin-panel-div').style.d
 function adminUpdateWallet() {
 let newAmt = parseFloat(document.getElementById('admin-wallet-input').value);
 if (!isNaN(newAmt)) {
-walletBalance = newAmt;
-updateBalanceDisplay();
-alert("✅ वॉलेट बैलेंस अपडेट हो गया: ₹" + walletBalance);
+setWalletBalance(newAmt);
+alert("✅ वॉलेट बैलेंस अपडेट हो गया: ₹" + newAmt);
 }
 }
 
 function startPuzzleGame() {
 let betAmt = parseInt(document.getElementById('puzzle-bet-input').value);
 if (isNaN(betAmt) || betAmt < 5) { alert("❌ कृपया न्यूनतम ₹5 की बाजी लगाएं!"); return; }
-if (walletBalance < betAmt) { alert("❌ आपके वॉलेट में पर्याप्त बैलेंस नहीं है!"); return; }
+
+let bal = getWalletBalance();
+if (bal < betAmt) { alert("❌ आपके वॉलेट में पर्याप्त बैलेंस नहीं है!"); return; }
 
 currentBetAmount = betAmt;
 currentLevel = 1;
 document.getElementById('last-bet-view').innerText = currentBetAmount;
 document.getElementById('admin-live-bet').innerText = "₹" + currentBetAmount;
 
-walletBalance -= betAmt;
-updateBalanceDisplay();
+setWalletBalance(bal - betAmt);
 
 document.getElementById('puzzle-setup-box').classList.add('hidden');
 document.getElementById('puzzle-play-box').classList.remove('hidden');
@@ -300,7 +331,7 @@ clearInterval(puzzleTimerInterval);
 enableOptions(false);
 let resultDiv = document.getElementById('puzzle-result');
 resultDiv.className = "error";
-resultDiv.innerText = `⏳ समय समाप्त! Level ${currentLevel} पर हार गए।`;
+resultDiv.innerText = `⏱️ समय समाप्त! Level ${currentLevel} पर हार गए।`;
 currentLevel = 1;
 updateBalanceDisplay();
 setTimeout(backToSetup, 3000);
@@ -312,11 +343,11 @@ function checkAnswer(selectedKey) {
 if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
 enableOptions(false);
 let resultDiv = document.getElementById('puzzle-result');
+let currentBal = getWalletBalance();
 
 if (selectedKey === correctButtonLetter) {
 let winAmt = currentBetAmount * 2;
-walletBalance += winAmt;
-updateBalanceDisplay();
+setWalletBalance(currentBal + winAmt);
 
 if (currentLevel < 3) {
 currentLevel++;
