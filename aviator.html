@@ -143,16 +143,16 @@ body {
     z-index: 3;
 }
 
-/* Fighter Jet & Tail Line connected precisely to plane tail */
+/* Aviator Red Propeller Plane Styling */
 .plane-icon {
-    font-size: 24px;
-    color: #38bdf8;
     position: absolute;
     bottom: 5px;
     left: 5px;
     transition: 0.08s linear;
     z-index: 4;
-    text-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
+    filter: drop-shadow(0 0 8px rgba(255, 61, 0, 0.8));
+    width: 36px;
+    height: 22px;
 }
 .tail-line {
     position: absolute;
@@ -167,15 +167,15 @@ body {
 }
 .smoke-puff {
     position: absolute;
-    background: rgba(200, 200, 200, 0.3);
+    background: rgba(255, 100, 50, 0.4);
     border-radius: 50%;
     pointer-events: none;
     z-index: 2;
     animation: fadeSmoke 0.8s linear forwards;
 }
 @keyframes fadeSmoke {
-    0% { transform: scale(0.5); opacity: 0.6; }
-    100% { transform: scale(2); opacity: 0; }
+    0% { transform: scale(0.5); opacity: 0.7; }
+    100% { transform: scale(2.2); opacity: 0; }
 }
 
 .bet-card {
@@ -353,7 +353,15 @@ body {
         <div class="plane-status" id="plane-status-msg">🚀 प्लेन उड़ रहा है...</div>
         
         <div class="tail-line" id="tail-line"></div>
-        <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
+        <!-- Real Aviator Red Propeller Plane SVG -->
+        <div class="plane-icon" id="plane-graphic">
+            <svg viewBox="0 0 100 60" width="100%" height="100%">
+                <path d="M10,30 L50,15 L85,25 L95,30 L85,35 L50,45 Z" fill="#ff1744"/>
+                <path d="M45,10 L55,10 L55,50 L45,50 Z" fill="#d50000"/>
+                <polygon points="90,27 100,30 90,33" fill="#ffeb3b"/>
+                <circle cx="50" cy="30" r="5" fill="#ffffff"/>
+            </svg>
+        </div>
     </div>
 
     <div class="bet-card">
@@ -431,7 +439,6 @@ function closeAviatorAdmin() {
     document.getElementById('aviator-admin-modal').style.display = 'none';
 }
 
-// Persistent Admin Crash Target saved in memory/localStorage
 let forcedAdminCrash = null;
 function saveAdminSettings() {
     let val = parseFloat(document.getElementById('admin-target-mult').value);
@@ -471,7 +478,6 @@ function updateAviatorDisplay() {
 
 window.onload = function() {
     updateAviatorDisplay();
-    // Load saved admin crash target if exists
     let savedTarget = localStorage.getItem('admin_target_crash');
     if(savedTarget) {
         forcedAdminCrash = parseFloat(savedTarget);
@@ -555,13 +561,10 @@ function startAviatorGameLoop() {
     
     currentMultiplier = 1.00;
     
-    // Check if Admin Target Crash is set, otherwise generate random up to 100x
     let crashPoint;
     let savedAdminVal = localStorage.getItem('admin_target_crash');
     if(savedAdminVal) {
         crashPoint = parseFloat(savedAdminVal);
-        // Clear after one use so subsequent games are normal unless admin sets again, 
-        // or keep it if admin wants fixed target. Let's keep it until changed or reset.
     } else {
         crashPoint = (Math.random() * 95 + 1.5).toFixed(2);
     }
@@ -584,7 +587,6 @@ function startAviatorGameLoop() {
         planeIcon.style.left = posX + 'px';
         planeIcon.style.bottom = currentY + 'px';
 
-        // Tail-line attached precisely to the plane's tail center (offset adjustments)
         let tailStartX = posX + 5;
         let tailStartY = currentY + 5;
         let originX = 10;
@@ -602,8 +604,8 @@ function startAviatorGameLoop() {
             smoke.className = 'smoke-puff';
             smoke.style.left = (posX + 5) + 'px';
             smoke.style.bottom = (currentY + 5) + 'px';
-            smoke.style.width = '6px';
-            smoke.style.height = '6px';
+            smoke.style.width = '7px';
+            smoke.style.height = '7px';
             screenBox.appendChild(smoke);
             setTimeout(() => { smoke.remove(); }, 800);
         }
@@ -639,7 +641,6 @@ function startAviatorGameLoop() {
                 }
             });
 
-            // 15 seconds timer
             let countdown = 15;
             let countInterval = setInterval(() => {
                 statusMsg.innerHTML = `⏳ अगला राउंड ${countdown} सेकंड में शुरू होगा...`;
