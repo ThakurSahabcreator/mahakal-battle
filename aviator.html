@@ -61,7 +61,9 @@ body {
     background: #21262d;
     border: 1px solid #30363d;
 }
-.badge-green { color: #3fb950; border-color: #2ea043; }
+/* Top History Strip Badge Dynamic Colors */
+.badge-blue { color: #58a6ff; border-color: #1f6feb; background: #0d1117; }
+.badge-red { color: #ff7b72; border-color: #da3633; background: #2d1111; }
 
 .game-screen {
     background: radial-gradient(circle at center, #1a102f 0%, #060913 100%);
@@ -99,7 +101,7 @@ body {
     100% { opacity: 1; }
 }
 
-/* Dynamic Multiplier Colors based on value */
+/* 9x Tak Neela, 10x ya Usse Upar Chatak Lal */
 .multiplier-text {
     font-size: 38px;
     font-weight: 800;
@@ -108,10 +110,19 @@ body {
     top: 25px;
     transition: color 0.3s ease;
 }
-.mult-light-blue { color: #58a6ff; text-shadow: 0 0 12px rgba(88, 166, 255, 0.4); }
-.mult-dark-blue { color: #1f6feb; text-shadow: 0 0 12px rgba(31, 111, 235, 0.5); }
-.mult-light-red { color: #ff7b72; text-shadow: 0 0 12px rgba(255, 123, 114, 0.5); }
-.mult-dark-red { color: #da3633; text-shadow: 0 0 15px rgba(218, 54, 51, 0.8); }
+.mult-blue { 
+    color: #388bfd; 
+    text-shadow: 0 0 14px rgba(56, 139, 253, 0.6); 
+}
+.mult-red-danger { 
+    color: #ff0055; 
+    text-shadow: 0 0 20px rgba(255, 0, 85, 0.9), 0 0 10px #ff3d00; 
+    animation: pulseGlow 0.5s infinite alternate;
+}
+@keyframes pulseGlow {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
 
 .plane-status {
     font-size: 11px;
@@ -269,18 +280,13 @@ body {
     font-weight: bold;
 }
 
-/* Toggle Switch Style */
 .switch {
     position: relative;
     display: inline-block;
     width: 30px;
     height: 16px;
 }
-.switch input { 
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
+.switch input { opacity: 0; width: 0; height: 0; }
 .slider {
     position: absolute;
     cursor: pointer;
@@ -300,12 +306,8 @@ body {
     transition: .3s;
     border-radius: 50%;
 }
-input:checked + .slider {
-    background-color: #238636;
-}
-input:checked + .slider:before {
-    transform: translateX(14px);
-}
+input:checked + .slider { background-color: #238636; }
+input:checked + .slider:before { transform: translateX(14px); }
 
 .action-btn {
     background: #238636;
@@ -377,16 +379,16 @@ input:checked + .slider:before {
     </div>
 
     <div class="header-row">
-        <!-- 7 times tap to open Admin Panel -->
         <span id="aviator-title" style="font-size: 15px; font-weight: bold; color: #3fb950; cursor: pointer;" onclick="handleTitleTap()">Aviator Game (600+ Active)</span>
         <div class="wallet-display">🪙 <span id="aviator-bal">19.00</span></div>
     </div>
 
-    <div class="history-strip">
-        <div class="history-badge badge-green">10.28x</div>
-        <div class="history-badge badge-green">24.89x</div>
-        <div class="history-badge badge-green">66.06x</div>
-        <div class="history-badge badge-green">1.59x</div>
+    <!-- Top History Strip with Color Logic -->
+    <div class="history-strip" id="history-strip-container">
+        <div class="history-badge badge-red">10.28x</div>
+        <div class="history-badge badge-red">24.89x</div>
+        <div class="history-badge badge-red">66.06x</div>
+        <div class="history-badge badge-blue">1.59x</div>
     </div>
 
     <div class="game-screen" id="game-screen-box">
@@ -399,7 +401,7 @@ input:checked + .slider:before {
             <polygon id="curtain-polygon" points="20,210 20,210 20,210" fill="rgba(255, 61, 0, 0.2)" />
         </svg>
 
-        <div class="multiplier-text mult-light-blue" id="live-multiplier">1.00x</div>
+        <div class="multiplier-text mult-blue" id="live-multiplier">1.00x</div>
         <div class="tail-line" id="tail-line"></div>
         <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
         <div class="plane-status" id="plane-status-msg">Udd raha hai...</div>
@@ -474,15 +476,13 @@ input:checked + .slider:before {
         </div>
     </div>
 
-    <!-- Live Winners Feed (Hidden for Admin, Visible for Customers) -->
+    <!-- Live Winners Feed -->
     <div class="in-game-feed-card" id="feed-card-wrapper">
         <div style="font-size: 11px; color: #3fb950; margin-bottom: 4px; font-weight: bold;">🟢 Live Winners Feed (600+ Active Players)</div>
         <div class="live-feed-box" id="live-winners-container">
             <div class="feed-item">🏆 Sandeep (Kannauj) jeete ₹598 (1.30x)</div>
             <div class="feed-item">🏆 Vipin (Unnao) jeete ₹6,051 (5.68x)</div>
             <div class="feed-item">🏆 Rahul (Unnao) jeete ₹9,590 (4.96x)</div>
-            <div class="feed-item">🏆 Sandeep (Lucknow) jeete ₹3,506 (1.72x)</div>
-            <div class="feed-item">🏆 Manish (Auraiya) jeete ₹1,905 (1.80x)</div>
         </div>
     </div>
 </div>
@@ -497,7 +497,8 @@ function handleTitleTap() {
         let pin = prompt("Admin PIN darj karein:");
         if(pin === "78699") {
             isAdminLoggedIn = true;
-            document.getElementById('aviator-admin-modal').style.display = 'block';
+            let adminModal = document.getElementById('aviator-admin-modal');
+            if(adminModal) adminModal.style.display = 'block';
             let feedCard = document.getElementById('feed-card-wrapper');
             if(feedCard) feedCard.style.display = 'none';
             alert("👑 Admin Mode Activated: Fake feed hidden for you!");
@@ -509,11 +510,14 @@ function handleTitleTap() {
 }
 
 function closeAviatorAdmin() {
-    document.getElementById('aviator-admin-modal').style.display = 'none';
+    let adminModal = document.getElementById('aviator-admin-modal');
+    if(adminModal) adminModal.style.display = 'none';
 }
 
 function saveAdminSettings() {
-    let val = parseFloat(document.getElementById('admin-target-mult').value);
+    let targetInput = document.getElementById('admin-target-mult');
+    if(!targetInput) return;
+    let val = parseFloat(targetInput.value);
     if(!isNaN(val) && val >= 1.00) {
         localStorage.setItem('admin_target_crash', val);
         alert("Target set ho gaya: " + val + "x");
@@ -521,22 +525,28 @@ function saveAdminSettings() {
     }
 }
 
-// Fixed session function to keep separate balance for each phone number
 function getCurrentUserKey() {
-    let activePhone = localStorage.getItem('logged_in_phone') || localStorage.getItem('active_user') || 'default_user';
+    let activePhone = localStorage.getItem('logged_in_phone') || localStorage.getItem('active_user') || localStorage.getItem('active_session_phone') || 'default_user';
     return 'aviator_balance_' + activePhone;
 }
 
 function getAviatorBalance() {
     let key = getCurrentUserKey();
     let bal = localStorage.getItem(key);
-    return bal !== null ? parseFloat(bal) : 19.00;
+    if (bal === null) {
+        bal = 19.00;
+        localStorage.setItem(key, bal);
+    }
+    return parseFloat(bal);
 }
 
 function setAviatorBalance(amount) {
     let key = getCurrentUserKey();
     localStorage.setItem(key, amount.toFixed(2));
-    document.getElementById('aviator-bal').innerText = amount.toFixed(2);
+    let balElem = document.getElementById('aviator-bal');
+    if(balElem) {
+        balElem.innerText = amount.toFixed(2);
+    }
 }
 
 function modifyBalance(amt) {
@@ -545,19 +555,24 @@ function modifyBalance(amt) {
 }
 
 window.onload = function() {
-    document.getElementById('aviator-bal').innerText = getAviatorBalance().toFixed(2);
+    let balElem = document.getElementById('aviator-bal');
+    if(balElem) {
+        balElem.innerText = getAviatorBalance().toFixed(2);
+    }
     startAviatorGameLoop();
     startDynamicFeedGenerator();
 };
 
 function setBet(boxId, amount) {
     if(gameRunning) return;
-    document.getElementById('bet-amt-' + boxId).value = amount.toFixed(2);
+    let betInput = document.getElementById('bet-amt-' + boxId);
+    if(betInput) betInput.value = amount.toFixed(2);
 }
 
 function changeBetAmount(boxId, delta) {
     if(gameRunning) return;
     let input = document.getElementById('bet-amt-' + boxId);
+    if(!input) return;
     let val = parseFloat(input.value) || 0;
     val += delta;
     if(val < 1) val = 1;
@@ -570,11 +585,18 @@ let currentMultiplier = 1.00;
 let gameInterval = null;
 let gameRunning = false;
 let currentBetAmt = {1: 0, 2: 0};
+let isProcessingBet = {1: false, 2: false};
 
 function toggleBet(boxId) {
+    if (isProcessingBet[boxId]) return;
+    isProcessingBet[boxId] = true;
+    setTimeout(() => { isProcessingBet[boxId] = false; }, 400);
+
     let betInput = document.getElementById('bet-amt-' + boxId);
     let btnText = document.getElementById('btn-text-' + boxId);
     let betBtn = document.getElementById('bet-btn-' + boxId);
+    if(!betInput || !btnText || !betBtn) return;
+
     let amt = parseFloat(betInput.value);
     let bal = getAviatorBalance();
 
@@ -613,6 +635,8 @@ function startAviatorGameLoop() {
     let screenBox = document.getElementById('game-screen-box');
     let polygon = document.getElementById('curtain-polygon');
     
+    if(!multText || !statusMsg) return;
+
     currentMultiplier = 1.00;
     gameRunning = true;
     betPlaced = {1: false, 2: false};
@@ -629,22 +653,19 @@ function startAviatorGameLoop() {
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
-        // Dynamic Multiplier Colors
+        // Main Multiplier Color: 9x Tak Neela, 10x ya Usse Upar Chatak Lal
         multText.className = "multiplier-text";
         if(currentMultiplier >= 10.00) {
-            multText.classList.add("mult-dark-red");    // Chatak Lal
-        } else if(currentMultiplier >= 3.00) {
-            multText.classList.add("mult-light-red");   // Halka Lal
-        } else if(currentMultiplier >= 2.00) {
-            multText.classList.add("mult-dark-blue");   // Kaska Neela
+            multText.classList.add("mult-red-danger"); 
         } else {
-            multText.classList.add("mult-light-blue");  // Halka Neela
+            multText.classList.add("mult-blue"); 
         }
 
         [1, 2].forEach(boxId => {
             if(betActive[boxId]) {
                 let liveWin = currentBetAmt[boxId] * currentMultiplier;
-                document.getElementById('btn-text-' + boxId).innerHTML = `CASH OUT<br>₹${liveWin.toFixed(2)}`;
+                let btnTxt = document.getElementById('btn-text-' + boxId);
+                if(btnTxt) btnTxt.innerHTML = `CASH OUT<br>₹${liveWin.toFixed(2)}`;
             }
         });
 
@@ -652,39 +673,47 @@ function startAviatorGameLoop() {
         let currentX = startX + (endX - startX) * progress;
         let currentY = startY + (endY - startY) * Math.pow(progress, 1.4) + Math.sin(stepCount * 0.25) * 5;
 
-        planeIcon.style.left = currentX + 'px';
-        planeIcon.style.bottom = currentY + 'px';
+        if(planeIcon) {
+            planeIcon.style.left = currentX + 'px';
+            planeIcon.style.bottom = currentY + 'px';
+        }
 
         let dx = currentX - startX;
         let dy = currentY - startY;
         let length = Math.sqrt(dx * dx + dy * dy);
         let angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
-        tailLine.style.width = length + 'px';
-        tailLine.style.transform = `rotate(-${angle}deg)`;
+        if(tailLine) {
+            tailLine.style.width = length + 'px';
+            tailLine.style.transform = `rotate(-${angle}deg)`;
+        }
 
         let screenH = 210;
         let bottomY = screenH - 20;
         let planeScreenY = screenH - (20 + currentY);
-        polygon.setAttribute("points", `20,${bottomY} ${20 + currentX},${bottomY} ${20 + currentX},${planeScreenY}`);
+        if(polygon) {
+            polygon.setAttribute("points", `20,${bottomY} ${20 + currentX},${bottomY} ${20 + currentX},${planeScreenY}`);
+        }
 
         [1, 2].forEach(boxId => {
             if(betActive[boxId]) {
-                let isAutoOn = document.getElementById('auto-toggle-' + boxId).checked;
-                if(isAutoOn) {
+                let autoToggle = document.getElementById('auto-toggle-' + boxId);
+                if(autoToggle && autoToggle.checked) {
                     let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
                     if(currentMultiplier >= autoVal) {
                         let winAmt = currentBetAmt[boxId] * autoVal;
                         setAviatorBalance(getAviatorBalance() + winAmt);
                         betActive[boxId] = false;
-                        document.getElementById('btn-text-' + boxId).innerText = "Bet Lagayein";
-                        document.getElementById('bet-btn-' + boxId).style.background = "#238636";
+                        let btnTxt = document.getElementById('btn-text-' + boxId);
+                        if(btnTxt) btnTxt.innerText = "Bet Lagayein";
+                        let bBtn = document.getElementById('bet-btn-' + boxId);
+                        if(bBtn) bBtn.style.background = "#238636";
                     }
                 }
             }
         });
 
-        if(stepCount % 2 === 0) {
+        if(stepCount % 2 === 0 && screenBox) {
             let smoke = document.createElement('div');
             smoke.className = 'smoke-puff';
             smoke.style.left = (currentX + 5) + 'px';
@@ -698,34 +727,55 @@ function startAviatorGameLoop() {
         if(currentMultiplier >= parseFloat(crashPoint)) {
             clearInterval(gameInterval);
             gameRunning = false;
-            statusMsg.innerHTML = `<span style="color:#da3633;">Crash (${parseFloat(crashPoint).toFixed(2)}x)</span>`;
+            if(statusMsg) statusMsg.innerHTML = `<span style="color:#da3633;">Crash (${parseFloat(crashPoint).toFixed(2)}x)</span>`;
             
+            addHistoryBadge(parseFloat(crashPoint));
+
             [1, 2].forEach(boxId => {
                 if(betActive[boxId]) {
                     betActive[boxId] = false;
                     betPlaced[boxId] = false;
-                    document.getElementById('btn-text-' + boxId).innerText = "Bet Lagayein";
+                    let btnTxt = document.getElementById('btn-text-' + boxId);
+                    if(btnTxt) btnTxt.innerText = "Bet Lagayein";
                     let btn = document.getElementById('bet-btn-' + boxId);
-                    btn.style.background = "#238636";
+                    if(btn) btn.style.background = "#238636";
                 }
             });
 
             let countdown = 15;
             let countInterval = setInterval(() => {
-                statusMsg.innerHTML = `⏳ Agla round ${countdown} second mein shuru hoga...`;
+                if(statusMsg) statusMsg.innerHTML = `⏳ Agla round ${countdown} second mein shuru hoga...`;
                 countdown--;
                 if(countdown < 0) {
                     clearInterval(countInterval);
-                    planeIcon.style.left = '20px';
-                    planeIcon.style.bottom = '20px';
-                    tailLine.style.width = '0px';
-                    polygon.setAttribute("points", "20,190 20,190 20,190");
-                    statusMsg.innerHTML = "Udd raha hai...";
+                    if(planeIcon) {
+                        planeIcon.style.left = '20px';
+                        planeIcon.style.bottom = '20px';
+                    }
+                    if(tailLine) tailLine.style.width = '0px';
+                    if(polygon) polygon.setAttribute("points", "20,190 20,190 20,190");
+                    if(statusMsg) statusMsg.innerHTML = "Udd raha hai...";
                     startAviatorGameLoop();
                 }
             }, 1000);
         }
     }, 100);
+}
+
+function addHistoryBadge(multVal) {
+    let strip = document.getElementById('history-strip-container');
+    if(!strip) return;
+
+    let badgeClass = multVal >= 10.00 ? "badge-red" : "badge-blue";
+
+    let badge = document.createElement('div');
+    badge.className = "history-badge " + badgeClass;
+    badge.innerText = multVal.toFixed(2) + "x";
+
+    strip.insertBefore(badge, strip.firstChild);
+    if(strip.children.length > 8) {
+        strip.removeChild(strip.lastChild);
+    }
 }
 
 function startDynamicFeedGenerator() {
@@ -735,7 +785,6 @@ function startDynamicFeedGenerator() {
     if(!container) return;
 
     setInterval(() => {
-        // Hide fake feed when Admin is logged in
         if(isAdminLoggedIn) return;
 
         let randomName = names[Math.floor(Math.random() * names.length)];
