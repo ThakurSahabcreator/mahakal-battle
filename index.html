@@ -170,7 +170,7 @@ transition: 0.3s;
 <div id="login-section">
 <div class="card-box" style="text-align: center;" id="login-form-box">
 <h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस</h3>
-<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें (नया खाता बनाने पर ₹19 मिलेंगा):</p>
+<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें (नया खाता बनाने पर ₹19 मिलेगा):</p>
 <input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
 <input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
 <button class="btn" onclick="processLogin()">सुरक्षित लॉगिन करें</button>
@@ -181,11 +181,11 @@ transition: 0.3s;
 <!-- Reset Password Box -->
 <div class="card-box" style="text-align: center; display: none;" id="reset-form-box">
 <h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔄 पासवर्ड रीसेट करें (3-Step Verification)</h3>
-<p style="font-size: 11px; color: #aaa;">अपना रजिस्टर्ड मोबाइल नंबर और तीनों खानों में नया पासवर्ड दर्ज करें:</p>
+<p style="font-size: 11px; color: #aaa;">अपना रजिस्टर्ड मोबाइल नंबर और नया पासवर्ड दर्ज करें:</p>
 <input type="tel" id="reset-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
-<input type="password" id="reset-pass1" placeholder="नया पासवर्ड (1st Time) दर्ज करें">
-<input type="password" id="reset-pass2" placeholder="पासवर्ड दोबारा दर्ज करें (2nd Time)">
-<input type="password" id="reset-pass3" placeholder="पासवर्ड पक्का करें (3rd Time)">
+<input type="password" id="reset-pass1" placeholder="नया पासवर्ड दर्ज करें">
+<input type="password" id="reset-pass2" placeholder="पासवर्ड दोबारा दर्ज करें">
+<input type="password" id="reset-pass3" placeholder="पासवर्ड पक्का करें">
 <button class="btn" style="background: #eab308; color: #000;" onclick="processResetPassword()">पासवर्ड अपडेट करें (OK)</button>
 <button class="btn" style="background: #334155; font-size: 12px; padding: 8px;" onclick="backToLoginBox()">वापस लॉगिन पर जाएं</button>
 <div id="reset-msg"></div>
@@ -294,7 +294,6 @@ transition: 0.3s;
 <img src="qrcode.jpg" alt="QR" class="qr-img">
 <p style="font-size: 11px; color: #aaa; text-align: center;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 
-<!-- Direct UPI Payment Button added back here -->
 <a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=ThakurSahabMahakal&cu=INR" class="btn" style="background: linear-gradient(to right, #25D366, #128C7E); display: block; text-decoration: none; text-align: center; margin-bottom: 10px; font-size: 14px;">📲 Google Pay / PhonePe पर सीधा भुगतान करें</a>
 
 <input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
@@ -302,15 +301,6 @@ transition: 0.3s;
 <input type="text" id="dep-txnid" placeholder="UPI Txn ID दर्ज करें">
 <button class="btn" style="background: #00897b;" onclick="sendDepositReq()">डिपॉजिट अनुरोध भेजें</button>
 <div id="dep-msg"></div>
-
-<div id="direct-approval-box" style="margin-top: 15px; background: #1a1000; border: 1px solid #ffab00; padding: 10px; border-radius: 6px; display: none;">
-<p style="color: #ffab00; font-size: 12px; margin: 0 0 5px 0; font-weight: bold;">📢 नया डिपॉजिट अनुरोध (Live):</p>
-<div id="live-dep-details" style="font-size: 11px; color: #fff; margin-bottom: 8px;"></div>
-<div id="live-dep-buttons">
-<button onclick="admDepYes()" style="background:#00e676; border:none; padding:6px 12px; font-weight:bold; border-radius:3px; cursor:pointer; color:#000;">✔ YES (पूरा बैलेंस जोड़ें)</button>
-<button onclick="admDepNo()" style="background:#ff5252; border:none; padding:6px 12px; font-weight:bold; border-radius:3px; cursor:pointer; color:#fff; margin-left:5px;">✖ NO (रद्द करें)</button>
-</div>
-</div>
 
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
@@ -427,7 +417,7 @@ if(installBtn) {
 }
 
 // -------------------------------------------------------------------------
-// STRICT USER SESSION & ISOLATED BALANCE STORAGE FUNCTIONS (Fixed)
+// SECURE USER SESSION & ISOLATED BALANCE STORAGE FUNCTIONS (Strict Fix)
 // -------------------------------------------------------------------------
 function getCurrentUser() {
     return localStorage.getItem('active_session_phone');
@@ -478,9 +468,17 @@ function processLogin() {
         return;
     }
 
+    // Check if password matches if already registered
+    let savedPass = localStorage.getItem('user_pass_' + phone);
+    if(savedPass !== null && savedPass !== pass) {
+        document.getElementById('login-msg').innerHTML = "<span class='error'>Galat password! Kripya sahi password dalein.</span>";
+        return;
+    }
+
+    // Set active session strictly for this phone number
     localStorage.setItem('active_session_phone', phone);
 
-    if(!localStorage.getItem('user_pass_' + phone)) {
+    if(savedPass === null) {
         localStorage.setItem('user_pass_' + phone, pass);
     }
 
