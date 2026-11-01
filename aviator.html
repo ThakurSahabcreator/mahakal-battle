@@ -118,13 +118,11 @@ body {
 
 .curtain-area {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background: linear-gradient(135deg, rgba(255, 61, 0, 0.25) 0%, rgba(255, 152, 0, 0.1) 100%);
-    clip-path: polygon(0 100%, 0 100%, 0 100%);
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(135deg, rgba(255, 61, 0, 0.3) 0%, rgba(255, 152, 0, 0.05) 100%);
     pointer-events: none;
     z-index: 2;
-    transition: 0.05s linear;
 }
 
 .plane-icon {
@@ -251,12 +249,12 @@ body {
     font-size: 10px;
     color: #856404;
     background: #ffeeba;
-    padding: 2px 5px;
+    padding: 3px 5px;
     border-radius: 4px;
     font-weight: bold;
 }
 .auto-input {
-    width: 45px;
+    width: 40px;
     background: #fff;
     border: 1px solid #ced4da;
     color: #000;
@@ -265,6 +263,45 @@ body {
     border-radius: 3px;
     font-weight: bold;
 }
+
+/* Toggle Switch Style */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 16px;
+}
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 16px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #238636;
+}
+input:checked + .slider:before {
+    transform: translateX(14px);
+}
+
 .action-btn {
     background: #238636;
     color: white;
@@ -352,7 +389,10 @@ body {
         <div class="star" style="top: 60px; left: 120px; width: 3px; height: 3px;"></div>
         <div class="star" style="top: 40px; left: 250px; width: 2px; height: 2px;"></div>
 
-        <div class="curtain-area" id="curtain-area"></div>
+        <svg class="curtain-area" id="curtain-svg" style="position:absolute; width:100%; height:100%; top:0; left:0;">
+            <polygon id="curtain-polygon" points="20,210 20,210 20,210" fill="rgba(255, 61, 0, 0.2)" />
+        </svg>
+
         <div class="multiplier-text" id="live-multiplier">1.00x</div>
         <div class="tail-line" id="tail-line"></div>
         <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
@@ -381,7 +421,11 @@ body {
                 <button class="chip-btn" onclick="setBet(1, 5000)">5000</button>
             </div>
             <div class="auto-cash-row">
-                <span>Auto Cashout:</span>
+                <span>Auto:</span>
+                <label class="switch">
+                    <input type="checkbox" id="auto-toggle-1">
+                    <span class="slider"></span>
+                </label>
                 <input type="number" id="auto-cash-1" class="auto-input" value="2.00" step="0.1">
             </div>
         </div>
@@ -408,7 +452,11 @@ body {
                 <button class="chip-btn" onclick="setBet(2, 10000)">10000</button>
             </div>
             <div class="auto-cash-row">
-                <span>Auto Cashout:</span>
+                <span>Auto:</span>
+                <label class="switch">
+                    <input type="checkbox" id="auto-toggle-2">
+                    <span class="slider"></span>
+                </label>
                 <input type="number" id="auto-cash-2" class="auto-input" value="2.00" step="0.1">
             </div>
         </div>
@@ -424,11 +472,11 @@ body {
     <div class="in-game-feed-card">
         <div style="font-size: 11px; color: #3fb950; margin-bottom: 4px; font-weight: bold;">🟢 Live Winners Feed (Active Players)</div>
         <div class="live-feed-box" id="live-winners-container">
-            <div class="feed-item">🏆 Sandeep (Kannauj) jeete ₹598 (1.30x)[span_0](start_span)[span_0](end_span)</div>
-            <div class="feed-item">🏆 Vipin (Unnao) jeete ₹6,051 (5.68x)[span_1](start_span)[span_1](end_span)</div>
-            <div class="feed-item">🏆 Rahul (Unnao) jeete ₹9,590 (4.96x)[span_2](start_span)[span_2](end_span)</div>
-            <div class="feed-item">🏆 Sandeep (Lucknow) jeete ₹3,506 (1.72x)[span_3](start_span)[span_3](end_span)</div>
-            <div class="feed-item">🏆 Manish (Auraiya) jeete ₹1,905 (1.80x)[span_4](start_span)[span_4](end_span)</div>
+            <div class="feed-item">🏆 Sandeep (Kannauj) jeete ₹598 (1.30x)</div>
+            <div class="feed-item">🏆 Vipin (Unnao) jeete ₹6,051 (5.68x)</div>
+            <div class="feed-item">🏆 Rahul (Unnao) jeete ₹9,590 (4.96x)</div>
+            <div class="feed-item">🏆 Sandeep (Lucknow) jeete ₹3,506 (1.72x)</div>
+            <div class="feed-item">🏆 Manish (Auraiya) jeete ₹1,905 (1.80x)</div>
         </div>
     </div>
 </div>
@@ -549,8 +597,8 @@ function startAviatorGameLoop() {
     let statusMsg = document.getElementById('plane-status-msg');
     let planeIcon = document.getElementById('plane-graphic');
     let tailLine = document.getElementById('tail-line');
-    let curtainArea = document.getElementById('curtain-area');
     let screenBox = document.getElementById('game-screen-box');
+    let polygon = document.getElementById('curtain-polygon');
     
     currentMultiplier = 1.00;
     gameRunning = true;
@@ -590,19 +638,25 @@ function startAviatorGameLoop() {
         tailLine.style.width = length + 'px';
         tailLine.style.transform = `rotate(-${angle}deg)`;
 
-        curtainArea.style.width = length + 'px';
-        curtainArea.style.height = currentY + 'px';
-        curtainArea.style.clipPath = `polygon(0 100%, 100% ${100 - (currentY/2)}%, 0 0)`;
+        // Corrected bottom curtain area polygon
+        let screenH = 210;
+        let bottomY = screenH - 20; // 190
+        let planeScreenY = screenH - (20 + currentY);
+        polygon.setAttribute("points", `20,${bottomY} ${20 + currentX},${bottomY} ${20 + currentX},${planeScreenY}`);
 
+        // Auto cashout logic with On/Off toggle check
         [1, 2].forEach(boxId => {
             if(betActive[boxId]) {
-                let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
-                if(currentMultiplier >= autoVal) {
-                    let winAmt = currentBetAmt[boxId] * autoVal;
-                    setAviatorBalance(getAviatorBalance() + winAmt);
-                    betActive[boxId] = false;
-                    document.getElementById('btn-text-' + boxId).innerText = "Bet Lagayein";
-                    document.getElementById('bet-btn-' + boxId).style.background = "#238636";
+                let isAutoOn = document.getElementById('auto-toggle-' + boxId).checked;
+                if(isAutoOn) {
+                    let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
+                    if(currentMultiplier >= autoVal) {
+                        let winAmt = currentBetAmt[boxId] * autoVal;
+                        setAviatorBalance(getAviatorBalance() + winAmt);
+                        betActive[boxId] = false;
+                        document.getElementById('btn-text-' + boxId).innerText = "Bet Lagayein";
+                        document.getElementById('bet-btn-' + boxId).style.background = "#238636";
+                    }
                 }
             }
         });
@@ -642,7 +696,7 @@ function startAviatorGameLoop() {
                     planeIcon.style.left = '20px';
                     planeIcon.style.bottom = '20px';
                     tailLine.style.width = '0px';
-                    curtainArea.style.width = '0px';
+                    polygon.setAttribute("points", "20,190 20,190 20,190");
                     statusMsg.innerHTML = "Udd raha hai...";
                     startAviatorGameLoop();
                 }
