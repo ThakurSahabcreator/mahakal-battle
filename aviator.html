@@ -584,10 +584,14 @@ let gameInterval = null;
 let gameRunning = false;
 let currentBetAmt = {1: 0, 2: 0};
 let hasCashedOut = {1: false, 2: false};
-let isProcessingCashOut = {1: false, 2: false}; 
-let isBettingLocked = {1: false, 2: false}; // Countdown aur round ke dauran double click se balance badhne se rokne ke liye strict lock
+let isProcessingClick = {1: false, 2: false};
 
 function toggleBet(boxId) {
+    // Multi-click aur double addition rokne ke liye strict lock
+    if (isProcessingClick[boxId]) return;
+    isProcessingClick[boxId] = true;
+    setTimeout(() => { isProcessingClick[boxId] = false; }, 400);
+
     let betInput = document.getElementById('bet-amt-' + boxId);
     let btnText = document.getElementById('btn-text-' + boxId);
     let betBtn = document.getElementById('bet-btn-' + boxId);
@@ -596,11 +600,11 @@ function toggleBet(boxId) {
     let amt = parseFloat(betInput.value);
     let bal = getAviatorBalance();
 
-    // Agar button pehle hi lock ho chuka hai (countdown ya click ke baad), toh dubara click ignore hoga
-    if(isBettingLocked[boxId]) return;
-
+    // 1. AGAR BET ABHI TAK NAHI LAGI HAI (Bet Lagane ka samay - Countdown / Plane udne se pehle)
     if(!betActive[boxId]) {
         if(gameRunning) {
+            // Agar plane ud chuka hai aur user bet cancel karna chahe ya beech mein hatana chahe
+            // Asli aviator mein round chalne ke dauran bet cancel nahi hoti, agle round ka intezaar hota hai
             alert("Round shuru ho chuka hai, agle round ka intezaar karein!");
             return;
         }
@@ -609,25 +613,35 @@ function toggleBet(boxId) {
             return;
         }
 
-        // Turant lock lagayein taaki 3-4 baar fast click karne par balance dobara na kate ya na badhe
-        isBettingLocked[boxId] = true;
+        // Sirf ek baar exact amount katega (jaise 10 rupaye)
         setAviatorBalance(bal - amt);
-        
         betActive[boxId] = true;
         betPlaced[boxId] = true;
         hasCashedOut[boxId] = false;
-        isProcessingCashOut[boxId] = false;
         currentBetAmt[boxId] = amt;
-        btnText.innerHTML = `CASH OUT<br>₹${amt.toFixed(2)}`;
-        betBtn.style.background = "#d29922";
 
-        // Thodi der baad lock hata dein taaki aage game mein normal kaam kar sake
-        setTimeout(() => { isBettingLocked[boxId] = false; }, 300);
+        // Button ka roop badal kar "Bet Cancel / Cancel" ya "Bet Lag Gayi" dikhayega, 
+        // aur agar user udne se pehle click kare toh bet wapas cancel ho jayegi!
+        btnText.innerHTML = `CANCEL<br>₹${amt.toFixed(2)}`;
+        betBtn.style.background = "#da3633"; // Red color for cancel option before flight
 
     } else {
-        // Yeh cash-out ke waqt multi-click aur double addition rokne ke liye hai
-        if(hasCashedOut[boxId] || isProcessingCashOut[boxId]) return;
-        isProcessingCashOut[boxId] = true;
+        // 2. AGAR USER PLANE UDNAE SE PEHLE APNI BET CANCEL (HATANA) CHAHTE HAIN
+        if(!gameRunning && betActive[boxId] && !hasCashedOut[boxId]) {
+            // Agar plane abhi nahi uda hai aur user ne cancel daba diya, toh poore 10 rupaye wapas jud jayenge
+            let currentBal = getAviatorBalance();
+            setAviatorBalance(currentBal + currentBetAmt[boxId]);
+
+            betActive[boxId] = false;
+            betPlaced[boxId] = false;
+            currentBetAmt[boxId] = 0;
+            btnText.innerText = "Bet Lagayein";
+            betBtn.style.background = "#238636";
+            return;
+        }
+
+        // 3. AGAR PLANE UCHUKA HAI AUR USER CASH OUT KAR RAHA HAI
+        if(hasCashedOut[boxId]) return;
         hasCashedOut[boxId] = true; 
 
         let winAmt = currentBetAmt[boxId] * currentMultiplier;
@@ -673,9 +687,16 @@ function startAviatorGameLoop() {
     }
 
     gameRunning = true;
-    betPlaced = {1: false, 2: false};
-    hasCashedOut = {1: false, 2: false};
-    isProcessingCashOut = {1: false, 2: false};
+    
+    // Jaise hi plane udna shuru ho, agar kisi ne bet laga rakhi hai toh button ka text "CASH OUT" kar do
+    [1, 2].forEach(boxId => {
+        if(betActive[boxId] && !hasCashedOut[boxId]) {
+            let btnTxt = document.getElementById('btn-text-' + boxId);
+            let bBtn = document.getElementById('bet-btn-' + boxId);
+            if(btnTxt) btnTxt.innerHTML = `CASH OUT<br>₹${currentBetAmt[boxId].toFixed(2)}`;
+            if(bBtn) bBtn.style.background = "#d29922";
+        }
+    });
 
     let startX = 20, startY = 20;
     let endX = 240, endY = 120;
@@ -702,8 +723,7 @@ function startAviatorGameLoop() {
                 let autoToggle = document.getElementById('auto-toggle-' + boxId);
                 if(autoToggle && autoToggle.checked) {
                     let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
-                    if(currentMultiplier >= autoVal && !isProcessingCashOut[boxId]) {
-                        isProcessingCashOut[boxId] = true;
+                    if(currentMultiplier >= autoVal && !hasCashedOut[boxId]) {
                         hasCashedOut[boxId] = true;
                         let winAmt = currentBetAmt[boxId] * autoVal;
                         setAviatorBalance(getAviatorBalance() + winAmt);
@@ -766,7 +786,6 @@ function startAviatorGameLoop() {
                     betActive[boxId] = false;
                     betPlaced[boxId] = false;
                     hasCashedOut[boxId] = false;
-                    isProcessingCashOut[boxId] = false;
                     let btnTxt = document.getElementById('btn-text-' + boxId);
                     if(btnTxt) btnTxt.innerText = "Bet Lagayein";
                     let btn = document.getElementById('bet-btn-' + boxId);
