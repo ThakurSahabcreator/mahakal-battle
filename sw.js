@@ -1,18 +1,23 @@
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open('mahakal-cache').then((cache) => {
-      return cache.addAll([
+Self.addEventListener('install', (e) => {
+  E.waitUntil(
+    Caches.open('mahakal-cache').then((cache) => {
+      Return cache.addAll([
         './index.html',
-        './manifest.json'
+        './manifest.json',
+        './ludo.html',
+        './puzzle.html',
+        './play.html',
+        './aviator.html',
+        './naya_game.html'
       ]);
     })
   );
 });
 
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => {
-      return response || fetch(e.request);
+Self.addEventListener('fetch', (e) => {
+  E.respondWith(
+    Caches.match(e.request).then((response) => {
+      Return response || fetch(e.request);
     })
   );
 });
