@@ -509,9 +509,10 @@ function saveAdminSettings() {
     }
 }
 
+// Fixed session function to keep separate balance for each phone number
 function getCurrentUserKey() {
-    let activeUser = localStorage.getItem('active_user') || 'default_user';
-    return 'aviator_balance_' + activeUser;
+    let activePhone = localStorage.getItem('logged_in_phone') || localStorage.getItem('active_user') || 'default_user';
+    return 'aviator_balance_' + activePhone;
 }
 
 function getAviatorBalance() {
@@ -638,13 +639,11 @@ function startAviatorGameLoop() {
         tailLine.style.width = length + 'px';
         tailLine.style.transform = `rotate(-${angle}deg)`;
 
-        // Corrected bottom curtain area polygon
         let screenH = 210;
-        let bottomY = screenH - 20; // 190
+        let bottomY = screenH - 20;
         let planeScreenY = screenH - (20 + currentY);
         polygon.setAttribute("points", `20,${bottomY} ${20 + currentX},${bottomY} ${20 + currentX},${planeScreenY}`);
 
-        // Auto cashout logic with On/Off toggle check
         [1, 2].forEach(boxId => {
             if(betActive[boxId]) {
                 let isAutoOn = document.getElementById('auto-toggle-' + boxId).checked;
