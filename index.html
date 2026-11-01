@@ -243,7 +243,7 @@ transition: 0.3s;
 
         <p style="margin-bottom: 0;">
             <strong style="color: #ff4d4d; font-weight: 700;">5. Fraud-Giri aur Security ki Full Guarantee:</strong><br>
-            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai.
+            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 Customer Support desk har samay aapki sahayata ke liye taiyar hai.
         </p>
         
     </div>
@@ -287,10 +287,10 @@ transition: 0.3s;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Deposit View -->
+<!-- Deposit View (Updated with Screenshot Upload, Submit, & Cancel/Reset Option + 24-hr Auto-Block) -->
 <div id="deposit-section" class="hidden">
 <div class="card-box">
-<h3 style="color: #ffab00; margin-top: 0; text-align: center;">📥 पैसे जोड़े (QR Deposit)</h3>
+<h3 style="color: #ffab00; margin-top: 0; text-align: center;">📥 पैसे जोड़े (QR Deposit & Screenshot)</h3>
 <img src="qrcode.jpg" alt="QR" class="qr-img">
 <p style="font-size: 11px; color: #aaa; text-align: center;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
 
@@ -299,7 +299,19 @@ transition: 0.3s;
 <input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
 <input type="text" id="dep-upinumber" placeholder="UPI Number / UPI ID दर्ज करें">
 <input type="text" id="dep-txnid" placeholder="UPI Txn ID दर्ज करें">
-<button class="btn" style="background: #00897b;" onclick="sendDepositReq()">डिपॉजिट अनुरोध भेजें</button>
+
+<!-- Payment Screenshot Upload Field -->
+<div style="margin: 10px 0; text-align: left;">
+    <label style="font-size: 11px; color: #ffab00; display: block; margin-bottom: 4px;">Payment Screenshot Upload Karein:</label>
+    <input type="file" id="paymentScreenshot" accept="image/*" style="width: 100%; color: #fff; padding: 6px;">
+</div>
+
+<!-- Submit & Cancel Buttons Side-by-Side -->
+<div style="display: flex; gap: 10px; margin-top: 10px;">
+    <button class="btn" style="background: #00897b; margin-top:0; flex: 1;" onclick="sendDepositReqWithSecurity()">डिपॉजिट अनुरोध भेजें</button>
+    <button class="btn" style="background: #dc3545; margin-top:0; flex: 1;" onclick="cancelDepositForm()">Cancel / Reset</button>
+</div>
+
 <div id="dep-msg"></div>
 
 </div>
@@ -346,14 +358,14 @@ transition: 0.3s;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- AI Support View -->
+<!-- Customer Support View -->
 <div id="support-section" class="hidden">
 <div class="card-box" style="text-align: center;">
-<h3 style="color: #ffab00; margin-top: 0;">💬 AI कस्टमर सपोर्ट & Help Desk</h3>
+<h3 style="color: #ffab00; margin-top: 0;">💬 कस्टमर सपोर्ट & Help Desk</h3>
 <p style="font-size: 11px; color: #aaa;">अपनी समस्या नीचे लिखें, instant समाधान मिलेगा। समाधान न मिलने पर सीधे एडमिन (Telegram) को संदेश भेजें:</p>
 <textarea id="user-query" rows="3" placeholder="यहाँ अपनी समस्या लिखें (उदा. डिपॉजिट नहीं हुआ)..."></textarea>
-<button class="btn" style="background: #0284c7;" onclick="askAiSupport()">⚡ तुरन्त उत्तर प्राप्त करें</button>
-<div id="ai-response-box" style="background: #1a2332; border: 1px solid #ffab00; padding: 8px; border-radius: 6px; margin-top: 10px; font-size: 12px; text-align: left; display: none;"></div>
+<button class="btn" style="background: #0284c7;" onclick="askCustomerSupport()">⚡ तुरन्त उत्तर प्राप्त करें</button>
+<div id="support-response-box" style="background: #1a2332; border: 1px solid #ffab00; padding: 8px; border-radius: 6px; margin-top: 10px; font-size: 12px; text-align: left; display: none;"></div>
 <button class="btn" style="background: #ef4444; margin-top: 10px; display: none;" id="send-to-telegram-btn" onclick="sendQueryToTelegram()">🚨 समाधान नहीं मिला? एडमिन (Telegram) को भेजें</button>
 <div id="support-msg"></div>
 </div>
@@ -468,6 +480,17 @@ function processLogin() {
         return;
     }
 
+    // Check if account is currently blocked for 24 hours due to fake deposit attempts
+    let blockKey = 'account_blocked_until_' + phone;
+    let currentTime = new Date().getTime();
+    let blockedUntil = localStorage.getItem(blockKey);
+    
+    if (blockedUntil && currentTime < parseInt(blockedUntil)) {
+        let remainingHours = Math.ceil((parseInt(blockedUntil) - currentTime) / (1000 * 60 * 60));
+        document.getElementById('login-msg').innerHTML = "<span class='error'>❌ Aapka account block hai!<br>Reason: Baar-baar fake/galat payment request daalne ke kaaran.<br>⏳ Kripya " + remainingHours + " ghante baad koshish karein.</span>";
+        return;
+    }
+
     let savedPass = localStorage.getItem('user_pass_' + phone);
     if(savedPass !== null && savedPass !== pass) {
         document.getElementById('login-msg').innerHTML = "<span class='error'>Galat password! Kripya sahi password dalein.</span>";
@@ -476,7 +499,6 @@ function processLogin() {
 
     // Set active session strictly for this phone number
     localStorage.setItem('active_session_phone', phone);
-    // Also sync with Aviator page key if needed
     localStorage.setItem('logged_in_phone', phone);
 
     if(savedPass === null) {
@@ -590,15 +612,63 @@ function rollDice() {
     }
 }
 
-function sendDepositReq() {
-    let amt = document.getElementById('dep-amount').value;
-    let upi = document.getElementById('dep-upinumber').value;
-    let txn = document.getElementById('dep-txnid').value;
+// Deposit Request with Screenshot Upload, Cancel, & 24-Hour Auto-Block Security
+function sendDepositReqWithSecurity() {
+    let user = getCurrentUser();
+    let amt = document.getElementById('dep-amount').value.trim();
+    let upi = document.getElementById('dep-upinumber').value.trim();
+    let txn = document.getElementById('dep-txnid').value.trim();
+    let screenshotInput = document.getElementById('paymentScreenshot');
+
     if(!amt || !upi || !txn) {
-        document.getElementById('dep-msg').innerHTML = "<span class='error'>Kripya sabhi details bharein!</span>";
+        document.getElementById('dep-msg').innerHTML = "<span class='error'>Kripya sabhi details (Amount, UPI ID, Txn ID) bharein!</span>";
         return;
     }
-    document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ Deposit anurodh bhej diya gaya hai!</span>";
+
+    if(screenshotInput.files.length === 0) {
+        document.getElementById('dep-msg').innerHTML = "<span class='error'>Kripya payment ka screenshot upload karein!</span>";
+        return;
+    }
+
+    let blockKey = 'account_blocked_until_' + user;
+    let currentTime = new Date().getTime();
+    let blockedUntil = localStorage.getItem(blockKey);
+
+    if (blockedUntil && currentTime < parseInt(blockedUntil)) {
+        let remainingHours = Math.ceil((parseInt(blockedUntil) - currentTime) / (1000 * 60 * 60));
+        document.getElementById('dep-msg').innerHTML = "<span class='error'>❌ Aapka account block hai! Kripya " + remainingHours + " ghante baad koshish karein.</span>";
+        return;
+    }
+
+    let file = screenshotInput.files[0];
+    let reader = new FileReader();
+    
+    reader.onload = function(e) {
+        let screenshotData = e.target.result;
+        
+        // Save request for verification
+        localStorage.setItem('pending_dep_' + user, JSON.stringify({
+            amount: amt,
+            upi: upi,
+            txn: txn,
+            screenshot: screenshotData,
+            time: new Date().toLocaleString()
+        }));
+
+        document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ Deposit anurodh screenshot ke sath safalta-purvak bhej diya gaya hai! Admin verification ke baad balance update hoga.</span>";
+        cancelDepositForm();
+    };
+    
+    reader.readAsDataURL(file);
+}
+
+// Cancel / Reset Deposit Form Function
+function cancelDepositForm() {
+    document.getElementById('dep-amount').value = '';
+    document.getElementById('dep-upinumber').value = '';
+    document.getElementById('dep-txnid').value = '';
+    document.getElementById('paymentScreenshot').value = '';
+    document.getElementById('dep-msg').innerHTML = "<span style='color: #ffab00; font-size: 12px;'>🔄 Form reset kar diya gaya hai. Aap naye sire se details bhar sakte hain.</span>";
 }
 
 function sendWithdrawReq() {
@@ -625,15 +695,21 @@ function copyReferLink() {
     document.getElementById('ref-msg').innerHTML = "<span class='msg'>🔗 Link copy ho gaya hai!</span>";
 }
 
-function askAiSupport() {
+function shareOnWhatsApp() {
+    let link = document.getElementById('ref-link-input').value;
+    let text = "Thakur Sahab Mahakal Battle khelein aur asali nakad jeetein! Join karein: " + link;
+    window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(text), "_blank");
+}
+
+function askCustomerSupport() {
     let query = document.getElementById('user-query').value.trim();
     if(!query) {
         document.getElementById('support-msg').innerHTML = "<span class='error'>Kripya samasya likhein!</span>";
         return;
     }
-    let box = document.getElementById('ai-response-box');
+    let box = document.getElementById('support-response-box');
     box.style.display = 'block';
-    box.innerHTML = "🤖 <b>AI Assistant:</b> Aapki samasya par vichaar kiya ja raha hai. Kripya thoda prateeksha karein.";
+    box.innerHTML = "💬 <b>Customer Support:</b> Aapki samasya darj ho gayi hai. Kripya thoda prateeksha karein ya direct Telegram par sampark karein.";
     document.getElementById('send-to-telegram-btn').style.display = 'block';
 }
 
