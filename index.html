@@ -468,7 +468,6 @@ function processLogin() {
         return;
     }
 
-    // Check if password matches if already registered
     let savedPass = localStorage.getItem('user_pass_' + phone);
     if(savedPass !== null && savedPass !== pass) {
         document.getElementById('login-msg').innerHTML = "<span class='error'>Galat password! Kripya sahi password dalein.</span>";
@@ -477,6 +476,8 @@ function processLogin() {
 
     // Set active session strictly for this phone number
     localStorage.setItem('active_session_phone', phone);
+    // Also sync with Aviator page key if needed
+    localStorage.setItem('logged_in_phone', phone);
 
     if(savedPass === null) {
         localStorage.setItem('user_pass_' + phone, pass);
@@ -495,6 +496,7 @@ function processLogin() {
 
 function logoutUser() {
     localStorage.removeItem('active_session_phone');
+    localStorage.removeItem('logged_in_phone');
     document.getElementById('app-dashboard').classList.add('hidden');
     document.getElementById('login-section').classList.remove('hidden');
     document.getElementById('login-phone').value = '';
