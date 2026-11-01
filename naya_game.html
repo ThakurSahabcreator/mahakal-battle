@@ -1,27 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mera Naya Game</title>
+    <title>Mera Naya Game - Thakur Sahab</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans p-6">
 
     <div class="max-w-md mx-auto bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-xl text-center">
-        <h1 class="text-2xl font-bold text-orange-400 mb-2">🚀 Mera Naya Game</h1>
-        <p class="text-xs text-gray-400 mb-6">Yeh bilkul alag file hai, purana code safe hai!</p>
+        <h1 class="text-2xl font-bold text-orange-400 mb-1">🚀 Mera Naya Game</h1>
+        <p class="text-xs text-gray-400 mb-4" id="user-phone-display">📱 Loading session...</p>
+
+        <!-- Wallet Box Added for Strict Number Isolation -->
+        <div class="bg-gradient-to-r from-amber-900 to-yellow-900 border border-yellow-600 rounded-xl p-3 mb-4 text-center">
+            <span class="text-xs text-yellow-200">💰 Mera Wallet: </span>
+            <span class="text-lg font-bold text-yellow-400">₹<span id="wallet-balance">19</span></span>
+        </div>
 
         <!-- Game Box -->
         <div class="bg-black/40 border border-gray-700 rounded-xl p-6 mb-6">
             <div id="planeAnim" class="text-5xl mb-3">✈️</div>
             <h2 id="numberShow" class="text-4xl font-black text-green-400">1.00x</h2>
-            <p id="statusText" class="text-xs text-gray-400 mt-2">Game shuru hone ke liye taiyar hai</p>
+            <p id="statusText" class="text-xs text-gray-400 mt-2">Game shuru hone ke liye taiyar hai (Bet: ₹10)</p>
         </div>
 
         <!-- Start Button -->
-        <button id="startBtn" onclick="startGame()" class="w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 rounded-xl text-sm transition shadow-lg">
-            GAME START KAREIN
+        <button id="startBtn" onclick="startGame()" class="w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 rounded-xl text-sm transition shadow-lg cursor-pointer">
+            GAME START KAREIN (₹10 Bet)
+        </button>
+
+        <button onclick="window.location.href='index.html'" class="mt-4 w-full bg-gray-700 hover:bg-gray-600 font-bold py-2 rounded-xl text-xs transition">
+            🏠 Main Dashboard Par Wapas Jayein
         </button>
     </div>
 
@@ -29,29 +39,82 @@
         let interval;
         let mult = 1.00;
         let running = false;
+        const betAmount = 10;
+
+        function getCurrentUserPhone() {
+            return localStorage.getItem('active_session_phone') || localStorage.getItem('logged_in_phone');
+        }
+
+        function getWalletBalance() {
+            let user = getCurrentUserPhone();
+            if(!user) return 19;
+            let bal = localStorage.getItem('user_bal_' + user);
+            if(bal === null) {
+                bal = '19';
+                localStorage.setItem('user_bal_' + user, bal);
+            }
+            return parseFloat(bal);
+        }
+
+        function setWalletBalance(amount) {
+            let user = getCurrentUserPhone();
+            if(user) {
+                localStorage.setItem('user_bal_' + user, amount);
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            let bal = getWalletBalance();
+            let balEl = document.getElementById('wallet-balance');
+            if(balEl) balEl.innerText = bal;
+
+            let user = getCurrentUserPhone();
+            let phoneEl = document.getElementById('user-phone-display');
+            if(phoneEl && user) {
+                phoneEl.innerText = "Logged in: " + user;
+            } else if(phoneEl) {
+                phoneEl.innerText = "Guest Mode (Default)";
+            }
+        }
+
+        window.onload = function() {
+            updateUI();
+        };
 
         function startGame() {
             let btn = document.getElementById('startBtn');
             let status = document.getElementById('statusText');
-            
+            let currentBal = getWalletBalance();
+
             if (!running) {
+                if (currentBal < betAmount) {
+                    alert("❌ Aapke wallet mein paryapt balance nahi hai!");
+                    return;
+                }
+
+                setWalletBalance(currentBal - betAmount);
+
                 running = true;
                 mult = 1.00;
                 btn.innerText = "CRASH HONE KA WAIT KAREIN...";
                 btn.className = "w-full bg-red-600 font-bold py-3 rounded-xl text-sm cursor-not-allowed";
                 status.innerText = "Plane ud raha hai...";
 
+                let randomCrash = (Math.random() * 2 + 1.5).toFixed(2);
+
                 interval = setInterval(() => {
                     mult += 0.08;
                     document.getElementById('numberShow').innerText = mult.toFixed(2) + "x";
 
-                    if (mult >= 2.50) {
+                    if (mult >= parseFloat(randomCrash)) {
                         clearInterval(interval);
                         running = false;
                         document.getElementById('numberShow').innerHTML = `<span class="text-red-500">CRASHED @ ${mult.toFixed(2)}x</span>`;
-                        status.innerText = "Khel khatam! Dobara shuru karein.";
+                        status.innerText = "Khel khatam! Aapke ₹10 haar gaye.";
                         btn.innerText = "PHIR SE START KAREIN";
-                        btn.className = "w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 rounded-xl text-sm transition shadow-lg";
+                        btn.className = "w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-3 rounded-xl text-sm transition shadow-lg cursor-pointer";
+                        updateUI();
                     }
                 }, 150);
             }
