@@ -61,7 +61,6 @@ body {
     background: #21262d;
     border: 1px solid #30363d;
 }
-/* Top History Strip Badge Dynamic Colors */
 .badge-blue { color: #58a6ff; border-color: #1f6feb; background: #0d1117; }
 .badge-red { color: #ff7b72; border-color: #da3633; background: #2d1111; }
 
@@ -101,7 +100,6 @@ body {
     100% { opacity: 1; }
 }
 
-/* 9x Tak Neela, 10x ya Usse Upar Chatak Lal */
 .multiplier-text {
     font-size: 38px;
     font-weight: 800;
@@ -383,7 +381,6 @@ input:checked + .slider:before { transform: translateX(14px); }
         <div class="wallet-display">🪙 <span id="aviator-bal">19.00</span></div>
     </div>
 
-    <!-- Top History Strip with Color Logic -->
     <div class="history-strip" id="history-strip-container">
         <div class="history-badge badge-red">10.28x</div>
         <div class="history-badge badge-red">24.89x</div>
@@ -585,13 +582,8 @@ let currentMultiplier = 1.00;
 let gameInterval = null;
 let gameRunning = false;
 let currentBetAmt = {1: 0, 2: 0};
-let isProcessingBet = {1: false, 2: false};
 
 function toggleBet(boxId) {
-    if (isProcessingBet[boxId]) return;
-    isProcessingBet[boxId] = true;
-    setTimeout(() => { isProcessingBet[boxId] = false; }, 400);
-
     let betInput = document.getElementById('bet-amt-' + boxId);
     let btnText = document.getElementById('btn-text-' + boxId);
     let betBtn = document.getElementById('bet-btn-' + boxId);
@@ -600,12 +592,12 @@ function toggleBet(boxId) {
     let amt = parseFloat(betInput.value);
     let bal = getAviatorBalance();
 
-    if(gameRunning && !betPlaced[boxId]) {
-        alert("Round shuru ho chuka hai, ab bet nahi lag sakti!");
-        return;
-    }
-
+    // Agar bet active nahi hai, toh nayi bet lagane ki koshish hai
     if(!betActive[boxId]) {
+        if(gameRunning) {
+            alert("Round shuru ho chuka hai, agle round ka intezaar karein!");
+            return;
+        }
         if(amt > bal) {
             alert("Balance kam hai!");
             return;
@@ -617,6 +609,7 @@ function toggleBet(boxId) {
         btnText.innerHTML = `CASH OUT<br>₹${amt.toFixed(2)}`;
         betBtn.style.background = "#d29922";
     } else {
+        // Cash Out Action - Jab game chal raha ho aur user cash out kare
         let winAmt = currentBetAmt[boxId] * currentMultiplier;
         setAviatorBalance(getAviatorBalance() + winAmt);
         betActive[boxId] = false;
@@ -653,7 +646,6 @@ function startAviatorGameLoop() {
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
-        // Main Multiplier Color: 9x Tak Neela, 10x ya Usse Upar Chatak Lal
         multText.className = "multiplier-text";
         if(currentMultiplier >= 10.00) {
             multText.classList.add("mult-red-danger"); 
@@ -666,6 +658,20 @@ function startAviatorGameLoop() {
                 let liveWin = currentBetAmt[boxId] * currentMultiplier;
                 let btnTxt = document.getElementById('btn-text-' + boxId);
                 if(btnTxt) btnTxt.innerHTML = `CASH OUT<br>₹${liveWin.toFixed(2)}`;
+
+                // Auto Cash-Out Check
+                let autoToggle = document.getElementById('auto-toggle-' + boxId);
+                if(autoToggle && autoToggle.checked) {
+                    let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
+                    if(currentMultiplier >= autoVal) {
+                        let winAmt = currentBetAmt[boxId] * autoVal;
+                        setAviatorBalance(getAviatorBalance() + winAmt);
+                        betActive[boxId] = false;
+                        btnTxt.innerText = "Bet Lagayein";
+                        let bBtn = document.getElementById('bet-btn-' + boxId);
+                        if(bBtn) bBtn.style.background = "#238636";
+                    }
+                }
             }
         });
 
@@ -694,24 +700,6 @@ function startAviatorGameLoop() {
         if(polygon) {
             polygon.setAttribute("points", `20,${bottomY} ${20 + currentX},${bottomY} ${20 + currentX},${planeScreenY}`);
         }
-
-        [1, 2].forEach(boxId => {
-            if(betActive[boxId]) {
-                let autoToggle = document.getElementById('auto-toggle-' + boxId);
-                if(autoToggle && autoToggle.checked) {
-                    let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
-                    if(currentMultiplier >= autoVal) {
-                        let winAmt = currentBetAmt[boxId] * autoVal;
-                        setAviatorBalance(getAviatorBalance() + winAmt);
-                        betActive[boxId] = false;
-                        let btnTxt = document.getElementById('btn-text-' + boxId);
-                        if(btnTxt) btnTxt.innerText = "Bet Lagayein";
-                        let bBtn = document.getElementById('bet-btn-' + boxId);
-                        if(bBtn) bBtn.style.background = "#238636";
-                    }
-                }
-            }
-        });
 
         if(stepCount % 2 === 0 && screenBox) {
             let smoke = document.createElement('div');
