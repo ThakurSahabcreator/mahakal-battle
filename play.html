@@ -2,11 +2,12 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>Aviator Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aviator Game - Thakur Sahab</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
-  body { background: #0b0f19; color: #fff; font-family: Arial; text-align: center; padding: 10px; }
+  body { background: #0b0f19; color: #fff; font-family: Arial; text-align: center; padding: 10px; user-select: none; }
   .box { background: #121824; max-width: 380px; margin: auto; padding: 15px; border-radius: 8px; border: 2px solid #ff4757; }
   button { background: #2ed573; color: #000; border: none; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 10px; }
   input { width: 90%; padding: 8px; margin-top: 5px; background: #0b0f19; color: #fff; border: 1px solid #444; border-radius: 4px; text-align: center; }
@@ -18,12 +19,15 @@
 <div class="box">
   <!-- Title par click karke admin password dalna hai -->
   <h2 onclick="openAdmin()" style="cursor: pointer; color: #ff4757;">Aviator Game</h2>
-  <p>Balance: ₹<span id="bal">90398</span></p>
+  <p>📱 <span id="user-phone-view" style="color: #00e676; font-size: 12px;">Loading...</span></p>
+  <p>Balance: ₹<span id="bal">19</span></p>
 
   <div>
     <input type="number" id="bet-amt" value="100">
     <button onclick="placeBet()">BET LAGAYEN</button>
   </div>
+
+  <button onclick="window.location.href='index.html'" style="background: #555; color: #fff; font-size: 11px; padding: 6px; margin-top: 8px;">🏠 Dashboard Par Wapas Jayein</button>
 
   <div class="live-box">
     <b>🟢 Live Players:</b>
@@ -38,7 +42,39 @@
 
   let isAdmin = false;
 
-  // Jab aap title par click karke password dalenge, tabhi aapke phone mein real mode on hoga
+  function getCurrentUserPhone() {
+      return localStorage.getItem('active_session_phone') || localStorage.getItem('logged_in_phone') || 'Guest_User';
+  }
+
+  function getWalletBalance() {
+      let user = getCurrentUserPhone();
+      if(!user || user === 'Guest_User') return 19;
+      let bal = localStorage.getItem('user_bal_' + user);
+      if(bal === null) {
+          bal = '19';
+          localStorage.setItem('user_bal_' + user, bal);
+      }
+      return parseFloat(bal);
+  }
+
+  function setWalletBalance(amount) {
+      let user = getCurrentUserPhone();
+      if(user && user !== 'Guest_User') {
+          localStorage.setItem('user_bal_' + user, amount);
+          updateUI();
+      }
+  }
+
+  function updateUI() {
+      let bal = getWalletBalance();
+      document.getElementById('bal').innerText = bal;
+      document.getElementById('user-phone-view').innerText = "Logged in: " + getCurrentUserPhone();
+  }
+
+  window.onload = function() {
+      updateUI();
+  };
+
   function openAdmin() {
     let p = prompt("Admin Password Dalein:");
     if(p === "78699") {
@@ -47,33 +83,42 @@
     }
   }
 
-  // User jab bhi bet lagayega, data server par save ho jayega
   function placeBet() {
-    let amt = document.getElementById('bet-amt').value;
-    let userId = "User_" + Math.floor(Math.random() * 1000);
-    
-    db.ref('realBets/' + userId).set({
-      name: userId,
+    let amt = parseFloat(document.getElementById('bet-amt').value);
+    let currentBal = getWalletBalance();
+    let currentUser = getCurrentUserPhone();
+
+    if(isNaN(amt) || amt <= 0) {
+        alert("Sahi bet amount dalein!");
+        return;
+    }
+
+    if(currentBal < amt) {
+        alert("Wallet mein paryapt balance nahi hai!");
+        return;
+    }
+
+    setWalletBalance(currentBal - amt);
+
+    db.ref('realBets/' + currentUser).set({
+      name: currentUser,
       amt: amt,
       status: "Playing ⏳"
     });
-    alert("Bet lag gayi!");
+    alert("Bet safal-purvak lag gayi!");
   }
 
-  // Yeh check karega ki kiska phone hai
   db.ref('realBets').on('value', (snapshot) => {
     let data = snapshot.val();
     let listEl = document.getElementById('players-list');
     listEl.innerHTML = "";
 
-    // Agar Yeh AAPKA phone hai (Yaani password dal chuke hain) toh hi REAL dikhega[span_1](start_span)[span_1](end_span)
     if (isAdmin && data) {
       Object.values(data).forEach(u => {
         listEl.innerHTML += `<div style="color: #ff5252;">[REAL] ${u.name} - ₹${u.amt} (${u.status})</div>`;
       });
     } 
     else {
-      // Aur agar yeh kisi AMM USER ka phone hai, toh use hamesha FAKE/nakli list hi dikhegi[span_2](start_span)[span_2](end_span)
       listEl.innerHTML += `
         <div>Rahul_99 - ₹500 (Playing)</div>
         <div>Amit_Vip - ₹1000 (Won ₹2100)</div>
