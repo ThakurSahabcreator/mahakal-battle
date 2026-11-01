@@ -63,11 +63,12 @@ body {
 }
 .badge-green { color: #3fb950; border-color: #2ea043; }
 
+/* Game Screen with Wind, Curtain & Stars Effect */
 .game-screen {
-    background: #090d16;
+    background: radial-gradient(circle at center, #1a102f 0%, #060913 100%);
     border: 1px solid #30363d;
     border-radius: 10px;
-    height: 180px;
+    height: 200px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -76,8 +77,46 @@ body {
     justify-content: center;
     margin-bottom: 8px;
 }
+.moon {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    width: 20px;
+    height: 20px;
+    background: #fef08a;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #fde047;
+    z-index: 1;
+}
+.star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    animation: twinkle 1.5s infinite alternate;
+    z-index: 1;
+}
+@keyframes twinkle {
+    0% { opacity: 0.2; }
+    100% { opacity: 1; }
+}
+.wind-curtain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent, rgba(255,61,0,0.08));
+    animation: moveCurtain 4s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+@keyframes moveCurtain {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0%); }
+}
+
 .multiplier-text {
-    font-size: 34px;
+    font-size: 36px;
     font-weight: 800;
     color: #3fb950;
     text-shadow: 0 0 12px rgba(63, 185, 80, 0.4);
@@ -93,26 +132,38 @@ body {
     bottom: 6px;
 }
 .plane-icon {
-    font-size: 26px;
-    color: #3fb950;
+    font-size: 28px;
+    color: #ff3d00;
     position: absolute;
     bottom: 20px;
     left: 20px;
     transform-origin: center;
     z-index: 4;
-    text-shadow: 0 0 10px rgba(63, 185, 80, 0.9);
+    text-shadow: 0 0 12px rgba(255, 61, 0, 0.9);
     transform: rotate(-35deg);
 }
 .tail-line {
     position: absolute;
     bottom: 20px;
     left: 20px;
-    background: #3fb950;
-    height: 3px;
+    background: linear-gradient(90deg, #ff3d00, #ff9800);
+    height: 4px;
     transform-origin: left bottom;
     pointer-events: none;
     z-index: 2;
-    box-shadow: 0 0 8px #3fb950;
+    box-shadow: 0 0 10px #ff3d00;
+}
+.smoke-puff {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    animation: fadeSmoke 0.6s linear forwards;
+}
+@keyframes fadeSmoke {
+    0% { transform: scale(0.5); opacity: 0.5; }
+    100% { transform: scale(2); opacity: 0; }
 }
 
 .global-balance-control {
@@ -137,9 +188,10 @@ body {
     cursor: pointer;
 }
 
+/* Yellow Betting Box */
 .bet-card {
-    background: #161b22;
-    border: 1px solid #30363d;
+    background: #fff3cd;
+    border: 2px solid #ffc107;
     border-radius: 10px;
     padding: 8px;
     margin-bottom: 8px;
@@ -157,14 +209,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #0d1117;
-    border: 1px solid #30363d;
+    background: #ffffff;
+    border: 1px solid #ced4da;
     border-radius: 6px;
     padding: 2px;
 }
 .step-btn {
-    background: #21262d;
-    color: white;
+    background: #e9ecef;
+    color: #000;
     border: none;
     font-size: 14px;
     font-weight: bold;
@@ -177,9 +229,9 @@ body {
     width: 60px;
     background: transparent;
     border: none;
-    color: white;
+    color: #000;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
 }
 .quick-chips-grid {
@@ -188,9 +240,9 @@ body {
     gap: 3px;
 }
 .chip-btn {
-    background: #21262d;
-    border: 1px solid #30363d;
-    color: #3fb950;
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    color: #856404;
     padding: 3px;
     font-size: 10px;
     font-weight: bold;
@@ -232,12 +284,12 @@ body {
     padding: 6px;
     font-size: 11px;
     color: #3fb950;
-    max-height: 70px;
+    max-height: 120px;
     overflow-y: auto;
 }
 .feed-item {
-    padding: 2px 0;
-    border-bottom: 1px dashed rgba(255,255,255,0.05);
+    padding: 3px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.08);
 }
 
 .aviator-admin-modal {
@@ -258,7 +310,6 @@ body {
 <body>
 
 <div class="container">
-    <!-- Secret Admin Panel (Hidden, unlocks after 7 taps on title with PIN: 78699) -->
     <div id="aviator-admin-modal" class="aviator-admin-modal">
         <b style="color: #3fb950; font-size: 13px;">👑 Admin Control Panel:</b>
         <p style="font-size: 11px; color: #8b949e; margin: 4px 0;">Target Crash Multiplier:</p>
@@ -269,7 +320,7 @@ body {
 
     <div class="header-row">
         <span id="aviator-title" style="font-size: 15px; font-weight: bold; color: #3fb950; cursor: pointer;" onclick="handleTitleTap()">Aviator Game</span>
-        <div class="wallet-display">🪙 <span id="aviator-bal">3564.86</span></div>
+        <div class="wallet-display">🪙 <span id="aviator-bal">199.00</span></div>
     </div>
 
     <div class="history-strip">
@@ -280,6 +331,12 @@ body {
     </div>
 
     <div class="game-screen" id="game-screen-box">
+        <div class="moon"></div>
+        <div class="star" style="top: 30px; left: 50px; width: 2px; height: 2px;"></div>
+        <div class="star" style="top: 60px; left: 120px; width: 3px; height: 3px;"></div>
+        <div class="star" style="top: 40px; left: 250px; width: 2px; height: 2px;"></div>
+        <div class="wind-curtain"></div>
+
         <div class="multiplier-text" id="live-multiplier">1.00x</div>
         <div class="tail-line" id="tail-line"></div>
         <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
@@ -339,12 +396,15 @@ body {
         </div>
     </div>
 
-    <!-- Live Winners Feed (Fake/Dynamic for customers) -->
+    <!-- Live Winners Feed -->
     <div class="in-game-feed-card">
-        <div style="font-size: 11px; color: #3fb950; margin-bottom: 4px; font-weight: bold;">🟢 Live Winners Feed</div>
+        <div style="font-size: 11px; color: #3fb950; margin-bottom: 4px; font-weight: bold;">🟢 Live Winners Feed (Active Players)</div>
         <div class="live-feed-box" id="live-winners-container">
-            <div class="feed-item">🏆 Rahul Thakur jeete ₹1,500 (3.2x)</div>
-            <div class="feed-item">🏆 Sandeep Kumar jeete ₹4,850 (2.1x)</div>
+            <div class="feed-item">🏆 Rahul Thakur (Kanpur) jeete ₹12,500 (4.2x)</div>
+            <div class="feed-item">🏆 Sandeep Kumar (Rasulabad) jeete ₹8,850 (3.1x)</div>
+            <div class="feed-item">🏆 Amit Singh (Unnao) jeete ₹15,400 (6.5x)</div>
+            <div class="feed-item">🏆 Deepak Verma (Lucknow) jeete ₹5,200 (2.2x)</div>
+            <div class="feed-item">🏆 Vijay Kumar (Kanpur) jeete ₹9,100 (3.8x)</div>
         </div>
     </div>
 </div>
@@ -379,7 +439,7 @@ function saveAdminSettings() {
 
 function getAviatorBalance() {
     let bal = localStorage.getItem('aviator_balance');
-    return bal !== null ? parseFloat(bal) : 3564.86;
+    return bal !== null ? parseFloat(bal) : 199.00;
 }
 
 function setAviatorBalance(amount) {
@@ -445,13 +505,14 @@ function startAviatorGameLoop() {
     let statusMsg = document.getElementById('plane-status-msg');
     let planeIcon = document.getElementById('plane-graphic');
     let tailLine = document.getElementById('tail-line');
+    let screenBox = document.getElementById('game-screen-box');
     
     currentMultiplier = 1.00;
     let savedTarget = localStorage.getItem('admin_target_crash');
     let crashPoint = savedTarget ? parseFloat(savedTarget) : (Math.random() * 8 + 1.5).toFixed(2);
 
     let startX = 20, startY = 20;
-    let endX = 240, endY = 110;
+    let endX = 240, endY = 120;
     let stepCount = 0;
 
     gameInterval = setInterval(() => {
@@ -461,7 +522,7 @@ function startAviatorGameLoop() {
 
         let progress = Math.min(stepCount / 100, 1);
         let currentX = startX + (endX - startX) * progress;
-        let currentY = startY + (endY - startY) * Math.pow(progress, 1.5) + Math.sin(stepCount * 0.2) * 4;
+        let currentY = startY + (endY - startY) * Math.pow(progress, 1.4) + Math.sin(stepCount * 0.25) * 5;
 
         planeIcon.style.left = currentX + 'px';
         planeIcon.style.bottom = currentY + 'px';
@@ -473,6 +534,17 @@ function startAviatorGameLoop() {
 
         tailLine.style.width = length + 'px';
         tailLine.style.transform = `rotate(-${angle}deg)`;
+
+        if(stepCount % 2 === 0) {
+            let smoke = document.createElement('div');
+            smoke.className = 'smoke-puff';
+            smoke.style.left = (currentX + 5) + 'px';
+            smoke.style.bottom = (currentY + 5) + 'px';
+            smoke.style.width = '6px';
+            smoke.style.height = '6px';
+            screenBox.appendChild(smoke);
+            setTimeout(() => { smoke.remove(); }, 600);
+        }
 
         if(currentMultiplier >= parseFloat(crashPoint)) {
             clearInterval(gameInterval);
@@ -487,7 +559,6 @@ function startAviatorGameLoop() {
                 }
             });
 
-            // 15 seconds waiting time before next round
             let countdown = 15;
             let countInterval = setInterval(() => {
                 statusMsg.innerHTML = `⏳ Agla round ${countdown} second mein shuru hoga...`;
@@ -506,25 +577,25 @@ function startAviatorGameLoop() {
 }
 
 function startDynamicFeedGenerator() {
-    let names = ["Rahul", "Sandeep", "Amit", "Deepak", "Vijay", "Ankit", "Manish", "Suraj"];
-    let places = ["Kanpur", "Rasulabad", "Unnao", "Lucknow", "Etawah"];
+    let names = ["Rahul", "Sandeep", "Amit", "Deepak", "Vijay", "Ankit", "Manish", "Suraj", "Vipin", "Sachin"];
+    let places = ["Kanpur", "Rasulabad", "Unnao", "Lucknow", "Etawah", "Auraiya", "Kannauj"];
     let container = document.getElementById('live-winners-container');
 
     setInterval(() => {
         let randomName = names[Math.floor(Math.random() * names.length)];
         let randomPlace = places[Math.floor(Math.random() * places.length)];
-        let randomAmt = Math.floor(Math.random() * 8000) + 200;
-        let randomMult = (Math.random() * 4.5 + 1.2).toFixed(2);
+        let randomAmt = Math.floor(Math.random() * 12000) + 500;
+        let randomMult = (Math.random() * 5.5 + 1.2).toFixed(2);
 
         let newItem = document.createElement('div');
         newItem.className = 'feed-item';
         newItem.innerHTML = `🏆 ${randomName} (${randomPlace}) jeete ₹${randomAmt.toLocaleString()} (${randomMult}x)`;
         
         container.insertBefore(newItem, container.firstChild);
-        if(container.children.length > 20) {
+        if(container.children.length > 25) {
             container.removeChild(container.lastChild);
         }
-    }, 3500);
+    }, 2500);
 }
 </script>
 
