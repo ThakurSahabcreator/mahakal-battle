@@ -99,15 +99,20 @@ body {
     100% { opacity: 1; }
 }
 
+/* Dynamic Multiplier Colors based on value */
 .multiplier-text {
     font-size: 38px;
     font-weight: 800;
-    color: #3fb950;
-    text-shadow: 0 0 12px rgba(63, 185, 80, 0.4);
     z-index: 3;
     position: absolute;
     top: 25px;
+    transition: color 0.3s ease;
 }
+.mult-light-blue { color: #58a6ff; text-shadow: 0 0 12px rgba(88, 166, 255, 0.4); }
+.mult-dark-blue { color: #1f6feb; text-shadow: 0 0 12px rgba(31, 111, 235, 0.5); }
+.mult-light-red { color: #ff7b72; text-shadow: 0 0 12px rgba(255, 123, 114, 0.5); }
+.mult-dark-red { color: #da3633; text-shadow: 0 0 15px rgba(218, 54, 51, 0.8); }
+
 .plane-status {
     font-size: 11px;
     color: #8b949e;
@@ -372,7 +377,8 @@ input:checked + .slider:before {
     </div>
 
     <div class="header-row">
-        <span id="aviator-title" style="font-size: 15px; font-weight: bold; color: #3fb950; cursor: pointer;" onclick="handleTitleTap()">Aviator Game</span>
+        <!-- 7 times tap to open Admin Panel -->
+        <span id="aviator-title" style="font-size: 15px; font-weight: bold; color: #3fb950; cursor: pointer;" onclick="handleTitleTap()">Aviator Game (600+ Active)</span>
         <div class="wallet-display">🪙 <span id="aviator-bal">19.00</span></div>
     </div>
 
@@ -393,7 +399,7 @@ input:checked + .slider:before {
             <polygon id="curtain-polygon" points="20,210 20,210 20,210" fill="rgba(255, 61, 0, 0.2)" />
         </svg>
 
-        <div class="multiplier-text" id="live-multiplier">1.00x</div>
+        <div class="multiplier-text mult-light-blue" id="live-multiplier">1.00x</div>
         <div class="tail-line" id="tail-line"></div>
         <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
         <div class="plane-status" id="plane-status-msg">Udd raha hai...</div>
@@ -468,9 +474,9 @@ input:checked + .slider:before {
         </div>
     </div>
 
-    <!-- Live Winners Feed -->
-    <div class="in-game-feed-card">
-        <div style="font-size: 11px; color: #3fb950; margin-bottom: 4px; font-weight: bold;">🟢 Live Winners Feed (Active Players)</div>
+    <!-- Live Winners Feed (Hidden for Admin, Visible for Customers) -->
+    <div class="in-game-feed-card" id="feed-card-wrapper">
+        <div style="font-size: 11px; color: #3fb950; margin-bottom: 4px; font-weight: bold;">🟢 Live Winners Feed (600+ Active Players)</div>
         <div class="live-feed-box" id="live-winners-container">
             <div class="feed-item">🏆 Sandeep (Kannauj) jeete ₹598 (1.30x)</div>
             <div class="feed-item">🏆 Vipin (Unnao) jeete ₹6,051 (5.68x)</div>
@@ -483,12 +489,18 @@ input:checked + .slider:before {
 
 <script>
 let titleTapCount = 0;
+let isAdminLoggedIn = false;
+
 function handleTitleTap() {
     titleTapCount++;
     if(titleTapCount >= 7) {
         let pin = prompt("Admin PIN darj karein:");
         if(pin === "78699") {
+            isAdminLoggedIn = true;
             document.getElementById('aviator-admin-modal').style.display = 'block';
+            let feedCard = document.getElementById('feed-card-wrapper');
+            if(feedCard) feedCard.style.display = 'none';
+            alert("👑 Admin Mode Activated: Fake feed hidden for you!");
         } else if(pin !== null) {
             alert("Galat PIN hai!");
         }
@@ -617,6 +629,18 @@ function startAviatorGameLoop() {
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
+        // Dynamic Multiplier Colors
+        multText.className = "multiplier-text";
+        if(currentMultiplier >= 10.00) {
+            multText.classList.add("mult-dark-red");    // Chatak Lal
+        } else if(currentMultiplier >= 3.00) {
+            multText.classList.add("mult-light-red");   // Halka Lal
+        } else if(currentMultiplier >= 2.00) {
+            multText.classList.add("mult-dark-blue");   // Kaska Neela
+        } else {
+            multText.classList.add("mult-light-blue");  // Halka Neela
+        }
+
         [1, 2].forEach(boxId => {
             if(betActive[boxId]) {
                 let liveWin = currentBetAmt[boxId] * currentMultiplier;
@@ -708,8 +732,12 @@ function startDynamicFeedGenerator() {
     let names = ["Rahul", "Sandeep", "Amit", "Deepak", "Vijay", "Ankit", "Manish", "Suraj", "Vipin", "Sachin"];
     let places = ["Kanpur", "Rasulabad", "Unnao", "Lucknow", "Etawah", "Auraiya", "Kannauj"];
     let container = document.getElementById('live-winners-container');
+    if(!container) return;
 
     setInterval(() => {
+        // Hide fake feed when Admin is logged in
+        if(isAdminLoggedIn) return;
+
         let randomName = names[Math.floor(Math.random() * names.length)];
         let randomPlace = places[Math.floor(Math.random() * places.length)];
         let randomAmt = Math.floor(Math.random() * 12000) + 500;
