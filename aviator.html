@@ -63,12 +63,12 @@ body {
 }
 .badge-green { color: #3fb950; border-color: #2ea043; }
 
-/* Game Screen with Wind, Curtain & Stars Effect */
+/* Game Screen with Curtain & Wind Effect */
 .game-screen {
     background: radial-gradient(circle at center, #1a102f 0%, #060913 100%);
     border: 1px solid #30363d;
     border-radius: 10px;
-    height: 200px;
+    height: 210px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -81,8 +81,8 @@ body {
     position: absolute;
     top: 15px;
     right: 25px;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     background: #fef08a;
     border-radius: 50%;
     box-shadow: 0 0 10px #fde047;
@@ -105,8 +105,8 @@ body {
     left: 0;
     width: 200%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent, rgba(255,61,0,0.08));
-    animation: moveCurtain 4s linear infinite;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent, rgba(255,61,0,0.1));
+    animation: moveCurtain 3s linear infinite;
     pointer-events: none;
     z-index: 2;
 }
@@ -116,7 +116,7 @@ body {
 }
 
 .multiplier-text {
-    font-size: 36px;
+    font-size: 38px;
     font-weight: 800;
     color: #3fb950;
     text-shadow: 0 0 12px rgba(63, 185, 80, 0.4);
@@ -155,14 +155,14 @@ body {
 }
 .smoke-puff {
     position: absolute;
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     pointer-events: none;
     z-index: 2;
     animation: fadeSmoke 0.6s linear forwards;
 }
 @keyframes fadeSmoke {
-    0% { transform: scale(0.5); opacity: 0.5; }
+    0% { transform: scale(0.5); opacity: 0.6; }
     100% { transform: scale(2); opacity: 0; }
 }
 
@@ -188,7 +188,7 @@ body {
     cursor: pointer;
 }
 
-/* Yellow Betting Box */
+/* Yellow Betting Box with Auto Cashout */
 .bet-card {
     background: #fff3cd;
     border: 2px solid #ffc107;
@@ -196,14 +196,14 @@ body {
     padding: 8px;
     margin-bottom: 8px;
     display: grid;
-    grid-template-columns: 1fr 1.2fr;
+    grid-template-columns: 1.1fr 1fr;
     gap: 8px;
     align-items: center;
 }
 .bet-left-side {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
 }
 .bet-control-group {
     display: flex;
@@ -220,18 +220,18 @@ body {
     border: none;
     font-size: 14px;
     font-weight: bold;
-    width: 26px;
-    height: 24px;
+    width: 24px;
+    height: 22px;
     border-radius: 4px;
     cursor: pointer;
 }
 .bet-input {
-    width: 60px;
+    width: 50px;
     background: transparent;
     border: none;
     color: #000;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
 }
 .quick-chips-grid {
@@ -243,11 +243,32 @@ body {
     background: #ffffff;
     border: 1px solid #ced4da;
     color: #856404;
-    padding: 3px;
+    padding: 2px;
     font-size: 10px;
     font-weight: bold;
     border-radius: 4px;
     cursor: pointer;
+}
+.auto-cash-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: #856404;
+    background: #ffeeba;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.auto-input {
+    width: 45px;
+    background: #fff;
+    border: 1px solid #ced4da;
+    color: #000;
+    text-align: center;
+    font-size: 10px;
+    border-radius: 3px;
+    font-weight: bold;
 }
 .action-btn {
     background: #238636;
@@ -255,7 +276,7 @@ body {
     border: none;
     width: 100%;
     height: 100%;
-    min-height: 55px;
+    min-height: 65px;
     border-radius: 8px;
     font-size: 14px;
     font-weight: bold;
@@ -350,7 +371,7 @@ body {
         <button class="bal-ctrl-btn" onclick="modifyBalance(100)">+</button>
     </div>
 
-    <!-- Bet Box 1 -->
+    <!-- Bet Box 1 with Auto Cashout -->
     <div class="bet-card">
         <div class="bet-left-side">
             <div class="bet-control-group">
@@ -364,6 +385,10 @@ body {
                 <button class="chip-btn" onclick="setBet(1, 1000)">1000</button>
                 <button class="chip-btn" onclick="setBet(1, 5000)">5000</button>
             </div>
+            <div class="auto-cash-row">
+                <span>Auto Cashout:</span>
+                <input type="number" id="auto-cash-1" class="auto-input" value="2.00" step="0.1">
+            </div>
         </div>
         <div>
             <button class="action-btn" id="bet-btn-1" onclick="toggleBet(1)">
@@ -373,7 +398,7 @@ body {
         </div>
     </div>
 
-    <!-- Bet Box 2 -->
+    <!-- Bet Box 2 with Auto Cashout -->
     <div class="bet-card">
         <div class="bet-left-side">
             <div class="bet-control-group">
@@ -386,6 +411,10 @@ body {
                 <button class="chip-btn" onclick="setBet(2, 100)">100</button>
                 <button class="chip-btn" onclick="setBet(2, 1000)">1000</button>
                 <button class="chip-btn" onclick="setBet(2, 10000)">10000</button>
+            </div>
+            <div class="auto-cash-row">
+                <span>Auto Cashout:</span>
+                <input type="number" id="auto-cash-2" class="auto-input" value="2.00" step="0.1">
             </div>
         </div>
         <div>
@@ -534,6 +563,21 @@ function startAviatorGameLoop() {
 
         tailLine.style.width = length + 'px';
         tailLine.style.transform = `rotate(-${angle}deg)`;
+
+        // Auto cashout check
+        [1, 2].forEach(boxId => {
+            if(betActive[boxId]) {
+                let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
+                if(currentMultiplier >= autoVal) {
+                    let amt = parseFloat(document.getElementById('bet-amt-' + boxId).value);
+                    let winAmt = amt * autoVal;
+                    setAviatorBalance(getAviatorBalance() + winAmt);
+                    betActive[boxId] = false;
+                    document.getElementById('btn-text-' + boxId).innerText = "Bet Lagayein";
+                    document.getElementById('bet-btn-' + boxId).style.background = "#238636";
+                }
+            }
+        });
 
         if(stepCount % 2 === 0) {
             let smoke = document.createElement('div');
