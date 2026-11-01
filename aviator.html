@@ -522,9 +522,10 @@ function saveAdminSettings() {
     }
 }
 
+// EXACT INDEX.HTML SECURE PHONE ISOLATION KEY
 function getCurrentUserKey() {
     let activePhone = localStorage.getItem('logged_in_phone') || localStorage.getItem('active_user') || localStorage.getItem('active_session_phone') || 'default_user';
-    return 'aviator_balance_' + activePhone;
+    return 'user_bal_' + activePhone;
 }
 
 function getAviatorBalance() {
@@ -582,6 +583,7 @@ let currentMultiplier = 1.00;
 let gameInterval = null;
 let gameRunning = false;
 let currentBetAmt = {1: 0, 2: 0};
+let hasCashedOut = {1: false, 2: false};
 
 function toggleBet(boxId) {
     let betInput = document.getElementById('bet-amt-' + boxId);
@@ -592,7 +594,6 @@ function toggleBet(boxId) {
     let amt = parseFloat(betInput.value);
     let bal = getAviatorBalance();
 
-    // Agar bet active nahi hai, toh nayi bet lagane ki koshish hai
     if(!betActive[boxId]) {
         if(gameRunning) {
             alert("Round shuru ho chuka hai, agle round ka intezaar karein!");
@@ -605,11 +606,14 @@ function toggleBet(boxId) {
         setAviatorBalance(bal - amt);
         betActive[boxId] = true;
         betPlaced[boxId] = true;
+        hasCashedOut[boxId] = false;
         currentBetAmt[boxId] = amt;
         btnText.innerHTML = `CASH OUT<br>₹${amt.toFixed(2)}`;
         betBtn.style.background = "#d29922";
     } else {
-        // Cash Out Action - Jab game chal raha ho aur user cash out kare
+        if(hasCashedOut[boxId]) return;
+        hasCashedOut[boxId] = true;
+
         let winAmt = currentBetAmt[boxId] * currentMultiplier;
         setAviatorBalance(getAviatorBalance() + winAmt);
         betActive[boxId] = false;
@@ -633,6 +637,7 @@ function startAviatorGameLoop() {
     currentMultiplier = 1.00;
     gameRunning = true;
     betPlaced = {1: false, 2: false};
+    hasCashedOut = {1: false, 2: false};
 
     let savedTarget = localStorage.getItem('admin_target_crash');
     let crashPoint = savedTarget ? parseFloat(savedTarget) : (Math.random() * 8 + 1.5).toFixed(2);
@@ -654,16 +659,16 @@ function startAviatorGameLoop() {
         }
 
         [1, 2].forEach(boxId => {
-            if(betActive[boxId]) {
+            if(betActive[boxId] && !hasCashedOut[boxId]) {
                 let liveWin = currentBetAmt[boxId] * currentMultiplier;
                 let btnTxt = document.getElementById('btn-text-' + boxId);
                 if(btnTxt) btnTxt.innerHTML = `CASH OUT<br>₹${liveWin.toFixed(2)}`;
 
-                // Auto Cash-Out Check
                 let autoToggle = document.getElementById('auto-toggle-' + boxId);
                 if(autoToggle && autoToggle.checked) {
                     let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
                     if(currentMultiplier >= autoVal) {
+                        hasCashedOut[boxId] = true;
                         let winAmt = currentBetAmt[boxId] * autoVal;
                         setAviatorBalance(getAviatorBalance() + winAmt);
                         betActive[boxId] = false;
@@ -723,6 +728,7 @@ function startAviatorGameLoop() {
                 if(betActive[boxId]) {
                     betActive[boxId] = false;
                     betPlaced[boxId] = false;
+                    hasCashedOut[boxId] = false;
                     let btnTxt = document.getElementById('btn-text-' + boxId);
                     if(btnTxt) btnTxt.innerText = "Bet Lagayein";
                     let btn = document.getElementById('bet-btn-' + boxId);
