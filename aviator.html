@@ -1,169 +1,487 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aviator Admin Panel</title>
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <style>
-    body { background: #111; color: #eee; font-family: Arial, sans-serif; padding: 20px; }
-    input, button, textarea { width: 100%; padding: 8px; margin: 6px 0; border-radius: 4px; border: none; box-sizing: border-box; }
-    button { cursor: pointer; background: #0af; color: #fff; font-weight: bold; }
-    .user-card { background: #222; padding: 12px; margin: 12px 0; border-radius: 6px; }
-    .user-card button { margin-right: 6px; width: auto; padding: 6px 12px; }
-    h1, h2, h3 { margin-top: 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aviator - Thakur Sahab</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body {
+    background-color: #0b0f19;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 10px;
+    user-select: none;
+}
+.container {
+    max-width: 420px;
+    margin: auto;
+    background: #131a26;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.back-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.wallet-display {
+    background: #00c853;
+    color: #000;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+.deposit-btn-top {
+    background: #00897b;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.history-strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 4px 0;
+    margin-bottom: 8px;
+    scrollbar-width: none;
+}
+.history-badge {
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
+    color: #fff;
+}
+.badge-lightblue { background: #0284c7; border: 1px solid #38bdf8; }
+.badge-darkblue { background: #1e3a8a; border: 1px solid #3b82f6; }
+.badge-red { background: #dc2626; border: 1px solid #f87171; }
+
+.game-screen {
+    background: radial-gradient(circle at center, #1e293b 0%, #060913 100%);
+    border: 1px solid #334155;
+    border-radius: 10px;
+    height: 190px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+.moon {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    width: 25px;
+    height: 25px;
+    background: #fef08a;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #fde047;
+    z-index: 1;
+}
+.star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    animation: twinkle 2s infinite alternate;
+    z-index: 1;
+}
+@keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    z-index: 1;
+    animation: moveCloud linear infinite;
+}
+@keyframes moveCloud {
+    0% { transform: translateX(400px); }
+    100% { transform: translateX(-150px); }
+}
+
+.multiplier-text {
+    font-size: 38px;
+    font-weight: 800;
+    color: #ffab00;
+    text-shadow: 0 0 10px rgba(255, 171, 0, 0.5);
+    z-index: 3;
+    position: absolute;
+    top: 20px;
+}
+.plane-status {
+    font-size: 13px;
+    color: #00e676;
+    margin-top: 5px;
+    font-weight: bold;
+    z-index: 3;
+    position: absolute;
+    bottom: 10px;
+}
+
+/* Plane & Trajectory Styling */
+.plane-icon {
+    font-size: 24px;
+    color: #38bdf8;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    transform-origin: center;
+    z-index: 4;
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
+}
+.tail-line {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: linear-gradient(to right, #ff3d00, #ff5722);
+    height: 3px;
+    transform-origin: left bottom;
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: 0 0 8px #ff3d00;
+}
+.smoke-puff {
+    position: absolute;
+    background: rgba(200, 200, 200, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    animation: fadeSmoke 0.8s linear forwards;
+}
+@keyframes fadeSmoke {
+    0% { transform: scale(0.5); opacity: 0.6; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+.bet-card {
+    background: #1a1515;
+    border: 2px solid #ff3d00;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(255, 61, 0, 0.2);
+}
+.bet-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.bet-control-group {
+    display: flex;
+    align-items: center;
+    background: #0b0f19;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 2px;
+}
+.step-btn {
+    background: #222d3e;
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.bet-input {
+    width: 65px;
+    background: transparent;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+.quick-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+.chip-btn {
+    background: #251a1a;
+    border: 1px solid #ff3d00;
+    color: #ffab00;
+    padding: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.auto-cash-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #aaa;
+    margin-bottom: 6px;
+    background: #0b0f19;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+.auto-input {
+    width: 60px;
+    padding: 3px;
+    background: #131a26;
+    border: 1px solid #444;
+    color: #ffab00;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+.action-btn {
+    background: linear-gradient(to bottom, #ff3d00, #d50000);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(255, 61, 0, 0.4);
+}
+
+.in-game-feed-card {
+    background: #1a2332;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 8px;
+    text-align: left;
+}
+.live-feed-box {
+    background: #0b0f19;
+    border: 1px solid #2a364f;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 11px;
+    color: #00ff66;
+    max-height: 80px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ffab00 #0b0f19;
+}
+.feed-item {
+    padding: 2px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.1);
+}
+</style>
 </head>
 <body>
-  <h1>Aviator Admin Panel</h1>
 
-  <div id="loginSection">
-    <h2>Admin Login</h2>
-    <input id="adminPhone" type="text" placeholder="Admin Phone Number" />
-    <input id="adminPass" type="password" placeholder="Password" />
-    <button onclick="adminLogin()">Login</button>
-    
-    <p style="font-size:0.9em; margin-top:8px;">
-      <a href="#" onclick="bypassLogin(); return false;" style="color:#0af;">Bypass Login (Direct Open)</a>
-    </p>
-  </div>
+<div class="container">
+    <div class="header-row">
+        <button class="back-btn" onclick="history.back()">Back</button>
+        <span style="font-size: 18px; font-weight: bold; color: #ffab00;">Aviator</span>
+        <div style="display: flex; gap: 5px; align-items: center;">
+            <div class="wallet-display">₹<span id="aviator-bal">19</span></div>
+        </div>
+    </div>
 
-  <div id="panel" style="display:none">
-    <h2>Users</h2>
-    <input id="searchUid" type="text" placeholder="Search by UID (leave blank for all)" />
-    <button onclick="loadUsers()">Search</button>
-    <div id="usersList"></div>
+    <div class="history-strip" id="multiplier-history">
+        <div class="history-badge badge-lightblue">1.40x</div>
+        <div class="history-badge badge-darkblue">3.50x</div>
+        <div class="history-badge badge-red">12.40x</div>
+    </div>
 
-    <h3>Edit Global Messages</h3>
-    <label>Deposit Page Message:</label>
-    <textarea id="depositMsg" rows="2"></textarea>
-    <button onclick="saveGlobalMsg('deposit')">Save Deposit Msg</button>
+    <div class="game-screen" id="game-screen-box">
+        <div class="moon"></div>
+        <div class="star" style="top: 30px; left: 50px; width: 2px; height: 2px;"></div>
+        <div class="star" style="top: 60px; left: 120px; width: 3px; height: 3px;"></div>
+        
+        <div class="cloud" style="top: 40px; width: 60px; height: 15px; animation-duration: 8s;"></div>
 
-    <label>Redeem Page Message:</label>
-    <textarea id="redeemMsg" rows="2"></textarea>
-    <button onclick="saveGlobalMsg('redeem')">Save Redeem Msg</button>
-  </div>
+        <div class="multiplier-text" id="live-multiplier">1.00x</div>
+        
+        <div class="tail-line" id="tail-line"></div>
+        <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
 
-  <script>
-    // 1) Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBEw0RMnk5qI6kvfzZCodlXDVKEbGYXhZA",
-      authDomain: "aviator-khelo.firebaseapp.com",
-      projectId: "aviator-khelo",
-      storageBucket: "aviator-khelo.firebasestorage.app",
-      messagingSenderId: "530801804270",
-      appId: "1:530801804270:web:e1226cf092c8d3bed044ff",
-      measurementId: "G-JE0G267L3W"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+        <div class="plane-status" id="plane-status-msg">🚀 प्लेन उड़ रहा है...</div>
+    </div>
 
-    // 2) Admin Credentials (Naya Password Set kiya gaya hai)
-    const ADMIN_PHONE = "7880447645";
-    const ADMIN_PASS  = "Rahul@7880";
+    <div class="bet-card">
+        <div class="bet-top-row">
+            <span style="font-size: 12px; color: #ffab00; font-weight: bold;">बेट 1</span>
+            <div class="bet-control-group">
+                <button class="step-btn" onclick="changeBetAmount(1, -5)">-</button>
+                <input type="number" id="bet-amt-1" class="bet-input" value="10">
+                <button class="step-btn" onclick="changeBetAmount(1, 5)">+</button>
+            </div>
+        </div>
+        <div class="quick-chips-grid">
+            <button class="chip-btn" onclick="setBet(1, 5)">5</button>
+            <button class="chip-btn" onclick="setBet(1, 10)">10</button>
+            <button class="chip-btn" onclick="setBet(1, 20)">20</button>
+            <button class="chip-btn" onclick="setBet(1, 50)">50</button>
+        </div>
+        <div class="auto-cash-row">
+            <span>ऑटो कैशआउट (Auto Pay):</span>
+            <input type="number" id="auto-cash-1" class="auto-input" value="2.00" step="0.1">
+        </div>
+        <button class="action-btn" id="bet-btn-1" onclick="toggleBet(1)">BET (लगाएं)</button>
+    </div>
 
-    // 3) Login handler
-    function adminLogin() {
-      const phoneInput = document.getElementById('adminPhone').value.trim();
-      const passInput = document.getElementById('adminPass').value.trim();
+    <div class="in-game-feed-card">
+        <div style="font-size: 11px; color: #ffab00; margin-bottom: 4px; font-weight: bold;">🟢 Live Winners Feed</div>
+        <div class="live-feed-box" id="live-winners-container">
+            <div class="feed-item">🏆 Rahul Thakur jeete ₹1,500 (3.2x)</div>
+            <div class="feed-item">🏆 Sandeep Kumar jeete ₹850 (2.1x)</div>
+        </div>
+    </div>
+</div>
 
-      if (phoneInput === ADMIN_PHONE && passInput === ADMIN_PASS) {
-        showPanel();
-      } else {
-        alert('Galat Phone Number ya Password hai!');
-      }
-    }
+<script>
+function getAviatorBalance() {
+    let bal = localStorage.getItem('aviator_balance');
+    return bal !== null ? parseFloat(bal) : 19;
+}
 
-    // 3b) Bypass Login
-    function bypassLogin() {
-      showPanel();
-    }
+function setAviatorBalance(amount) {
+    localStorage.setItem('aviator_balance', amount);
+    document.getElementById('aviator-bal').innerText = amount;
+}
 
-    function showPanel() {
-      document.getElementById('loginSection').style.display = 'none';
-      document.getElementById('panel').style.display = 'block';
-      loadGlobalMsgs();
-      loadUsers();
-    }
+window.onload = function() {
+    document.getElementById('aviator-bal').innerText = getAviatorBalance();
+    startAviatorGameLoop();
+};
 
-    // 4) Load users
-    async function loadUsers() {
-      const usersList = document.getElementById('usersList');
-      const searchUid = document.getElementById('searchUid');
-      usersList.innerHTML = 'Loading…';
-      const uid = searchUid.value.trim();
-      usersList.innerHTML = '';
-      try {
-        if (uid) {
-          const doc = await db.collection('users').doc(uid).get();
-          if (doc.exists) renderUser(doc.id, doc.data());
-          else usersList.innerHTML = `<p>No user with UID "${uid}"</p>`;
-        } else {
-          const snap = await db.collection('users').get();
-          if(snap.empty) {
-            usersList.innerHTML = `<p>Koi user nahi mila.</p>`;
-          }
-          snap.forEach(d => renderUser(d.id, d.data()));
+function setBet(boxId, amount) {
+    document.getElementById('bet-amt-' + boxId).value = amount;
+}
+
+function changeBetAmount(boxId, delta) {
+    let input = document.getElementById('bet-amt-' + boxId);
+    let val = parseInt(input.value) || 0;
+    val += delta;
+    if(val < 5) val = 5;
+    input.value = val;
+}
+
+let betActive = false;
+let currentMultiplier = 1.00;
+let gameInterval = null;
+
+function toggleBet(boxId) {
+    let betInput = document.getElementById('bet-amt-' + boxId);
+    let betBtn = document.getElementById('bet-btn-' + boxId);
+    let amt = parseFloat(betInput.value);
+    let bal = getAviatorBalance();
+
+    if(!betActive) {
+        if(amt > bal) {
+            alert("Balance kam hai!");
+            return;
         }
-      } catch(e) {
-        usersList.innerHTML = `<p>Error loading users: ${e.message}</p>`;
-      }
+        setAviatorBalance(bal - amt);
+        betActive = true;
+        betBtn.innerText = "CASH OUT";
+        betBtn.style.background = "#ffab00";
+        betBtn.style.color = "#000";
+    } else {
+        let winAmt = Math.round(amt * currentMultiplier);
+        setAviatorBalance(getAviatorBalance() + winAmt);
+        alert(`Jeet gaye! ₹${winAmt}`);
+        betActive = false;
+        betBtn.innerText = "BET (लगाएं)";
+        betBtn.style.background = "linear-gradient(to bottom, #ff3d00, #d50000)";
+        betBtn.style.color = "white";
     }
+}
 
-    function renderUser(uid, data) {
-      const usersList = document.getElementById('usersList');
-      const div = document.createElement('div');
-      div.className = 'user-card';
-      div.innerHTML = `
-        <b>UID:</b> ${uid}<br>
-        <b>Name:</b> ${data.name || 'N/A'}<br>
-        <b>Phone:</b> ${data.phone || 'N/A'}<br>
-        <b>INR:</b> ${data.inr || 0}<br>
-        <b>Status:</b> ${data.blocked ? 'Blocked' : 'Active'}<br><br>
-        <button onclick="modifyCoins('${uid}', true)">+ Add Coins</button>
-        <button onclick="modifyCoins('${uid}', false)">– Remove Coins</button>
-        <button onclick="toggleBlock('${uid}', ${data.blocked ? true : false})">
-          ${data.blocked ? 'Unblock' : 'Block'}
-        </button>
-      `;
-      usersList.appendChild(div);
-    }
+function startAviatorGameLoop() {
+    let multText = document.getElementById('live-multiplier');
+    let statusMsg = document.getElementById('plane-status-msg');
+    let planeIcon = document.getElementById('plane-graphic');
+    let tailLine = document.getElementById('tail-line');
+    let screenBox = document.getElementById('game-screen-box');
+    
+    currentMultiplier = 1.00;
+    let crashPoint = (Math.random() * 8 + 1.5).toFixed(2);
 
-    // 5) Add/remove coins
-    async function modifyCoins(uid, add) {
-      let amt = prompt(add ? 'Amount to add?' : 'Amount to remove?');
-      amt = parseInt(amt);
-      if (!amt || amt <= 0) return alert('Enter valid number');
-      await db.collection('users').doc(uid)
-        .update({ inr: firebase.firestore.FieldValue.increment(add ? amt : -amt) });
-      loadUsers();
-    }
+    let startX = 20;
+    let startY = 20;
+    let endX = 260;
+    let endY = 110;
+    let stepCount = 0;
 
-    // 6) Block/unblock
-    async function toggleBlock(uid, blocked) {
-      await db.collection('users').doc(uid).update({ blocked: !blocked });
-      loadUsers();
-    }
+    gameInterval = setInterval(() => {
+        currentMultiplier += 0.03;
+        multText.innerText = currentMultiplier.toFixed(2) + "x";
+        stepCount++;
 
-    // 7) Load global messages
-    async function loadGlobalMsgs() {
-      try {
-        const dep = await db.collection('settings').doc('deposit_message').get();
-        const red = await db.collection('settings').doc('redeem_message').get();
-        document.getElementById('depositMsg').value = dep.exists ? dep.data().text : '';
-        document.getElementById('redeemMsg').value = red.exists ? red.data().text : '';
-      } catch(e) { console.log(e); }
-    }
+        let progress = Math.min(stepCount / 100, 1);
+        let currentX = startX + (endX - startX) * progress;
+        let currentY = startY + (endY - startY) * Math.pow(progress, 1.5) + Math.sin(stepCount * 0.2) * 4;
 
-    // 8) Save global messages
-    async function saveGlobalMsg(type) {
-      const txt = (type === 'deposit' ? document.getElementById('depositMsg').value : document.getElementById('redeemMsg').value).trim();
-      if (!txt) return alert('Message cannot be empty');
-      await db.collection('settings').doc(type + '_message').set({ text: txt });
-      alert(type.charAt(0).toUpperCase() + type.slice(1) + ' message saved');
-    }
-  </script>
+        planeIcon.style.left = currentX + 'px';
+        planeIcon.style.bottom = currentY + 'px';
+        planeIcon.style.transform = `rotate(25deg)`;
+
+        // Fix tail line tracking correctly from bottom-left origin to plane
+        let dx = currentX - startX;
+        let dy = currentY - startY;
+        let length = Math.sqrt(dx * dx + dy * dy);
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+        tailLine.style.width = length + 'px';
+        tailLine.style.transform = `rotate(-${angle}deg)`;
+
+        if(currentMultiplier >= parseFloat(crashPoint)) {
+            clearInterval(gameInterval);
+            statusMsg.innerHTML = `<span style="color:#ff5252;">💥 Crash ho gaya! (${crashPoint}x)</span>`;
+            
+            if(betActive) {
+                betActive = false;
+                let btn = document.getElementById('bet-btn-1');
+                btn.innerText = "BET (लगाएं)";
+                btn.style.background = "linear-gradient(to bottom, #ff3d00, #d50000)";
+                btn.style.color = "white";
+            }
+
+            setTimeout(() => {
+                statusMsg.innerHTML = "🚀 Naya round shuru ho raha hai...";
+                setTimeout(startAviatorGameLoop, 2000);
+            }, 1500);
+        }
+    }, 100);
+}
+</script>
+
 </body>
 </html>
