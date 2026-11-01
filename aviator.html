@@ -21,9 +21,14 @@
 
   <div id="loginSection">
     <h2>Admin Login</h2>
-    <input id="adminPhone" type="text" placeholder="Enter Admin Phone" />
+    <input id="adminPhone" type="text" placeholder="Admin Phone Number" />
     <input id="adminPass" type="password" placeholder="Password" />
     <button onclick="adminLogin()">Login</button>
+    
+    <!-- तुरंत बिना पासवर्ड के खोलने के लिए Bypass Link वापस जोड़ दिया गया है -->
+    <p style="font-size:0.9em; margin-top:8px;">
+      <a href="#" onclick="bypassLogin(); return false;" style="color:#0af;">Bypass Login (Direct Open)</a>
+    </p>
   </div>
 
   <div id="panel" style="display:none">
@@ -56,48 +61,29 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 3) Secure Login handler via Firebase Database
-    async function adminLogin() {
-      const phone = document.getElementById('adminPhone').value.trim();
-      const pass = document.getElementById('adminPass').value.trim();
+    // 2) Yahan aap apna admin phone number aur password set kar sakte hain
+    const ADMIN_PHONE = "7880447645"; // Yahan aap apna number dal sakte hain
+    const ADMIN_PASS  = "ANEES ADMIN"; // Yahan apna password dal sakte hain
 
-      if (!phone || !pass) {
-        alert('Kripya phone number aur password darj karein!');
-        return;
-      }
-
-      try {
-        // Firebase me check karega ki is phone number ka user admin hai ya nahi
-        const snapshot = await db.collection('users').where('phone', '==', phone).get();
-        
-        if (snapshot.empty) {
-          alert('Yeh user database mein nahi mila!');
-          return;
-        }
-
-        let isAdminValid = false;
-        snapshot.forEach(doc => {
-          let data = doc.data();
-          // Yahan check hoga ki user ka role admin hai aur password match karta hai
-          if (data.isAdmin === true && data.password === pass) {
-            isAdminValid = true;
-          }
-        });
-
-        if (isAdminValid) {
-          showPanel();
-        } else {
-          alert('Invalid Admin Credentials!');
-        }
-      } catch (error) {
-        console.error("Login error: ", error);
-        alert('Login karne mein samasya aayi.');
+    // 3) Login handler
+    function adminLogin() {
+      const phone = adminPhone.value.trim();
+      const pass  = adminPass.value.trim();
+      if (phone === ADMIN_PHONE && pass === ADMIN_PASS) {
+        showPanel();
+      } else {
+        alert('Galat Phone Number ya Password hai!');
       }
     }
 
+    // 3b) Bypass Login (बिना पासवर्ड के डायरेक्ट खोलने के लिए)
+    function bypassLogin() {
+      showPanel();
+    }
+
     function showPanel() {
-      document.getElementById('loginSection').style.display = 'none';
-      document.getElementById('panel').style.display = 'block';
+      loginSection.style.display = 'none';
+      panel.style.display = 'block';
       loadGlobalMsgs();
       loadUsers();
     }
