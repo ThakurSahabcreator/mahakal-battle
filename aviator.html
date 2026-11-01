@@ -9,10 +9,10 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <style>
     body { background: #111; color: #eee; font-family: Arial, sans-serif; padding: 20px; }
-    input, button, textarea { width: 100%; padding: 8px; margin: 6px 0; border-radius: 4px; border: none; }
-    button { cursor: pointer; }
-    .user-card { background: #222; padding: 12px; margin:12px 0; border-radius:6px; }
-    .user-card button { margin-right: 6px; }
+    input, button, textarea { width: 100%; padding: 8px; margin: 6px 0; border-radius: 4px; border: none; box-sizing: border-box; }
+    button { cursor: pointer; background: #0af; color: #fff; font-weight: bold; }
+    .user-card { background: #222; padding: 12px; margin: 12px 0; border-radius: 6px; }
+    .user-card button { margin-right: 6px; width: auto; padding: 6px 12px; }
     h1, h2, h3 { margin-top: 0; }
   </style>
 </head>
@@ -25,7 +25,6 @@
     <input id="adminPass" type="password" placeholder="Password" />
     <button onclick="adminLogin()">Login</button>
     
-    <!-- तुरंत बिना पासवर्ड के खोलने के लिए Bypass Link वापस जोड़ दिया गया है -->
     <p style="font-size:0.9em; margin-top:8px;">
       <a href="#" onclick="bypassLogin(); return false;" style="color:#0af;">Bypass Login (Direct Open)</a>
     </p>
@@ -61,60 +60,72 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 2) Yahan aap apna admin phone number aur password set kar sakte hain
-    const ADMIN_PHONE = "7880447645"; // Yahan aap apna number dal sakte hain
-    const ADMIN_PASS  = "ANEES ADMIN"; // Yahan apna password dal sakte hain
+    // 2) Admin Credentials
+    const ADMIN_PHONE = "7880447645";
+    const ADMIN_PASS  = "ANEES ADMIN";
 
     // 3) Login handler
     function adminLogin() {
-      const phone = adminPhone.value.trim();
-      const pass  = adminPass.value.trim();
-      if (phone === ADMIN_PHONE && pass === ADMIN_PASS) {
+      const phoneInput = document.getElementById('adminPhone').value.trim();
+      const passInput = document.getElementById('adminPass').value.trim();
+
+      if (phoneInput === ADMIN_PHONE && passInput === ADMIN_PASS) {
         showPanel();
       } else {
         alert('Galat Phone Number ya Password hai!');
       }
     }
 
-    // 3b) Bypass Login (बिना पासवर्ड के डायरेक्ट खोलने के लिए)
+    // 3b) Bypass Login
     function bypassLogin() {
       showPanel();
     }
 
     function showPanel() {
-      loginSection.style.display = 'none';
-      panel.style.display = 'block';
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
       loadGlobalMsgs();
       loadUsers();
     }
 
     // 4) Load users
     async function loadUsers() {
+      const usersList = document.getElementById('usersList');
+      const searchUid = document.getElementById('searchUid');
       usersList.innerHTML = 'Loading…';
       const uid = searchUid.value.trim();
       usersList.innerHTML = '';
-      if (uid) {
-        const doc = await db.collection('users').doc(uid).get();
-        if (doc.exists) renderUser(doc.id, doc.data());
-        else usersList.innerHTML = `<p>No user with UID "${uid}"</p>`;
-      } else {
-        const snap = await db.collection('users').get();
-        snap.forEach(d => renderUser(d.id, d.data()));
+      try {
+        if (uid) {
+          const doc = await db.collection('users').doc(uid).get();
+          if (doc.exists) renderUser(doc.id, doc.data());
+          else usersList.innerHTML = `<p>No user with UID "${uid}"</p>`;
+        } else {
+          const snap = await db.collection('users').get();
+          if(snap.empty) {
+            usersList.innerHTML = `<p>Koi user nahi mila.</p>`;
+          }
+          snap.forEach(d => renderUser(d.id, d.data()));
+        }
+      } catch(e) {
+        usersList.innerHTML = `<p>Error loading users: ${e.message}</p>`;
       }
     }
+
     function renderUser(uid, data) {
+      const usersList = document.getElementById('usersList');
       const div = document.createElement('div');
       div.className = 'user-card';
       div.innerHTML = `
         <b>UID:</b> ${uid}<br>
-        <b>Name:</b> ${data.name}<br>
-        <b>Phone:</b> ${data.phone}<br>
-        <b>INR:</b> ${data.inr||0}<br>
-        <b>Status:</b> ${data.blocked? 'Blocked':'Active'}<br><br>
-        <button onclick="modifyCoins('${uid}',true)">+ Add Coins</button>
-        <button onclick="modifyCoins('${uid}',false)">– Remove Coins</button>
-        <button onclick="toggleBlock('${uid}',${data.blocked})">
-          ${data.blocked? 'Unblock':'Block'}
+        <b>Name:</b> ${data.name || 'N/A'}<br>
+        <b>Phone:</b> ${data.phone || 'N/A'}<br>
+        <b>INR:</b> ${data.inr || 0}<br>
+        <b>Status:</b> ${data.blocked ? 'Blocked' : 'Active'}<br><br>
+        <button onclick="modifyCoins('${uid}', true)">+ Add Coins</button>
+        <button onclick="modifyCoins('${uid}', false)">– Remove Coins</button>
+        <button onclick="toggleBlock('${uid}', ${data.blocked ? true : false})">
+          ${data.blocked ? 'Unblock' : 'Block'}
         </button>
       `;
       usersList.appendChild(div);
@@ -122,31 +133,36 @@
 
     // 5) Add/remove coins
     async function modifyCoins(uid, add) {
-      let amt = prompt(add? 'Amount to add?':'Amount to remove?');
+      let amt = prompt(add ? 'Amount to add?' : 'Amount to remove?');
       amt = parseInt(amt);
       if (!amt || amt <= 0) return alert('Enter valid number');
       await db.collection('users').doc(uid)
-        .update({ inr: firebase.firestore.FieldValue.increment(add? amt:-amt) });
+        .update({ inr: firebase.firestore.FieldValue.increment(add ? amt : -amt) });
       loadUsers();
     }
+
     // 6) Block/unblock
     async function toggleBlock(uid, blocked) {
       await db.collection('users').doc(uid).update({ blocked: !blocked });
       loadUsers();
     }
+
     // 7) Load global messages
     async function loadGlobalMsgs() {
-      const dep = await db.collection('settings').doc('deposit_message').get();
-      const red = await db.collection('settings').doc('redeem_message').get();
-      depositMsg.value = dep.exists? dep.data().text:'';
-      redeemMsg.value = red.exists? red.data().text:'';
+      try {
+        const dep = await db.collection('settings').doc('deposit_message').get();
+        const red = await db.collection('settings').doc('redeem_message').get();
+        document.getElementById('depositMsg').value = dep.exists ? dep.data().text : '';
+        document.getElementById('redeemMsg').value = red.exists ? red.data().text : '';
+      } catch(e) { console.log(e); }
     }
+
     // 8) Save global messages
     async function saveGlobalMsg(type) {
-      const txt = (type==='deposit'? depositMsg.value: redeemMsg.value).trim();
+      const txt = (type === 'deposit' ? document.getElementById('depositMsg').value : document.getElementById('redeemMsg').value).trim();
       if (!txt) return alert('Message cannot be empty');
-      await db.collection('settings').doc(type+'_message').set({ text: txt });
-      alert(type.charAt(0).toUpperCase()+ type.slice(1)+ ' message saved');
+      await db.collection('settings').doc(type + '_message').set({ text: txt });
+      alert(type.charAt(0).toUpperCase() + type.slice(1) + ' message saved');
     }
   </script>
 </body>
