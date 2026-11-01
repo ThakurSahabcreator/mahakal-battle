@@ -584,7 +584,8 @@ let gameInterval = null;
 let gameRunning = false;
 let currentBetAmt = {1: 0, 2: 0};
 let hasCashedOut = {1: false, 2: false};
-let isProcessingCashOut = {1: false, 2: false}; // Multi-click aur double addition rokne ke liye strict lock
+let isProcessingCashOut = {1: false, 2: false}; 
+let isBettingLocked = {1: false, 2: false}; // Countdown aur round ke dauran double click se balance badhne se rokne ke liye strict lock
 
 function toggleBet(boxId) {
     let betInput = document.getElementById('bet-amt-' + boxId);
@@ -595,6 +596,9 @@ function toggleBet(boxId) {
     let amt = parseFloat(betInput.value);
     let bal = getAviatorBalance();
 
+    // Agar button pehle hi lock ho chuka hai (countdown ya click ke baad), toh dubara click ignore hoga
+    if(isBettingLocked[boxId]) return;
+
     if(!betActive[boxId]) {
         if(gameRunning) {
             alert("Round shuru ho chuka hai, agle round ka intezaar karein!");
@@ -604,7 +608,11 @@ function toggleBet(boxId) {
             alert("Balance kam hai!");
             return;
         }
+
+        // Turant lock lagayein taaki 3-4 baar fast click karne par balance dobara na kate ya na badhe
+        isBettingLocked[boxId] = true;
         setAviatorBalance(bal - amt);
+        
         betActive[boxId] = true;
         betPlaced[boxId] = true;
         hasCashedOut[boxId] = false;
@@ -612,8 +620,12 @@ function toggleBet(boxId) {
         currentBetAmt[boxId] = amt;
         btnText.innerHTML = `CASH OUT<br>₹${amt.toFixed(2)}`;
         betBtn.style.background = "#d29922";
+
+        // Thodi der baad lock hata dein taaki aage game mein normal kaam kar sake
+        setTimeout(() => { isBettingLocked[boxId] = false; }, 300);
+
     } else {
-        // Yeh strict lock ensure karega ki chahe jitni baar fast click karo, balance sirf ek hi baar judega
+        // Yeh cash-out ke waqt multi-click aur double addition rokne ke liye hai
         if(hasCashedOut[boxId] || isProcessingCashOut[boxId]) return;
         isProcessingCashOut[boxId] = true;
         hasCashedOut[boxId] = true; 
