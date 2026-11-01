@@ -287,7 +287,7 @@ transition: 0.3s;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Deposit View (Updated with Screenshot Upload, Submit, & Cancel/Reset Option + 24-hr Auto-Block) -->
+<!-- Deposit View -->
 <div id="deposit-section" class="hidden">
 <div class="card-box">
 <h3 style="color: #ffab00; margin-top: 0; text-align: center;">📥 पैसे जोड़े (QR Deposit & Screenshot)</h3>
@@ -300,13 +300,11 @@ transition: 0.3s;
 <input type="text" id="dep-upinumber" placeholder="UPI Number / UPI ID दर्ज करें">
 <input type="text" id="dep-txnid" placeholder="UPI Txn ID दर्ज करें">
 
-<!-- Payment Screenshot Upload Field -->
 <div style="margin: 10px 0; text-align: left;">
     <label style="font-size: 11px; color: #ffab00; display: block; margin-bottom: 4px;">Payment Screenshot Upload Karein:</label>
     <input type="file" id="paymentScreenshot" accept="image/*" style="width: 100%; color: #fff; padding: 6px;">
 </div>
 
-<!-- Submit & Cancel Buttons Side-by-Side -->
 <div style="display: flex; gap: 10px; margin-top: 10px;">
     <button class="btn" style="background: #00897b; margin-top:0; flex: 1;" onclick="sendDepositReqWithSecurity()">डिपॉजिट अनुरोध भेजें</button>
     <button class="btn" style="background: #dc3545; margin-top:0; flex: 1;" onclick="cancelDepositForm()">Cancel / Reset</button>
@@ -372,7 +370,7 @@ transition: 0.3s;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!---------------- SECRET ADMIN PANEL (Password: 78699) ---------------->
+<!---------------- SECRET ADMIN PANEL ---------------->
 <div id="admin-panel-div" class="admin-panel">
 <b style="color: #ff5252;">👑 मास्टर एडमिन कंट्रोल पैनल (Security & Master Lock):</b>
 <hr style="border-color: #444; margin: 5px 0;">
@@ -401,7 +399,6 @@ transition: 0.3s;
 
 </div>
 
-<!-- Audio for instant reward sound effect -->
 <audio id="bonus-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
 <script>
@@ -419,9 +416,6 @@ if(installBtn) {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-      }
       deferredPrompt = null;
       installBtn.style.display = 'none';
     }
@@ -429,7 +423,7 @@ if(installBtn) {
 }
 
 // -------------------------------------------------------------------------
-// SECURE USER SESSION & ISOLATED BALANCE STORAGE FUNCTIONS (Strict Fix)
+// SECURE USER SESSION & ISOLATED BALANCE FUNCTIONS
 // -------------------------------------------------------------------------
 function getCurrentUser() {
     return localStorage.getItem('active_session_phone');
@@ -480,14 +474,13 @@ function processLogin() {
         return;
     }
 
-    // Check if account is currently blocked for 24 hours due to fake deposit attempts
     let blockKey = 'account_blocked_until_' + phone;
     let currentTime = new Date().getTime();
     let blockedUntil = localStorage.getItem(blockKey);
     
     if (blockedUntil && currentTime < parseInt(blockedUntil)) {
         let remainingHours = Math.ceil((parseInt(blockedUntil) - currentTime) / (1000 * 60 * 60));
-        document.getElementById('login-msg').innerHTML = "<span class='error'>❌ Aapka account block hai!<br>Reason: Baar-baar fake/galat payment request daalne ke kaaran.<br>⏳ Kripya " + remainingHours + " ghante baad koshish karein.</span>";
+        document.getElementById('login-msg').innerHTML = "<span class='error'>❌ Aapka account block hai!<br>⏳ Kripya " + remainingHours + " ghante baad koshish karein.</span>";
         return;
     }
 
@@ -499,7 +492,6 @@ function processLogin() {
 
     // Set active session strictly for this phone number
     localStorage.setItem('active_session_phone', phone);
-    localStorage.setItem('logged_in_phone', phone);
 
     if(savedPass === null) {
         localStorage.setItem('user_pass_' + phone, pass);
@@ -518,7 +510,6 @@ function processLogin() {
 
 function logoutUser() {
     localStorage.removeItem('active_session_phone');
-    localStorage.removeItem('logged_in_phone');
     document.getElementById('app-dashboard').classList.add('hidden');
     document.getElementById('login-section').classList.remove('hidden');
     document.getElementById('login-phone').value = '';
@@ -612,7 +603,6 @@ function rollDice() {
     }
 }
 
-// Deposit Request with Screenshot Upload, Cancel, & 24-Hour Auto-Block Security
 function sendDepositReqWithSecurity() {
     let user = getCurrentUser();
     let amt = document.getElementById('dep-amount').value.trim();
@@ -621,7 +611,7 @@ function sendDepositReqWithSecurity() {
     let screenshotInput = document.getElementById('paymentScreenshot');
 
     if(!amt || !upi || !txn) {
-        document.getElementById('dep-msg').innerHTML = "<span class='error'>Kripya sabhi details (Amount, UPI ID, Txn ID) bharein!</span>";
+        document.getElementById('dep-msg').innerHTML = "<span class='error'>Kripya sabhi details bharein!</span>";
         return;
     }
 
@@ -630,23 +620,11 @@ function sendDepositReqWithSecurity() {
         return;
     }
 
-    let blockKey = 'account_blocked_until_' + user;
-    let currentTime = new Date().getTime();
-    let blockedUntil = localStorage.getItem(blockKey);
-
-    if (blockedUntil && currentTime < parseInt(blockedUntil)) {
-        let remainingHours = Math.ceil((parseInt(blockedUntil) - currentTime) / (1000 * 60 * 60));
-        document.getElementById('dep-msg').innerHTML = "<span class='error'>❌ Aapka account block hai! Kripya " + remainingHours + " ghante baad koshish karein.</span>";
-        return;
-    }
-
     let file = screenshotInput.files[0];
     let reader = new FileReader();
     
     reader.onload = function(e) {
         let screenshotData = e.target.result;
-        
-        // Save request for verification
         localStorage.setItem('pending_dep_' + user, JSON.stringify({
             amount: amt,
             upi: upi,
@@ -655,20 +633,19 @@ function sendDepositReqWithSecurity() {
             time: new Date().toLocaleString()
         }));
 
-        document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ Deposit anurodh screenshot ke sath safalta-purvak bhej diya gaya hai! Admin verification ke baad balance update hoga.</span>";
+        document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ Deposit anurodh safalta-purvak bhej diya gaya hai!</span>";
         cancelDepositForm();
     };
     
     reader.readAsDataURL(file);
 }
 
-// Cancel / Reset Deposit Form Function
 function cancelDepositForm() {
     document.getElementById('dep-amount').value = '';
     document.getElementById('dep-upinumber').value = '';
     document.getElementById('dep-txnid').value = '';
     document.getElementById('paymentScreenshot').value = '';
-    document.getElementById('dep-msg').innerHTML = "<span style='color: #ffab00; font-size: 12px;'>🔄 Form reset kar diya gaya hai. Aap naye sire se details bhar sakte hain.</span>";
+    document.getElementById('dep-msg').innerHTML = "<span style='color: #ffab00; font-size: 12px;'>🔄 Form reset kar diya gaya hai.</span>";
 }
 
 function sendWithdrawReq() {
@@ -709,7 +686,7 @@ function askCustomerSupport() {
     }
     let box = document.getElementById('support-response-box');
     box.style.display = 'block';
-    box.innerHTML = "💬 <b>Customer Support:</b> Aapki samasya darj ho gayi hai. Kripya thoda prateeksha karein ya direct Telegram par sampark karein.";
+    box.innerHTML = "💬 <b>Customer Support:</b> Aapki samasya darj ho gayi hai.";
     document.getElementById('send-to-telegram-btn').style.display = 'block';
 }
 
