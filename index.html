@@ -423,7 +423,7 @@ if(installBtn) {
 }
 
 // -------------------------------------------------------------------------
-// SECURE USER SESSION & ISOLATED BALANCE FUNCTIONS
+// SECURE USER SESSION & STRICTLY ISOLATED WALLET FUNCTIONS
 // -------------------------------------------------------------------------
 function getCurrentUser() {
     return localStorage.getItem('active_session_phone');
@@ -432,10 +432,11 @@ function getCurrentUser() {
 function getWalletBalance() {
     let user = getCurrentUser();
     if(!user) return 19;
-    let bal = localStorage.getItem('user_bal_' + user);
+    let balKey = 'user_bal_' + user;
+    let bal = localStorage.getItem(balKey);
     if(bal === null) {
         bal = '19';
-        localStorage.setItem('user_bal_' + user, bal);
+        localStorage.setItem(balKey, bal);
     }
     return parseFloat(bal);
 }
@@ -443,7 +444,8 @@ function getWalletBalance() {
 function setWalletBalance(amount) {
     let user = getCurrentUser();
     if(user) {
-        localStorage.setItem('user_bal_' + user, amount);
+        let balKey = 'user_bal_' + user;
+        localStorage.setItem(balKey, amount.toString());
         updateWalletDisplay();
     }
 }
@@ -484,21 +486,23 @@ function processLogin() {
         return;
     }
 
-    let savedPass = localStorage.getItem('user_pass_' + phone);
+    let passKey = 'user_pass_' + phone;
+    let savedPass = localStorage.getItem(passKey);
     if(savedPass !== null && savedPass !== pass) {
         document.getElementById('login-msg').innerHTML = "<span class='error'>Galat password! Kripya sahi password dalein.</span>";
         return;
     }
 
-    // Set active session strictly for this phone number
+    // Set active session strictly for this specific phone number
     localStorage.setItem('active_session_phone', phone);
 
     if(savedPass === null) {
-        localStorage.setItem('user_pass_' + phone, pass);
+        localStorage.setItem(passKey, pass);
     }
 
-    if(localStorage.getItem('user_bal_' + phone) === null) {
-        localStorage.setItem('user_bal_' + phone, '19');
+    let balKey = 'user_bal_' + phone;
+    if(localStorage.getItem(balKey) === null) {
+        localStorage.setItem(balKey, '19');
     }
     
     document.getElementById('login-section').classList.add('hidden');
