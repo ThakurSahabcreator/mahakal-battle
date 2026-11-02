@@ -161,6 +161,7 @@ transition: 0.3s;
 
 <!-- Tiranga Flag Badge -->
 <div class="top-badge">🇮🇳 🟨 ⬜ 🟩 Thakur Sahab Creator 🇮🇳</div>
+<!-- 7 बार टैप करने पर एडमिन पैनल खुलेगा -->
 <h2 onclick="checkSecretAdminTap()">🔱 THAKUR SAHAB MAHAKAL BATTLE 🔱</h2>
 
 <!-- Banner Image -->
@@ -223,33 +224,33 @@ transition: 0.3s;
         
         <p style="margin-top: 0;">
             <strong style="color: #00ffcc;">1. Thakur Sahab Platform Dwara Game ka Nirman:</strong><br>
-            Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>Thakur Sahab Official Gaming Partner Network</strong> dwara taiyar kiya gaya hai. Isme 256-bit SSL encryption ka pura palan kiya gaya hai taaki aapka har ek data 100% surakshit rahe[span_7](start_span)[span_7](end_span).
+            Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>Thakur Sahab Official Gaming Partner Network</strong> dwara taiyar kiya gaya hai. Isme 256-bit SSL encryption ka pura palan kiya gaya hai taaki aapka har ek data 100% surakshit rahe.
         </p>
 
         <p>
             <strong style="color: #00ffcc;">2. Game Kaise Khele aur Rules Kya Hain:</strong><br>
-            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain. Har game me transparent RNG system kaam karta hai, jisse sabhi khiladiyon ko jeetne ke barabar aur fair mauke milte hain[span_8](start_span)[span_8](end_span).
+            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain. Har game me transparent RNG system kaam karta hai, jisse sabhi khiladiyon ko jeetne ke barabar aur fair mauke milte hain.
         </p>
 
         <p>
             <strong style="color: #00ffcc;">3. Refer & Earn Aur Commission System:</strong><br>
-            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai jo turant aapke wallet mein add ho jata hai[span_9](start_span)[span_9](end_span).
+            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai jo turant aapke wallet mein add ho jata hai.
         </p>
 
         <p>
             <strong style="color: #ff9900; font-weight: 700;">4. Withdrawal (Pase Nikalne) ki 100% Guarantee aur Time Limit:</strong><br>
-            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein paise safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai[span_10](start_span)[span_10](end_span)!
+            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein paise safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai!
         </p>
 
         <p style="margin-bottom: 0;">
             <strong style="color: #ff4d4d; font-weight: 700;">5. Fraud-Giri aur Security ki Full Guarantee:</strong><br>
-            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai[span_11](start_span)[span_11](end_span).
+            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai.
         </p>
         
     </div>
     
     <div style="text-align: center; margin-top: 12px; border-top: 1px solid rgba(255,215,0,0.3); padding-top: 8px; font-size: 11px; color: #00ff66; font-weight: 600;">
-        ✅ Officially Verified & Secure Gaming Portal by Thakur Sahab Network[span_12](start_span)[span_12](end_span).
+        ✅ Officially Verified & Secure Gaming Portal by Thakur Sahab Network.
     </div>
 </div>
 
@@ -260,16 +261,32 @@ transition: 0.3s;
 <!-- Pheli Game View -->
 <div id="puzzle-section" class="hidden">
 <div class="card-box">
-<h3 style="color: #ffab00; margin-top: 0;">🧠 कठिन पहेली गेम</h3>
-<p style="font-size: 12px; color: #ccc;">न्यूनतम ₹5 की बाजी लगाएं:</p>
-<input type="number" id="p-bet" value="10" min="5">
-<p id="p-question" style="font-size: 14px; color: #ffab00; font-weight: bold; text-align: left;"></p>
-<div id="p-options">
-<button class="btn" style="padding:8px; margin:5px 0; text-align:left;" onclick="checkPuzzle('A')">A. <span id="optA"></span></button>
-<button class="btn" style="padding:8px; margin:5px 0; text-align:left;" onclick="checkPuzzle('B')">B. <span id="optB"></span></button>
-<button class="btn" style="padding:8px; margin:5px 0; text-align:left;" onclick="checkPuzzle('C')">C. <span id="optC"></span></button>
-<button class="btn" style="padding:8px; margin:5px 0; text-align:left;" onclick="checkPuzzle('D')">D. <span id="optD"></span></button>
+<h3 style="color: #ffab00; margin-top: 0; text-align: center;">🧠 गाँव-देहात की कठिन पहेली गेम</h3>
+
+<!-- READY CONFIRMATION SCREEN -->
+<div id="ready-box" style="text-align: center; padding: 15px; background: #1a2332; border-radius: 8px; border: 1px dashed #ffab00;">
+    <p style="font-size: 15px; color: #ffab00; font-weight: bold; line-height: 1.5;">क्या आप सवाल का जवाब देने के लिए तैयार हैं?</p>
+    <p style="font-size: 12px; color: #ccc;">अगर तैयार हैं तो नीचे दिए गए 'हाँ (YES)' बटन पर क्लिक करें। (तैयार होने पर ही 15 सेकंड का टाइमर चालू होगा)</p>
+    <button class="btn" style="background: #00c853; color: #000; font-size: 16px; margin-top: 10px;" onclick="startPuzzleGame()">हाँ (YES) - मैं तैयार हूँ</button>
 </div>
+
+<!-- ACTUAL PUZZLE GAME AREA -->
+<div id="game-play-area" class="hidden">
+    <!-- 15 Seconds Timer Display -->
+    <div style="background: #1f1f1f; border: 1px solid #ff5252; padding: 6px; border-radius: 6px; text-align: center; margin-bottom: 8px;">
+        <span style="font-size: 13px; color: #ff5252; font-weight: bold;">⏳ समय शेष: <span id="timer-count">15</span> सेकंड</span>
+    </div>
+
+    <input type="number" id="p-bet" value="10" min="5" style="display:block; margin: 0 auto 8px auto;">
+    <p id="p-question" style="font-size: 14px; color: #ffab00; font-weight: bold; text-align: left; background: #1a2332; padding: 10px; border-radius: 6px; border: 1px dashed #ffab00;"></p>
+    <div id="p-options">
+    <button class="btn" style="padding:10px; margin:6px 0; text-align:left; background: #1f293d;" onclick="checkPuzzle('A')">A. <span id="optA"></span></button>
+    <button class="btn" style="padding:10px; margin:6px 0; text-align:left; background: #1f293d;" onclick="checkPuzzle('B')">B. <span id="optB"></span></button>
+    <button class="btn" style="padding:10px; margin:6px 0; text-align:left; background: #1f293d;" onclick="checkPuzzle('C')">C. <span id="optC"></span></button>
+    <button class="btn" style="padding:10px; margin:6px 0; text-align:left; background: #1f293d;" onclick="checkPuzzle('D')">D. <span id="optD"></span></button>
+    </div>
+</div>
+
 <div id="p-result"></div>
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
@@ -349,7 +366,7 @@ transition: 0.3s;
 <div id="refer-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">🎁 शेयर करें और 3% कमीशन पाएं</h3>
-<p style="font-size: 12px; color: #ccc;">अपना यूनिक लिंक शेयर करें। आपके लिंक से जुड़ने वाले यूजर जब भी डिपॉजिट करेंगे, उनका पूरा पैसा उनके गेम में जुड़ेगा और आपको अलग से 3% कमीशन मिलेगा[span_13](start_span)[span_13](end_span)!</p>
+<p style="font-size: 12px; color: #ccc;">अपना यूनिक लिंक शेयर करें। आपके लिंक से जुड़ने वाले यूजर जब भी डिपॉजिट करेंगे, उनका पूरा पैसा उनके गेम में जुड़ेगा और आपको अलग से 3% कमीशन मिलेगा!</p>
 <input type="text" id="ref-link-input" readonly style="background:#121212; color:#ffab00; font-weight:bold;">
 <button class="btn" style="background: #00897b;" onclick="copyReferLink()">🔗 लिंक कॉपी करें</button>
 <button class="btn" style="background: #25D366; color:#000;" onclick="shareOnWhatsApp()">💬 WhatsApp पर शेयर करें</button>
@@ -428,7 +445,7 @@ if(installBtn) {
 }
 
 // -------------------------------------------------------------------------
-// SECURE USER SESSION & ISOLATED BALANCE STORAGE FUNCTIONS (100% Fixed Isolation)
+// SECURE USER SESSION & ISOLATED BALANCE STORAGE FUNCTIONS
 // -------------------------------------------------------------------------
 function getCurrentUser() {
     return localStorage.getItem('active_session_phone');
@@ -470,18 +487,18 @@ function processLogin() {
     let pass = document.getElementById('login-pass').value.trim();
     
     if(phone.length !== 10) {
-        document.getElementById('login-msg').innerHTML = "<span class='error'>Kripya 10 anko ka sahi mobile number darj karein!</span>";
+        document.getElementById('login-msg').innerHTML = "<span class='error'>कृपया 10 अंकों का सही मोबाइल नंबर दर्ज करें!</span>";
         return;
     }
 
     if(pass === "") {
-        document.getElementById('login-msg').innerHTML = "<span class='error'>Kripya password darj karein!</span>";
+        document.getElementById('login-msg').innerHTML = "<span class='error'>कृपया पासवर्ड दर्ज करें!</span>";
         return;
     }
 
     let savedPass = localStorage.getItem('user_pass_' + phone);
     if(savedPass !== null && savedPass !== pass) {
-        document.getElementById('login-msg').innerHTML = "<span class='error'>Galat password! Kripya sahi password dalein.</span>";
+        document.getElementById('login-msg').innerHTML = "<span class='error'>गलत पासवर्ड! कृपया सही पासवर्ड डालें।</span>";
         return;
     }
 
@@ -500,7 +517,6 @@ function processLogin() {
     document.getElementById('app-dashboard').classList.remove('hidden');
     updateWalletDisplay();
     document.getElementById('login-msg').innerHTML = "";
-    loadNewPuzzle();
 }
 
 function logoutUser() {
@@ -524,13 +540,17 @@ function openSection(sectionId) {
     if(target) target.classList.remove('hidden');
 
     if(sectionId === 'puzzle-section') {
-        loadNewPuzzle();
+        document.getElementById('ready-box').style.display = 'block';
+        document.getElementById('game-play-area').classList.add('hidden');
+        document.getElementById('p-result').innerHTML = '';
+        clearInterval(puzzleTimer);
     } else if(sectionId === 'refer-section') {
         setupReferralLink();
     }
 }
 
 function backToDashboard() {
+    clearInterval(puzzleTimer);
     ['puzzle-section', 'ludo-section', 'deposit-section', 'bank-section', 'refer-section', 'support-section'].forEach(id => {
         let el = document.getElementById(id);
         if(el) el.classList.add('hidden');
@@ -557,41 +577,87 @@ function resetScreenshot() {
     document.getElementById('screenshot-preview-box').style.display = 'none';
 }
 
+// -------------------------------------------------------------------------
+// UNIQUE RURAL / GAON-DEHAT PUZZLES DATABASE
+// -------------------------------------------------------------------------
 const puzzleList = [
-    { q: "Aisi kaun si cheez hai jo sochte hi thak jati hai?", options: { A: "Dimag", B: "Pair", C: "Hath", D: "Aankh" }, ans: "A" },
-    { q: "Voh kaun sa fal hai jise pakne par meetha aur kachha hone par khata hota hai?", options: { A: "Aam", B: "Kela", C: "Angoor", D: "Papita" }, ans: "B" },
-    { q: "Aisa kaun sa shabdh hai jise ulta likhne par ladki ka naam banta hai?", options: { A: "Madhu", B: "Kajal", C: "Sarita", D: "Nisha" }, ans: "D" }
+    { q: "चार टांग खाट की, एक टांग मटके की, बताओ वह कौन सी चीज़ है जो खेत में खड़ी लटके की?", options: { A: "ककड़ी", B: "मक्का", C: "सूरजमुखी", D: "अरहर" }, ans: "A" },
+    { q: "काला मुँह, लाल शरीर, कागज़ को वह चबाए तीर! बताओ क्या?", options: { A: "पेंसिल", B: "माचिस", C: "दीया", D: "कोयला" }, ans: "B" },
+    { q: "एक पाँव की ऐसी रानी, गर्मी में दे ठण्डा पानी? बताओ क्या?", options: { A: "पंखा", B: "सुराही", C: "झरना", D: "नल" }, ans: "B" },
+    { q: "बिना पैर के चलती जाए, कभी न थककर रुकने पाए? बताओ क्या?", options: { A: "घड़ी की सुई", B: "नदी", C: "हवा", D: "साइकिल" }, ans: "A" },
+    { q: "तीन अक्षर का मेरा नाम, उल्टा सीधा एक समान? बताओ क्या?", options: { A: "कनक", B: "नयन", C: "जहाज", D: "मम" }, ans: "A" },
+    { q: "लाल गाय लकड़ी खाए, पानी पीते ही मर जाए? बताओ क्या?", options: { A: "आग", B: "चूल्हा", C: "बीड़ी", D: "दीया" }, ans: "A" }
 ];
+
 let currentPuzzleIndex = 0;
+let puzzleTimer = null;
+let timeLeft = 15;
+
+function startPuzzleGame() {
+    document.getElementById('ready-box').style.display = 'none';
+    document.getElementById('game-play-area').classList.remove('hidden');
+    loadNewPuzzle();
+}
+
+function startPuzzleTimer() {
+    clearInterval(puzzleTimer);
+    timeLeft = 15;
+    document.getElementById('timer-count').innerText = timeLeft;
+    
+    puzzleTimer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer-count').innerText = timeLeft;
+        if(timeLeft <= 0) {
+            clearInterval(puzzleTimer);
+            let bet = parseFloat(document.getElementById('p-bet').value) || 5;
+            let bal = getWalletBalance();
+            let newBalance = Math.max(0, bal - bet);
+            setWalletBalance(newBalance);
+            
+            document.getElementById('p-result').innerHTML = `<span class='error'>⏰ 15 सेकंड में जवाब न दे पाने के कारण आपके वॉलेट से ₹${bet} काट लिए गए हैं! अगली पहेली आ रही है...</span>`;
+            setTimeout(() => {
+                loadNewPuzzle();
+            }, 1500);
+        }
+    }, 1000);
+}
 
 function loadNewPuzzle() {
+    clearInterval(puzzleTimer);
     currentPuzzleIndex = Math.floor(Math.random() * puzzleList.length);
     let p = puzzleList[currentPuzzleIndex];
-    document.getElementById('p-question').innerText = p.q;
+    document.getElementById('p-question').innerText = "सवाल: " + p.q;
     document.getElementById('optA').innerText = p.options.A;
     document.getElementById('optB').innerText = p.options.B;
     document.getElementById('optC').innerText = p.options.C;
     document.getElementById('optD').innerText = p.options.D;
     document.getElementById('p-result').innerHTML = "";
+    
+    startPuzzleTimer();
 }
 
 function checkPuzzle(selectedOpt) {
+    clearInterval(puzzleTimer);
     let bet = parseFloat(document.getElementById('p-bet').value) || 5;
     let bal = getWalletBalance();
     
     if(bal < bet) {
-        document.getElementById('p-result').innerHTML = "<span class='error'>Wallet mein paryapt balance nahi hai! Kripya deposit karein.</span>";
+        document.getElementById('p-result').innerHTML = "<span class='error'>वॉलेट में पर्याप्त बैलेंस नहीं है! कृपया पहले पैसे जोड़ें।</span>";
         return;
     }
 
     let p = puzzleList[currentPuzzleIndex];
     if(selectedOpt === p.ans) {
-        setWalletBalance(bal + bet);
-        document.getElementById('p-result').innerHTML = `<span class='msg'>🎉 Sahi jawab! Aapne ₹${bet} jeet liye hain!</span>`;
+        let newBalance = bal + bet;
+        setWalletBalance(newBalance);
+        document.getElementById('p-result').innerHTML = `<span class='msg'>🎉 बिल्कुल सही जवाब! आपने ₹${bet} जीत लिए हैं! नया बैलेंस: ₹${newBalance}</span>`;
         try { document.getElementById('bonus-sound').play(); } catch(e){}
+        setTimeout(() => { loadNewPuzzle(); }, 1200);
     } else {
-        setWalletBalance(bal - bet);
-        document.getElementById('p-result').innerHTML = `<span class='error'>❌ Galat jawab! Aapke ₹${bet} kat gaye.</span>`;
+        let newBalance = bal - bet;
+        setWalletBalance(newBalance);
+        document.getElementById('p-result').innerHTML = `<span class='error'>❌ गलत जवाब! आपके ₹${bet} कट गए। तुरंत अगली पहेली आ रही है...</span>`;
+        setTimeout(() => { loadNewPuzzle(); }, 1200);
     }
 }
 
@@ -600,7 +666,7 @@ function rollDice() {
     let bal = getWalletBalance();
     
     if(bal < bet) {
-        document.getElementById('l-result').innerHTML = "<span class='error'>Wallet mein paryapt balance nahi hai!</span>";
+        document.getElementById('l-result').innerHTML = "<span class='error'>वॉलेट में पर्याप्त बैलेंस नहीं है!</span>";
         return;
     }
 
@@ -610,10 +676,10 @@ function rollDice() {
 
     if(diceVal >= 4) {
         setWalletBalance(bal + bet);
-        document.getElementById('l-result').innerHTML = `<span class='msg'>🎉 Badhai ho! Paasa ${diceVal} aaya, aap jeet gaye ₹${bet}!</span>`;
+        document.getElementById('l-result').innerHTML = `<span class='msg'>🎉 बधाई हो! पासा ${diceVal} आया, आप जीत गए ₹${bet}!</span>`;
     } else {
         setWalletBalance(bal - bet);
-        document.getElementById('l-result').innerHTML = `<span class='error'>❌ Paasa ${diceVal} aaya, aap haar gaye ₹${bet}.</span>`;
+        document.getElementById('l-result').innerHTML = `<span class='error'>❌ पासा ${diceVal} आया, आप हार गए ₹${bet}.</span>`;
     }
 }
 
@@ -621,13 +687,12 @@ function sendDepositReq() {
     let amt = document.getElementById('dep-amount').value;
     let txn = document.getElementById('dep-txnid').value;
     if(!amt || !txn) {
-        document.getElementById('dep-msg').innerHTML = "<span class='error'>Kripya rashi aur Txn ID bharein!</span>";
+        document.getElementById('dep-msg').innerHTML = "<span class='error'>कृपया राशि और Txn ID भरें!</span>";
         return;
     }
-    document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ Deposit anurodh safal-purvak bhej diya gaya hai!</span>";
+    document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ डिपॉजिट अनुरोध सफल-पूर्वक भेज दिया गया है!</span>";
 }
 
-// Bank Withdrawal with 2% commission cut and 20 minutes countdown transfer message
 function sendWithdrawReq() {
     let bankName = document.getElementById('b-name').value;
     let holder = document.getElementById('b-holder').value.trim();
@@ -637,28 +702,26 @@ function sendWithdrawReq() {
     let bal = getWalletBalance();
 
     if(!bankName || !holder || !acc || !ifsc || amt <= 0) {
-        document.getElementById('bank-msg').innerHTML = "<span class='error'>Kripya sabhi bank details aur rashi sahi bharein!</span>";
+        document.getElementById('bank-msg').innerHTML = "<span class='error'>कृपया सभी बैंक डिटेल्स और राशि सही भरें!</span>";
         return;
     }
 
     if(amt < 2500) {
-        document.getElementById('bank-msg').innerHTML = "<span class='error'>Minimum withdrawal rashi ₹2500 hai!</span>";
+        document.getElementById('bank-msg').innerHTML = "<span class='error'>Minimum withdrawal राशि ₹2500 है!</span>";
         return;
     }
 
     if(bal < amt) {
-        document.getElementById('bank-msg').innerHTML = "<span class='error'>Wallet mein paryapt balance nahi hai!</span>";
+        document.getElementById('bank-msg').innerHTML = "<span class='error'>वॉलेट में पर्याप्त बैलेंस नहीं है!</span>";
         return;
     }
 
-    // 2% Commission Calculation
     let commission = amt * 0.02;
     let finalPayable = amt - commission;
 
-    // Deduct full amount from user's isolated wallet
     setWalletBalance(bal - amt);
 
-    document.getElementById('bank-msg').innerHTML = `<span class='msg'>🏦 Withdrawal request safal! 2% commission (₹${commission.toFixed(2)}) katne ke baad ₹${finalPayable.toFixed(2)} aapke ${bankName} account mein <strong>20 minute</strong> ke andar transfer ho jayenge.</span>`;
+    document.getElementById('bank-msg').innerHTML = `<span class='msg'>🏦 Withdrawal request सफल! 2% कमीशन (₹${commission.toFixed(2)}) काटने के बाद ₹${finalPayable.toFixed(2)} आपके ${bankName} account में <strong>20 मिनट</strong> के अंदर ट्रांसफर हो जाएंगे।</span>`;
 }
 
 function setupReferralLink() {
@@ -671,7 +734,7 @@ function copyReferLink() {
     let copyText = document.getElementById('ref-link-input');
     copyText.select();
     navigator.clipboard.writeText(copyText.value);
-    document.getElementById('ref-msg').innerHTML = "<span class='msg'>🔗 Link copy ho gaya hai!</span>";
+    document.getElementById('ref-msg').innerHTML = "<span class='msg'>🔗 लिंक कॉपी हो गया है!</span>";
 }
 
 function sendQueryToTelegram() {
@@ -699,7 +762,7 @@ function processResetPassword() {
     let phone = document.getElementById('reset-phone').value.trim();
     let p1 = document.getElementById('reset-pass1').value.trim();
     if(phone.length !== 10 || !p1) {
-        document.getElementById('reset-msg').innerHTML = "<span class='error'>Sahi mobile number aur password dalein!</span>";
+        document.getElementById('reset-msg').innerHTML = "<span class='error'>सही मोबाइल नंबर और पासवर्ड डालें!</span>";
         return;
     }
     localStorage.setItem('user_pass_' + phone, p1);
@@ -707,10 +770,11 @@ function processResetPassword() {
     setTimeout(() => { backToLoginBox(); }, 1500);
 }
 
+// 7 बार टैप करने पर एडमिन पैनल खुलने का नियम (78699 कोड के साथ)
 let tapCount = 0;
 function checkSecretAdminTap() {
     tapCount++;
-    if(tapCount >= 5) {
+    if(tapCount >= 7) {
         let code = prompt("Enter Master Admin Code:");
         if(code === "78699") {
             document.getElementById('admin-panel-div').style.display = 'block';
@@ -746,4 +810,4 @@ function admWitNo() { alert("Withdrawal Cancelled!"); }
 </script>
 
 </body>
-</html>
+</html>ismein kya-kya option Diya Gaya yah batao Khali
