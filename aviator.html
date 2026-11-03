@@ -601,7 +601,7 @@ function toggleBet(boxId) {
 
     if(!betActive[boxId]) {
         if(gameRunning) {
-            alert("Round shuru ho chuka hai, agle round ka intezaar karein!");
+            alert("Round shuru ho chuka hai, agle round ka intezaار karein!");
             return;
         }
         if(amt > bal) {
@@ -665,8 +665,8 @@ function startAviatorGameLoop() {
     }
 
     let elapsedSeconds = (now - parseInt(roundStartTime)) / 1000;
-    // ✅ 8x speed applied here
-    currentMultiplier = 1.00 + (elapsedSeconds * 0.3 * 8);
+    // ✅ 6x speed applied here (Perfect balanced speed)
+    currentMultiplier = 1.00 + (elapsedSeconds * 0.3 * 6);
 
     let savedTarget = localStorage.getItem('admin_target_crash');
     let crashPoint = savedTarget ? parseFloat(savedTarget) : 12.00;
@@ -690,11 +690,11 @@ function startAviatorGameLoop() {
 
     let startX = 20, startY = 20;
     let endX = 240, endY = 120;
-    let stepCount = Math.floor((currentMultiplier - 1.00) / (0.03 * 8));
+    let stepCount = Math.floor((currentMultiplier - 1.00) / (0.03 * 6));
 
     gameInterval = setInterval(() => {
-        // ✅ 8x speed applied here inside loop
-        currentMultiplier += (0.03 * 8);
+        // ✅ 6x speed applied here inside loop
+        currentMultiplier += (0.03 * 6);
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
