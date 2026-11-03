@@ -3,926 +3,857 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest.json">
-<title>My Love India - Official Portal</title>
-
-<!-- WhatsApp & Social Share Preview Meta Tags -->
-<meta property="og:title" content="My Love India - Master Games Portal">
-<meta property="og:description" content="Paheliyan suljhayein, Ludo khelein aur My Love India ke sath asali nakad jeetein!">
-<meta property="og:image" content="1792858963757.png">
-<meta property="og:url" content="https://thakursahabcreator.github.io/mahakal-battle/">
-<meta property="og:type" content="website">
-
-<!-- FontAwesome Icons for Social Buttons -->
+<title>Aviator - Thakur Sahab</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
 body {
-background-color: #0b0f19;
-color: #ffffff;
-font-family: Arial, sans-serif;
-text-align: center;
-margin: 0;
-padding: 10px;
-user-select: none;
+    background-color: #0d1117;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 5px;
+    user-select: none;
 }
 .container {
-max-width: 420px;
-margin: auto;
-background: #131a26;
-padding: 15px;
-border-radius: 12px;
-border: 2px solid #ff7b00;
-box-shadow: 0 4px 20px rgba(255, 123, 0, 0.3);
-position: relative;
+    max-width: 420px;
+    margin: auto;
+    background: #161b22;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    position: relative;
+    border: 1px solid #30363d;
 }
-h2 { color: #ffab00; margin-top: 10px; cursor: pointer; font-size: 18px; }
-
-.top-badge {
-font-size: 11px;
-color: #ff9933;
-background: #1a2332;
-padding: 4px 12px;
-border-radius: 15px;
-border: 1px solid #ff9933;
-display: inline-block;
-margin-bottom: 5px;
-font-weight: bold;
-box-shadow: 0 0 10px rgba(255, 153, 51, 0.3);
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    background: #21262d;
+    padding: 8px 12px;
+    border-radius: 8px;
 }
-
-.banner-img {
-width: 100%;
-max-height: 200px;
-object-fit: cover;
-border-radius: 8px;
-border: 1px solid #ffab00;
-margin-bottom: 12px;
+.wallet-display {
+    background: #238636;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 15px;
 }
 
-.btn {
-background: linear-gradient(to right, #ff7b00, #ffaa00);
-color: white;
-border: none;
-padding: 12px;
-width: 100%;
-border-radius: 6px;
-font-size: 15px;
-font-weight: bold;
-cursor: pointer;
-margin-top: 10px;
+.history-strip {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    padding: 4px 0;
+    margin-bottom: 8px;
+    scrollbar-width: none;
 }
-.btn:hover { opacity: 0.9; }
+.history-badge {
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
+    color: #fff;
+    background: #21262d;
+    border: 1px solid #30363d;
+}
+.badge-blue { color: #58a6ff; border-color: #1f6feb; background: #0d1117; }
+.badge-red { color: #ff7b72; border-color: #da3633; background: #2d1111; }
 
-input, select, textarea {
-width: 90%;
-padding: 10px;
-margin: 8px 0;
-background: #1a2332;
-border: 1px solid #444;
-color: white;
-border-radius: 5px;
-text-align: center;
-font-size: 14px;
+.game-screen {
+    background: radial-gradient(circle at center, #1a102f 0%, #060913 100%);
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    height: 210px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+.moon {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    width: 22px;
+    height: 22px;
+    background: #fef08a;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #fde047;
+    z-index: 1;
+}
+.star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    animation: twinkle 1.5s infinite alternate;
+    z-index: 1;
+}
+@keyframes twinkle {
+    0% { opacity: 0.2; }
+    100% { opacity: 1; }
 }
 
-.wallet-box {
-background: linear-gradient(135deg, #2c1a00, #4d2600);
-padding: 12px;
-border-radius: 8px;
-margin-bottom: 12px;
-border: 1px solid #ffcc00;
-font-size: 14px;
+.multiplier-text {
+    font-size: 38px;
+    font-weight: 800;
+    z-index: 3;
+    position: absolute;
+    top: 25px;
+    transition: color 0.3s ease;
+}
+.mult-blue { 
+    color: #388bfd; 
+    text-shadow: 0 0 14px rgba(56, 139, 253, 0.6); 
+}
+.mult-red-danger { 
+    color: #ff0055; 
+    text-shadow: 0 0 20px rgba(255, 0, 85, 0.9), 0 0 10px #ff3d00; 
+    animation: pulseGlow 0.5s infinite alternate;
+}
+@keyframes pulseGlow {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
 }
 
-.card-box {
-background: #1a2332;
-border: 1px solid #334155;
-border-radius: 8px;
-padding: 12px;
-margin: 10px 0;
-text-align: left;
+.plane-status {
+    font-size: 11px;
+    color: #8b949e;
+    z-index: 3;
+    position: absolute;
+    bottom: 6px;
 }
 
-.qr-img {
-width: 150px;
-height: 150px;
-background: white;
-padding: 6px;
-border-radius: 6px;
-margin: 8px auto;
-display: block;
-border: 2px solid #ffab00;
+.curtain-area {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(135deg, rgba(255, 61, 0, 0.3) 0%, rgba(255, 152, 0, 0.05) 100%);
+    pointer-events: none;
+    z-index: 2;
 }
 
-.admin-panel {
-background: #2a1a1a;
-border: 2px solid #ff5252;
-padding: 12px;
-border-radius: 8px;
-margin-top: 15px;
-text-align: left;
-display: none;
-font-size: 12px;
+.plane-icon {
+    font-size: 28px;
+    color: #ff3d00;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    transform-origin: center;
+    z-index: 4;
+    text-shadow: 0 0 12px rgba(255, 61, 0, 0.9);
+    transform: rotate(-35deg);
 }
-.hidden { display: none !important; }
-.msg { color: #00e676; font-size: 13px; margin-top: 8px; font-weight: bold; text-align: center; }
-.error { color: #ff5252; font-size: 13px; margin-top: 8px; font-weight: bold; text-align: center; }
+.tail-line {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: linear-gradient(90deg, #ff3d00, #ff9800);
+    height: 4px;
+    transform-origin: left bottom;
+    pointer-events: none;
+    z-index: 3;
+    box-shadow: 0 0 10px #ff3d00;
+}
+.smoke-puff {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    animation: fadeSmoke 0.6s linear forwards;
+}
+@keyframes fadeSmoke {
+    0% { transform: scale(0.5); opacity: 0.6; }
+    100% { transform: scale(2); opacity: 0; }
+}
 
-/* Social Icons Strip Styles */
-.social-strip { 
-display: flex; 
-justify-content: center; 
-gap: 12px; 
-margin-top: 15px; 
+.global-balance-control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 8px;
 }
-.s-icon { 
-width: 36px; 
-height: 36px; 
-border-radius: 50%; 
-display: flex; 
-align-items: center; 
-justify-content: center; 
-color: #fff; 
-font-size: 14px; 
-text-decoration: none; 
-border: 1px solid #d4af37; 
-transition: 0.3s;
+.bal-ctrl-btn {
+    background: #30363d;
+    color: #fff;
+    border: none;
+    width: 28px;
+    height: 24px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
 }
-.s-icon:hover { transform: scale(1.1); }
 
-/* Welcome Banner Modal Styles */
-.welcome-modal {
-position: fixed;
-top: 0; left: 0; width: 100%; height: 100%;
-background: rgba(0,0,0,0.85);
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 99999;
-padding: 15px;
+.bet-card {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 10px;
+    padding: 8px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 8px;
+    align-items: center;
 }
-.welcome-content {
-background: linear-gradient(135deg, #161b22 0%, #1f242d 100%);
-border: 2px solid #ffd700;
-border-radius: 15px;
-padding: 20px;
-max-width: 380px;
-text-align: center;
-box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+.bet-left-side {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
-.tricolour-flag {
-font-size: 32px;
-margin-bottom: 8px;
-letter-spacing: 5px;
+.bet-control-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 2px;
+}
+.step-btn {
+    background: #e9ecef;
+    color: #000;
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    width: 24px;
+    height: 22px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.bet-input {
+    width: 50px;
+    background: transparent;
+    border: none;
+    color: #000;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+}
+.quick-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3px;
+}
+.chip-btn {
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    color: #856404;
+    padding: 2px;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.auto-cash-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: #856404;
+    background: #ffeeba;
+    padding: 3px 5px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.auto-input {
+    width: 40px;
+    background: #fff;
+    border: 1px solid #ced4da;
+    color: #000;
+    text-align: center;
+    font-size: 10px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 16px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 16px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+input:checked + .slider { background-color: #238636; }
+input:checked + .slider:before { transform: translateX(14px); }
+
+.action-btn {
+    background: #238636;
+    color: white;
+    border: none;
+    width: 100%;
+    height: 100%;
+    min-height: 65px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    border: 1px solid #2ea043;
+}
+
+.in-game-feed-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 8px;
+    text-align: left;
+}
+.live-feed-box {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 11px;
+    color: #3fb950;
+    max-height: 120px;
+    overflow-y: auto;
+}
+.feed-item {
+    padding: 3px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.08);
+}
+
+.aviator-admin-modal {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    right: 10px;
+    background: #161b22;
+    border: 2px solid #3fb950;
+    padding: 12px;
+    border-radius: 8px;
+    z-index: 999;
+    display: none;
+    text-align: left;
 }
 </style>
 </head>
 <body>
 
-<!-- 🇮🇳 TIRANGA WELCOME BANNER MODAL -->
-<div id="welcome-banner-modal" class="welcome-modal">
-    <div class="welcome-content">
-        <div class="tricolour-flag">🇮🇳 🇮🇳 🇮🇳</div>
-        <h2 style="color: #ffd700; font-size: 18px; margin: 5px 0;">✨ अपने सपने पूरे करें, सारे दुःख दूर करें! ✨</h2>
-        <p style="font-size: 12px; color: #e6edf3; line-height: 1.5; margin: 10px 0;">
-            अब हर इंसान का एक सपना होता है... और उस सपने को हकीकत बनाने के लिए आ गया है — <b>अपने भारत का असली और अपना भरोसेमंद गेम!</b><br><br>
-            यहाँ हर यूजर को मिलेगा मौका, अपनी मेहनत से अपना हर सपना पूरा करने का। <b>एक बार किस्मत जरूर आजमाएं!</b><br><br>
-            🚀 लॉगिन करते ही आपके वॉलेट में जुड़ चुका है स्पेशल बोनस! अब मैदान में उतरिए, पूरी शान से खेलिए और साबित कर दीजिए कि असली किंग कौन है!
-        </p>
-        <button class="btn" style="background: #238636; min-height: 40px; margin-top: 10px; font-size: 13px;" onclick="closeWelcomeModal()">गेम में प्रवेश करें (OK) 🚀</button>
-    </div>
-</div>
-
 <div class="container">
-
-<!-- App Download Button -->
-<button id="installBtn" style="display:none; background:#ff7b00; color:#fff; padding:10px 20px; border:none; border-radius:8px; font-weight:bold; margin: 10px auto; cursor:pointer; width:100%;">📥 Game App Download Karein</button>
-
-<!-- 🇮🇳 MY LOVE INDIA BADGE -->
-<div class="top-badge">🇮🇳 MY LOVE INDIA 🇮🇳</div>
-<!-- 7 बार टैप करने पर एडमिन पैनल खुलेगा -->
-<h2 onclick="checkSecretAdminTap()">🔱 MY LOVE INDIA 🔱</h2>
-
-<!-- Banner Image -->
-<img src="1792858963757.png" alt="My Love India Banner" class="banner-img">
-
-<!---------------- 1. LOGIN & RESET PAGE SECTION ---------------->
-<div id="login-section">
-<div class="card-box" style="text-align: center;" id="login-form-box">
-<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस</h3>
-<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें (नया खाता बनाने पर ₹19 मिलेगा):</p>
-<input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
-<input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
-<button class="btn" onclick="processLogin()">सुरक्षित लॉगिन करें</button>
-<button class="btn" style="background: #334155; font-size: 12px; padding: 8px;" onclick="showResetBox()">पासवर्ड भूल गए? Reset Karein</button>
-<div id="login-msg"></div>
-</div>
-
-<!-- Reset Password Box -->
-<div class="card-box" style="text-align: center; display: none;" id="reset-form-box">
-<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔄 पासवर्ड रीसेट करें (3-Step Verification)</h3>
-<p style="font-size: 11px; color: #aaa;">अपना रजिस्टर्ड मोबाइल नंबर और नया पासवर्ड दर्ज करें:</p>
-<input type="tel" id="reset-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
-<input type="password" id="reset-pass1" placeholder="नया पासवर्ड दर्ज करें">
-<input type="password" id="reset-pass2" placeholder="पासवर्ड दोबारा दर्ज करें">
-<input type="password" id="reset-pass3" placeholder="पासवर्ड पक्का करें">
-<button class="btn" style="background: #eab308; color: #000;" onclick="processResetPassword()">पासवर्ड अपडेट करें (OK)</button>
-<button class="btn" style="background: #334155; font-size: 12px; padding: 8px;" onclick="backToLoginBox()">वापस लॉगिन पर जाएं</button>
-<div id="reset-msg"></div>
-</div>
-</div>
-
-<!---------------- 2. MAIN SERVER DASHBOARD ---------------->
-<div id="app-dashboard" class="hidden">
-<div class="wallet-box">
-<h3>💰 मेरा वॉलेट: ₹<span id="balance">19</span></h3>
-<p id="user-display-phone" style="font-size: 11px; color: #00e676; margin: 2px 0;"></p>
-<p id="bonus-timer-msg" style="font-size: 11px; color: #ffab00; margin: 5px 0 0 0;">⏳ 3 महीने (90 दिन) लगातार खेलने के बाद ₹199 सीनियर बोनस मिलेगा...</p>
-</div>
-
-<p style="color: #ffab00; font-weight: bold; font-size: 13px; margin: 10px 0 5px 0;">My Love India - मास्टर गेम्स सूची:</p>
-
-<button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="openSection('puzzle-section')">🧠 1. कठिन पहेली गेम</button>
-<button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="openSection('ludo-section')">🎲 2. लूडो पासा बैटल</button>
-<!-- ✅ Corrected Aviator Link pointing to aviator.html -->
-<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='aviator.html'">✈️ 3. Aviator प्लेन गेम</button>
-<button class="btn" style="background: linear-gradient(to right, #00897b, #00acc1);" onclick="openSection('deposit-section')">📥 4. पैसे जोड़े (BharatPe QR Deposit)</button>
-<button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 5. बैंक में पैसे भेजें (Withdrawal Portal)</button>
-
-<button class="btn" style="background: linear-gradient(to right, #eab308, #ca8a04);" onclick="openSection('refer-section')">🎁 6. शेयर करें और 3% कमीशन पाएं (Refer & Earn)</button>
-<button class="btn" style="background: linear-gradient(to right, #0284c7, #0369a1);" onclick="openSection('support-section')">💬 7. Help Customer Care</button>
-<button class="btn" style="background: #ef4444; font-size: 13px; padding: 8px;" onclick="logoutUser()">🚪 लॉगआउट (Logout / नंबर बदलें)</button>
-    
-<!-- MY LOVE INDIA OFFICIAL GAMING PARTNER BOX -->
-<div style="background: linear-gradient(135deg, #141414, #1f1f1f); border: 2px solid #ffd700; border-radius: 12px; padding: 18px; margin: 15px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #e0e0e0; box-shadow: 0 6px 20px rgba(0,0,0,0.7); text-align: left;">
-    
-    <h3 style="color: #ffcc00; font-size: 13px; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">
-        ⚡ MY LOVE INDIA - OFFICIAL GAMING PARTNER PORTAL ⚡
-    </h3>
-    
-    <div style="max-height: 220px; overflow-y: auto; padding-right: 8px; font-size: 12px; line-height: 1.6; color: #cccccc; scrollbar-width: thin; scrollbar-color: #ffd700 #222;">
-        
-        <p style="margin-top: 0;">
-            <strong style="color: #00ffcc;">1. My Love India Platform Dwara Game ka Nirman:</strong><br>
-            Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>My Love India Official Gaming Network</strong> dwara taiyar kiya gaya hai. Isme 256-bit SSL encryption ka pura palan kiya gaya hai taaki aapka har ek data 100% surakshit rahe.
-        </p>
-
-        <p>
-            <strong style="color: #00ffcc;">2. Game Kaise Khele aur Rules Kya Hain:</strong><br>
-            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain. Har game me transparent RNG system kaam karta hai, jisse sabhi khiladiyon ko jeetne ke barabar aur fair mauke milte hain.
-        </p>
-
-        <p>
-            <strong style="color: #00ffcc;">3. Refer & Earn Aur Commission System:</strong><br>
-            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai jo turant aapke wallet mein add ho jata hai.
-        </p>
-
-        <p>
-            <strong style="color: #ff9900; font-weight: 700;">4. Withdrawal (Pase Nikalne) ki 100% Guarantee aur Time Limit:</strong><br>
-            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai!
-        </p>
-
-        <p style="margin-bottom: 0;">
-            <strong style="color: #ff4d4d; font-weight: 700;">5. Fraud-Giri aur Security ki Full Guarantee:</strong><br>
-            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai.
-        </p>
-        
-    </div>
-    
-    <div style="text-align: center; margin-top: 12px; border-top: 1px solid rgba(255,215,0,0.3); padding-top: 8px; font-size: 11px; color: #00ff66; font-weight: 600;">
-        ✅ Officially Verified & Secure Gaming Portal by My Love India.
-    </div>
-</div>
-
-</div>
-
-<!---------------- SUB-SECTIONS ---------------->
-
-<!-- Pheli Game View -->
-<div id="puzzle-section" class="hidden">
-<div class="card-box">
-<h3 style="color: #ffab00; margin-top: 0; text-align: center;">🧠 गाँव-देहात की कठिन पहेली गेम</h3>
-
-<!-- READY CONFIRMATION SCREEN -->
-<div id="ready-box" style="text-align: center; padding: 15px; background: #1a2332; border-radius: 8px; border: 1px dashed #ffab00;">
-    <p style="font-size: 15px; color: #ffab00; font-weight: bold; line-height: 1.5;">क्या आप सवाल का जवाब देने के लिए तैयार हैं?</p>
-    <p style="font-size: 12px; color: #ccc;">अगर तैयार हैं तो नीचे दिए गए 'हाँ (YES)' बटन पर क्लिक करें। (तैयार होने पर ही 15 सेकंड का टाइमर चालू होगा)</p>
-    <button class="btn" style="background: #00c853; color: #000; font-size: 16px; margin-top: 10px;" onclick="startPuzzleGame()">हाँ (YES) - मैं तैयार हूँ</button>
-</div>
-
-<!-- ACTUAL PUZZLE GAME AREA -->
-<div id="game-play-area" class="hidden">
-    <!-- 15 Seconds Timer Display -->
-    <div style="background: #1f1f1f; border: 1px solid #ff5252; padding: 6px; border-radius: 6px; text-align: center; margin-bottom: 8px;">
-        <span style="font-size: 13px; color: #ff5252; font-weight: bold;">⏳ समय शेष: <span id="timer-count">15</span> सेकंड</span>
+    <div id="aviator-admin-modal" class="aviator-admin-modal">
+        <b style="color: #3fb950; font-size: 13px;">👑 Admin Control Panel:</b>
+        <p style="font-size: 11px; color: #8b949e; margin: 4px 0;">Target Crash Multiplier:</p>
+        <input type="number" id="admin-target-mult" class="bet-input" value="2.00" step="0.1" style="width:100%; background:#0d1117; border:1px solid #30363d; padding:5px; color:#fff;">
+        <button class="action-btn" style="background:#238636; padding:5px; margin-top:6px; min-height:30px;" onclick="saveAdminSettings()">Save Target</button>
+        <button class="action-btn" style="background:#da3633; padding:5px; margin-top:4px; min-height:30px; border-color:#f85149;" onclick="closeAviatorAdmin()">Close</button>
     </div>
 
-    <input type="number" id="p-bet" value="10" min="5" style="display:block; margin: 0 auto 8px auto;">
-    <p id="p-question" style="font-size: 14px; color: #ffab00; font-weight: bold; text-align: left; background: #1a2332; padding: 10px; border-radius: 6px; border: 1px dashed #ffab00;"></p>
-    <div id="p-options">
-    <button class="btn" style="padding:10px; margin:6px 0; text-align:left; background: #1f293d;" onclick="checkPuzzle('A')">A. <span id="optA"></span></button>
-    <button class="btn" style="padding:10px; margin:6px 0; text-align:left; background: #1f293d;" onclick="checkPuzzle('B')">B. <span id="optB"></span></button>
-    <button class="btn" style="padding:10px; margin:6px 0; text-align:left; background: #1f293d;" onclick="checkPuzzle('C')">C. <span id="optC"></span></button>
-    <button class="btn" style="padding:10px; margin:6px 0; text-align:left; background: #1f293d;" onclick="checkPuzzle('D')">D. <span id="optD"></span></button>
+    <div class="header-row">
+        <span id="aviator-title" style="font-size: 15px; font-weight: bold; color: #3fb950; cursor: pointer;" onclick="handleTitleTap()">Aviator Game (600+ Active)</span>
+        <div class="wallet-display">🪙 <span id="aviator-bal">19.00</span></div>
+    </div>
+
+    <div class="history-strip" id="history-strip-container">
+        <div class="history-badge badge-red">10.28x</div>
+        <div class="history-badge badge-red">24.89x</div>
+        <div class="history-badge badge-red">66.06x</div>
+        <div class="history-badge badge-blue">1.59x</div>
+    </div>
+
+    <div class="game-screen" id="game-screen-box">
+        <div class="moon"></div>
+        <div class="star" style="top: 30px; left: 50px; width: 2px; height: 2px;"></div>
+        <div class="star" style="top: 60px; left: 120px; width: 3px; height: 3px;"></div>
+        <div class="star" style="top: 40px; left: 250px; width: 2px; height: 2px;"></div>
+
+        <svg class="curtain-area" id="curtain-svg" style="position:absolute; width:100%; height:100%; top:0; left:0;">
+            <polygon id="curtain-polygon" points="20,210 20,210 20,210" fill="rgba(255, 61, 0, 0.2)" />
+        </svg>
+
+        <div class="multiplier-text mult-blue" id="live-multiplier">1.00x</div>
+        <div class="tail-line" id="tail-line"></div>
+        <div class="plane-icon" id="plane-graphic"><i class="fa-solid fa-fighter-jet"></i></div>
+        <div class="plane-status" id="plane-status-msg">Udd raha hai...</div>
+    </div>
+
+    <div class="global-balance-control">
+        <span style="font-size: 11px; color: #8b949e;">Balance +/-:</span>
+        <button class="bal-ctrl-btn" onclick="modifyBalance(-10)">-</button>
+        <span style="font-size: 12px; font-weight: bold;">Wallet</span>
+        <button class="bal-ctrl-btn" onclick="modifyBalance(10)">+</button>
+    </div>
+
+    <!-- Bet Box 1 -->
+    <div class="bet-card">
+        <div class="bet-left-side">
+            <div class="bet-control-group">
+                <button class="step-btn" onclick="changeBetAmount(1, -10)">-</button>
+                <input type="number" id="bet-amt-1" class="bet-input" value="10.00">
+                <button class="step-btn" onclick="changeBetAmount(1, 10)">+</button>
+            </div>
+            <div class="quick-chips-grid">
+                <button class="chip-btn" onclick="setBet(1, 10)">10</button>
+                <button class="chip-btn" onclick="setBet(1, 100)">100</button>
+                <button class="chip-btn" onclick="setBet(1, 1000)">1000</button>
+                <button class="chip-btn" onclick="setBet(1, 5000)">5000</button>
+            </div>
+            <div class="auto-cash-row">
+                <span>Auto:</span>
+                <label class="switch">
+                    <input type="checkbox" id="auto-toggle-1">
+                    <span class="slider"></span>
+                </label>
+                <input type="number" id="auto-cash-1" class="auto-input" value="2.00" step="0.1">
+            </div>
+        </div>
+        <div>
+            <button class="action-btn" id="bet-btn-1" onclick="toggleBet(1)">
+                <i class="fa-solid fa-plane"></i>
+                <span id="btn-text-1">Bet Lagayein</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bet Box 2 -->
+    <div class="bet-card">
+        <div class="bet-left-side">
+            <div class="bet-control-group">
+                <button class="step-btn" onclick="changeBetAmount(2, -10)">-</button>
+                <input type="number" id="bet-amt-2" class="bet-input" value="10.00">
+                <button class="step-btn" onclick="changeBetAmount(2, 10)">+</button>
+            </div>
+            <div class="quick-chips-grid">
+                <button class="chip-btn" onclick="setBet(2, 10)">10</button>
+                <button class="chip-btn" onclick="setBet(2, 100)">100</button>
+                <button class="chip-btn" onclick="setBet(2, 1000)">1000</button>
+                <button class="chip-btn" onclick="setBet(2, 10000)">10000</button>
+            </div>
+            <div class="auto-cash-row">
+                <span>Auto:</span>
+                <label class="switch">
+                    <input type="checkbox" id="auto-toggle-2">
+                    <span class="slider"></span>
+                </label>
+                <input type="number" id="auto-cash-2" class="auto-input" value="2.00" step="0.1">
+            </div>
+        </div>
+        <div>
+            <button class="action-btn" id="bet-btn-2" onclick="toggleBet(2)">
+                <i class="fa-solid fa-plane"></i>
+                <span id="btn-text-2">Bet Lagayein</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Live Winners Feed -->
+    <div class="in-game-feed-card" id="feed-card-wrapper">
+        <div style="font-size: 11px; color: #3fb950; margin-bottom: 4px; font-weight: bold;">🟢 Live Winners Feed (600+ Active Players)</div>
+        <div class="live-feed-box" id="live-winners-container">
+            <div class="feed-item">🏆 Sandeep (Kannauj) jeete ₹598 (1.30x)</div>
+            <div class="feed-item">🏆 Vipin (Unnao) jeete ₹6,051 (5.68x)</div>
+            <div class="feed-item">🏆 Rahul (Unnao) jeete ₹9,590 (4.96x)</div>
+        </div>
     </div>
 </div>
-
-<div id="p-result"></div>
-</div>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
-</div>
-
-<!-- Ludo Dice View -->
-<div id="ludo-section" class="hidden">
-<div class="card-box" style="text-align: center;">
-<h3 style="color: #ffab00; margin-top: 0;">🎲 लूडो पासा बैटल</h3>
-<input type="number" id="l-bet" value="10" min="5">
-<div style="font-size: 50px; background: #121212; border: 2px solid #ffab00; border-radius: 8px; width: 70px; height: 70px; margin: 10px auto; display: flex; align-items: center; justify-content: center;" id="dice-view">🎲</div>
-<button class="btn" onclick="rollDice()">पासा फेंको (Roll)</button>
-<div id="l-result"></div>
-</div>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
-</div>
-
-<!-- Deposit View with GPay/PhonePe and Screenshot Upload + Reset -->
-<div id="deposit-section" class="hidden">
-<div class="card-box">
-<h3 style="color: #ffab00; margin-top: 0; text-align: center;">📥 पैसे जोड़े (QR Deposit)</h3>
-<img src="qrcode.jpg" alt="QR" class="qr-img">
-<p style="font-size: 11px; color: #aaa; text-align: center;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
-
-<!-- GPay & PhonePe Direct Buttons -->
-<div style="display:flex; gap:6px; margin-bottom:10px;">
-<a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=MyLoveIndia&cu=INR" class="btn" style="background: #4285F4; font-size:13px; padding:8px; text-decoration:none; text-align:center; margin-top:0;">Google Pay</a>
-<a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=MyLoveIndia&cu=INR" class="btn" style="background: #5f259f; font-size:13px; padding:8px; text-decoration:none; text-align:center; margin-top:0;">PhonePe Pay</a>
-</div>
-
-<input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
-<input type="text" id="dep-txnid" placeholder="UPI Txn ID दर्ज करें">
-
-<label style="font-size: 11px; color: #ffab00; display: block; margin-top: 8px; text-align: left;">Payment Screenshot Upload Karein:</label>
-<input type="file" id="dep-screenshot" accept="image/*" style="background:#131a26; padding:6px; border:1px dashed #ffab00; width:90%; color:#fff;" onchange="previewScreenshot(event)">
-
-<div id="screenshot-preview-box" style="margin-top:8px; display:none; text-align:center;">
-<img id="preview-img" src="" style="max-width:110px; max-height:110px; border-radius:5px; border:1px solid #fff;">
-<br>
-<button type="button" onclick="resetScreenshot()" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; font-size:11px; border-radius:4px; margin-top:6px; cursor:pointer; font-weight:bold;">✖ Reset / Change Screenshot</button>
-</div>
-
-<button class="btn" style="background: #00897b; margin-top:12px;" onclick="sendDepositReq()">डिपॉजिट अनुरोध भेजें</button>
-<div id="dep-msg"></div>
-
-</div>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
-</div>
-
-<!-- Bank Withdrawal View with 2% Commission & 20 Min Timer System -->
-<div id="bank-section" class="hidden">
-<div class="card-box">
-<h3 style="color: #00e676; margin-top: 0; text-align: center;">🏦 बैंक ट्रांसफर (Withdrawal)</h3>
-<p style="font-size: 11px; color: #aaa; text-align: center;">न्यूनतम सीमा: ₹2500 (2% कमीशन कटेगा)</p>
-<label style="font-size: 11px; color: #ffab00;">बैंक चुनें:</label>
-<select id="b-name">
-<option value="">-- बैंक चुनें --</option>
-<option value="Central Bank of India">Central Bank of India</option>
-<option value="Bank of Baroda (BOB)">Bank of Baroda (BOB)</option>
-<option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
-<option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)</option>
-<option value="HDFC Bank">HDFC Bank</option>
-<option value="ICICI Bank">ICICI Bank</option>
-<option value="Axis Bank">Axis Bank</option>
-</select>
-<input type="text" id="b-holder" placeholder="खाता धारक का नाम">
-<input type="text" id="b-acc" placeholder="अकाउंट नंबर">
-<input type="text" id="b-ifsc" placeholder="IFSC कोड">
-<input type="number" id="b-amt" placeholder="राशि (न्यूनतम ₹2500)" min="2500">
-<button class="btn" style="background: #00c853;" onclick="sendWithdrawReq()">विथड्रॉवल लगाएं (20 Min Transfer)</button>
-<div id="bank-msg"></div>
-</div>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
-</div>
-
-<!-- Refer & Earn View -->
-<div id="refer-section" class="hidden">
-<div class="card-box" style="text-align: center;">
-<h3 style="color: #ffab00; margin-top: 0;">🎁 शेयर करें और 3% कमीशन पाएं</h3>
-<p style="font-size: 12px; color: #ccc;">अपना यूनिक लिंक शेयर करें। आपके लिंक से जुड़ने वाले यूजर जब भी डिपॉजिट करेंगे, उनका पूरा पैसा उनके गेम में जुड़ेगा और आपको अलग से 3% कमीशन मिलेगा!</p>
-<input type="text" id="ref-link-input" readonly style="background:#121212; color:#ffab00; font-weight:bold;">
-<button class="btn" style="background: #00897b;" onclick="copyReferLink()">🔗 लिंक कॉपी करें</button>
-<button class="btn" style="background: #25D366; color:#000;" onclick="shareOnWhatsApp()">💬 WhatsApp पर शेयर करें</button>
-<p id="referred-by-info" style="font-size: 11px; color: #00e676; margin-top: 10px;"></p>
-<div id="ref-msg"></div>
-</div>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
-</div>
-
-<!-- Help Customer Care View -->
-<div id="support-section" class="hidden">
-<div class="card-box" style="text-align: center;">
-<h3 style="color: #ffab00; margin-top: 0;">💬 Help Customer Care</h3>
-<p style="font-size: 11px; color: #aaa;">अपनी समस्या नीचे लिखें, सीधे एडमिन (Telegram) को संदेश भेजें:</p>
-<textarea id="user-query" rows="3" placeholder="यहाँ अपनी समस्या लिखें (उदा. डिपॉजिट नहीं हुआ)..."></textarea>
-<button class="btn" style="background: #ef4444; margin-top: 10px;" onclick="sendQueryToTelegram()">🚨 एडमिन (Telegram) को संदेश भेजें</button>
-<div id="support-msg"></div>
-</div>
-<button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
-</div>
-
-<!---------------- SECRET ADMIN PANEL (Password: 78699) ---------------->
-<div id="admin-panel-div" class="admin-panel">
-<b style="color: #ff5252;">👑 मास्टर एडमिन कंट्रोल पैनल (Security & Master Lock):</b>
-<hr style="border-color: #444; margin: 5px 0;">
-
-<!-- 👥 REAL USERS LIVE TRACKER BOX -->
-<div style="background: #111827; border: 1px solid #374151; padding: 10px; border-radius: 6px; margin-top: 10px;">
-    <p style="color: #00ffcc; margin: 0 0 8px 0; font-weight: bold; font-size: 12px;">👥 असली यूज़र्स की लाइव कुंडली (Real Users Tracker):</p>
-    <div id="admin-real-users-list" style="max-height: 160px; overflow-y: auto; font-size: 11px; text-align: left; color: #e5e7eb;">
-        <!-- यहाँ असली यूज़र्स की लिस्ट अपने आप लोड होगी -->
-    </div>
-    <button class="btn" style="padding: 5px; background: #2563eb; font-size: 11px; margin-top: 6px;" onclick="loadRealUsersIntoAdmin()">🔄 यूज़र्स लिस्ट रिफ्रेश करें</button>
-</div>
-
-<p style="margin-top: 15px;">🔒 <b>मास्टर सिक्योरिटी लॉक:</b></p>
-<button onclick="toggleMasterLock()" id="lock-status-btn" style="background:#00e676; border:none; padding:6px 12px; font-weight:bold; border-radius:4px; cursor:pointer;">Lock Status: UNLOCKED</button>
-
-<p style="margin-top: 15px;">🏦 <b>विथड्रॉवल अनुरोध:</b> <span id="adm-wit" style="color: #ffab00;">कोई नहीं</span></p>
-<button onclick="admWitYes()" style="background:#00e676; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer;">✔ YES (2% काटकर)</button>
-<button onclick="admWitNo()" style="background:#ff5252; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer; color:#fff; margin-left:5px;">✖ NO</button>
-
-<p style="margin-top: 10px;">💰 <b>वॉलेट बैलेंस एडिट करें:</b></p>
-<input type="number" id="adm-new-bal" placeholder="नया बैलेंस">
-<button class="btn" style="padding: 6px; background: #00e676; color: #000;" onclick="admUpdateBal()">बैलेंस सेव करें</button>
-
-<button class="btn" style="background: #555; padding: 5px; margin-top: 8px;" onclick="closeAdmin()">एडमिन बंद करें</button>
-</div>
-
-<!---------------- CLEAN SINGLE SOCIAL ICONS STRIP ---------------->
-<div class="social-strip">
-    <a href="https://t.me/YOUR_USERNAME" target="_blank" class="s-icon" style="background:#0088cc" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
-    <a href="javascript:void(0);" class="s-icon" style="background:#1877F2" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-    <a href="javascript:void(0);" class="s-icon" style="background:#E1306C" title="Instagram"><i class="fab fa-instagram"></i></a>
-    <a href="javascript:void(0);" class="s-icon" style="background:#25D366" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-</div>
-
-</div>
-
-<!-- Audio for instant reward sound effect -->
-<audio id="bonus-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
 <script>
-let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
+let titleTapCount = 0;
+let isAdminLoggedIn = false;
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  if(installBtn) installBtn.style.display = 'block';
-});
-
-if(installBtn) {
-  installBtn.addEventListener('click', async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-      }
-      deferredPrompt = null;
-      installBtn.style.display = 'none';
-    }
-  });
-}
-
-// -------------------------------------------------------------------------
-// WELCOME BANNER MODAL CLOSE FUNCTION
-// -------------------------------------------------------------------------
-function closeWelcomeModal() {
-    let modal = document.getElementById('welcome-banner-modal');
-    if(modal) modal.style.display = 'none';
-}
-
-// -------------------------------------------------------------------------
-// SECURE USER SESSION & ISOLATED BALANCE STORAGE FUNCTIONS
-// -------------------------------------------------------------------------
-function getCurrentUser() {
-    return localStorage.getItem('active_session_phone');
-}
-
-function getWalletBalance() {
-    let user = getCurrentUser();
-    if(!user) return 19;
-    let bal = localStorage.getItem('user_bal_' + user);
-    if(bal === null) {
-        bal = '19';
-        localStorage.setItem('user_bal_' + user, bal);
-    }
-    return parseFloat(bal);
-}
-
-function setWalletBalance(amount) {
-    let user = getCurrentUser();
-    if(user) {
-        localStorage.setItem('user_bal_' + user, amount);
-        updateWalletDisplay();
-        registerRealUser(user);
-    }
-}
-
-function updateWalletDisplay() {
-    let bal = getWalletBalance();
-    let balEl = document.getElementById('balance');
-    if(balEl) balEl.innerText = bal;
-    
-    let user = getCurrentUser();
-    let phoneDisp = document.getElementById('user-display-phone');
-    if(phoneDisp && user) {
-        phoneDisp.innerText = "📱 Logged in: " + user;
-    }
-}
-
-function registerRealUser(phone) {
-    if(!phone || phone.length !== 10) return;
-    let allRealUsers = JSON.parse(localStorage.getItem('thakur_real_users_db') || "[]");
-    
-    let existingIndex = allRealUsers.findIndex(u => u.phone === phone);
-    let nowTimestamp = new Date().getTime();
-    
-    if(existingIndex === -1) {
-        allRealUsers.push({
-            phone: phone,
-            joinedDate: new Date().toLocaleDateString(),
-            lastActive: nowTimestamp,
-            balance: getWalletBalance()
-        });
-    } else {
-        allRealUsers[existingIndex].lastActive = nowTimestamp;
-        allRealUsers[existingIndex].balance = getWalletBalance();
-    }
-    
-    localStorage.setItem('thakur_real_users_db', JSON.stringify(allRealUsers));
-}
-
-function loadRealUsersIntoAdmin() {
-    let listContainer = document.getElementById('admin-real-users-list');
-    if(!listContainer) return;
-    
-    let allRealUsers = JSON.parse(localStorage.getItem('thakur_real_users_db') || "[]");
-    
-    if(allRealUsers.length === 0) {
-        listContainer.innerHTML = "<p style='color: #9ca3af; text-align:center;'>अभी तक कोई असली यूज़र रजिस्टर नहीं हुआ है।</p>";
-        return;
-    }
-    
-    let html = "<table style='width:100%; border-collapse: collapse; font-size:10px;'>";
-    html += "<tr style='border-bottom: 1px solid #4b5563; color: #fbbf24;'><th style='padding:3px;'>मोबाइल नंबर</th><th style='padding:3px;'>बैलेंस</th><th style='padding:3px;'>कब से नहीं आया?</th></tr>";
-    
-    let currentTime = new Date().getTime();
-    
-    allRealUsers.forEach(u => {
-        let diffDays = Math.floor((currentTime - u.lastActive) / (1000 * 60 * 60 * 24));
-        let activeStatusText = diffDays === 0 ? "आज आया था" : `${diffDays} दिन से गायब`;
-        
-        html += `<tr style='border-bottom: 1px solid #1f2937;'>
-            <td style='padding:4px; color:#34d399; font-weight:bold;'>${u.phone}</td>
-            <td style='padding:4px;'>₹${u.balance}</td>
-            <td style='padding:4px; color:${diffDays > 2 ? '#ef4444' : '#60a5fa'};'>${activeStatusText}</td>
-        </tr>`;
-    });
-    
-    html += "</table>";
-    listContainer.innerHTML = html;
-}
-
-function processLogin() {
-    let phone = document.getElementById('login-phone').value.trim();
-    let pass = document.getElementById('login-pass').value.trim();
-    
-    if(phone.length !== 10) {
-        document.getElementById('login-msg').innerHTML = "<span class='error'>कृपया 10 अंकों का सही मोबाइल नंबर दर्ज करें!</span>";
-        return;
-    }
-
-    if(pass === "") {
-        document.getElementById('login-msg').innerHTML = "<span class='error'>कृपया पासवर्ड दर्ज करें!</span>";
-        return;
-    }
-
-    let savedPass = localStorage.getItem('user_pass_' + phone);
-    if(savedPass !== null && savedPass !== pass) {
-        document.getElementById('login-msg').innerHTML = "<span class='error'>गलत पासवर्ड! कृपया सही पासवर्ड डालें।</span>";
-        return;
-    }
-
-    localStorage.setItem('active_session_phone', phone);
-    localStorage.setItem('logged_in_phone', phone);
-
-    if(savedPass === null) {
-        localStorage.setItem('user_pass_' + phone, pass);
-    }
-
-    if(localStorage.getItem('user_bal_' + phone) === null) {
-        localStorage.setItem('user_bal_' + phone, '19');
-    }
-    
-    registerRealUser(phone);
-
-    document.getElementById('login-section').classList.add('hidden');
-    document.getElementById('app-dashboard').classList.remove('hidden');
-    updateWalletDisplay();
-    document.getElementById('login-msg').innerHTML = "";
-}
-
-function logoutUser() {
-    localStorage.removeItem('active_session_phone');
-    localStorage.removeItem('logged_in_phone');
-    document.getElementById('app-dashboard').classList.add('hidden');
-    document.getElementById('login-section').classList.remove('hidden');
-    document.getElementById('login-phone').value = '';
-    document.getElementById('login-pass').value = '';
-    document.getElementById('login-msg').innerHTML = '';
-}
-
-function openSection(sectionId) {
-    ['puzzle-section', 'ludo-section', 'deposit-section', 'bank-section', 'refer-section', 'support-section'].forEach(id => {
-        let el = document.getElementById(id);
-        if(el) el.classList.add('hidden');
-    });
-    document.getElementById('app-dashboard').classList.add('hidden');
-    
-    let target = document.getElementById(sectionId);
-    if(target) target.classList.remove('hidden');
-
-    if(sectionId === 'puzzle-section') {
-        document.getElementById('ready-box').style.display = 'block';
-        document.getElementById('game-play-area').classList.add('hidden');
-        document.getElementById('p-result').innerHTML = '';
-        clearInterval(puzzleTimer);
-    } else if(sectionId === 'refer-section') {
-        setupReferralLink();
-    }
-}
-
-function backToDashboard() {
-    clearInterval(puzzleTimer);
-    ['puzzle-section', 'ludo-section', 'deposit-section', 'bank-section', 'refer-section', 'support-section'].forEach(id => {
-        let el = document.getElementById(id);
-        if(el) el.classList.add('hidden');
-    });
-    document.getElementById('app-dashboard').classList.remove('hidden');
-    updateWalletDisplay();
-}
-
-// Screenshot preview & reset functions
-function previewScreenshot(event) {
-    let reader = new FileReader();
-    reader.onload = function(){
-        let output = document.getElementById('preview-img');
-        output.src = reader.result;
-        document.getElementById('screenshot-preview-box').style.display = 'block';
-    };
-    if(event.target.files[0]) {
-        reader.readAsDataURL(event.target.files[0]);
-    }
-}
-function resetScreenshot() {
-    document.getElementById('dep-screenshot').value = '';
-    document.getElementById('preview-img').src = '';
-    document.getElementById('screenshot-preview-box').style.display = 'none';
-}
-
-// -------------------------------------------------------------------------
-// UNIQUE RURAL / GAON-DEHAT PUZZLES DATABASE
-// -------------------------------------------------------------------------
-const puzzleList = [
-    { q: "चार टांग खाट की, एक टांग मटके की, बताओ वह कौन सी चीज़ है जो खेत में खड़ी लटके की?", options: { A: "ककड़ी", B: "मक्का", C: "सूरजमुखी", D: "अरहर" }, ans: "A" },
-    { q: "काला मुँह, लाल शरीर, कागज़ को वह चबाए तीर! बताओ क्या?", options: { A: "पेंसिल", B: "माचिस", C: "दीया", D: "कोयला" }, ans: "B" },
-    { q: "एक पाँव की ऐसी रानी, गर्मी में दे ठण्डा पानी? बताओ क्या?", options: { A: "पंखा", B: "सुराही", C: "झरना", D: "नल" }, ans: "B" },
-    { q: "बिना पैर के चलती जाए, कभी न थककर रुकने पाए? बताओ क्या?", options: { A: "घड़ी की सुई", B: "नदी", C: "हवा", D: "साइकिल" }, ans: "A" },
-    { q: "तीन अक्षर का मेरा नाम, उल्टा सीधा एक समान? बताओ क्या?", options: { A: "कनक", B: "नयन", C: "जहाज", D: "मम" }, ans: "A" },
-    { q: "लाल गाय लकड़ी खाए, पानी पीते ही मर जाए? बताओ क्या?", options: { A: "आग", B: "चूल्हा", C: "बीड़ी", D: "दीया" }, ans: "A" }
-];
-
-let currentPuzzleIndex = 0;
-let puzzleTimer = null;
-let timeLeft = 15;
-
-function startPuzzleGame() {
-    document.getElementById('ready-box').style.display = 'none';
-    document.getElementById('game-play-area').classList.remove('hidden');
-    loadNewPuzzle();
-}
-
-function startPuzzleTimer() {
-    clearInterval(puzzleTimer);
-    timeLeft = 15;
-    document.getElementById('timer-count').innerText = timeLeft;
-    
-    puzzleTimer = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timer-count').innerText = timeLeft;
-        if(timeLeft <= 0) {
-            clearInterval(puzzleTimer);
-            let bet = parseFloat(document.getElementById('p-bet').value) || 5;
-            let bal = getWalletBalance();
-            let newBalance = Math.max(0, bal - bet);
-            setWalletBalance(newBalance);
-            
-            document.getElementById('p-result').innerHTML = `<span class='error'>⏰ 15 सेकंड में जवाब न दे पाने के कारण आपके वॉलेट से ₹${bet} काट लिए गए हैं! अगली पहेली आ रही है...</span>`;
-            setTimeout(() => {
-                loadNewPuzzle();
-            }, 1500);
+function handleTitleTap() {
+    titleTapCount++;
+    if(titleTapCount >= 7) {
+        let pin = prompt("Admin PIN darj karein:");
+        if(pin === "78699") {
+            isAdminLoggedIn = true;
+            let adminModal = document.getElementById('aviator-admin-modal');
+            if(adminModal) adminModal.style.display = 'block';
+            let feedCard = document.getElementById('feed-card-wrapper');
+            if(feedCard) feedCard.style.display = 'none';
+            alert("👑 Admin Mode Activated: Fake feed hidden for you!");
+        } else if(pin !== null) {
+            alert("Galat PIN hai!");
         }
-    }, 1000);
-}
-
-function loadNewPuzzle() {
-    clearInterval(puzzleTimer);
-    currentPuzzleIndex = Math.floor(Math.random() * puzzleList.length);
-    let p = puzzleList[currentPuzzleIndex];
-    document.getElementById('p-question').innerText = "सवाल: " + p.q;
-    document.getElementById('optA').innerText = p.options.A;
-    document.getElementById('optB').innerText = p.options.B;
-    document.getElementById('optC').innerText = p.options.C;
-    document.getElementById('optD').innerText = p.options.D;
-    document.getElementById('p-result').innerHTML = "";
-    
-    startPuzzleTimer();
-}
-
-function checkPuzzle(selectedOpt) {
-    clearInterval(puzzleTimer);
-    let bet = parseFloat(document.getElementById('p-bet').value) || 5;
-    let bal = getWalletBalance();
-    
-    if(bal < bet) {
-        document.getElementById('p-result').innerHTML = "<span class='error'>वॉलेट में पर्याप्त बैलेंस नहीं है! कृपया पहले पैसे जोड़ें।</span>";
-        return;
-    }
-
-    let p = puzzleList[currentPuzzleIndex];
-    if(selectedOpt === p.ans) {
-        let newBalance = bal + bet;
-        setWalletBalance(newBalance);
-        document.getElementById('p-result').innerHTML = `<span class='msg'>🎉 बिल्कुल सही जवाब! आपने ₹${bet} जीत लिए हैं! नया बैलेंस: ₹${newBalance}</span>`;
-        try { document.getElementById('bonus-sound').play(); } catch(e){}
-        setTimeout(() => { loadNewPuzzle(); }, 1200);
-    } else {
-        let newBalance = bal - bet;
-        setWalletBalance(newBalance);
-        document.getElementById('p-result').innerHTML = `<span class='error'>❌ गलत जवाब! आपके ₹${bet} कट गए। तुरंत अगली पहेली आ रही है...</span>`;
-        setTimeout(() => { loadNewPuzzle(); }, 1200);
+        titleTapCount = 0;
     }
 }
 
-function rollDice() {
-    let bet = parseFloat(document.getElementById('l-bet').value) || 5;
-    let bal = getWalletBalance();
-    
-    if(bal < bet) {
-        document.getElementById('l-result').innerHTML = "<span class='error'>वॉलेट में पर्याप्त बैलेंस नहीं है!</span>";
-        return;
-    }
+function closeAviatorAdmin() {
+    let adminModal = document.getElementById('aviator-admin-modal');
+    if(adminModal) adminModal.style.display = 'none';
+}
 
-    let diceVal = Math.floor(Math.random() * 6) + 1;
-    let diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-    document.getElementById('dice-view').innerText = diceFaces[diceVal - 1];
-
-    if(diceVal >= 4) {
-        setWalletBalance(bal + bet);
-        document.getElementById('l-result').innerHTML = `<span class='msg'>🎉 बधाई हो! पासा ${diceVal} आया, आप जीत गए ₹${bet}!</span>`;
-    } else {
-        setWalletBalance(bal - bet);
-        document.getElementById('l-result').innerHTML = `<span class='error'>❌ पासा ${diceVal} आया, आप हार गए ₹${bet}.</span>`;
+function saveAdminSettings() {
+    let targetInput = document.getElementById('admin-target-mult');
+    if(!targetInput) return;
+    let val = parseFloat(targetInput.value);
+    if(!isNaN(val) && val >= 1.00) {
+        localStorage.setItem('admin_target_crash', val);
+        alert("Target set ho gaya: " + val + "x");
+        closeAviatorAdmin();
     }
 }
 
-function sendDepositReq() {
-    let amt = document.getElementById('dep-amount').value;
-    let txn = document.getElementById('dep-txnid').value;
-    if(!amt || !txn) {
-        document.getElementById('dep-msg').innerHTML = "<span class='error'>कृपया राशि और Txn ID भरें!</span>";
-        return;
-    }
-    document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ डिपॉजिट अनुरोध सफल-पूर्वक भेज दिया गया है!</span>";
+function getCurrentUserKey() {
+    let activePhone = localStorage.getItem('logged_in_phone') || localStorage.getItem('active_user') || localStorage.getItem('active_session_phone') || 'default_user';
+    return 'user_bal_' + activePhone;
 }
 
-function sendWithdrawReq() {
-    let bankName = document.getElementById('b-name').value;
-    let holder = document.getElementById('b-holder').value.trim();
-    let acc = document.getElementById('b-acc').value.trim();
-    let ifsc = document.getElementById('b-ifsc').value.trim();
-    let amt = parseFloat(document.getElementById('b-amt').value) || 0;
-    let bal = getWalletBalance();
-
-    if(!bankName || !holder || !acc || !ifsc || amt <= 0) {
-        document.getElementById('bank-msg').innerHTML = "<span class='error'>कृपया सभी बैंक डिटेल्स और राशि सही भरें!</span>";
-        return;
+function getAviatorBalance() {
+    let key = getCurrentUserKey();
+    let bal = localStorage.getItem(key);
+    if (bal === null) {
+        bal = "19.00";
+        localStorage.setItem(key, bal);
     }
-
-    if(amt < 2500) {
-        document.getElementById('bank-msg').innerHTML = "<span class='error'>Minimum withdrawal राशि ₹2500 है!</span>";
-        return;
-    }
-
-    if(bal < amt) {
-        document.getElementById('bank-msg').innerHTML = "<span class='error'>वॉलेट में पर्याप्त बैलेंस नहीं है!</span>";
-        return;
-    }
-
-    let commission = amt * 0.02;
-    let finalPayable = amt - commission;
-
-    setWalletBalance(bal - amt);
-
-    document.getElementById('bank-msg').innerHTML = `<span class='msg'>🏦 Withdrawal request सफल! 2% कमीशन (₹${commission.toFixed(2)}) काटने के बाद ₹${finalPayable.toFixed(2)} आपके ${bankName} account में <strong>20 मिनट</strong> के अंदर ट्रांसफर हो जाएंगे।</span>`;
+    return parseFloat(parseFloat(bal).toFixed(2));
 }
 
-function setupReferralLink() {
-    let user = getCurrentUser();
-    let refLink = "https://thakursahabcreator.github.io/mahakal-battle/?ref=" + (user || "thakur");
-    document.getElementById('ref-link-input').value = refLink;
+function setAviatorBalance(amount) {
+    let key = getCurrentUserKey();
+    let fixedAmt = parseFloat(amount).toFixed(2);
+    localStorage.setItem(key, fixedAmt);
+    let balElem = document.getElementById('aviator-bal');
+    if(balElem) {
+        balElem.innerText = fixedAmt;
+    }
 }
 
-function copyReferLink() {
-    let copyText = document.getElementById('ref-link-input');
-    copyText.select();
-    navigator.clipboard.writeText(copyText.value);
-    document.getElementById('ref-msg').innerHTML = "<span class='msg'>🔗 लिंक कॉपी हो गया है!</span>";
-}
-
-function sendQueryToTelegram() {
-    window.open("https://t.me/THAKUR_SAHAB_CREATOR", "_blank");
+function modifyBalance(amt) {
+    let current = getAviatorBalance();
+    setAviatorBalance(current + amt);
 }
 
 window.onload = function() {
-    let user = getCurrentUser();
-    if(user) {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('app-dashboard').classList.remove('hidden');
-        updateWalletDisplay();
-        registerRealUser(user);
+    let balElem = document.getElementById('aviator-bal');
+    if(balElem) {
+        balElem.innerText = getAviatorBalance().toFixed(2);
     }
+    startAviatorGameLoop();
+    startDynamicFeedGenerator();
 };
 
-function showResetBox() {
-    document.getElementById('login-form-box').style.display = 'none';
-    document.getElementById('reset-form-box').style.display = 'block';
-}
-function backToLoginBox() {
-    document.getElementById('reset-form-box').style.display = 'none';
-    document.getElementById('login-form-box').style.display = 'block';
-}
-function processResetPassword() {
-    let phone = document.getElementById('reset-phone').value.trim();
-    let p1 = document.getElementById('reset-pass1').value.trim();
-    if(phone.length !== 10 || !p1) {
-        document.getElementById('reset-msg').innerHTML = "<span class='error'>सही मोबाइल नंबर और पासवर्ड डालें!</span>";
-        return;
-    }
-    localStorage.setItem('user_pass_' + phone, p1);
-    document.getElementById('reset-msg').innerHTML = "<span class='msg'>✅ Password update ho gaya!</span>";
-    setTimeout(() => { backToLoginBox(); }, 1500);
+function setBet(boxId, amount) {
+    if(gameRunning) return;
+    let betInput = document.getElementById('bet-amt-' + boxId);
+    if(betInput) betInput.value = amount.toFixed(2);
 }
 
-// 7 बार टैप करने पर एडमिन पैनल खुलने का नियम (78699 कोड के साथ)
-let tapCount = 0;
-function checkSecretAdminTap() {
-    tapCount++;
-    if(tapCount >= 7) {
-        let code = prompt("Enter Master Admin Code:");
-        if(code === "78699") {
-            document.getElementById('admin-panel-div').style.display = 'block';
-            loadRealUsersIntoAdmin();
-            alert("👑 Welcome Master Admin!");
+function changeBetAmount(boxId, delta) {
+    if(gameRunning) return;
+    let input = document.getElementById('bet-amt-' + boxId);
+    if(!input) return;
+    let val = parseFloat(input.value) || 0;
+    val += delta;
+    if(val < 1) val = 1;
+    input.value = val.toFixed(2);
+}
+
+let betActive = {1: false, 2: false};
+let betPlaced = {1: false, 2: false};
+let currentMultiplier = 1.00;
+let gameInterval = null;
+let gameRunning = false;
+let currentBetAmt = {1: 0, 2: 0};
+let hasCashedOut = {1: false, 2: false};
+let isProcessingClick = {1: false, 2: false};
+
+function toggleBet(boxId) {
+    // Multi-click aur double addition rokne ke liye strict lock
+    if (isProcessingClick[boxId]) return;
+    isProcessingClick[boxId] = true;
+    setTimeout(() => { isProcessingClick[boxId] = false; }, 400);
+
+    let betInput = document.getElementById('bet-amt-' + boxId);
+    let btnText = document.getElementById('btn-text-' + boxId);
+    let betBtn = document.getElementById('bet-btn-' + boxId);
+    if(!betInput || !btnText || !betBtn) return;
+
+    let amt = parseFloat(betInput.value);
+    let bal = getAviatorBalance();
+
+    // 1. AGAR BET ABHI TAK NAHI LAGI HAI (Bet Lagane ka samay - Countdown / Plane udne se pehle)
+    if(!betActive[boxId]) {
+        if(gameRunning) {
+            // Agar plane ud chuka hai aur user bet cancel karna chahe ya beech mein hatana chahe
+            // Asli aviator mein round chalne ke dauran bet cancel nahi hoti, agle round ka intezaar hota hai
+            alert("Round shuru ho chuka hai, agle round ka intezaar karein!");
+            return;
         }
-        tapCount = 0;
-    }
-}
-function closeAdmin() {
-    document.getElementById('admin-panel-div').style.display = 'none';
-}
-function admUpdateBal() {
-    let newBal = parseFloat(document.getElementById('adm-new-bal').value);
-    if(!isNaN(newBal)) {
-        setWalletBalance(newBal);
-        alert("Wallet balance updated to ₹" + newBal);
-    }
-}
-let masterLocked = false;
-function toggleMasterLock() {
-    masterLocked = !masterLocked;
-    let btn = document.getElementById('lock-status-btn');
-    if(masterLocked) {
-        btn.innerText = "Lock Status: LOCKED";
-        btn.style.source = "#ff5252";
+        if(amt > bal) {
+            alert("Balance kam hai!");
+            return;
+        }
+
+        // Sirf ek baar exact amount katega (jaise 10 rupaye)
+        setAviatorBalance(bal - amt);
+        betActive[boxId] = true;
+        betPlaced[boxId] = true;
+        hasCashedOut[boxId] = false;
+        currentBetAmt[boxId] = amt;
+
+        // Button ka roop badal kar "Bet Cancel / Cancel" ya "Bet Lag Gayi" dikhayega, 
+        // aur agar user udne se pehle click kare toh bet wapas cancel ho jayegi!
+        btnText.innerHTML = `CANCEL<br>₹${amt.toFixed(2)}`;
+        betBtn.style.background = "#da3633"; // Red color for cancel option before flight
+
     } else {
-        btn.innerText = "Lock Status: UNLOCKED";
-        btn.style.background = "#00e676";
+        // 2. AGAR USER PLANE UDNAE SE PEHLE APNI BET CANCEL (HATANA) CHAHTE HAIN
+        if(!gameRunning && betActive[boxId] && !hasCashedOut[boxId]) {
+            // Agar plane abhi nahi uda hai aur user ne cancel daba diya, toh poore 10 rupaye wapas jud jayenge
+            let currentBal = getAviatorBalance();
+            setAviatorBalance(currentBal + currentBetAmt[boxId]);
+
+            betActive[boxId] = false;
+            betPlaced[boxId] = false;
+            currentBetAmt[boxId] = 0;
+            btnText.innerText = "Bet Lagayein";
+            betBtn.style.background = "#238636";
+            return;
+        }
+
+        // 3. AGAR PLANE UCHUKA HAI AUR USER CASH OUT KAR RAHA HAI
+        if(hasCashedOut[boxId]) return;
+        hasCashedOut[boxId] = true; 
+
+        let winAmt = currentBetAmt[boxId] * currentMultiplier;
+        let updatedBal = getAviatorBalance() + winAmt;
+        setAviatorBalance(updatedBal);
+
+        betActive[boxId] = false;
+        betPlaced[boxId] = false;
+        btnText.innerText = "Bet Lagayein";
+        betBtn.style.background = "#238636";
+        alert(`Badhai ho! Aapne ₹${winAmt.toFixed(2)} jeet liye.`);
     }
 }
-function admWitYes() { alert("Withdrawal Approved!"); }
-function admWitNo() { alert("Withdrawal Cancelled!"); }
+
+function startAviatorGameLoop() {
+    let multText = document.getElementById('live-multiplier');
+    let statusMsg = document.getElementById('plane-status-msg');
+    let planeIcon = document.getElementById('plane-graphic');
+    let tailLine = document.getElementById('tail-line');
+    let screenBox = document.getElementById('game-screen-box');
+    let polygon = document.getElementById('curtain-polygon');
+    
+    if(!multText || !statusMsg) return;
+
+    let now = Date.now();
+    let roundStartTime = localStorage.getItem('aviator_round_start');
+    
+    if (!roundStartTime) {
+        roundStartTime = now;
+        localStorage.setItem('aviator_round_start', roundStartTime);
+    }
+
+    let elapsedSeconds = (now - parseInt(roundStartTime)) / 1000;
+    currentMultiplier = 1.00 + (elapsedSeconds * 0.3);
+
+    let savedTarget = localStorage.getItem('admin_target_crash');
+    let crashPoint = savedTarget ? parseFloat(savedTarget) : 12.00;
+
+    if (currentMultiplier >= crashPoint) {
+        localStorage.removeItem('aviator_round_start');
+        startAviatorGameLoop();
+        return;
+    }
+
+    gameRunning = true;
+    
+    // Jaise hi plane udna shuru ho, agar kisi ne bet laga rakhi hai toh button ka text "CASH OUT" kar do
+    [1, 2].forEach(boxId => {
+        if(betActive[boxId] && !hasCashedOut[boxId]) {
+            let btnTxt = document.getElementById('btn-text-' + boxId);
+            let bBtn = document.getElementById('bet-btn-' + boxId);
+            if(btnTxt) btnTxt.innerHTML = `CASH OUT<br>₹${currentBetAmt[boxId].toFixed(2)}`;
+            if(bBtn) bBtn.style.background = "#d29922";
+        }
+    });
+
+    let startX = 20, startY = 20;
+    let endX = 240, endY = 120;
+    let stepCount = Math.floor((currentMultiplier - 1.00) / 0.03);
+
+    gameInterval = setInterval(() => {
+        currentMultiplier += 0.03;
+        multText.innerText = currentMultiplier.toFixed(2) + "x";
+        stepCount++;
+
+        multText.className = "multiplier-text";
+        if(currentMultiplier >= 10.00) {
+            multText.classList.add("mult-red-danger"); 
+        } else {
+            multText.classList.add("mult-blue"); 
+        }
+
+        [1, 2].forEach(boxId => {
+            if(betActive[boxId] && !hasCashedOut[boxId]) {
+                let liveWin = currentBetAmt[boxId] * currentMultiplier;
+                let btnTxt = document.getElementById('btn-text-' + boxId);
+                if(btnTxt) btnTxt.innerHTML = `CASH OUT<br>₹${liveWin.toFixed(2)}`;
+
+                let autoToggle = document.getElementById('auto-toggle-' + boxId);
+                if(autoToggle && autoToggle.checked) {
+                    let autoVal = parseFloat(document.getElementById('auto-cash-' + boxId).value);
+                    if(currentMultiplier >= autoVal && !hasCashedOut[boxId]) {
+                        hasCashedOut[boxId] = true;
+                        let winAmt = currentBetAmt[boxId] * autoVal;
+                        setAviatorBalance(getAviatorBalance() + winAmt);
+                        betActive[boxId] = false;
+                        btnTxt.innerText = "Bet Lagayein";
+                        let bBtn = document.getElementById('bet-btn-' + boxId);
+                        if(bBtn) bBtn.style.background = "#238636";
+                    }
+                }
+            }
+        });
+
+        let progress = Math.min(stepCount / 100, 1);
+        let currentX = startX + (endX - startX) * progress;
+        let currentY = startY + (endY - startY) * Math.pow(progress, 1.4) + Math.sin(stepCount * 0.25) * 5;
+
+        if(planeIcon) {
+            planeIcon.style.left = currentX + 'px';
+            planeIcon.style.bottom = currentY + 'px';
+        }
+
+        let dx = currentX - startX;
+        let dy = currentY - startY;
+        let length = Math.sqrt(dx * dx + dy * dy);
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+        if(tailLine) {
+            tailLine.style.width = length + 'px';
+            tailLine.style.transform = `rotate(-${angle}deg)`;
+        }
+
+        let screenH = 210;
+        let bottomY = screenH - 20;
+        let planeScreenY = screenH - (20 + currentY);
+        if(polygon) {
+            polygon.setAttribute("points", `20,${bottomY} ${20 + currentX},${bottomY} ${20 + currentX},${planeScreenY}`);
+        }
+
+        if(stepCount % 2 === 0 && screenBox) {
+            let smoke = document.createElement('div');
+            smoke.className = 'smoke-puff';
+            smoke.style.left = (currentX + 5) + 'px';
+            smoke.style.bottom = (currentY + 5) + 'px';
+            smoke.style.width = '6px';
+            smoke.style.height = '6px';
+            screenBox.appendChild(smoke);
+            setTimeout(() => { smoke.remove(); }, 600);
+        }
+
+        if(currentMultiplier >= parseFloat(crashPoint)) {
+            clearInterval(gameInterval);
+            gameRunning = false;
+            localStorage.removeItem('aviator_round_start');
+            if(statusMsg) statusMsg.innerHTML = `<span style="color:#da3633;">Crash (${parseFloat(crashPoint).toFixed(2)}x)</span>`;
+            
+            addHistoryBadge(parseFloat(crashPoint));
+
+            [1, 2].forEach(boxId => {
+                if(betActive[boxId]) {
+                    betActive[boxId] = false;
+                    betPlaced[boxId] = false;
+                    hasCashedOut[boxId] = false;
+                    let btnTxt = document.getElementById('btn-text-' + boxId);
+                    if(btnTxt) btnTxt.innerText = "Bet Lagayein";
+                    let btn = document.getElementById('bet-btn-' + boxId);
+                    if(btn) btn.style.background = "#238636";
+                }
+            });
+
+            let countdown = 15;
+            let countInterval = setInterval(() => {
+                if(statusMsg) statusMsg.innerHTML = `⏳ Agla round ${countdown} second mein shuru hoga...`;
+                countdown--;
+                if(countdown < 0) {
+                    clearInterval(countInterval);
+                    localStorage.setItem('aviator_round_start', Date.now());
+                    if(planeIcon) {
+                        planeIcon.style.left = '20px';
+                        planeIcon.style.bottom = '20px';
+                    }
+                    if(tailLine) tailLine.style.width = '0px';
+                    if(polygon) polygon.setAttribute("points", "20,190 20,190 20,190");
+                    if(statusMsg) statusMsg.innerHTML = "Udd raha hai...";
+                    startAviatorGameLoop();
+                }
+            }, 1000);
+        }
+    }, 100);
+}
+
+function addHistoryBadge(multVal) {
+    let strip = document.getElementById('history-strip-container');
+    if(!strip) return;
+
+    let badgeClass = multVal >= 10.00 ? "badge-red" : "badge-blue";
+
+    let badge = document.createElement('div');
+    badge.className = "history-badge " + badgeClass;
+    badge.innerText = multVal.toFixed(2) + "x";
+
+    strip.insertBefore(badge, strip.firstChild);
+    if(strip.children.length > 8) {
+        strip.removeChild(strip.lastChild);
+    }
+}
+
+function startDynamicFeedGenerator() {
+    let names = ["Rahul", "Sandeep", "Amit", "Deepak", "Vijay", "Ankit", "Manish", "Suraj", "Vipin", "Sachin"];
+    let places = ["Kanpur", "Rasulabad", "Unnao", "Lucknow", "Etawah", "Auraiya", "Kannauj"];
+    let container = document.getElementById('live-winners-container');
+    if(!container) return;
+
+    setInterval(() => {
+        if(isAdminLoggedIn) return;
+
+        let randomName = names[Math.floor(Math.random() * names.length)];
+        let randomPlace = places[Math.floor(Math.random() * places.length)];
+        let randomAmt = Math.floor(Math.random() * 12000) + 500;
+        let randomMult = (Math.random() * 5.5 + 1.2).toFixed(2);
+
+        let newItem = document.createElement('div');
+        newItem.className = 'feed-item';
+        newItem.innerHTML = `🏆 ${randomName} (${randomPlace}) jeete ₹${randomAmt.toLocaleString()} (${randomMult}x)`;
+        
+        container.insertBefore(newItem, container.firstChild);
+        if(container.children.length > 25) {
+            container.removeChild(container.lastChild);
+        }
+    }, 2500);
+}
 </script>
 
 </body>
