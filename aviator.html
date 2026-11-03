@@ -659,14 +659,14 @@ function startAviatorGameLoop() {
     let now = Date.now();
     let roundStartTime = localStorage.getItem('aviator_round_start');
     
-    // --- FIX: यहाँ परमानेंट टाइम लॉक सेट किया गया है ताकि रिफ्रेश करने पर टाइम रीसेट न हो ---
     if (!roundStartTime) {
         roundStartTime = now;
         localStorage.setItem('aviator_round_start', roundStartTime);
     }
 
     let elapsedSeconds = (now - parseInt(roundStartTime)) / 1000;
-    currentMultiplier = 1.00 + (elapsedSeconds * 0.3);
+    // --- 8 POINT SPEED: यहाँ 0.8 सेट किया गया है ---
+    currentMultiplier = 1.00 + (elapsedSeconds * 0.8);
 
     let savedTarget = localStorage.getItem('admin_target_crash');
     let crashPoint = savedTarget ? parseFloat(savedTarget) : 12.00;
@@ -690,10 +690,10 @@ function startAviatorGameLoop() {
 
     let startX = 20, startY = 20;
     let endX = 240, endY = 120;
-    let stepCount = Math.floor((currentMultiplier - 1.00) / 0.03);
+    let stepCount = Math.floor((currentMultiplier - 1.00) / 0.08);
 
     gameInterval = setInterval(() => {
-        currentMultiplier += 0.03;
+        currentMultiplier += 0.08; // --- यहाँ लूप में भी स्पीड 0.08 कर दी है ---
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
