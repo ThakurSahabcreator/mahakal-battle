@@ -245,7 +245,8 @@ letter-spacing: 5px;
 
 <button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="openSection('puzzle-section')">🧠 1. कठिन पहेली गेम</button>
 <button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="openSection('ludo-section')">🎲 2. लूडो पासा बैटल</button>
-<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='desi-aviator.html'">✈️ 3. Aviator प्लेन गेम</button>
+<!-- ✅ Corrected Aviator Link pointing to aviator.html -->
+<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='aviator.html'">✈️ 3. Aviator प्लेन गेम</button>
 <button class="btn" style="background: linear-gradient(to right, #00897b, #00acc1);" onclick="openSection('deposit-section')">📥 4. पैसे जोड़े (BharatPe QR Deposit)</button>
 <button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 5. बैंक में पैसे भेजें (Withdrawal Portal)</button>
 
@@ -257,7 +258,7 @@ letter-spacing: 5px;
 <div style="background: linear-gradient(135deg, #141414, #1f1f1f); border: 2px solid #ffd700; border-radius: 12px; padding: 18px; margin: 15px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #e0e0e0; box-shadow: 0 6px 20px rgba(0,0,0,0.7); text-align: left;">
     
     <h3 style="color: #ffcc00; font-size: 13px; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">
-        ⚡ MY LOVE INDIA - OFFICIAL GAMING PORTAL ⚡
+        ⚡ MY LOVE INDIA - OFFICIAL GAMING PARTNER PORTAL ⚡
     </h3>
     
     <div style="max-height: 220px; overflow-y: auto; padding-right: 8px; font-size: 12px; line-height: 1.6; color: #cccccc; scrollbar-width: thin; scrollbar-color: #ffd700 #222;">
@@ -914,7 +915,7 @@ function toggleMasterLock() {
     let btn = document.getElementById('lock-status-btn');
     if(masterLocked) {
         btn.innerText = "Lock Status: LOCKED";
-        btn.style.background = "#ff5252";
+        btn.style.source = "#ff5252";
     } else {
         btn.innerText = "Lock Status: UNLOCKED";
         btn.style.background = "#00e676";
