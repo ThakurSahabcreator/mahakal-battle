@@ -150,9 +150,49 @@ border: 1px solid #d4af37;
 transition: 0.3s;
 }
 .s-icon:hover { transform: scale(1.1); }
+
+/* Welcome Banner Modal Styles */
+.welcome-modal {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(0,0,0,0.85);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 99999;
+padding: 15px;
+}
+.welcome-content {
+background: linear-gradient(135deg, #161b22 0%, #1f242d 100%);
+border: 2px solid #ffd700;
+border-radius: 15px;
+padding: 20px;
+max-width: 380px;
+text-align: center;
+box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+}
+.tricolour-flag {
+font-size: 32px;
+margin-bottom: 8px;
+letter-spacing: 5px;
+}
 </style>
 </head>
 <body>
+
+<!-- 🇮🇳 TIRANGA WELCOME BANNER MODAL (सबसे पहले स्क्रीन पर दिखेगा) -->
+<div id="welcome-banner-modal" class="welcome-modal">
+    <div class="welcome-content">
+        <div class="tricolour-flag">🇮🇳 🇮🇳 🇮🇳</div>
+        <h2 style="color: #ffd700; font-size: 18px; margin: 5px 0;">✨ अपने सपने पूरे करें, सारे दुःख दूर करें! ✨</h2>
+        <p style="font-size: 12px; color: #e6edf3; line-height: 1.5; margin: 10px 0;">
+            अब हर इंसान का एक सपना होता है... और उस सपने को हकीकत बनाने के लिए आ गया है — <b>अपने भारत का असली और अपना भरोसेमंद गेम!</b><br><br>
+            यहाँ हर यूजर को मिलेगा मौका, अपनी मेहनत से अपना हर सपना पूरा करने का। <b>एक बार किस्मत जरूर आजमाएं!</b><br><br>
+            🚀 लॉगिन करते ही आपके वॉलेट में जुड़ चुका है स्पेशल बोनस! अब मैदान में उतरिए, पूरी शान से खेलिए और साबित कर दीजिए कि असली किंग कौन है!
+        </p>
+        <button class="btn" style="background: #238636; min-height: 40px; margin-top: 10px; font-size: 13px;" onclick="closeWelcomeModal()">गेम में प्रवेश करें (OK) 🚀</button>
+    </div>
+</div>
 
 <div class="container">
 
@@ -205,7 +245,7 @@ transition: 0.3s;
 
 <button class="btn" style="background: linear-gradient(to right, #ff5722, #ff9800);" onclick="openSection('puzzle-section')">🧠 1. कठिन पहेली गेम</button>
 <button class="btn" style="background: linear-gradient(to right, #673ab7, #9c27b0);" onclick="openSection('ludo-section')">🎲 2. लूडो पासा बैटल</button>
-<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='aviator.html'">✈️ 3. Aviator प्लेन गेम</button>
+<button class="btn" style="background: linear-gradient(to right, #0077b6, #00b4d8);" onclick="window.location.href='desi-aviator.html'">✈️ 3. Aviator प्लेन गेम</button>
 <button class="btn" style="background: linear-gradient(to right, #00897b, #00acc1);" onclick="openSection('deposit-section')">📥 4. पैसे जोड़े (BharatPe QR Deposit)</button>
 <button class="btn" style="background: linear-gradient(to right, #00c853, #64dd17);" onclick="openSection('bank-section')">🏦 5. बैंक में पैसे भेजें (Withdrawal Portal)</button>
 
@@ -239,7 +279,7 @@ transition: 0.3s;
 
         <p>
             <strong style="color: #ff9900; font-weight: 700;">4. Withdrawal (Pase Nikalne) ki 100% Guarantee aur Time Limit:</strong><br>
-            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein paise safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai!
+            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai!
         </p>
 
         <p style="margin-bottom: 0;">
@@ -442,6 +482,14 @@ if(installBtn) {
       installBtn.style.display = 'none';
     }
   });
+}
+
+// -------------------------------------------------------------------------
+// WELCOME BANNER MODAL CLOSE FUNCTION
+// -------------------------------------------------------------------------
+function closeWelcomeModal() {
+    let modal = document.getElementById('welcome-banner-modal');
+    if(modal) modal.style.display = 'none';
 }
 
 // -------------------------------------------------------------------------
@@ -810,4 +858,4 @@ function admWitNo() { alert("Withdrawal Cancelled!"); }
 </script>
 
 </body>
-</html>ismein kya-kya option Diya Gaya yah batao Khali
+</html>
