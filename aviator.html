@@ -601,7 +601,7 @@ function toggleBet(boxId) {
 
     if(!betActive[boxId]) {
         if(gameRunning) {
-            alert("Round shuru ho chuka hai, agle round ka intezaار karein!");
+            alert("Round shuru ho chuka hai, agle round ka intezaar karein!");
             return;
         }
         if(amt > bal) {
@@ -659,14 +659,14 @@ function startAviatorGameLoop() {
     let now = Date.now();
     let roundStartTime = localStorage.getItem('aviator_round_start');
     
+    // --- FIX: यहाँ परमानेंट टाइम लॉक सेट किया गया है ताकि रिफ्रेश करने पर टाइम रीसेट न हो ---
     if (!roundStartTime) {
         roundStartTime = now;
         localStorage.setItem('aviator_round_start', roundStartTime);
     }
 
     let elapsedSeconds = (now - parseInt(roundStartTime)) / 1000;
-    // यहाँ 0.04 की रफ़्तार (increment) बिल्कुल सेट है
-    currentMultiplier = 1.00 + (elapsedSeconds * 0.4);
+    currentMultiplier = 1.00 + (elapsedSeconds * 0.3);
 
     let savedTarget = localStorage.getItem('admin_target_crash');
     let crashPoint = savedTarget ? parseFloat(savedTarget) : 12.00;
@@ -690,10 +690,10 @@ function startAviatorGameLoop() {
 
     let startX = 20, startY = 20;
     let endX = 240, endY = 120;
-    let stepCount = Math.floor((currentMultiplier - 1.00) / 0.04);
+    let stepCount = Math.floor((currentMultiplier - 1.00) / 0.03);
 
     gameInterval = setInterval(() => {
-        currentMultiplier += 0.04; // यहाँ भी 0.04 से बढ़ेगी
+        currentMultiplier += 0.03;
         multText.innerText = currentMultiplier.toFixed(2) + "x";
         stepCount++;
 
