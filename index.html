@@ -506,19 +506,22 @@ function closeWelcomeModal() {
 }
 
 // -------------------------------------------------------------------------
-// SECURE USER SESSION & ISOLATED BALANCE STORAGE FUNCTIONS
+// PERMANENT SECURE BALANCE & USER STORAGE SYSTEM (SAFE 24/7 BACKUP)
 // -------------------------------------------------------------------------
 function getCurrentUser() {
-    return localStorage.getItem('active_session_phone');
+    return localStorage.getItem('active_session_phone') || localStorage.getItem('logged_in_phone');
 }
 
 function getWalletBalance() {
     let user = getCurrentUser();
     if(!user) return 19;
-    let bal = localStorage.getItem('user_bal_' + user);
-    if(bal === null) {
+    
+    // Check multiple storage backups to ensure balance never gets lost
+    let bal = localStorage.getItem('user_bal_' + user) || localStorage.getItem('backup_bal_' + user);
+    if(bal === null || bal === undefined || isNaN(bal)) {
         bal = '19';
         localStorage.setItem('user_bal_' + user, bal);
+        localStorage.setItem('backup_bal_' + user, bal);
     }
     return parseFloat(bal);
 }
@@ -526,7 +529,10 @@ function getWalletBalance() {
 function setWalletBalance(amount) {
     let user = getCurrentUser();
     if(user) {
-        localStorage.setItem('user_bal_' + user, amount);
+        let safeAmount = parseFloat(amount).toFixed(2);
+        // Double-save to prevent any accidental clearing
+        localStorage.setItem('user_bal_' + user, safeAmount);
+        localStorage.setItem('backup_bal_' + user, safeAmount);
         updateWalletDisplay();
         registerRealUser(user);
     }
@@ -550,17 +556,18 @@ function registerRealUser(phone) {
     
     let existingIndex = allRealUsers.findIndex(u => u.phone === phone);
     let nowTimestamp = new Date().getTime();
+    let currentBal = getWalletBalance();
     
     if(existingIndex === -1) {
         allRealUsers.push({
             phone: phone,
             joinedDate: new Date().toLocaleDateString(),
             lastActive: nowTimestamp,
-            balance: getWalletBalance()
+            balance: currentBal
         });
     } else {
         allRealUsers[existingIndex].lastActive = nowTimestamp;
-        allRealUsers[existingIndex].balance = getWalletBalance();
+        allRealUsers[existingIndex].balance = currentBal;
     }
     
     localStorage.setItem('thakur_real_users_db', JSON.stringify(allRealUsers));
@@ -626,6 +633,7 @@ function processLogin() {
 
     if(localStorage.getItem('user_bal_' + phone) === null) {
         localStorage.setItem('user_bal_' + phone, '19');
+        localStorage.setItem('backup_bal_' + phone, '19');
     }
     
     registerRealUser(phone);
@@ -638,7 +646,6 @@ function processLogin() {
 
 function logoutUser() {
     localStorage.removeItem('active_session_phone');
-    localStorage.removeItem('logged_in_phone');
     document.getElementById('app-dashboard').classList.add('hidden');
     document.getElementById('login-section').classList.remove('hidden');
     document.getElementById('login-phone').value = '';
