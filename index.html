@@ -184,14 +184,15 @@ letter-spacing: 5px;
 </head>
 <body>
 
-<!-- 🇮🇳 TIRANGA & DIWALI WELCOME BANNER MODAL -->
+<!-- 🇮🇳 TIRANGA WELCOME BANNER MODAL -->
 <div id="welcome-banner-modal" class="welcome-modal">
     <div class="welcome-content">
-        <div class="tricolour-flag">🪔 🇮🇳 🪔</div>
-        <h2 style="color: #ffd700; font-size: 18px; margin: 5px 0;">✨ दीवाली स्पेशल ऑफर: पाएं ₹499 इंस्टेंट बोनस! ✨</h2>
+        <div class="tricolour-flag">🇮🇳 🇮🇳 🇮🇳</div>
+        <h2 style="color: #ffd700; font-size: 18px; margin: 5px 0;">✨ अपने सपने पूरे करें, सारे दुःख दूर करें! ✨</h2>
         <p style="font-size: 12px; color: #e6edf3; line-height: 1.5; margin: 10px 0;">
-            इस दीवाली अपने सारे सपने पूरे करें! आ गया है — <b>अपने भारत का असली और अपना भरोसेमंद गेम!</b><br><br>
-            लॉगिन करते ही आपके वॉलेट में जुड़ चुका है <b>₹499 का दीवाली स्पेशल बोनस!</b> अब मैदान में उतरिए, पूरी शान से खेलिए और जीतिए असली नकद! 🚀
+            अब हर इंसान का एक सपना होता है... और उस सपने को हकीकत बनाने के लिए आ गया है — <b>अपने भारत का असली और अपना भरोसेमंद गेम!</b><br><br>
+            यहाँ हर यूजर को मिलेगा मौका, अपनी मेहनत से अपना हर सपना पूरा करने का। <b>एक बार किस्मत जरूर आजमाएं!</b><br><br>
+            🚀 लॉगिन करते ही आपके वॉलेट में जुड़ चुका है स्पेशल बोनस! अब मैदान में उतरिए, पूरी शान से खेलिए और साबित कर दीजिए कि असली किंग कौन है!
         </p>
         <button class="btn" style="background: #238636; min-height: 40px; margin-top: 10px; font-size: 13px;" onclick="closeWelcomeModal()">गेम में प्रवेश करें (OK) 🚀</button>
     </div>
@@ -213,8 +214,8 @@ letter-spacing: 5px;
 <!---------------- 1. LOGIN & RESET PAGE SECTION ---------------->
 <div id="login-section">
 <div class="card-box" style="text-align: center;" id="login-form-box">
-<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🪔 दीवाली स्पेशल लॉगिन & ₹499 इंस्टेंट बोनस</h3>
-<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें (नया खाता बनाने पर ₹499 दीवाली बोनस मिलेगा):</p>
+<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस</h3>
+<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें (नया खाता बनाने पर ₹19 मिलेगा):</p>
 <input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
 <input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
 <button class="btn" onclick="processLogin()">सुरक्षित लॉगिन करें</button>
@@ -239,9 +240,9 @@ letter-spacing: 5px;
 <!---------------- 2. MAIN SERVER DASHBOARD ---------------->
 <div id="app-dashboard" class="hidden">
 <div class="wallet-box">
-<h3>💰 मेरा वॉलेट: ₹<span id="balance">499</span></h3>
+<h3>💰 मेरा वॉलेट: ₹<span id="balance">19</span></h3>
 <p id="user-display-phone" style="font-size: 11px; color: #00e676; margin: 2px 0;"></p>
-<p id="bonus-timer-msg" style="font-size: 11px; color: #ffab00; margin: 5px 0 0 0;">🪔 दीवाली स्पेशल ऑफर: ₹499 बोनस के साथ खेलें और जीतें!</p>
+<p id="bonus-timer-msg" style="font-size: 11px; color: #ffab00; margin: 5px 0 0 0;">⏳ 3 महीने (90 दिन) लगातार खेलने के बाद ₹199 सीनियर बोनस मिलेगा...</p>
 </div>
 
 <p style="color: #ffab00; font-weight: bold; font-size: 13px; margin: 10px 0 5px 0;">My Love India - मास्टर गेम्स सूची:</p>
@@ -513,12 +514,12 @@ function getCurrentUser() {
 
 function getWalletBalance() {
     let user = getCurrentUser();
-    if(!user) return 499;
+    if(!user) return 19;
     
     // Check multiple storage backups to ensure balance never gets lost
     let bal = localStorage.getItem('user_bal_' + user) || localStorage.getItem('backup_bal_' + user);
     if(bal === null || bal === undefined || isNaN(bal)) {
-        bal = '499';
+        bal = '19';
         localStorage.setItem('user_bal_' + user, bal);
         localStorage.setItem('backup_bal_' + user, bal);
     }
@@ -631,8 +632,8 @@ function processLogin() {
     }
 
     if(localStorage.getItem('user_bal_' + phone) === null) {
-        localStorage.setItem('user_bal_' + phone, '499');
-        localStorage.setItem('backup_bal_' + phone, '499');
+        localStorage.setItem('user_bal_' + phone, '19');
+        localStorage.setItem('backup_bal_' + phone, '19');
     }
     
     registerRealUser(phone);
