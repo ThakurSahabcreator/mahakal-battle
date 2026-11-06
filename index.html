@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="google-site-verification" content="1esOTSc6W4-MlxHTxvfnVIwoKUsba-w1I9TbILFkipg" />
 <link rel="manifest" href="manifest.json">
 <title>Mahakal Puzzle Battle - Official Gaming Portal</title>
@@ -20,6 +20,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
+/* 🔒 Screen Lock / Pull-to-Refresh Disable Styles */
+html, body {
+  overscroll-behavior-y: none;
+  position: fixed;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
 body {
 background-color: #0b0f19;
 color: #ffffff;
@@ -28,7 +37,10 @@ text-align: center;
 margin: 0;
 padding: 10px;
 user-select: none;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
 }
+
 .container {
 max-width: 420px;
 margin: auto;
@@ -52,6 +64,7 @@ display: inline-block;
 margin-bottom: 5px;
 font-weight: bold;
 box-shadow: 0 0 10px rgba(255, 153, 51, 0.3);
+cursor: pointer;
 }
 
 .banner-img {
@@ -203,8 +216,8 @@ letter-spacing: 5px;
 <!-- App Download Button -->
 <button id="installBtn" style="display:none; background:#ff7b00; color:#fff; padding:10px 20px; border:none; border-radius:8px; font-weight:bold; margin: 10px auto; cursor:pointer; width:100%;">📥 Game App Download Karein</button>
 
-<!-- 🇮🇳 MY LOVE INDIA BADGE -->
-<div class="top-badge">🇮🇳 MY LOVE INDIA 🇮🇳</div>
+<!-- 🇮🇳 MY LOVE INDIA BADGE (7-Click Owner Direct Login) -->
+<div class="top-badge" onclick="checkOwnerBypassTap()">🇮🇳 MY LOVE INDIA (Owner Direct Login) 🇮🇳</div>
 <h2 onclick="checkSecretAdminTap()">🔱 MY LOVE INDIA 🔱</h2>
 
 <!-- Banner Image -->
@@ -213,7 +226,7 @@ letter-spacing: 5px;
 <!---------------- 1. LOGIN & AUTHENTICATION SECTION (Firebase Real OTP + Password) ---------------->
 <div id="login-section">
     <div class="card-box" style="text-align: center;" id="login-form-box">
-        <h3 id="form-title" style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस</h3>
+        <h3 id="form-title" style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹49 इंस्टेंट बोनस</h3>
         <p style="font-size: 11px; color: #aaa;">मोबाइल नंबर और पासवर्ड से लॉगिन करें (नया खाता बनाने पर OTP verification मिलेगा):</p>
         
         <!-- Direct Password Login Sub-Section -->
@@ -259,7 +272,7 @@ letter-spacing: 5px;
 <!---------------- 2. MAIN SERVER DASHBOARD ---------------->
 <div id="app-dashboard" class="hidden">
 <div class="wallet-box">
-<h3>💰 मेरा वॉलेट: ₹<span id="balance">19</span></h3>
+<h3>💰 मेरा वॉलेट: ₹<span id="balance">49</span></h3>
 <p id="user-display-phone" style="font-size: 11px; color: #00e676; margin: 2px 0;"></p>
 <p id="bonus-timer-msg" style="font-size: 11px; color: #ffab00; margin: 5px 0 0 0;">⏳ 3 महीने (90 दिन) लगातार खेलने के बाद ₹199 सीनियर बोनस मिलेगा...</p>
 </div>
@@ -473,7 +486,7 @@ letter-spacing: 5px;
 
     // Screen Switching Functions for Auth
     window.showLoginSection = function() {
-        document.getElementById('form-title').innerText = "🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस";
+        document.getElementById('form-title').innerText = "🔐 सुरक्षित लॉगिन & ₹49 इंस्टेंट बोनस";
         document.getElementById('login-sub-section').style.display = 'block';
         document.getElementById('register-sub-section').style.display = 'none';
         document.getElementById('forgot-sub-section').style.display = 'none';
@@ -545,8 +558,8 @@ letter-spacing: 5px;
                 alert("Registration Successful!");
                 localStorage.setItem("aviator_user", userId);
                 localStorage.setItem("active_session_phone", phone);
-                localStorage.setItem('user_bal_' + phone, '19');
-                localStorage.setItem('backup_bal_' + phone, '19');
+                localStorage.setItem('user_bal_' + phone, '49');
+                localStorage.setItem('backup_bal_' + phone, '49');
                 
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('app-dashboard').classList.remove('hidden');
@@ -621,8 +634,8 @@ letter-spacing: 5px;
                     localStorage.setItem("active_session_phone", phone);
                     
                     if(localStorage.getItem('user_bal_' + phone) === null) {
-                        localStorage.setItem('user_bal_' + phone, '19');
-                        localStorage.setItem('backup_bal_' + phone, '19');
+                        localStorage.setItem('user_bal_' + phone, '49');
+                        localStorage.setItem('backup_bal_' + phone, '49');
                     }
 
                     document.getElementById('login-section').classList.add('hidden');
@@ -671,10 +684,10 @@ function getCurrentUser() {
 
 function getWalletBalance() {
     let user = getCurrentUser();
-    if(!user) return 19;
+    if(!user) return 49;
     let bal = localStorage.getItem('user_bal_' + user) || localStorage.getItem('backup_bal_' + user);
     if(bal === null || isNaN(bal)) {
-        bal = '19';
+        bal = '49';
         localStorage.setItem('user_bal_' + user, bal);
         localStorage.setItem('backup_bal_' + user, bal);
     }
@@ -916,6 +929,25 @@ function checkSecretAdminTap() {
         tapCount = 0;
     }
 }
+
+// 👑 Owner Direct Login Bypass (7 Clicks on Top Badge)
+let ownerTapCount = 0;
+function checkOwnerBypassTap() {
+    ownerTapCount++;
+    if(ownerTapCount >= 7) {
+        let code = prompt("Enter Owner Bypass Code:");
+        if(code === "78699") {
+            localStorage.setItem("active_session_phone", "9999999999");
+            localStorage.setItem("user_bal_9999999999", "99999");
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('app-dashboard').classList.remove('hidden');
+            updateWalletDisplay();
+            alert("👑 Owner Direct Access Granted!");
+        }
+        ownerTapCount = 0;
+    }
+}
+
 function closeAdmin() { document.getElementById('admin-panel-div').style.display = 'none'; }
 let masterLocked = false;
 function toggleMasterLock() {
