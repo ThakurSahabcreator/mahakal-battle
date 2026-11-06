@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="1esOTSc6W4-MlxHTxvfnVIwoKUsba-w1I9TbILFkipg" />
 <link rel="manifest" href="manifest.json">
-<!-- SEO Title aur Description (Bina kisi personal naam ke) -->
 <title>Mahakal Puzzle Battle - Official Gaming Portal</title>
 <meta name="description" content="Play Mahakal Puzzle Battle online game. Enjoy the best Hindi puzzles, Ludo, and win exciting rewards!">
 <meta name="keywords" content="Mahakal Puzzle Battle, Mahakal Game, Hindi Puzzle Game, Online Gaming Portal">
@@ -132,6 +131,7 @@ font-size: 12px;
 .hidden { display: none !important; }
 .msg { color: #00e676; font-size: 13px; margin-top: 8px; font-weight: bold; text-align: center; }
 .error { color: #ff5252; font-size: 13px; margin-top: 8px; font-weight: bold; text-align: center; }
+.switch-btn { background: none; color: #3498db; border: none; cursor: pointer; margin-top: 10px; font-size: 13px; display: block; width: 100%; text-align: center; }
 
 /* Social Icons Strip Styles */
 .social-strip { 
@@ -205,36 +205,55 @@ letter-spacing: 5px;
 
 <!-- 🇮🇳 MY LOVE INDIA BADGE -->
 <div class="top-badge">🇮🇳 MY LOVE INDIA 🇮🇳</div>
-<!-- 7 बार टैप करने पर एडमिन पैनल खुलेगा -->
 <h2 onclick="checkSecretAdminTap()">🔱 MY LOVE INDIA 🔱</h2>
 
 <!-- Banner Image -->
 <img src="1792858963757.png" alt="My Love India Banner" class="banner-img">
 
-<!---------------- 1. LOGIN & RESET PAGE SECTION ---------------->
+<!---------------- 1. LOGIN & AUTHENTICATION SECTION (Firebase Real OTP + Password) ---------------->
 <div id="login-section">
-<div class="card-box" style="text-align: center;" id="login-form-box">
-<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस</h3>
-<p style="font-size: 11px; color: #aaa;">खेलने के लिए अपना 10 अंकों का मोबाइल नंबर और पासवर्ड दर्ज करें (नया खाता बनाने पर ₹19 मिलेगा):</p>
-<input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
-<input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
-<button class="btn" onclick="processLogin()">सुरक्षित लॉगिन करें</button>
-<button class="btn" style="background: #334155; font-size: 12px; padding: 8px;" onclick="showResetBox()">पासवर्ड भूल गए? Reset Karein</button>
-<div id="login-msg"></div>
-</div>
+    <div class="card-box" style="text-align: center;" id="login-form-box">
+        <h3 id="form-title" style="color: #ffab00; margin-top: 0; font-size: 16px;">🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस</h3>
+        <p style="font-size: 11px; color: #aaa;">मोबाइल नंबर और पासवर्ड से लॉगिन करें (नया खाता बनाने पर OTP verification मिलेगा):</p>
+        
+        <!-- Direct Password Login Sub-Section -->
+        <div id="login-sub-section">
+            <input type="tel" id="login-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
+            <input type="password" id="login-pass" placeholder="पासवर्ड दर्ज करें">
+            <button class="btn" onclick="loginWithPassword()">सुरक्षित लॉगिन करें</button>
+            <button class="switch-btn" onclick="showRegisterSection()">नया खाता बनाएं (Real OTP)</button>
+            <button class="switch-btn" onclick="showForgotSection()" style="color: #e67e22;">पासवर्ड भूल गए? Reset Karein</button>
+        </div>
 
-<!-- Reset Password Box -->
-<div class="card-box" style="text-align: center; display: none;" id="reset-form-box">
-<h3 style="color: #ffab00; margin-top: 0; font-size: 16px;">🔄 पासवर्ड रीसेट करें (3-Step Verification)</h3>
-<p style="font-size: 11px; color: #aaa;">अपना रजिस्टर्ड मोबाइल नंबर और नया पासवर्ड दर्ज करें:</p>
-<input type="tel" id="reset-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
-<input type="password" id="reset-pass1" placeholder="नया पासवर्ड दर्ज करें">
-<input type="password" id="reset-pass2" placeholder="पासवर्ड दोबारा दर्ज करें">
-<input type="password" id="reset-pass3" placeholder="पासवर्ड पक्का करें">
-<button class="btn" style="background: #eab308; color: #000;" onclick="processResetPassword()">पासवर्ड अपडेट करें (OK)</button>
-<button class="btn" style="background: #334155; font-size: 12px; padding: 8px;" onclick="backToLoginBox()">वापस लॉगिन पर जाएं</button>
-<div id="reset-msg"></div>
-</div>
+        <!-- Register Sub-Section (Firebase Real OTP + Manpasand Password) -->
+        <div id="register-sub-section" style="display:none;">
+            <input type="tel" id="reg-phone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
+            <button class="btn" style="background: #00897b;" onclick="sendOTP('reg')">रियल OTP भेजें</button>
+            
+            <div id="reg-otp-div" style="display:none; margin-top: 10px;">
+                <input type="text" id="reg-otp-code" placeholder="6-digit OTP दर्ज करें">
+                <input type="password" id="reg-new-password" placeholder="अपना मनपसंद पासवर्ड बनाएं">
+                <button class="btn" style="background: #00c853;" onclick="verifyOTPAndRegister()">खाता बनाएं और लॉगिन करें</button>
+            </div>
+            <button class="switch-btn" onclick="showLoginSection()">पपहले से खाता है? लॉगिन करें</button>
+        </div>
+
+        <!-- Forgot Password Sub-Section -->
+        <div id="forgot-sub-section" style="display:none;">
+            <input type="tel" id="forgot-phone" placeholder="रजिस्टर्ड मोबाइल नंबर" maxlength="10">
+            <button class="btn" style="background: #eab308; color: #000;" onclick="sendOTP('forgot')">रीसेट OTP भेजें</button>
+            
+            <div id="forgot-otp-div" style="display:none; margin-top: 10px;">
+                <input type="text" id="forgot-otp-code" placeholder="6-digit OTP दर्ज करें">
+                <input type="password" id="forgot-new-password" placeholder="नया मनपसंद पासवर्ड दर्ज करें">
+                <button class="btn" style="background: #00c853;" onclick="verifyOTPAndResetPassword()">पासवर्ड अपडेट करें (OK)</button>
+            </div>
+            <button class="switch-btn" onclick="showLoginSection()">वापस लॉगिन पर जाएं</button>
+        </div>
+
+        <div id="recaptcha-container"></div>
+        <div id="login-msg"></div>
+    </div>
 </div>
 
 <!---------------- 2. MAIN SERVER DASHBOARD ---------------->
@@ -255,44 +274,20 @@ letter-spacing: 5px;
 
 <button class="btn" style="background: linear-gradient(to right, #eab308, #ca8a04);" onclick="openSection('refer-section')">🎁 6. शेयर करें और 3% कमीशन पाएं (Refer & Earn)</button>
 <button class="btn" style="background: linear-gradient(to right, #0284c7, #0369a1);" onclick="openSection('support-section')">💬 7. Help Customer Care</button>
-<button class="btn" style="background: #ef4444; font-size: 13px; padding: 8px;" onclick="logoutUser()">🚪 लॉगआउट (Logout / नंबर बदलें)</button>
+<button class="btn" style="background: #ef4444; font-size: 13px; padding: 8px;" onclick="logoutUser()">🚪 लॉगआउट (Logout)</button>
     
 <!-- MY LOVE INDIA OFFICIAL GAMING PARTNER BOX -->
 <div style="background: linear-gradient(135deg, #141414, #1f1f1f); border: 2px solid #ffd700; border-radius: 12px; padding: 18px; margin: 15px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #e0e0e0; box-shadow: 0 6px 20px rgba(0,0,0,0.7); text-align: left;">
-    
     <h3 style="color: #ffcc00; font-size: 13px; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">
         ⚡ MY LOVE INDIA - OFFICIAL GAMING PARTNER PORTAL ⚡
     </h3>
-    
     <div style="max-height: 220px; overflow-y: auto; padding-right: 8px; font-size: 12px; line-height: 1.6; color: #cccccc; scrollbar-width: thin; scrollbar-color: #ffd700 #222;">
-        
-        <p style="margin-top: 0;">
-            <strong style="color: #00ffcc;">1. My Love India Platform Dwara Game ka Nirman:</strong><br>
-            Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>My Love India Official Gaming Network</strong> dwara taiyar kiya gaya hai. Isme 256-bit SSL encryption ka pura palan kiya gaya hai taaki aapka har ek data 100% surakshit rahe.
-        </p>
-
-        <p>
-            <strong style="color: #00ffcc;">2. Game Kaise Khele aur Rules Kya Hain:</strong><br>
-            Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain. Har game me transparent RNG system kaam karta hai, jisse sabhi khiladiyon ko jeetne ke barabar aur fair mauke milte hain.
-        </p>
-
-        <p>
-            <strong style="color: #00ffcc;">3. Refer & Earn Aur Commission System:</strong><br>
-            Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai jo turant aapke wallet mein add ho jata hai.
-        </p>
-
-        <p>
-            <strong style="color: #ff9900; font-weight: 700;">4. Withdrawal (Pase Nikalne) ki 100% Guarantee aur Time Limit:</strong><br>
-            Automated payment gateway ke zariye, jaise hi aap "Bank mein paise bhejen (Withdrawal)" par click karenge, theek <strong>20 se 30 sekund (seconds)</strong> ke andar aapke bank account ya UPI mein safal-purvak pahunch jayenge. Iski poori <strong>financial guarantee</strong> hai!
-        </p>
-
-        <p style="margin-bottom: 0;">
-            <strong style="color: #ff4d4d; font-weight: 700;">5. Fraud-Giri aur Security ki Full Guarantee:</strong><br>
-            Yeh platform <strong>Zero Tolerance Fraud Policy</strong> par kaam karta hai. Yahan kisi bhi prakar ke dhokhadhadi ya scam ki koi gunjaish nahi hai. 24/7 AI Customer Support desk har samay aapki sahayata ke liye taiyar hai.
-        </p>
-        
+        <p style="margin-top: 0;"><strong style="color: #00ffcc;">1. My Love India Platform Dwara Game ka Nirman:</strong><br>Yeh game advanced provably fair algorithm aur secure international gaming standards ke tahat <strong>My Love India Official Gaming Network</strong> dwara taiyar kiya gaya hai.</p>
+        <p><strong style="color: #00ffcc;">2. Game Kaise Khele aur Rules Kya Hain:</strong><br>Is platform par aap Mahakal Puzzle Battle, Ludo Paasa Battle, aur Aviator Plane Game ka anand le sakte hain.</p>
+        <p><strong style="color: #00ffcc;">3. Refer & Earn Aur Commission System:</strong><br>Jab aap apne doston ya network par is official gaming platform ko share karte hain, toh har ek successful deposit aur gameplay par aapko seedha <strong>3% instant commission</strong> milta hai.</p>
+        <p><strong style="color: #ff9900; font-weight: 700;">4. Withdrawal ki 100% Guarantee aur Time Limit:</strong><br>Automated payment gateway ke zariye 20 se 30 sekund ke andar aapke bank account ya UPI mein paise pahunch jayenge.</p>
+        <p style="margin-bottom: 0;"><strong style="color: #ff4d4d; font-weight: 700;">5. Fraud-Giri aur Security ki Full Guarantee:</strong><br>Yeh platform Zero Tolerance Fraud Policy par kaam karta hai.</p>
     </div>
-    
     <div style="text-align: center; margin-top: 12px; border-top: 1px solid rgba(255,215,0,0.3); padding-top: 8px; font-size: 11px; color: #00ff66; font-weight: 600;">
         ✅ Officially Verified & Secure Gaming Portal by My Love India.
     </div>
@@ -306,21 +301,15 @@ letter-spacing: 5px;
 <div id="puzzle-section" class="hidden">
 <div class="card-box">
 <h3 style="color: #ffab00; margin-top: 0; text-align: center;">🧠 गाँव-देहात की कठिन पहेली गेम</h3>
-
-<!-- READY CONFIRMATION SCREEN -->
 <div id="ready-box" style="text-align: center; padding: 15px; background: #1a2332; border-radius: 8px; border: 1px dashed #ffab00;">
     <p style="font-size: 15px; color: #ffab00; font-weight: bold; line-height: 1.5;">क्या आप सवाल का जवाब देने के लिए तैयार हैं?</p>
-    <p style="font-size: 12px; color: #ccc;">अगर तैयार हैं तो नीचे दिए गए 'हाँ (YES)' बटन पर क्लिक करें। (तैयार होने पर ही 15 सेकंड का टाइमर चालू होगा)</p>
+    <p style="font-size: 12px; color: #ccc;">अगर तैयार हैं तो नीचे दिए गए 'हाँ (YES)' बटन पर क्लिक करें।</p>
     <button class="btn" style="background: #00c853; color: #000; font-size: 16px; margin-top: 10px;" onclick="startPuzzleGame()">हाँ (YES) - मैं तैयार हूँ</button>
 </div>
-
-<!-- ACTUAL PUZZLE GAME AREA -->
 <div id="game-play-area" class="hidden">
-    <!-- 15 Seconds Timer Display -->
     <div style="background: #1f1f1f; border: 1px solid #ff5252; padding: 6px; border-radius: 6px; text-align: center; margin-bottom: 8px;">
         <span style="font-size: 13px; color: #ff5252; font-weight: bold;">⏳ समय शेष: <span id="timer-count">15</span> सेकंड</span>
     </div>
-
     <input type="number" id="p-bet" value="10" min="5" style="display:block; margin: 0 auto 8px auto;">
     <p id="p-question" style="font-size: 14px; color: #ffab00; font-weight: bold; text-align: left; background: #1a2332; padding: 10px; border-radius: 6px; border: 1px dashed #ffab00;"></p>
     <div id="p-options">
@@ -330,7 +319,6 @@ letter-spacing: 5px;
     <button class="btn" style="padding:10px; margin:6px 0; text-align:left; background: #1f293d;" onclick="checkPuzzle('D')">D. <span id="optD"></span></button>
     </div>
 </div>
-
 <div id="p-result"></div>
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
@@ -348,39 +336,32 @@ letter-spacing: 5px;
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Deposit View with GPay/PhonePe and Screenshot Upload + Reset -->
+<!-- Deposit View -->
 <div id="deposit-section" class="hidden">
 <div class="card-box">
 <h3 style="color: #ffab00; margin-top: 0; text-align: center;">📥 पैसे जोड़े (QR Deposit)</h3>
 <img src="qrcode.jpg" alt="QR" class="qr-img">
 <p style="font-size: 11px; color: #aaa; text-align: center;">UPI ID: BHARATPE2G0F0C1Y8Q38903@unitype</p>
-
-<!-- GPay & PhonePe Direct Buttons -->
 <div style="display:flex; gap:6px; margin-bottom:10px;">
 <a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=MyLoveIndia&cu=INR" class="btn" style="background: #4285F4; font-size:13px; padding:8px; text-decoration:none; text-align:center; margin-top:0;">Google Pay</a>
 <a href="upi://pay?pa=BHARATPE2G0F0C1Y8Q38903@unitype&pn=MyLoveIndia&cu=INR" class="btn" style="background: #5f259f; font-size:13px; padding:8px; text-decoration:none; text-align:center; margin-top:0;">PhonePe Pay</a>
 </div>
-
 <input type="number" id="dep-amount" placeholder="राशि दर्ज करें (उदा. 100)" min="100">
 <input type="text" id="dep-txnid" placeholder="UPI Txn ID दर्ज करें">
-
 <label style="font-size: 11px; color: #ffab00; display: block; margin-top: 8px; text-align: left;">Payment Screenshot Upload Karein:</label>
 <input type="file" id="dep-screenshot" accept="image/*" style="background:#131a26; padding:6px; border:1px dashed #ffab00; width:90%; color:#fff;" onchange="previewScreenshot(event)">
-
 <div id="screenshot-preview-box" style="margin-top:8px; display:none; text-align:center;">
 <img id="preview-img" src="" style="max-width:110px; max-height:110px; border-radius:5px; border:1px solid #fff;">
 <br>
-<button type="button" onclick="resetScreenshot()" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; font-size:11px; border-radius:4px; margin-top:6px; cursor:pointer; font-weight:bold;">✖ Reset / Change Screenshot</button>
+<button type="button" onclick="resetScreenshot()" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; font-size:11px; border-radius:4px; margin-top:6px; cursor:pointer; font-weight:bold;">✖ Reset Screenshot</button>
 </div>
-
 <button class="btn" style="background: #00897b; margin-top:12px;" onclick="sendDepositReq()">डिपॉजिट अनुरोध भेजें</button>
 <div id="dep-msg"></div>
-
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
-<!-- Bank Withdrawal View with 2% Commission & 20 Min Timer System -->
+<!-- Bank Withdrawal View -->
 <div id="bank-section" class="hidden">
 <div class="card-box">
 <h3 style="color: #00e676; margin-top: 0; text-align: center;">🏦 बैंक ट्रांसफर (Withdrawal)</h3>
@@ -410,11 +391,10 @@ letter-spacing: 5px;
 <div id="refer-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">🎁 शेयर करें और 3% कमीशन पाएं</h3>
-<p style="font-size: 12px; color: #ccc;">अपना यूनिक लिंक शेयर करें। आपके लिंक से जुड़ने वाले यूजर जब भी डिपॉजिट करेंगे, उनका पूरा पैसा उनके गेम में जुड़ेगा और आपको अलग से 3% कमीशन मिलेगा!</p>
+<p style="font-size: 12px; color: #ccc;">अपना यूनिक लिंक शेयर करें।</p>
 <input type="text" id="ref-link-input" readonly style="background:#121212; color:#ffab00; font-weight:bold;">
 <button class="btn" style="background: #00897b;" onclick="copyReferLink()">🔗 लिंक कॉपी करें</button>
 <button class="btn" style="background: #25D366; color:#000;" onclick="shareOnWhatsApp()">💬 WhatsApp पर शेयर करें</button>
-<p id="referred-by-info" style="font-size: 11px; color: #00e676; margin-top: 10px;"></p>
 <div id="ref-msg"></div>
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
@@ -424,43 +404,26 @@ letter-spacing: 5px;
 <div id="support-section" class="hidden">
 <div class="card-box" style="text-align: center;">
 <h3 style="color: #ffab00; margin-top: 0;">💬 Help Customer Care</h3>
-<p style="font-size: 11px; color: #aaa;">अपनी समस्या नीचे लिखें, सीधे एडमिन (Telegram) को संदेश भेजें:</p>
-<textarea id="user-query" rows="3" placeholder="यहाँ अपनी समस्या लिखें (उदा. डिपॉजिट नहीं हुआ)..."></textarea>
+<textarea id="user-query" rows="3" placeholder="यहाँ अपनी समस्या लिखें..."></textarea>
 <button class="btn" style="background: #ef4444; margin-top: 10px;" onclick="sendQueryToTelegram()">🚨 एडमिन (Telegram) को संदेश भेजें</button>
-<div id="support-msg"></div>
 </div>
 <button class="btn" style="background:#555;" onclick="backToDashboard()">डैशबोर्ड पर वापस जाएं</button>
 </div>
 
 <!---------------- SECRET ADMIN PANEL (Password: 78699) ---------------->
 <div id="admin-panel-div" class="admin-panel">
-<b style="color: #ff5252;">👑 मास्टर एडमिन कंट्रोल पैनल (Security & Master Lock):</b>
+<b style="color: #ff5252;">👑 मास्टर एडमिन कंट्रोल पैनल:</b>
 <hr style="border-color: #444; margin: 5px 0;">
-
-<!-- 👥 REAL USERS LIVE TRACKER BOX -->
 <div style="background: #111827; border: 1px solid #374151; padding: 10px; border-radius: 6px; margin-top: 10px;">
-    <p style="color: #00ffcc; margin: 0 0 8px 0; font-weight: bold; font-size: 12px;">👥 असली यूज़र्स की लाइव कुंडली (Real Users Tracker):</p>
-    <div id="admin-real-users-list" style="max-height: 160px; overflow-y: auto; font-size: 11px; text-align: left; color: #e5e7eb;">
-        <!-- यहाँ असली यूज़र्स की लिस्ट अपने आप लोड होगी -->
-    </div>
+    <p style="color: #00ffcc; margin: 0 0 8px 0; font-weight: bold; font-size: 12px;">👥 असली यूज़र्स की लाइव कुंडली:</p>
+    <div id="admin-real-users-list" style="max-height: 160px; overflow-y: auto; font-size: 11px; text-align: left; color: #e5e7eb;"></div>
     <button class="btn" style="padding: 5px; background: #2563eb; font-size: 11px; margin-top: 6px;" onclick="loadRealUsersIntoAdmin()">🔄 यूज़र्स लिस्ट रिफ्रेश करें</button>
 </div>
-
 <p style="margin-top: 15px;">🔒 <b>मास्टर सिक्योरिटी लॉक:</b></p>
 <button onclick="toggleMasterLock()" id="lock-status-btn" style="background:#00e676; border:none; padding:6px 12px; font-weight:bold; border-radius:4px; cursor:pointer;">Lock Status: UNLOCKED</button>
-
-<p style="margin-top: 15px;">🏦 <b>विथड्रॉवल अनुरोध:</b> <span id="adm-wit" style="color: #ffab00;">कोई नहीं</span></p>
-<button onclick="admWitYes()" style="background:#00e676; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer;">✔ YES (2% काटकर)</button>
-<button onclick="admWitNo()" style="background:#ff5252; border:none; padding:4px 8px; font-weight:bold; border-radius:3px; cursor:pointer; color:#fff; margin-left:5px;">✖ NO</button>
-
-<p style="margin-top: 10px;">💰 <b>वॉलेट बैलेंस एडिट करें:</b></p>
-<input type="number" id="adm-new-bal" placeholder="नया बैलेंस">
-<button class="btn" style="padding: 6px; background: #00e676; color: #000;" onclick="admUpdateBal()">बैलेंस सेव करें</button>
-
 <button class="btn" style="background: #555; padding: 5px; margin-top: 8px;" onclick="closeAdmin()">एडमिन बंद करें</button>
 </div>
 
-<!---------------- CLEAN SINGLE SOCIAL ICONS STRIP ---------------->
 <div class="social-strip">
     <a href="https://t.me/YOUR_USERNAME" target="_blank" class="s-icon" style="background:#0088cc" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
     <a href="javascript:void(0);" class="s-icon" style="background:#1877F2" title="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -470,13 +433,216 @@ letter-spacing: 5px;
 
 </div>
 
-<!-- Audio for instant reward sound effect -->
 <audio id="bonus-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
+<!-- Firebase SDKs & Complete App Logic -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // Aapki Real Firebase Config Chabi
+    const firebaseConfig = {
+        apiKey: "AIzaSyCyI1HRuJMoBs24kbA7YicTdov1vSVUKkI",
+        authDomain: "aviatorapp-9b1a6.firebaseapp.com",
+        databaseURL: "https://aviatorapp-9b1a6-default-rtdb.firebaseio.com",
+        projectId: "aviatorapp-9b1a6",
+        storageBucket: "aviatorapp-9b1a6.firebasestorage.app",
+        messagingSenderId: "888257266737",
+        appId: "1:888257266737:web:e7eb598ff6105fafb88110",
+        measurementId: "G-N78X1X6XDG"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    window.onload = function() {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            'size': 'invisible'
+        });
+
+        // Agar user pehle se logged in hai toh dashboard dikhao
+        let savedUser = localStorage.getItem("aviator_user") || localStorage.getItem('active_session_phone');
+        if(savedUser) {
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('app-dashboard').classList.remove('hidden');
+            updateWalletDisplay();
+        }
+    }
+
+    // Screen Switching Functions for Auth
+    window.showLoginSection = function() {
+        document.getElementById('form-title').innerText = "🔐 सुरक्षित लॉगिन & ₹19 इंस्टेंट बोनस";
+        document.getElementById('login-sub-section').style.display = 'block';
+        document.getElementById('register-sub-section').style.display = 'none';
+        document.getElementById('forgot-sub-section').style.display = 'none';
+        document.getElementById('login-msg').innerHTML = "";
+    }
+
+    window.showRegisterSection = function() {
+        document.getElementById('form-title').innerText = "Naya Account Banayein (Real OTP)";
+        document.getElementById('login-sub-section').style.display = 'none';
+        document.getElementById('register-sub-section').style.display = 'block';
+        document.getElementById('forgot-sub-section').style.display = 'none';
+        document.getElementById('login-msg').innerHTML = "";
+    }
+
+    window.showForgotSection = function() {
+        document.getElementById('form-title').innerText = "Password Reset Karein (OTP)";
+        document.getElementById('login-sub-section').style.display = 'none';
+        document.getElementById('register-sub-section').style.display = 'none';
+        document.getElementById('forgot-sub-section').style.display = 'block';
+        document.getElementById('login-msg').innerHTML = "";
+    }
+
+    // Send Real SMS OTP
+    window.sendOTP = function(type) {
+        const phoneInput = type === 'reg' ? document.getElementById('reg-phone') : document.getElementById('forgot-phone');
+        let phone = phoneInput.value.trim();
+        
+        if(phone.length !== 10) {
+            alert("Kripya 10 anko ka sahi mobile number dalein!");
+            return;
+        }
+
+        const formattedPhone = "+91" + phone;
+
+        signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier)
+            .then((confirmationResult) => {
+                window.confirmationResult = confirmationResult;
+                alert("Real OTP mobile par bhej diya gaya hai!");
+                if(type === 'reg') {
+                    document.getElementById('reg-otp-div').style.display = 'block';
+                } else {
+                    document.getElementById('forgot-otp-div').style.display = 'block';
+                }
+            }).catch((error) => {
+                alert("OTP bhejne mein error aayi: " + error.message);
+            });
+    }
+
+    // 1. Verify OTP & Register New User with Manpasand Password
+    window.verifyOTPAndRegister = function() {
+        const otp = document.getElementById('reg-otp-code').value.trim();
+        const password = document.getElementById('reg-new-password').value.trim();
+        const phone = document.getElementById('reg-phone').value.trim();
+
+        if(!otp || !password) {
+            alert("OTP aur Password dono bharein!");
+            return;
+        }
+
+        window.confirmationResult.confirm(otp).then((result) => {
+            const userId = result.user.uid;
+            
+            // Database mein user save karein
+            set(ref(db, 'users/' + userId), {
+                phone: phone,
+                password: password,
+                createdAt: new Date().toISOString()
+            }).then(() => {
+                alert("Registration Successful!");
+                localStorage.setItem("aviator_user", userId);
+                localStorage.setItem("active_session_phone", phone);
+                localStorage.setItem('user_bal_' + phone, '19');
+                localStorage.setItem('backup_bal_' + phone, '19');
+                
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('app-dashboard').classList.remove('hidden');
+                updateWalletDisplay();
+                registerRealUser(phone);
+            });
+        }).catch(() => {
+            alert("Galat OTP! Dobara koshish karein.");
+        });
+    }
+
+    // 2. Verify OTP & Reset Forgotten Password
+    window.verifyOTPAndResetPassword = function() {
+        const otp = document.getElementById('forgot-otp-code').value.trim();
+        const newPassword = document.getElementById('forgot-new-password').value.trim();
+        const phone = document.getElementById('forgot-phone').value.trim();
+
+        if(!otp || !newPassword) {
+            alert("OTP aur Naya Password bharein!");
+            return;
+        }
+
+        window.confirmationResult.confirm(otp).then(() => {
+            const dbRef = ref(db, 'users');
+            get(dbRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    let foundKey = null;
+                    snapshot.forEach((childSnapshot) => {
+                        if(childSnapshot.val().phone === phone) {
+                            foundKey = childSnapshot.key;
+                        }
+                    });
+
+                    if(foundKey) {
+                        update(ref(db, 'users/' + foundKey), { password: newPassword }).then(() => {
+                            alert("Password successfully reset ho gaya! Ab naye password se login karein.");
+                            showLoginSection();
+                        });
+                    } else {
+                        alert("Yeh mobile number database mein registered nahi hai!");
+                    }
+                }
+            });
+        }).catch(() => {
+            alert("Galat OTP!");
+        });
+    }
+
+    // 3. Direct Login with Mobile Number and Manpasand Password (No OTP needed)
+    window.loginWithPassword = function() {
+        const phone = document.getElementById('login-phone').value.trim();
+        const pass = document.getElementById('login-pass').value.trim();
+
+        if(phone.length !== 10 || !pass) {
+            document.getElementById('login-msg').innerHTML = "<span class='error'>Kripya sahi 10 anko ka mobile number aur password dalein!</span>";
+            return;
+        }
+
+        get(ref(db, 'users')).then((snapshot) => {
+            if (snapshot.exists()) {
+                let foundKey = null;
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    if(data.phone === phone && data.password === pass) {
+                        foundKey = childSnapshot.key;
+                    }
+                });
+
+                if(foundKey) {
+                    alert("Login Successful!");
+                    localStorage.setItem("aviator_user", foundKey);
+                    localStorage.setItem("active_session_phone", phone);
+                    
+                    if(localStorage.getItem('user_bal_' + phone) === null) {
+                        localStorage.setItem('user_bal_' + phone, '19');
+                        localStorage.setItem('backup_bal_' + phone, '19');
+                    }
+
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('app-dashboard').classList.remove('hidden');
+                    updateWalletDisplay();
+                    registerRealUser(phone);
+                } else {
+                    document.getElementById('login-msg').innerHTML = "<span class='error'>Galat Number ya Password!</span>";
+                }
+            } else {
+                document.getElementById('login-msg').innerHTML = "<span class='error'>Koi account registered nahi hai! Pehle naya account banayein.</span>";
+            }
+        });
+    };
+</script>
+
 <script>
+// PWA App Install Prompt
 let deferredPrompt;
 const installBtn = document.getElementById('installBtn');
-
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
@@ -488,26 +654,17 @@ if(installBtn) {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-      }
       deferredPrompt = null;
       installBtn.style.display = 'none';
     }
   });
 }
 
-// -------------------------------------------------------------------------
-// WELCOME BANNER MODAL CLOSE FUNCTION
-// -------------------------------------------------------------------------
 function closeWelcomeModal() {
     let modal = document.getElementById('welcome-banner-modal');
     if(modal) modal.style.display = 'none';
 }
 
-// -------------------------------------------------------------------------
-// PERMANENT SECURE BALANCE & USER STORAGE SYSTEM (SAFE 24/7 BACKUP)
-// -------------------------------------------------------------------------
 function getCurrentUser() {
     return localStorage.getItem('active_session_phone') || localStorage.getItem('logged_in_phone');
 }
@@ -515,10 +672,8 @@ function getCurrentUser() {
 function getWalletBalance() {
     let user = getCurrentUser();
     if(!user) return 19;
-    
-    // Check multiple storage backups to ensure balance never gets lost
     let bal = localStorage.getItem('user_bal_' + user) || localStorage.getItem('backup_bal_' + user);
-    if(bal === null || bal === undefined || isNaN(bal)) {
+    if(bal === null || isNaN(bal)) {
         bal = '19';
         localStorage.setItem('user_bal_' + user, bal);
         localStorage.setItem('backup_bal_' + user, bal);
@@ -530,7 +685,6 @@ function setWalletBalance(amount) {
     let user = getCurrentUser();
     if(user) {
         let safeAmount = parseFloat(amount).toFixed(2);
-        // Double-save to prevent any accidental clearing
         localStorage.setItem('user_bal_' + user, safeAmount);
         localStorage.setItem('backup_bal_' + user, safeAmount);
         updateWalletDisplay();
@@ -553,104 +707,41 @@ function updateWalletDisplay() {
 function registerRealUser(phone) {
     if(!phone || phone.length !== 10) return;
     let allRealUsers = JSON.parse(localStorage.getItem('thakur_real_users_db') || "[]");
-    
     let existingIndex = allRealUsers.findIndex(u => u.phone === phone);
     let nowTimestamp = new Date().getTime();
     let currentBal = getWalletBalance();
     
     if(existingIndex === -1) {
-        allRealUsers.push({
-            phone: phone,
-            joinedDate: new Date().toLocaleDateString(),
-            lastActive: nowTimestamp,
-            balance: currentBal
-        });
+        allRealUsers.push({ phone: phone, joinedDate: new Date().toLocaleDateString(), lastActive: nowTimestamp, balance: currentBal });
     } else {
         allRealUsers[existingIndex].lastActive = nowTimestamp;
         allRealUsers[existingIndex].balance = currentBal;
     }
-    
     localStorage.setItem('thakur_real_users_db', JSON.stringify(allRealUsers));
 }
 
 function loadRealUsersIntoAdmin() {
     let listContainer = document.getElementById('admin-real-users-list');
     if(!listContainer) return;
-    
     let allRealUsers = JSON.parse(localStorage.getItem('thakur_real_users_db') || "[]");
-    
     if(allRealUsers.length === 0) {
-        listContainer.innerHTML = "<p style='color: #9ca3af; text-align:center;'>अभी तक कोई असली यूज़र रजिस्टर नहीं हुआ है।</p>";
+        listContainer.innerHTML = "<p style='color: #9ca3af; text-align:center;'>abhi tak koi user register nahi hua.</p>";
         return;
     }
-    
     let html = "<table style='width:100%; border-collapse: collapse; font-size:10px;'>";
-    html += "<tr style='border-bottom: 1px solid #4b5563; color: #fbbf24;'><th style='padding:3px;'>मोबाइल नंबर</th><th style='padding:3px;'>बैलेंस</th><th style='padding:3px;'>कब से नहीं आया?</th></tr>";
-    
-    let currentTime = new Date().getTime();
-    
+    html += "<tr style='border-bottom: 1px solid #4b5563; color: #fbbf24;'><th style='padding:3px;'>Number</th><th style='padding:3px;'>Balance</th></tr>";
     allRealUsers.forEach(u => {
-        let diffDays = Math.floor((currentTime - u.lastActive) / (1000 * 60 * 60 * 24));
-        let activeStatusText = diffDays === 0 ? "आज आया था" : `${diffDays} दिन से गायब`;
-        
-        html += `<tr style='border-bottom: 1px solid #1f2937;'>
-            <td style='padding:4px; color:#34d399; font-weight:bold;'>${u.phone}</td>
-            <td style='padding:4px;'>₹${u.balance}</td>
-            <td style='padding:4px; color:${diffDays > 2 ? '#ef4444' : '#60a5fa'};'>${activeStatusText}</td>
-        </tr>`;
+        html += `<tr style='border-bottom: 1px solid #1f2937;'><td style='padding:4px; color:#34d399; font-weight:bold;'>${u.phone}</td><td style='padding:4px;'>₹${u.balance}</td></tr>`;
     });
-    
     html += "</table>";
     listContainer.innerHTML = html;
 }
 
-function processLogin() {
-    let phone = document.getElementById('login-phone').value.trim();
-    let pass = document.getElementById('login-pass').value.trim();
-    
-    if(phone.length !== 10) {
-        document.getElementById('login-msg').innerHTML = "<span class='error'>कृपया 10 अंकों का सही मोबाइल नंबर दर्ज करें!</span>";
-        return;
-    }
-
-    if(pass === "") {
-        document.getElementById('login-msg').innerHTML = "<span class='error'>कृपया पासवर्ड दर्ज करें!</span>";
-        return;
-    }
-
-    let savedPass = localStorage.getItem('user_pass_' + phone);
-    if(savedPass !== null && savedPass !== pass) {
-        document.getElementById('login-msg').innerHTML = "<span class='error'>गलत पासवर्ड! कृपया सही पासवर्ड डालें।</span>";
-        return;
-    }
-
-    localStorage.setItem('active_session_phone', phone);
-    localStorage.setItem('logged_in_phone', phone);
-
-    if(savedPass === null) {
-        localStorage.setItem('user_pass_' + phone, pass);
-    }
-
-    if(localStorage.getItem('user_bal_' + phone) === null) {
-        localStorage.setItem('user_bal_' + phone, '19');
-        localStorage.setItem('backup_bal_' + phone, '19');
-    }
-    
-    registerRealUser(phone);
-
-    document.getElementById('login-section').classList.add('hidden');
-    document.getElementById('app-dashboard').classList.remove('hidden');
-    updateWalletDisplay();
-    document.getElementById('login-msg').innerHTML = "";
-}
-
 function logoutUser() {
     localStorage.removeItem('active_session_phone');
+    localStorage.removeItem('aviator_user');
     document.getElementById('app-dashboard').classList.add('hidden');
     document.getElementById('login-section').classList.remove('hidden');
-    document.getElementById('login-phone').value = '';
-    document.getElementById('login-pass').value = '';
-    document.getElementById('login-msg').innerHTML = '';
 }
 
 function openSection(sectionId) {
@@ -659,7 +750,6 @@ function openSection(sectionId) {
         if(el) el.classList.add('hidden');
     });
     document.getElementById('app-dashboard').classList.add('hidden');
-    
     let target = document.getElementById(sectionId);
     if(target) target.classList.remove('hidden');
 
@@ -683,7 +773,6 @@ function backToDashboard() {
     updateWalletDisplay();
 }
 
-// Screenshot preview & reset functions
 function previewScreenshot(event) {
     let reader = new FileReader();
     reader.onload = function(){
@@ -691,9 +780,7 @@ function previewScreenshot(event) {
         output.src = reader.result;
         document.getElementById('screenshot-preview-box').style.display = 'block';
     };
-    if(event.target.files[0]) {
-        reader.readAsDataURL(event.target.files[0]);
-    }
+    if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
 }
 function resetScreenshot() {
     document.getElementById('dep-screenshot').value = '';
@@ -701,16 +788,10 @@ function resetScreenshot() {
     document.getElementById('screenshot-preview-box').style.display = 'none';
 }
 
-// -------------------------------------------------------------------------
-// UNIQUE RURAL / GAON-DEHAT PUZZLES DATABASE
-// -------------------------------------------------------------------------
 const puzzleList = [
     { q: "चार टांग खाट की, एक टांग मटके की, बताओ वह कौन सी चीज़ है जो खेत में खड़ी लटके की?", options: { A: "ककड़ी", B: "मक्का", C: "सूरजमुखी", D: "अरहर" }, ans: "A" },
     { q: "काला मुँह, लाल शरीर, कागज़ को वह चबाए तीर! बताओ क्या?", options: { A: "पेंसिल", B: "माचिस", C: "दीया", D: "कोयला" }, ans: "B" },
-    { q: "एक पाँव की ऐसी रानी, गर्मी में दे ठण्डा पानी? बताओ क्या?", options: { A: "पंखा", B: "सुराही", C: "झरना", D: "नल" }, ans: "B" },
-    { q: "बिना पैर के चलती जाए, कभी न थककर रुकने पाए? बताओ क्या?", options: { A: "घड़ी की सुई", B: "नदी", C: "हवा", D: "साइकिल" }, ans: "A" },
-    { q: "तीन अक्षर का मेरा नाम, उल्टा सीधा एक समान? बताओ क्या?", options: { A: "कनक", B: "नयन", C: "जहाज", D: "मम" }, ans: "A" },
-    { q: "लाल गाय लकड़ी खाए, पानी पीते ही मर जाए? बताओ क्या?", options: { A: "आग", B: "चूल्हा", C: "बीड़ी", D: "दीया" }, ans: "A" }
+    { q: "एक पाँव की ऐसी रानी, गर्मी में दे ठण्डा पानी? बताओ क्या?", options: { A: "पंखा", B: "सुराही", C: "झरना", D: "नल" }, ans: "B" }
 ];
 
 let currentPuzzleIndex = 0;
@@ -727,7 +808,6 @@ function startPuzzleTimer() {
     clearInterval(puzzleTimer);
     timeLeft = 15;
     document.getElementById('timer-count').innerText = timeLeft;
-    
     puzzleTimer = setInterval(() => {
         timeLeft--;
         document.getElementById('timer-count').innerText = timeLeft;
@@ -735,13 +815,9 @@ function startPuzzleTimer() {
             clearInterval(puzzleTimer);
             let bet = parseFloat(document.getElementById('p-bet').value) || 5;
             let bal = getWalletBalance();
-            let newBalance = Math.max(0, bal - bet);
-            setWalletBalance(newBalance);
-            
-            document.getElementById('p-result').innerHTML = `<span class='error'>⏰ 15 सेकंड में जवाब न दे पाने के कारण आपके वॉलेट से ₹${bet} काट लिए गए हैं! अगली पहेली आ रही है...</span>`;
-            setTimeout(() => {
-                loadNewPuzzle();
-            }, 1500);
+            setWalletBalance(Math.max(0, bal - bet));
+            document.getElementById('p-result').innerHTML = `<span class='error'>⏰ Samay samapt! ₹${bet} kat gaye.</span>`;
+            setTimeout(() => { loadNewPuzzle(); }, 1500);
         }
     }, 1000);
 }
@@ -756,7 +832,6 @@ function loadNewPuzzle() {
     document.getElementById('optC').innerText = p.options.C;
     document.getElementById('optD').innerText = p.options.D;
     document.getElementById('p-result').innerHTML = "";
-    
     startPuzzleTimer();
 }
 
@@ -764,23 +839,19 @@ function checkPuzzle(selectedOpt) {
     clearInterval(puzzleTimer);
     let bet = parseFloat(document.getElementById('p-bet').value) || 5;
     let bal = getWalletBalance();
-    
     if(bal < bet) {
-        document.getElementById('p-result').innerHTML = "<span class='error'>वॉलेट में पर्याप्त बैलेंस नहीं है! कृपया पहले पैसे जोड़ें।</span>";
+        document.getElementById('p-result').innerHTML = "<span class='error'>Wallet mein balance kam hai!</span>";
         return;
     }
-
     let p = puzzleList[currentPuzzleIndex];
     if(selectedOpt === p.ans) {
-        let newBalance = bal + bet;
-        setWalletBalance(newBalance);
-        document.getElementById('p-result').innerHTML = `<span class='msg'>🎉 बिल्कुल सही जवाब! आपने ₹${bet} जीत लिए हैं! नया बैलेंस: ₹${newBalance}</span>`;
+        setWalletBalance(bal + bet);
+        document.getElementById('p-result').innerHTML = `<span class='msg'>🎉 Sahi jawab! Jeete ₹${bet}</span>`;
         try { document.getElementById('bonus-sound').play(); } catch(e){}
         setTimeout(() => { loadNewPuzzle(); }, 1200);
     } else {
-        let newBalance = bal - bet;
-        setWalletBalance(newBalance);
-        document.getElementById('p-result').innerHTML = `<span class='error'>❌ गलत जवाब! आपके ₹${bet} कट गए। तुरंत अगली पहेली आ रही है...</span>`;
+        setWalletBalance(bal - bet);
+        document.getElementById('p-result').innerHTML = `<span class='error'>❌ Galat jawab! ₹${bet} cut gaye.</span>`;
         setTimeout(() => { loadNewPuzzle(); }, 1200);
     }
 }
@@ -788,114 +859,50 @@ function checkPuzzle(selectedOpt) {
 function rollDice() {
     let bet = parseFloat(document.getElementById('l-bet').value) || 5;
     let bal = getWalletBalance();
-    
-    if(bal < bet) {
-        document.getElementById('l-result').innerHTML = "<span class='error'>वॉलेट में पर्याप्त बैलेंस नहीं है!</span>";
-        return;
-    }
-
+    if(bal < bet) { document.getElementById('l-result').innerHTML = "<span class='error'>Balance kam hai!</span>"; return; }
     let diceVal = Math.floor(Math.random() * 6) + 1;
     let diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
     document.getElementById('dice-view').innerText = diceFaces[diceVal - 1];
-
     if(diceVal >= 4) {
         setWalletBalance(bal + bet);
-        document.getElementById('l-result').innerHTML = `<span class='msg'>🎉 बधाई हो! पासा ${diceVal} आया, आप जीत गए ₹${bet}!</span>`;
+        document.getElementById('l-result').innerHTML = `<span class='msg'>🎉 Jeete ₹${bet}!</span>`;
     } else {
         setWalletBalance(bal - bet);
-        document.getElementById('l-result').innerHTML = `<span class='error'>❌ पासा ${diceVal} आया, आप हार गए ₹${bet}.</span>`;
+        document.getElementById('l-result').innerHTML = `<span class='error'>❌ Haare ₹${bet}.</span>`;
     }
 }
 
 function sendDepositReq() {
     let amt = document.getElementById('dep-amount').value;
     let txn = document.getElementById('dep-txnid').value;
-    if(!amt || !txn) {
-        document.getElementById('dep-msg').innerHTML = "<span class='error'>कृपया राशि और Txn ID भरें!</span>";
-        return;
-    }
-    document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ डिपॉजिट अनुरोध सफल-पूर्वक भेज दिया गया है!</span>";
+    if(!amt || !txn) { document.getElementById('dep-msg').innerHTML = "<span class='error'>Rashi aur Txn ID bharein!</span>"; return; }
+    document.getElementById('dep-msg').innerHTML = "<span class='msg'>✅ Deposit request bhej di gayi hai!</span>";
 }
 
 function sendWithdrawReq() {
-    let bankName = document.getElementById('b-name').value;
-    let holder = document.getElementById('b-holder').value.trim();
-    let acc = document.getElementById('b-acc').value.trim();
-    let ifsc = document.getElementById('b-ifsc').value.trim();
     let amt = parseFloat(document.getElementById('b-amt').value) || 0;
     let bal = getWalletBalance();
-
-    if(!bankName || !holder || !acc || !ifsc || amt <= 0) {
-        document.getElementById('bank-msg').innerHTML = "<span class='error'>कृपया सभी बैंक डिटेल्स और राशि सही भरें!</span>";
-        return;
-    }
-
-    if(amt < 2500) {
-        document.getElementById('bank-msg').innerHTML = "<span class='error'>Minimum withdrawal राशि ₹2500 है!</span>";
-        return;
-    }
-
-    if(bal < amt) {
-        document.getElementById('bank-msg').innerHTML = "<span class='error'>वॉलेट में पर्याप्त बैलेंस नहीं है!</span>";
-        return;
-    }
-
-    let commission = amt * 0.02;
-    let finalPayable = amt - commission;
-
+    if(amt < 2500 || bal < amt) { document.getElementById('bank-msg').innerHTML = "<span class='error'>Minimum withdrawal ₹2500 ya balance kam hai!</span>"; return; }
     setWalletBalance(bal - amt);
-
-    document.getElementById('bank-msg').innerHTML = `<span class='msg'>🏦 Withdrawal request सफल! 2% कमीशन (₹${commission.toFixed(2)}) काटने के बाद ₹${finalPayable.toFixed(2)} आपके ${bankName} account में <strong>20 मिनट</strong> के अंदर ट्रांसफर हो जाएंगे।</span>`;
+    document.getElementById('bank-msg').innerHTML = `<span class='msg'>🏦 Withdrawal successful! 20 minute mein transfer ho jayega.</span>`;
 }
 
 function setupReferralLink() {
     let user = getCurrentUser();
-    let refLink = "https://thakursahabcreator.github.io/mahakal-battle/?ref=" + (user || "thakur");
-    document.getElementById('ref-link-input').value = refLink;
+    document.getElementById('ref-link-input').value = "https://thakursahabcreator.github.io/mahakal-battle/?ref=" + (user || "thakur");
 }
 
 function copyReferLink() {
     let copyText = document.getElementById('ref-link-input');
     copyText.select();
     navigator.clipboard.writeText(copyText.value);
-    document.getElementById('ref-msg').innerHTML = "<span class='msg'>🔗 लिंक कॉपी हो गया है!</span>";
+    document.getElementById('ref-msg').innerHTML = "<span class='msg'>🔗 Link copy ho gaya!</span>";
 }
 
 function sendQueryToTelegram() {
     window.open("https://t.me/THAKUR_SAHAB_CREATOR", "_blank");
 }
 
-window.onload = function() {
-    let user = getCurrentUser();
-    if(user) {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('app-dashboard').classList.remove('hidden');
-        updateWalletDisplay();
-        registerRealUser(user);
-    }
-};
-
-function showResetBox() {
-    document.getElementById('login-form-box').style.display = 'none';
-    document.getElementById('reset-form-box').style.display = 'block';
-}
-function backToLoginBox() {
-    document.getElementById('reset-form-box').style.display = 'none';
-    document.getElementById('login-form-box').style.display = 'block';
-}
-function processResetPassword() {
-    let phone = document.getElementById('reset-phone').value.trim();
-    let p1 = document.getElementById('reset-pass1').value.trim();
-    if(phone.length !== 10 || !p1) {
-        document.getElementById('reset-msg').innerHTML = "<span class='error'>सही मोबाइल नंबर और पासवर्ड डालें!</span>";
-        return;
-    }
-    localStorage.setItem('user_pass_' + phone, p1);
-    document.getElementById('reset-msg').innerHTML = "<span class='msg'>✅ Password update ho gaya!</span>";
-    setTimeout(() => { backToLoginBox(); }, 1500);
-}
-
-// 7 बार टैप करने पर एडमिन पैनल खुलने का नियम (78699 कोड के साथ)
 let tapCount = 0;
 function checkSecretAdminTap() {
     tapCount++;
@@ -909,31 +916,14 @@ function checkSecretAdminTap() {
         tapCount = 0;
     }
 }
-function closeAdmin() {
-    document.getElementById('admin-panel-div').style.display = 'none';
-}
-function admUpdateBal() {
-    let newBal = parseFloat(document.getElementById('adm-new-bal').value);
-    if(!isNaN(newBal)) {
-        setWalletBalance(newBal);
-        alert("Wallet balance updated to ₹" + newBal);
-    }
-}
+function closeAdmin() { document.getElementById('admin-panel-div').style.display = 'none'; }
 let masterLocked = false;
 function toggleMasterLock() {
     masterLocked = !masterLocked;
     let btn = document.getElementById('lock-status-btn');
-    if(masterLocked) {
-        btn.innerText = "Lock Status: LOCKED";
-        btn.style.source = "#ff5252";
-    } else {
-        btn.innerText = "Lock Status: UNLOCKED";
-        btn.style.background = "#00e676";
-    }
+    btn.innerText = masterLocked ? "Lock Status: LOCKED" : "Lock Status: UNLOCKED";
+    btn.style.background = masterLocked ? "#ff5252" : "#00e676";
 }
-function admWitYes() { alert("Withdrawal Approved!"); }
-function admWitNo() { alert("Withdrawal Cancelled!"); }
 </script>
-
 </body>
 </html>
