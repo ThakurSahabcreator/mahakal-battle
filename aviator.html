@@ -1,55 +1,62 @@
-<!-- Spribe jaisa LIVE BETS - Stage ke neeche daal de -->
-<div style="max-width:480px;margin:10px auto;background:#111;border:1px solid #d4af37;border-radius:12px;padding:12px">
-  <div style="display:flex;justify-content:space-between"><b style="color:#ffd700">🔴 LIVE BETS - Real Players Jaisa</b><span style="font-size:11px;color:#22c55e">● 512 Online</span></div>
-  <div id="liveBets" style="margin-top:8px;font-size:12px"></div>
+<!-- PANEL ke andar PLAY button ke upar ye daal de -->
+<!-- Pehle aisa tha: <button class="play">PLAY</button> -->
+<!-- Ab aisa kar de: -->
+
+<div style="background:#000;border:1px solid #d4af37;border-radius:10px;padding:10px;text-align:center;margin-bottom:8px">
+  <div style="font-size:11px;color:#aaa">LAGAYA HUA BET</div>
+  <div style="font-size:18px;font-weight:800;color:#fff"><span id="myBet1">0</span> Points</div>
+  <div style="font-size:11px;color:#aaa;margin-top:6px">ABHI JEET - BADHTA HUA 🔥</div>
+  <div style="font-size:26px;font-weight:900;color:#22c55e" id="myWin1">0 Points</div>
+  <div style="font-size:11px;color:#ffd700" id="myMult1">1.00x pe ho</div>
 </div>
+<button class="play" id="btn1" onclick="play(1)">PLAY</button>
+
+<!-- Dusre panel ke liye bhi wahi - bas 1 ki jagah 2 likh de -->
+<div style="background:#000;border:1px solid #d4af37;border-radius:10px;padding:10px;text-align:center;margin-bottom:8px">
+  <div style="font-size:11px;color:#aaa">LAGAYA HUA BET</div>
+  <div style="font-size:18px;font-weight:800;color:#fff"><span id="myBet2">0</span> Points</div>
+  <div style="font-size:11px;color:#aaa;margin-top:6px">ABHI JEET - BADHTA HUA 🔥</div>
+  <div style="font-size:26px;font-weight:900;color:#22c55e" id="myWin2">0 Points</div>
+  <div style="font-size:11px;color:#ffd700" id="myMult2">1.00x pe ho</div>
+</div>
+<button class="play" id="btn2" onclick="play(2)">PLAY</button>
 
 <script>
-// Spribe jaisa Live Players - Naam + Bet + Badhte Hue Coin
-let livePlayers = [
-  {name:"Rahul •••", bet:100, cashoutAt:2.5, out:false},
-  {name:"Priya •••", bet:200, cashoutAt:3.8, out:false},
-  {name:"Amit •••", bet:50, cashoutAt:1.8, out:false},
-  {name:"Sneha •••", bet:500, cashoutAt:5.2, out:false},
-  {name:"Vikash •••", bet:1000, cashoutAt:8.5, out:false},
-  {name:"Rohan •••", bet:150, cashoutAt:2.1, out:false},
-];
-
-function showLiveBets(){
-  let html = '';
-  livePlayers.forEach(p=>{
-    let currentWin = Math.floor(p.bet * mult); // Jaise multiplier badhega, iska coin bhi badhega
-    if(mult >= p.cashoutAt && !p.out){
-      p.out = true;
-      p.finalWin = Math.floor(p.bet * p.cashoutAt);
-    }
-    if(p.out){
-      html += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #222"><span>👤 ${p.name}</span><span>${p.bet} Points</span><span style="color:#22c55e;font-weight:800">+${p.finalWin} WON ✅</span></div>`;
-    } else {
-      // Abhi ud raha hai - coin badhta hua dikhega
-      html += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #222"><span>👤 ${p.name}</span><span>${p.bet} Points</span><span style="color:#ffd700;font-weight:800">${currentWin} 🔥</span></div>`;
-    }
-  });
-  document.getElementById('liveBets').innerHTML = html;
+function play(p){
+  if(practice){ alert('Practice me ho bhai, paisa nahi lagega'); return; }
+  if(active[p]){ cashout(p); return; }
+  if(bal<amt[p]){ alert('Points khatam!'); return; }
+  bal-=amt[p];
+  document.getElementById('bal').innerText=bal;
+  active[p]={amt:amt[p]};
+  // Niche coin dikhao - Bet kitna lagaya
+  document.getElementById('myBet'+p).innerText=amt[p];
+  document.getElementById('myWin'+p).innerText=amt[p]+' Points';
+  let b=document.getElementById('btn'+p);
+  b.innerText='CASHOUT'; b.classList.add('cash');
 }
 
-// Har round shuru hone pe naye players banao - jaise real me naye log aate hain
-function resetLivePlayers(){
-  let names = ["Rahul","Priya","Amit","Sneha","Vikash","Rohan","Anjali","Deepak","Manish","Pooja","Arjun","Kavita"];
-  livePlayers = [];
-  for(let i=0;i<6;i++){
-    let n = names[Math.floor(Math.random()*names.length)];
-    let b = [50,100,150,200,500,1000][Math.floor(Math.random()*6)];
-    livePlayers.push({name:n+" •••", bet:b, cashoutAt:1.5+Math.random()*7, out:false});
-  }
+// Apne timer me - jahan mult badh raha hai - wahan ye 2 line add kar de
+// Yehi line coin ko badhta hua dikhayegi
+// [1,2].forEach(p=>{
+//   if(active[p]){
+//     let win = Math.floor(active[p].amt * mult);
+//     document.getElementById('myWin'+p).innerText = win + ' Points';
+//     document.getElementById('myMult'+p).innerText = mult.toFixed(2)+'x pe ho';
+//   }
+// });
+
+function cashout(p){
+  if(!active[p]||!playing) return;
+  let win=Math.floor(active[p].amt*mult);
+  bal+=win;
+  document.getElementById('bal').innerText=bal;
+  // Cashout ke baad niche 0 kar do
+  document.getElementById('myWin'+p).innerText='0 Points';
+  document.getElementById('myBet'+p).innerText='0';
+  document.getElementById('myMult'+p).innerText='Cashout ho gaya ✅';
+  active[p]=null;
+  let b=document.getElementById('btn'+p);
+  b.innerText='PLAY'; b.classList.remove('cash');
 }
-
-// Apne startRound() me ye line add kar de:
-// resetLivePlayers();
-
-// Apne timer me - jahan mult badh raha hai - wahan ye line add kar de:
-// showLiveBets();
-
-// Apne crash() me ye mat bhoolna - jo log cashout nahi kar paye, wo haar gaye:
-// livePlayers.forEach(p=>{ if(!p.out){ p.out=true; p.finalWin=0; } });
 </script>
