@@ -1,110 +1,55 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SKY KING - FINAL</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial}
-body{background:#050505;color:#fff}
-.top{max-width:480px;margin:auto;padding:12px}
-.header{display:flex;justify-content:space-between;align-items:center;border:1px solid #d4af37;padding:10px 14px;border-radius:12px;background:linear-gradient(180deg,#1a1605,#000);box-shadow:0 0 25px rgba(212,175,55,.3)}
-.header h1{font-size:24px;color:#f5d76e;cursor:pointer;user-select:none}
-.balance{background:#000;border:1px solid #d4af37;padding:6px 12px;border-radius:20px;color:#f5d76e;font-weight:800}
-.row{display:flex;gap:8px;margin:10px 0}
-.soundBtn{flex:1;background:#d4af37;color:#000;border:none;padding:9px;border-radius:20px;font-weight:800;cursor:pointer}
-.practiceBtn{flex:1;background:#222;color:#ffd700;border:1px solid #d4af37;padding:9px;border-radius:20px;font-weight:800;cursor:pointer}
-.history{display:flex;gap:6px;overflow-x:auto;padding:4px 0}
-.history span{background:#1a1a1a;border:1px solid #333;padding:5px 10px;border-radius:20px;font-size:12px;white-space:nowrap}
-.history span.gold{color:#ffd700;border-color:#d4af37}
-.stage{position:relative;height:440px;border-radius:16px;overflow:hidden;border:1px solid #333;background:#000}
-#mult{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:68px;font-weight:900;color:#ffd700;text-shadow:0 0 25px #000,0 0 10px #ffd700;z-index:3}
-#status{position:absolute;top:96px;left:0;right:0;text-align:center;color:#fff;font-size:12px;z-index:3;text-shadow:0 0 8px #000}
-#eagle{position:absolute;left:15%;top:240px;transform:translate(-50%,-50%) scaleX(-1);font-size:88px;filter:drop-shadow(0 0 20px gold);z-index:2;animation:flap .6s infinite alternate,bob 1.2s infinite ease-in-out}
-@keyframes flap{0%{transform:translate(-50%,-50%) scaleX(-1) scaleY(1) rotate(-3deg)}100%{transform:translate(-50%,-50%) scaleX(-1) scaleY(1.15) rotate(3deg)}}
-@keyframes bob{0%,100%{margin-top:0}50%{margin-top:-14px}}
-#trail{position:absolute;left:0;bottom:0;width:100%;height:200px;z-index:1}
-.leader{position:absolute;left:8px;top:125px;width:120px;background:rgba(0,0,0,.78);border:1px solid #d4af37;border-radius:10px;padding:8px;font-size:11px;z-index:4}
-.leader b{color:#ffd700;display:block;margin-bottom:6px}
-.leader div{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #222}
-.win{position:absolute;top:150px;left:0;right:0;text-align:center;font-size:24px;font-weight:900;color:#22c55e;display:none;z-index:5;text-shadow:0 0 10px #000}
-.panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.panel{border:1px solid #d4af37;border-radius:14px;padding:12px;background:linear-gradient(180deg,#1c1808,#000)}
-.panel h3{font-size:13px;line-height:1.2}.panel h3 span{color:#aaa;font-weight:400}
-.toggle{display:flex;justify-content:space-between;align-items:center;background:#000;padding:8px 10px;border-radius:8px;font-size:12px;margin-top:8px;border:1px solid #222}
-.switch{width:38px;height:20px;background:#333;border-radius:20px;position:relative;cursor:pointer}
-.switch:after{content:'';position:absolute;width:16px;height:16px;background:#888;border-radius:50%;top:2px;left:2px;transition:.2s}
-.switch.on{background:#d4af37}.switch.on:after{left:20px;background:#000}
-.amt{display:flex;align-items:center;justify-content:space-between;margin:10px 0;background:#000;border-radius:10px;padding:4px}
-.amt button{width:32px;height:32px;border-radius:50%;border:1px solid gold;background:#111;color:#ffd700;font-size:18px;cursor:pointer}
-.quick{display:flex;gap:6px;margin-bottom:10px}.quick button{flex:1;background:#000;border:1px solid #444;color:#ccc;padding:7px 0;border-radius:6px;font-size:11px;cursor:pointer}
-.play{width:100%;padding:13px;background:linear-gradient(180deg,#ffe27a,#b7950b);border:none;border-radius:10px;font-size:18px;font-weight:900;cursor:pointer;color:#000}
-.play.cash{background:#22c55e;color:#fff}
-.demo{margin-top:12px;background:#111;border:1px solid #d4af37;border-radius:12px;padding:12px;font-size:13px}
-.demo b{color:#ffd700}.demo .line{display:flex;justify-content:space-between;color:#fff;margin-top:8px}
-.demo small{color:#aaa;font-size:11px;display:block;margin-top:6px}
-.footer{text-align:center;font-size:11px;color:#777;padding:10px}
-#adminPanel{display:none;background:#111;border:2px solid #d4af37;border-radius:12px;padding:14px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;width:90%;max-width:440px;box-shadow:0 0 40px #000}
-</style>
-</head>
-<body>
-<div class="top">
-<div class="header"><h1 id="skyKingTitle">👑 SKY KING</h1><div class="balance">🪙 <span id="bal">1000</span> Points</div></div>
-<div class="row"><button class="soundBtn" id="soundBtn" onclick="toggleSound()">🔊 AWAAZ: ON</button><button class="practiceBtn" id="practiceBtn" onclick="togglePractice()">🧪 PRACTICE: OFF</button></div>
-<div class="history" id="hist"><span class="gold">1.93x</span><span>32.42x</span><span class="gold">1.49x</span><span>2.11x</span><span>4.33x</span></div>
-<div class="stage">
-<div style="position:absolute;inset:0;background:linear-gradient(180deg,#0a1a2e 0%,#1a2a3a 30%,#2a3a2a 55%,#0a1a0a 100%)"></div>
-<div style="position:absolute;bottom:30px;left:-20px;font-size:90px;opacity:.6">⛰️⛰️</div>
-<div style="position:absolute;bottom:50px;right:-10px;font-size:80px;opacity:.6">🌲🌲🌲</div>
-<div style="position:absolute;top:20px;right:20px;font-size:40px">☀️</div>
-<div id="mult">1.00x</div><div id="status">EAGLE KHUD UDEGA...</div>
-<div id="eagle">🦅</div><canvas id="trail"></canvas>
-<div class="leader"><b>⭐ LIVE LEADERBOARD</b><div><span>1. AURA</span><span>5200</span></div><div><span>2. NOVA</span><span>3840</span></div><div><span>3. ORION</span><span>2710</span></div><div><span>4. VEX</span><span>1920</span></div><div><span>5. LYNX</span><span>1450</span></div></div>
-<div class="win" id="winMsg"></div>
-</div>
-<div class="panels">
-<div class="panel"><h3>YOU<br><span>PILOT</span></h3><div class="toggle">Auto Collect <div class="switch on" id="sw1" onclick="this.classList.toggle('on')"></div></div><div class="amt"><button onclick="chg(1,-10)">-</button><b><span id="a1">10</span> Points</b><button onclick="chg(1,10)">+</button></div><div class="quick"><button onclick="setAmt(1,50)">Quick +50</button><button onclick="setAmt(1,100)">Quick +100</button></div><button class="play" id="btn1" onclick="play(1)">PLAY</button></div>
-<div class="panel"><h3>ALLY<br><span>WING</span></h3><div class="toggle">Auto Collect <div class="switch" id="sw2" onclick="this.classList.toggle('on')"></div></div><div class="amt"><button onclick="chg(2,-10)">-</button><b><span id="a2">10</span> Points</b><button onclick="chg(2,10)">+</button></div><div class="quick"><button onclick="setAmt(2,50)">Quick +50</button><button onclick="setAmt(2,100)">Quick +100</button></div><button class="play" id="btn2" onclick="play(2)">PLAY</button></div>
-</div>
-<div class="demo"><b>🧪 DEMO CHECK PANEL</b><div class="line"><span>Round Time: <b id="demoTime">0.0s</b></span><span>Live: <b id="demoMult">1.00x</b></span><span>Status: <b id="demoStatus">WAITING</b></span></div><div class="line"><span>Last Crash: <b id="lastCrash" style="color:#ff4444">-</b></span><span>Total Rounds: <b id="totalRounds">0</b></span></div><small>SKY KING pe 7 baar click karke Admin khulta hai - Password 78699. Crash hamesha Random rahega.</small></div>
-<div class="footer">SKY KING FINAL • Points Only • For Fun • No Real Money</div>
-</div>
-
-<div id="adminPanel">
-<div style="display:flex;justify-content:space-between"><b style="color:#ffd700">🔐 ADMIN - SKY KING</b><button onclick="document.getElementById('adminPanel').style.display='none'" style="background:#ff4444;color:#fff;border:none;padding:5px 10px;border-radius:6px">X Band Kar</button></div>
-<div style="margin-top:10px;color:#fff;font-size:13px">
-<div style="display:flex;justify-content:space-between"><span>Live Multiplier:</span><b id="adminMult" style="color:#ffd700">1.00x</b></div>
-<div style="display:flex;justify-content:space-between;margin-top:6px"><span>Round Time:</span><b id="adminTime">0.0s</b></div>
-<div style="display:flex;justify-content:space-between;margin-top:6px"><span>Status:</span><b id="adminStatus">WAITING</b></div>
-<div style="display:flex;justify-content:space-between;margin-top:6px"><span>Last Crash:</span><b id="adminLast" style="color:#ff4444">-</b></div>
-<div style="display:flex;justify-content:space-between;margin-top:6px"><span>Total Rounds:</span><b id="adminRounds">0</b></div>
-<div style="display:flex;justify-content:space-between;margin-top:6px"><span>Your Points:</span><b id="adminBal">1000</b></div>
-</div>
-<div style="margin-top:10px;font-size:11px;color:#aaa;background:#000;padding:8px;border-radius:8px">⚠️ Ye panel SIRF dekhne ke liye hai. Crash set karne ka option nahi hai, kyuki usse players ke sath cheating hogi.</div>
+<!-- Spribe jaisa LIVE BETS - Stage ke neeche daal de -->
+<div style="max-width:480px;margin:10px auto;background:#111;border:1px solid #d4af37;border-radius:12px;padding:12px">
+  <div style="display:flex;justify-content:space-between"><b style="color:#ffd700">🔴 LIVE BETS - Real Players Jaisa</b><span style="font-size:11px;color:#22c55e">● 512 Online</span></div>
+  <div id="liveBets" style="margin-top:8px;font-size:12px"></div>
 </div>
 
 <script>
-let bal=1000,mult=1,playing=false,crashAt=0,active={1:null,2:null},timer=null,amt={1:10,2:10},soundOn=true,audioCtx=null,engineOsc=null,practice=false,demoStart=0,demoRounds=0;
-let eagle=document.getElementById('eagle'),multEl=document.getElementById('mult'),statusEl=document.getElementById('status');
-let canvas=document.getElementById('trail'),ctx=canvas.getContext('2d');canvas.width=480;canvas.height=200;
-function toggleSound(){soundOn=!soundOn;document.getElementById('soundBtn').innerText=soundOn?'🔊 AWAAZ: ON':'🔇 AWAAZ: OFF';if(!soundOn)stopEngine();}
-function togglePractice(){practice=!practice;document.getElementById('practiceBtn').innerText=practice?'🧪 PRACTICE: ON':'🧪 PRACTICE: OFF';}
-function getCtx(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx;}
-function eagleSound(){if(!soundOn)return;try{let c=getCtx(),o=c.createOscillator(),g=c.createGain();o.type='sawtooth';o.frequency.setValueAtTime(1800,c.currentTime);o.frequency.exponentialRampToValueAtTime(900,c.currentTime+0.4);g.gain.setValueAtTime(0.08,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.5);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+0.5);}catch(e){}}
-function startEngine(){if(!soundOn)return;try{let c=getCtx();stopEngine();engineOsc=c.createOscillator();let g=c.createGain();engineOsc.type='sawtooth';engineOsc.frequency.setValueAtTime(80,c.currentTime);g.gain.setValueAtTime(0.04,c.currentTime);engineOsc.connect(g);g.connect(c.destination);engineOsc.start();}catch(e){}}
-function stopEngine(){try{if(engineOsc){engineOsc.stop();engineOsc=null;}}catch(e){}}
-function cashSound(){if(!soundOn)return;try{let c=getCtx();[880,1320].forEach((f,i)=>{let o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0.12,c.currentTime+i*0.12);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.12+0.3);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*0.12);o.stop(c.currentTime+i*0.12+0.3);});}catch(e){}}
-function crashSound(){if(!soundOn)return;try{let c=getCtx(),o=c.createOscillator(),g=c.createGain();o.type='square';o.frequency.setValueAtTime(200,c.currentTime);o.frequency.exponentialRampToValueAtTime(30,c.currentTime+0.6);g.gain.setValueAtTime(0.18,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.6);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+0.6);}catch(e){}}
-function drawTrail(){ctx.clearRect(0,0,480,200);ctx.beginPath();ctx.moveTo(0,180);ctx.quadraticCurveTo(200,180-(mult*18),430,180-(mult*22));ctx.strokeStyle='rgba(255,215,0,0.9)';ctx.lineWidth=3;ctx.stroke();}
-function chg(p,d){amt[p]=Math.max(10,Math.min(1000,amt[p]+d));document.getElementById('a'+p).innerText=amt[p];}
-function setAmt(p,v){amt[p]=v;document.getElementById('a'+p).innerText=v;}
-function play(p){if(active[p]){cashout(p);return;}if(bal<amt[p]){alert('Points khatam! Refresh karo');return;}bal-=amt[p];document.getElementById('bal').innerText=bal;document.getElementById('adminBal').innerText=bal;active[p]={amt:amt[p]};let b=document.getElementById('btn'+p);b.innerText='CASHOUT';b.classList.add('cash');statusEl.innerText='TU ROUND ME HAI - CASHOUT KA WAIT KAR!';}
-function cashout(p){if(!active[p]||!playing)return;let win=Math.floor(active[p].amt*mult);bal+=win;document.getElementById('bal').innerText=bal;document.getElementById('adminBal').innerText=bal;cashSound();let w=document.getElementById('winMsg');w.style.display='block';w.innerText='+'+win+' Points! 🦅';setTimeout(()=>w.style.display='none',2000);active[p]=null;let b=document.getElementById('btn'+p);b.innerText='PLAY';b.classList.remove('cash');}
-function startRound(){playing=true;mult=1;crashAt=1.2+Math.random()*8;demoStart=Date.now();document.getElementById('demoStatus').innerText='FLYING';document.getElementById('adminStatus').innerText='FLYING';statusEl.innerText='EAGLE UD RAHA HAI... DEKHTE RAHO!';eagleSound();startEngine();let start=Date.now();timer=setInterval(()=>{let t=(Date.now()-start)/1000;mult=1+t*0.55+t*t*0.08;mult=parseFloat(mult.toFixed(2));multEl.innerText=mult.toFixed(2)+'x';document.getElementById('demoMult').innerText=mult.toFixed(2)+'x';document.getElementById('adminMult').innerText=mult.toFixed(2)+'x';document.getElementById('demoTime').innerText=((Date.now()-demoStart)/1000).toFixed(1)+'s';document.getElementById('adminTime').innerText=((Date.now()-demoStart)/1000).toFixed(1)+'s';drawTrail();eagle.style.left=(15+mult*3)+'%';eagle.style.top=(240-mult*12)+'px';if(engineOsc&&soundOn)engineOsc.frequency.value=80+mult*10;[1,2].forEach(p=>{if(active[p]&&document.getElementById('sw'+p).classList.contains('on')&&mult>=2){cashout(p);}});if(mult>=crashAt){crash();}},100);}
-function crash(){clearInterval(timer);playing=false;stopEngine();crashSound();demoRounds++;document.getElementById('totalRounds').innerText=demoRounds;document.getElementById('adminRounds').innerText=demoRounds;document.getElementById('lastCrash').innerText=crashAt.toFixed(2)+'x';document.getElementById('adminLast').innerText=crashAt.toFixed(2)+'x';document.getElementById('demoStatus').innerText='CRASHED';document.getElementById('adminStatus').innerText='CRASHED';multEl.innerText='CRASHED @ '+crashAt.toFixed(2)+'x';multEl.style.color='#ff4444';statusEl.innerText='CRASH! NEXT FLIGHT 3 SEC ME...';eagle.innerText='💥';let h=document.getElementById('hist');let s=document.createElement('span');s.innerText=crashAt.toFixed(2)+'x';if(crashAt>4)s.className='gold';h.prepend(s);[1,2].forEach(p=>{if(active[p]){active[p]=null;let b=document.getElementById('btn'+p);b.innerText='PLAY';b.classList.remove('cash');}});setTimeout(()=>{multEl.style.color='#ffd700';multEl.innerText='1.00x';eagle.innerText='🦅';eagle.style.left='15%';eagle.style.top='240px';ctx.clearRect(0,0,480,200);statusEl.innerText='EAGLE PHIR UDEGA...';document.getElementById('demoStatus').innerText='WAITING';document.getElementById('adminStatus').innerText='WAITING';startRound();},3000);}
-window.addEventListener('load',()=>{ setTimeout(()=>{ if(!playing) startRound(); },1000); });
-let kingClicks=0,kingTimer=null;
-document.getElementById('skyKingTitle').addEventListener('click',function(){ kingClicks++; if(kingTimer) clearTimeout(kingTimer); kingTimer=setTimeout(()=>{kingClicks=0;},2000); if(kingClicks>=7){ kingClicks=0; let pass=prompt('ADMIN PASSWORD DALO:'); if(pass==='78699'){ document.getElementById('adminPanel').style.display='block'; alert('Admin Panel Khul Gaya Bhai ✅'); } else { alert('Galat Password ❌'); } } });
+// Spribe jaisa Live Players - Naam + Bet + Badhte Hue Coin
+let livePlayers = [
+  {name:"Rahul •••", bet:100, cashoutAt:2.5, out:false},
+  {name:"Priya •••", bet:200, cashoutAt:3.8, out:false},
+  {name:"Amit •••", bet:50, cashoutAt:1.8, out:false},
+  {name:"Sneha •••", bet:500, cashoutAt:5.2, out:false},
+  {name:"Vikash •••", bet:1000, cashoutAt:8.5, out:false},
+  {name:"Rohan •••", bet:150, cashoutAt:2.1, out:false},
+];
+
+function showLiveBets(){
+  let html = '';
+  livePlayers.forEach(p=>{
+    let currentWin = Math.floor(p.bet * mult); // Jaise multiplier badhega, iska coin bhi badhega
+    if(mult >= p.cashoutAt && !p.out){
+      p.out = true;
+      p.finalWin = Math.floor(p.bet * p.cashoutAt);
+    }
+    if(p.out){
+      html += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #222"><span>👤 ${p.name}</span><span>${p.bet} Points</span><span style="color:#22c55e;font-weight:800">+${p.finalWin} WON ✅</span></div>`;
+    } else {
+      // Abhi ud raha hai - coin badhta hua dikhega
+      html += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #222"><span>👤 ${p.name}</span><span>${p.bet} Points</span><span style="color:#ffd700;font-weight:800">${currentWin} 🔥</span></div>`;
+    }
+  });
+  document.getElementById('liveBets').innerHTML = html;
+}
+
+// Har round shuru hone pe naye players banao - jaise real me naye log aate hain
+function resetLivePlayers(){
+  let names = ["Rahul","Priya","Amit","Sneha","Vikash","Rohan","Anjali","Deepak","Manish","Pooja","Arjun","Kavita"];
+  livePlayers = [];
+  for(let i=0;i<6;i++){
+    let n = names[Math.floor(Math.random()*names.length)];
+    let b = [50,100,150,200,500,1000][Math.floor(Math.random()*6)];
+    livePlayers.push({name:n+" •••", bet:b, cashoutAt:1.5+Math.random()*7, out:false});
+  }
+}
+
+// Apne startRound() me ye line add kar de:
+// resetLivePlayers();
+
+// Apne timer me - jahan mult badh raha hai - wahan ye line add kar de:
+// showLiveBets();
+
+// Apne crash() me ye mat bhoolna - jo log cashout nahi kar paye, wo haar gaye:
+// livePlayers.forEach(p=>{ if(!p.out){ p.out=true; p.finalWin=0; } });
 </script>
-</body>
-</html>
